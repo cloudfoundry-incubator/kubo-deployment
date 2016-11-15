@@ -1,0 +1,63 @@
+- type: replace
+  path: /releases/-
+  value:
+    name: bosh-warden-cpi
+    version: 29
+    url: https://bosh.io/d/github.com/cppforlife/bosh-warden-cpi-release?v=29
+    sha1: 9cc293351744f3892d4a79479cccd3c3b2cf33c7
+
+- type: replace
+  path: /releases/-
+  value:
+    name: garden-linux
+    version: 0.342.0
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.342.0
+    sha1: dbfd8e7e3560286b6d8c02ba9065a50289e8e0f3
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: warden_cpi
+    release: bosh-warden-cpi
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: garden
+    release: garden-linux
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/cpi_job?
+  value: warden_cpi
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/compiled_package_cache?
+  value:
+    provider: local
+    options: {blobstore_path: /var/vcap/store/tmp/compiled_package_cache}
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/warden_cpi?
+  value:
+    host_ip: 10.254.50.4
+    warden:
+      connect_network: tcp
+      connect_address: 127.0.0.1:7777
+    agent: # todo remove once cpi dont know about these
+      mbus: nats://nats:((nats_password))@10.254.50.4:4222
+      blobstore:
+        provider: dav
+        options:
+          endpoint: http://10.254.50.4:25250
+          user: agent
+          password: ((blobstore_agent_password))
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/garden?
+  value:
+    listen_network: tcp
+    listen_address: 127.0.0.1:7777
+    disk_quota_enabled: false
+    allow_host_access: true
+    destroy_containers_on_start: true # avoids snapshots
+    default_container_grace_time: 0

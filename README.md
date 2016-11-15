@@ -1,9 +1,28 @@
 # bosh-deployment
 
-## Usage
+- Requires new [BOSH CLI](https://github.com/cloudfoundry/bosh-cli)
 
-`bosh create-env gcp-bosh.yml -l path/to/vars/file.yml`
+`bosh create-env gcp.yml -l path/to/vars/file.yml --state `
 
-## Dependencies and assumptions
+common:
 
-`bosh-deployment` requires that a deployer use the new [BOSH CLI](https://github.com/cloudfoundry/bosh-cli). The tool is still technically in alpha, but it has the features necessary to consume `bosh-deployment`.
+internal_cidr
+internal_gw
+internal_ip
+nats_password
+postgres_password
+blobstore_director_password
+agent_director_password
+admin_password
+hm_password
+director_name
+director_ssl_private_key
+director_ssl_certificate
+director_ssl_ca
+
+gcp: zone, service_account, network, subnetwork, project_id
+aws:
+vars:
+  - key: az
+    title: "something helpful"
+  - subnet_id, registry_password, access_key_id, secret_access_key, region, private_key

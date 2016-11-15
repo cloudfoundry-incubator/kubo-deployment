@@ -1,0 +1,101 @@
+---
+name: bosh
+
+releases:
+- name: bosh
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=260
+  sha1: f8f086974d9769263078fb6cb7927655744dacbc
+
+resource_pools:
+- name: vms
+  network: private
+
+disk_pools:
+- name: disks
+  disk_size: 32_768
+
+networks:
+- name: private
+  type: manual
+  subnets:
+  - range: ((internal_cidr)) # todo
+    gateway: ((internal_gw))
+    static: [((internal_ip))]
+
+instance_groups:
+- name: bosh
+  instances: 1
+  jobs:
+  - {name: nats, release: bosh}
+  - {name: postgres, release: bosh}
+  - {name: blobstore, release: bosh}
+  - {name: director, release: bosh}
+  - {name: health_monitor, release: bosh}
+  resource_pool: vms
+  persistent_disk_pool: disks
+  networks:
+  - name: private
+    static_ips: [((internal_ip))]
+    default: [dns, gateway]
+  properties:
+    nats:
+      address: 127.0.0.1
+      user: nats
+      password: ((nats_password))
+    postgres: &db
+      listen_address: 127.0.0.1
+      host: 127.0.0.1
+      user: postgres
+      password: ((postgres_password))
+      database: bosh
+      adapter: postgres
+    blobstore:
+      address: ((internal_ip))
+      port: 25250
+      provider: dav
+      director:
+        user: director
+        password: ((blobstore_director_password))
+      agent:
+        user: agent
+        password: ((agent_director_password))
+    director:
+      address: 127.0.0.1
+      name: ((director_name))
+      db: *db
+      flush_arp: true
+      enable_post_deploy: true
+      generate_vm_passwords: true
+      enable_dedicated_status_worker: true
+      workers: 4
+      events:
+        record_events: true
+      ssl:
+        key: ((director_ssl_private_key))
+        cert: ((director_ssl_certificate))
+      user_management:
+        provider: local
+        local:
+          users:
+          - name: admin
+            password: ((admin_password))
+          - name: hm
+            password: ((hm_password))
+    hm:
+      director_account:
+        user: hm
+        password: ((hm_password))
+        ca_cert: ((director_ssl_ca))
+      resurrector_enabled: true
+    ntp: &ntp
+    - 0.pool.ntp.org
+    - 1.pool.ntp.org
+    agent:
+      mbus: nats://nats:((nats_password))@((internal_ip)):4222
+
+cloud_provider:
+  mbus: https://mbus:((mbus_bootstrap_password))@((internal_ip)):6868
+  properties:
+    agent: {mbus: "https://mbus:((mbus_bootstrap_password))@0.0.0.0:6868"}
+    blobstore: {provider: local, path: /var/vcap/micro_bosh/data/cache}
+    ntp: *ntp
