@@ -21,13 +21,14 @@ networks:
   - range: ((internal_cidr)) # todo
     gateway: ((internal_gw))
     static: [((internal_ip))]
+    dns: [8.8.8.8]
 
 instance_groups:
 - name: bosh
   instances: 1
   jobs:
   - {name: nats, release: bosh}
-  - {name: postgres, release: bosh}
+  - {name: postgres-9.4, release: bosh}
   - {name: blobstore, release: bosh}
   - {name: director, release: bosh}
   - {name: health_monitor, release: bosh}
@@ -36,7 +37,6 @@ instance_groups:
   networks:
   - name: private
     static_ips: [((internal_ip))]
-    default: [dns, gateway]
   properties:
     nats:
       address: 127.0.0.1
@@ -71,8 +71,8 @@ instance_groups:
       events:
         record_events: true
       ssl:
-        key: ((director_ssl_private_key))
-        cert: ((director_ssl_certificate))
+        key: ((director_ssl.private_key))
+        cert: ((director_ssl.certificate))
       user_management:
         provider: local
         local:
@@ -85,7 +85,7 @@ instance_groups:
       director_account:
         user: hm
         password: ((hm_password))
-        ca_cert: ((director_ssl_ca))
+        ca_cert: ((director_ssl.ca))
       resurrector_enabled: true
     ntp: &ntp
     - 0.pool.ntp.org
@@ -99,3 +99,29 @@ cloud_provider:
     agent: {mbus: "https://mbus:((mbus_bootstrap_password))@0.0.0.0:6868"}
     blobstore: {provider: local, path: /var/vcap/micro_bosh/data/cache}
     ntp: *ntp
+
+variables:
+- name: admin_password
+  type: password
+- name: agent_director_password
+  type: password
+- name: blobstore_director_password
+  type: password
+- name: hm_password
+  type: password
+- name: mbus_bootstrap_password
+  type: password
+- name: nats_password
+  type: password
+- name: postgres_password
+  type: password
+- name: default_ca
+  type: certificate
+  options:
+    common_name: ca # todo fix
+- name: director_ssl
+  type: certificate
+  options:
+    ca: default_ca
+    common_name: ((internal_ip))
+    alternative_names: [((internal_ip))]
