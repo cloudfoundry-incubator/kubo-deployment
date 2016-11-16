@@ -1,28 +1,27 @@
 # bosh-deployment
 
-- Requires new [BOSH CLI](https://github.com/cloudfoundry/bosh-cli)
+- Requires new [BOSH CLI v0.0.112+](https://github.com/cloudfoundry/bosh-cli)
 
-`bosh create-env gcp.yml -l path/to/vars/file.yml --state `
+AWS:
 
-common:
+```
+$ mkdir bosh-1 && cd bosh-1
 
-internal_cidr
-internal_gw
-internal_ip
-nats_password
-postgres_password
-blobstore_director_password
-agent_director_password
-admin_password
-hm_password
-director_name
-director_ssl_private_key
-director_ssl_certificate
-director_ssl_ca
+$ cp ~/workspace/bosh-deployment/bosh.yml ./manifest.yml
 
-gcp: zone, service_account, network, subnetwork, project_id
-aws:
-vars:
-  - key: az
-    title: "something helpful"
-  - subnet_id, registry_password, access_key_id, secret_access_key, region, private_key
+$ bosh create-env ./manifest.yml \
+  --ops-file ~/workspace/bosh-deployment/use-aws.yml \
+  --vars-store ./creds.yml \
+  -v access_key_id=... \
+  -v secret_access_key=... \
+  -v region=us-east-1 \
+  -v az=us-east-1b \
+  -v default_key_name=$(dirname $PWD) \
+  -v default_security_groups=[bosh] \
+  -v subnet_id=subnet-... \
+  -v director_name=my-bosh \
+  -v internal_cidr=10.10.0.0/24 \
+  -v internal_gw=10.10.0.1 \
+  -v internal_ip=10.10.0.6 \
+  -v private_key=...
+```

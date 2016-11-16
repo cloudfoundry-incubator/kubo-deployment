@@ -86,3 +86,9 @@
 - type: replace
   path: /cloud_provider/properties/aws?
   value: *aws
+
+- type: replace
+  path: /variables/-
+  value:
+    name: registry_password
+    type: password

@@ -27,3 +27,7 @@
 - type: replace
   path: /cloud_provider/ssh_tunnel/host
   value: ((external_ip))
+
+- type: replace
+  path: /variables/name=director_ssl/options/alternative_names/-
+  value: ((external_ip))
