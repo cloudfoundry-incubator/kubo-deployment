@@ -3,8 +3,9 @@ name: bosh
 
 releases:
 - name: bosh
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=260
-  sha1: f8f086974d9769263078fb6cb7927655744dacbc
+  # https://main.bosh-ci.cf-app.com/teams/main/pipelines/compiled-releases/jobs/compile-bosh-release-latest-ubuntu-trusty-3312/builds/1
+  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/release-bosh-260-on-ubuntu-trusty-stemcell-3312-20161116233838.tgz?versionId=JjQIB5J4pXnaxltZj_4rWqwCvgbgadPM
+  sha1: 89b1c9e481411df65057363c745592653daf26a8
 
 resource_pools:
 - name: vms
