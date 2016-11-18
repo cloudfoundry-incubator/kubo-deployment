@@ -31,3 +31,5 @@
 - type: replace
   path: /variables/name=director_ssl/options/alternative_names/-
   value: ((external_ip))
+
+# switch uaa to external_ip
