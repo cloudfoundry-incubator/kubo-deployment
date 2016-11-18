@@ -16,10 +16,10 @@ $ bosh create-env ./manifest.yml \
   -v secret_access_key=... \
   -v region=us-east-1 \
   -v az=us-east-1b \
-  -v default_key_name=$(dirname $PWD) \
+  -v default_key_name=bosh \
   -v default_security_groups=[bosh] \
   -v subnet_id=subnet-... \
-  -v director_name=my-bosh \
+  -v director_name=$(dirname $PWD) \
   -v internal_cidr=10.10.0.0/24 \
   -v internal_gw=10.10.0.1 \
   -v internal_ip=10.10.0.6 \

@@ -19,7 +19,7 @@ networks:
 - name: private
   type: manual
   subnets:
-  - range: ((internal_cidr)) # todo
+  - range: ((internal_cidr))
     gateway: ((internal_gw))
     static: [((internal_ip))]
     dns: [8.8.8.8]
