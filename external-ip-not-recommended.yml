@@ -1,3 +1,5 @@
+# WARNING: We do not recommend to expose Director and any other services over public addresses.
+
 - type: replace
   path: /networks/-
   value:
