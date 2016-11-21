@@ -37,3 +37,15 @@ $ bosh build-manifest ./manifest.yml \
   -v access_key_id=... \
   -v secret_access_key=...
 ```
+
+Please ensure you have security groups setup correctly. i.e:
+
+```
+Type                 Protocol Port Range  Source
+All TCP              TCP      0 - 65535  <Your workstation IP>
+SSH                  TCP      22         10.10.0.0/16
+SSH                  TCP      22         <Your workstation IP>
+Custom TCP Rule      TCP      25555      10.10.0.0/16
+Custom TCP Rule      TCP      6868       10.10.0.0/16
+Custom TCP Rule      TCP      25777      10.10.0.0/16
+```
