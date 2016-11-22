@@ -41,11 +41,13 @@ $ bosh build-manifest ./manifest.yml \
 Please ensure you have security groups setup correctly. i.e:
 
 ```
-Type                 Protocol Port Range  Source
-SSH                  TCP      22         <((internal_cidr))>
-SSH                  TCP      22         <IP you run gocli from>
-Custom TCP Rule      TCP      25555      <((internal_cidr))>
-Custom TCP Rule      TCP      6868       <((internal_cidr))>
-Custom TCP Rule      TCP      25777      <((internal_cidr))>
-Custom TCP Rule      TCP      422        <((internal_cidr))>
+Type                 Protocol Port Range  Source                     Purpose
+SSH                  TCP      22          <IP you run bosh CLI from> SSH (if Registry is used)
+Custom TCP Rule      TCP      6868        <IP you run bosh CLI from> Agent for bootstrapping
+Custom TCP Rule      TCP      25555       <IP you run bosh CLI from> Director API
+Custom TCP Rule      TCP      8443        <IP you run bosh CLI from> UAA API (if UAA is used)
+SSH                  TCP      22          <((internal_cidr))>        BOSH SSH (optional)
+Custom TCP Rule      TCP      4222        <((internal_cidr))>        NATS
+Custom TCP Rule      TCP      25250       <((internal_cidr))>        Blobstore
+Custom TCP Rule      TCP      25777       <((internal_cidr))>        Registry if enabled
 ```
