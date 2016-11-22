@@ -59,7 +59,7 @@ instance_groups:
         password: ((blobstore_director_password))
       agent:
         user: agent
-        password: ((agent_director_password))
+        password: ((blobstore_agent_password))
     director:
       address: 127.0.0.1
       name: ((director_name))
@@ -104,9 +104,9 @@ cloud_provider:
 variables:
 - name: admin_password
   type: password
-- name: agent_director_password
-  type: password
 - name: blobstore_director_password
+  type: password
+- name: blobstore_agent_password
   type: password
 - name: hm_password
   type: password
