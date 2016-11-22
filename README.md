@@ -1,16 +1,14 @@
 # bosh-deployment
 
-- Requires new [BOSH CLI v0.0.114+](https://github.com/cloudfoundry/bosh-cli)
+- Requires new [BOSH CLI v0.0.120+](https://github.com/cloudfoundry/bosh-cli)
 
 AWS:
 
 ```
 $ mkdir bosh-1 && cd bosh-1
 
-# Upcoming change to CLI will allow custom state file location
-$ cp ~/workspace/bosh-deployment/bosh.yml ./manifest.yml
-
-$ bosh create-env ./manifest.yml \
+$ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
+  --state ./bosh-state.json \
   --ops-file ~/workspace/bosh-deployment/use-aws.yml \
   --vars-store ./creds.yml \
   -v access_key_id=... \
@@ -30,7 +28,7 @@ $ bosh create-env ./manifest.yml \
 To generate creds (without deploying anything) or just to check if your manifest builds:
 
 ```
-$ bosh build-manifest ./manifest.yml \
+$ bosh interpolate ~/workspace/bosh-deployment/bosh.yml \
   --var-errs \
   --ops-file ~/workspace/bosh-deployment/use-aws.yml \
   --vars-store ./creds.yml \
