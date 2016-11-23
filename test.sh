@@ -58,13 +58,14 @@ bosh interpolate aws/cloud-config.yml --var-errs \
 
 echo "- GCP"
 bosh interpolate bosh.yml --var-errs \
-  -o use-gcp.yml \
+  -o gcp/cpi.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \
   -v internal_gw=test \
   -v internal_ip=test \
   -v service_account=test \
+  -v gcp_credentials_json=test \
   -v project_id=test \
   -v zone=test \
   -v network=test \
@@ -73,7 +74,7 @@ bosh interpolate bosh.yml --var-errs \
 
 echo "- GCP with UAA"
 bosh interpolate bosh.yml --var-errs \
-  -o use-gcp.yml \
+  -o gcp/cpi.yml \
   -o uaa.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
@@ -81,6 +82,7 @@ bosh interpolate bosh.yml --var-errs \
   -v internal_gw=test \
   -v internal_ip=test \
   -v service_account=test \
+  -v gcp_credentials_json=test \
   -v project_id=test \
   -v zone=test \
   -v network=test \
@@ -89,7 +91,7 @@ bosh interpolate bosh.yml --var-errs \
 
 echo "- GCP with BOSH Lite"
 bosh interpolate bosh.yml --var-errs \
-  -o use-gcp.yml \
+  -o gcp/cpi.yml \
   -o enable-bosh-lite.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
@@ -97,6 +99,7 @@ bosh interpolate bosh.yml --var-errs \
   -v internal_gw=test \
   -v internal_ip=test \
   -v service_account=test \
+  -v gcp_credentials_json=test \
   -v project_id=test \
   -v zone=test \
   -v network=test \
