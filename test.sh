@@ -47,6 +47,15 @@ bosh interpolate bosh.yml --var-errs \
   -v subnet_id=test \
   > /dev/null
 
+echo "- AWS (cloud-config)"
+bosh interpolate aws/cloud-config.yml --var-errs \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v internal_cidr=test \
+  -v internal_gw=test \
+  -v az=test \
+  -v subnet_id=test \
+  > /dev/null
+
 echo "- GCP"
 bosh interpolate bosh.yml --var-errs \
   -o use-gcp.yml \
@@ -112,4 +121,42 @@ bosh interpolate bosh.yml --var-errs \
   -v private_key=test \
   -v region=test \
   -v tenant=test \
+  > /dev/null
+
+echo "- Openstack (cloud-config)"
+bosh interpolate openstack/cloud-config.yml --var-errs \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v internal_cidr=test \
+  -v internal_gw=test \
+  -v az=test \
+  -v net_id=test \
+  > /dev/null
+
+echo "- vSphere"
+bosh interpolate bosh.yml --var-errs \
+  -o vsphere/cpi.yml \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v director_name=test \
+  -v internal_cidr=test \
+  -v internal_gw=test \
+  -v internal_ip=test \
+  -v network_name=test \
+  -v vcenter_dc=test \
+  -v vcenter_ds=test \
+  -v vcenter_ip=test \
+  -v vcenter_user=test \
+  -v vcenter_password=test \
+  -v vcenter_templates=test \
+  -v vcenter_vms=test \
+  -v vcenter_disks=test \
+  -v vcenter_cluster=test \
+  > /dev/null
+
+echo "- vSphere (cloud-config)"
+bosh interpolate vsphere/cloud-config.yml --var-errs \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v internal_cidr=test \
+  -v internal_gw=test \
+  -v network_name=test \
+  -v vcenter_cluster=test \
   > /dev/null

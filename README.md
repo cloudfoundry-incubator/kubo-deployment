@@ -25,9 +25,9 @@ $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
   -v default_security_groups=[bosh] \
   -v subnet_id=subnet-... \
   -v director_name=$(dirname $PWD) \
-  -v internal_cidr=10.10.0.0/24 \
-  -v internal_gw=10.10.0.1 \
-  -v internal_ip=10.10.0.6 \
+  -v internal_cidr=10.0.0.0/24 \
+  -v internal_gw=10.0.0.1 \
+  -v internal_ip=10.0.0.6 \
   -v private_key=...
 
 # Alias deployed Director
