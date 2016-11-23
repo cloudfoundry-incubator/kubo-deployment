@@ -93,3 +93,23 @@ bosh interpolate bosh.yml --var-errs \
   -v network=test \
   -v subnetwork=test \
   > /dev/null
+
+echo "- Openstack"
+bosh interpolate bosh.yml --var-errs \
+  -o openstack.yml \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v director_name=test \
+  -v internal_cidr=test \
+  -v internal_gw=test \
+  -v internal_ip=test \
+  -v auth_url=test \
+  -v az=test \
+  -v default_key_name=test \
+  -v default_security_groups=test \
+  -v net_id=test \
+  -v openstack_password=test \
+  -v openstack_username=test \
+  -v private_key=test \
+  -v region=test \
+  -v tenant=test \
+  > /dev/null
