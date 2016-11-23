@@ -12,7 +12,7 @@ trap clean_tmp EXIT
 
 echo "- AWS"
 bosh interpolate bosh.yml --var-errs \
-  -o use-aws.yml \
+  -o aws/cpi.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \
@@ -30,7 +30,7 @@ bosh interpolate bosh.yml --var-errs \
 
 echo "- AWS with UAA"
 bosh interpolate bosh.yml --var-errs \
-  -o use-aws.yml \
+  -o aws/cpi.yml \
   -o uaa.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \

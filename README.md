@@ -15,7 +15,7 @@ $ mkdir bosh-1 && cd bosh-1
 # Deploy a Director
 $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
   --state ./state.json \
-  --ops-file ~/workspace/bosh-deployment/use-aws.yml \
+  --ops-file ~/workspace/bosh-deployment/aws/cpi.yml \
   --vars-store ./creds.yml \
   -v access_key_id=... \
   -v secret_access_key=... \
@@ -44,7 +44,7 @@ To generate creds (without deploying anything) or just to check if your manifest
 ```
 $ bosh int ~/workspace/bosh-deployment/bosh.yml \
   --var-errs \
-  --ops-file ~/workspace/bosh-deployment/use-aws.yml \
+  --ops-file ~/workspace/bosh-deployment/aws/cpi.yml \
   --vars-store ./creds.yml \
   -v access_key_id=... \
   -v secret_access_key=...
