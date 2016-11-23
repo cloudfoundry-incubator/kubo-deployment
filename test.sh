@@ -96,7 +96,7 @@ bosh interpolate bosh.yml --var-errs \
 
 echo "- Openstack"
 bosh interpolate bosh.yml --var-errs \
-  -o openstack.yml \
+  -o openstack/cpi.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \
