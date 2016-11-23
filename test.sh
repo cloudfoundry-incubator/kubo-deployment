@@ -106,6 +106,16 @@ bosh interpolate bosh.yml --var-errs \
   -v subnetwork=test \
   > /dev/null
 
+echo "- GCP (cloud-config)"
+bosh interpolate gcp/cloud-config.yml --var-errs \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v internal_cidr=test \
+  -v internal_gw=test \
+  -v zone=test \
+  -v network=test \
+  -v subnetwork=test \
+  > /dev/null
+
 echo "- Openstack"
 bosh interpolate bosh.yml --var-errs \
   -o openstack/cpi.yml \
