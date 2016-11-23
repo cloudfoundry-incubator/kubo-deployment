@@ -12,7 +12,7 @@ $ git clone https://github.com/cloudfoundry/bosh-deployment
 # Create a directory to keep Director deployment
 $ mkdir bosh-1 && cd bosh-1
 
-# Deploy a Director
+# Deploy a Director -- ./creds.yml is generated automatically
 $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
   --state ./state.json \
   --ops-file ~/workspace/bosh-deployment/aws/cpi.yml \
@@ -36,7 +36,17 @@ $ bosh alias-env bosh-1 \
   --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca)
 
 # Log in to the Director
-$ bosh -e bosh-1 log-in
+$ export BOSH_USER=admin
+$ export BOSH_PASSWORD=`bosh int ./creds.yml --path /admin_password`
+
+# Update cloud config -- single az
+$ bosh -e bosh-1 update-cloud-config ~/workspace/bosh-deployment/aws/cloud-config.yml -l ./creds.yml
+
+# Upload specific stemcell
+$ bosh -e bosh-1 upload-stemcell https://...
+
+# Get a deployment running
+$ bosh -e bosh-1 -d zookeeper deploy ~/workspace/zookeeper-release/manifests/example.yml
 ```
 
 To generate creds (without deploying anything) or just to check if your manifest builds:
