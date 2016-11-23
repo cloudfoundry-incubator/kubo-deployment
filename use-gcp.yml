@@ -53,6 +53,7 @@
   path: /instance_groups/name=bosh/properties/google?
   value: &cpi_conf
     project: ((project_id))
+    json_key: ((gcp_credentials_json))
 
 - type: replace
   path: /cloud_provider/properties/google?
