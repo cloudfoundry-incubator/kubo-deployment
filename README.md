@@ -5,10 +5,16 @@
 AWS:
 
 ```
+$ cd ~/workspace
+
+$ git clone https://github.com/cloudfoundry/bosh-deployment
+
+# Create a directory to keep Director deployment
 $ mkdir bosh-1 && cd bosh-1
 
+# Deploy a Director
 $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
-  --state ./bosh-state.json \
+  --state ./state.json \
   --ops-file ~/workspace/bosh-deployment/use-aws.yml \
   --vars-store ./creds.yml \
   -v access_key_id=... \
@@ -23,12 +29,20 @@ $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
   -v internal_gw=10.10.0.1 \
   -v internal_ip=10.10.0.6 \
   -v private_key=...
+
+# Alias deployed Director
+$ bosh alias-env bosh-1 \
+  -e `bosh int ./creds.yml --path /internal_ip` \
+  --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca)
+
+# Log in to the Director
+$ bosh -e bosh-1 log-in
 ```
 
 To generate creds (without deploying anything) or just to check if your manifest builds:
 
 ```
-$ bosh interpolate ~/workspace/bosh-deployment/bosh.yml \
+$ bosh int ~/workspace/bosh-deployment/bosh.yml \
   --var-errs \
   --ops-file ~/workspace/bosh-deployment/use-aws.yml \
   --vars-store ./creds.yml \
