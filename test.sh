@@ -64,7 +64,6 @@ bosh interpolate bosh.yml --var-errs \
   -v internal_cidr=test \
   -v internal_gw=test \
   -v internal_ip=test \
-  -v service_account=test \
   -v gcp_credentials_json=test \
   -v project_id=test \
   -v zone=test \
@@ -81,7 +80,6 @@ bosh interpolate bosh.yml --var-errs \
   -v internal_cidr=test \
   -v internal_gw=test \
   -v internal_ip=test \
-  -v service_account=test \
   -v gcp_credentials_json=test \
   -v project_id=test \
   -v zone=test \
@@ -98,7 +96,6 @@ bosh interpolate bosh.yml --var-errs \
   -v internal_cidr=test \
   -v internal_gw=test \
   -v internal_ip=test \
-  -v service_account=test \
   -v gcp_credentials_json=test \
   -v project_id=test \
   -v zone=test \
