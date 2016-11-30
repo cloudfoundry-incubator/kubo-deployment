@@ -20,7 +20,6 @@
     machine_type: n1-standard-1
     root_disk_size_gb: 40
     root_disk_type: pd-standard
-    service_account: ((service_account))
 
 - type: replace
   path: /disk_pools/name=disks/cloud_properties?
