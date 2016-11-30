@@ -24,7 +24,7 @@ $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
   -v default_key_name=bosh \
   -v default_security_groups=[bosh] \
   -v subnet_id=subnet-... \
-  -v director_name=$(dirname $PWD) \
+  -v director_name=$(basename $PWD) \
   -v internal_cidr=10.0.0.0/24 \
   -v internal_gw=10.0.0.1 \
   -v internal_ip=10.0.0.6 \
