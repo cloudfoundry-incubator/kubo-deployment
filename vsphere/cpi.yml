@@ -40,8 +40,8 @@
   value: *cpi_job
 
 - type: replace
-  path: /instance_groups/name=bosh/properties/vsphere?
-  value: &vsphere
+  path: /instance_groups/name=bosh/properties/vcenter?
+  value: &vcenter
     address: ((vcenter_ip))
     user: ((vcenter_user))
     password: ((vcenter_password))
@@ -56,5 +56,5 @@
       - ((vcenter_cluster)): {}
 
 - type: replace
-  path: /cloud_provider/properties/vsphere?
-  value: *vsphere
+  path: /cloud_provider/properties/vcenter?
+  value: *vcenter
