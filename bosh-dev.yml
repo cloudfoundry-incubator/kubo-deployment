@@ -1,0 +1,49 @@
+# Use Director to deploy other Director for development
+
+# Networks are defined in cloud-config
+- type: remove
+  path: /networks
+
+# Use disk type instead of disk_pools
+- type: remove
+  path: /disk_pools
+
+- type: remove
+  path: /instance_groups/name=bosh/persistent_disk_pool
+
+- type: replace
+  path: /instance_groups/name=bosh/persistent_disk_type?
+  value: default
+
+# Use VM type / stemcell instead of resource_pools
+- type: remove
+  path: /resource_pools
+
+- type: remove
+  path: /instance_groups/name=bosh/resource_pool
+
+- type: replace
+  path: /instance_groups/name=bosh/vm_type?
+  value: default
+
+- type: replace
+  path: /stemcells?/-
+  value:
+    alias: default
+    os: ubuntu-trusty
+    version: 3312
+
+- type: replace
+  path: /instance_groups/name=bosh/stemcell?
+  value: default
+
+- type: replace
+  path: /instance_groups/name=bosh/azs?
+  value: [z1]
+
+# remove create-env specifics
+- type: remove
+  path: /cloud_provider
+
+- type: remove
+  path: /variables/name=mbus_bootstrap_password

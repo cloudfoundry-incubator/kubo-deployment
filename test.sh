@@ -47,6 +47,22 @@ bosh interpolate bosh.yml --var-errs \
   -v subnet_id=test \
   > /dev/null
 
+echo "- AWS with UAA for BOSH development"
+bosh interpolate bosh.yml --var-errs \
+  -o aws/cpi.yml \
+  -o uaa.yml \
+  -o bosh-dev.yml \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v director_name=test \
+  -v internal_ip=test \
+  -v access_key_id=test \
+  -v secret_access_key=test \
+  -v region=test \
+  -v default_key_name=test \
+  -v default_security_groups=[test] \
+  -v subnet_id=test \
+  > /dev/null
+
 echo "- AWS (cloud-config)"
 bosh interpolate aws/cloud-config.yml --var-errs \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
@@ -90,7 +106,7 @@ bosh interpolate bosh.yml --var-errs \
 echo "- GCP with BOSH Lite"
 bosh interpolate bosh.yml --var-errs \
   -o gcp/cpi.yml \
-  -o enable-bosh-lite.yml \
+  -o bosh-lite.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \

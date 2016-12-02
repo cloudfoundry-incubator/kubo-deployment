@@ -3,9 +3,10 @@
   value:
     name: uaa
     version: 22
-    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=22
-    sha1: b0cde773f90ade9db3d375e9a671163b7e1c48ae
+    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=24
+    sha1: d0feb5494153217f3d62b346f426ad2b2f43511a
 
+# Switch Director to use UAA
 - type: replace
   path: /instance_groups/name=bosh/properties/director/user_management/provider
   value: uaa
@@ -21,6 +22,7 @@
   path: /instance_groups/name=bosh/properties/director/user_management/uaa/public_key?
   value: ((uaa_jwt_signing_key.public_key))
 
+# Add UAA job
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
   value:
@@ -29,6 +31,11 @@
     properties:
       uaa:
         url: "https://((internal_ip)):8443"
+        sslPrivateKey: ((uaa_ssl.private_key))
+        sslCertificate: ((uaa_ssl.certificate))
+        jwt:
+          signing_key: ((uaa_jwt_signing_key.private_key))
+          verification_key: ((uaa_jwt_signing_key.public_key))
         scim:
           users:
           - name: admin
@@ -52,9 +59,10 @@
         admin: {client_secret: ((uaa_admin_client_secret))}
         login: {client_secret: ((uaa_login_client_secret))}
         zones: {internal: {hostnames: []}}
-        jwt:
-          signing_key: ((uaa_jwt_signing_key.private_key))
-          verification_key: ((uaa_jwt_signing_key.public_key))
+      login:
+        saml:
+          serviceProviderKey: ((uaa_service_provider_ssl.private_key))
+          serviceProviderCertificate: ((uaa_service_provider_ssl.certificate))
       uaadb:
         address: 127.0.0.1
         port: 5432
@@ -71,6 +79,7 @@
   path: /instance_groups/name=bosh/properties/postgres/additional_databases?/-
   value: uaa
 
+# Switch HM to use UAA
 - type: replace
   path: /instance_groups/name=bosh/properties/hm/director_account/client_id?
   value: hm
@@ -96,3 +105,23 @@
   value:
     name: uaa_login_client_secret
     type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_ssl
+    type: certificate
+    options:
+      ca: default_ca
+      common_name: ((internal_ip))
+      alternative_names: [((internal_ip))]
+
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_service_provider_ssl
+    type: certificate
+    options:
+      ca: default_ca
+      common_name: ((internal_ip))
+      alternative_names: [((internal_ip))]
