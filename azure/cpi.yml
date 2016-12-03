@@ -2,31 +2,27 @@
 - type: replace
   path: /releases/-
   value:
-    name: bosh-aws-cpi
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=60
-    sha1: 8e40a9ff892204007889037f094a1b0d23777058
+    name: bosh-azure-cpi
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-azure-cpi-release?v=20
+    sha1: fb0180c685714d064b5a467eb6f2b34388fadf0a
 
 - type: replace
   path: /resource_pools/name=vms/stemcell?
   value:
-    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3312
-    sha1: ea1d210b58a12d957d0b9b6a6cc538262ee4a924
+    url: https://bosh.io/d/stemcells/bosh-azure-hyperv-ubuntu-trusty-go_agent?v=3312
+    sha1: c9f4a630b9b0483fb6db4e589c3006049ae8c2c9
 
-# Configure AWS sizes
+# Configure sizes
 - type: replace
   path: /resource_pools/name=vms/cloud_properties?
   value:
-    instance_type: m3.xlarge
-    ephemeral_disk: {size: 25_000, type: gp2}
-    availability_zone: ((az))
-
-- type: replace
-  path: /disk_pools/name=disks/cloud_properties?
-  value: {type: gp2}
+    instance_type: Standard_D1
 
 - type: replace
   path: /networks/name=private/subnets/0/cloud_properties?
-  value: {subnet: ((subnet_id))}
+  value:
+    virtual_network_name: ((vnet_name))
+    subnet_name: ((subnet_name))
 
 # Enable registry job
 - type: replace
@@ -58,25 +54,30 @@
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
   value: &cpi_job
-    name: aws_cpi
-    release: bosh-aws-cpi
+    name: azure_cpi
+    release: bosh-azure-cpi
 
 - type: replace
   path: /instance_groups/name=bosh/properties/director/cpi_job?
-  value: aws_cpi
+  value: azure_cpi
 
 - type: replace
   path: /cloud_provider/template?
   value: *cpi_job
 
 - type: replace
-  path: /instance_groups/name=bosh/properties/aws?
-  value: &aws
-    access_key_id: ((access_key_id))
-    secret_access_key: ((secret_access_key))
-    default_key_name: ((default_key_name))
-    default_security_groups: ((default_security_groups))
-    region: ((region))
+  path: /instance_groups/name=bosh/properties/azure?
+  value: &cpi_conf
+    environment: AzureCloud
+    subscription_id: ((subscription_id))
+    tenant_id: ((tenant_id))
+    client_id: ((client_id))
+    client_secret: ((client_secret))
+    resource_group_name: ((resource_group_name))
+    storage_account_name: ((storage_account_name))
+    default_security_group: ((default_security_group))
+    ssh_user: vcap
+    ssh_public_key: ((ssh.public_key))
 
 - type: replace
   path: /cloud_provider/ssh_tunnel?
@@ -84,11 +85,17 @@
     host: ((internal_ip))
     port: 22
     user: vcap
-    private_key: ((private_key))
+    private_key: ((ssh.private_key))
 
 - type: replace
-  path: /cloud_provider/properties/aws?
-  value: *aws
+  path: /cloud_provider/properties/azure?
+  value: *cpi_conf
+
+- type: replace
+  path: /variables/-
+  value:
+    name: ssh
+    type: ssh
 
 - type: replace
   path: /variables/-

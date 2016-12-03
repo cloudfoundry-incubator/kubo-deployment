@@ -186,3 +186,22 @@ bosh interpolate vsphere/cloud-config.yml --var-errs \
   -v network_name=test \
   -v vcenter_cluster=test \
   > /dev/null
+
+echo "- Azure"
+bosh interpolate bosh.yml --var-errs \
+  -o azure/cpi.yml \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v director_name=test \
+  -v internal_cidr=test \
+  -v internal_gw=test \
+  -v internal_ip=test \
+  -v vnet_name=test \
+  -v subnet_name=test \
+  -v subscription_id=test \
+  -v tenant_id=test \
+  -v client_id=test \
+  -v client_secret=test \
+  -v resource_group_name=test \
+  -v storage_account_name=test \
+  -v default_security_group=test \
+  > /dev/null
