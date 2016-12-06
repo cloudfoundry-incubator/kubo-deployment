@@ -62,6 +62,7 @@
       login:
         saml:
           serviceProviderKey: ((uaa_service_provider_ssl.private_key))
+          serviceProviderKeyPassword: "" # TODO: Remove this when UAA defaults this value
           serviceProviderCertificate: ((uaa_service_provider_ssl.certificate))
       uaadb:
         address: 127.0.0.1
