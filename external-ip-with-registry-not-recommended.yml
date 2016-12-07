@@ -27,6 +27,10 @@
   value: https://mbus:((mbus_bootstrap_password))@((external_ip)):6868
 
 - type: replace
+  path: /cloud_provider/ssh_tunnel/host
+  value: ((external_ip))
+
+- type: replace
   path: /variables/name=director_ssl/options/alternative_names/-
   value: ((external_ip))
 
