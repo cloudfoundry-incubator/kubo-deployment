@@ -230,3 +230,26 @@ bosh interpolate bosh.yml \
   --var-errs \
   --var-errs-unused \
   > /dev/null
+
+echo "- VirtualBox with BOSH Lite"
+bosh interpolate bosh.yml \
+  -o virtualbox/cpi.yml \
+  -o bosh-lite.yml \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v director_name=vbox \
+  -v internal_ip=192.168.56.6 \
+  -v internal_gw=192.168.56.1 \
+  -v internal_cidr=192.168.56.0/24 \
+  -v network_name=vboxnet0 \
+  -v host_ip=172.20.10.4 \
+  -v host_username=test \
+  -v host_private_key=test \
+  --var-errs \
+  --var-errs-unused \
+  > /dev/null
+
+echo "- VirtualBox (cloud-config)"
+bosh interpolate virtualbox/cloud-config.yml \
+  --var-errs \
+  --var-errs-unused \
+  > /dev/null

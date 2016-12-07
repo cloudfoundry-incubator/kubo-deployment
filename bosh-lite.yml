@@ -57,6 +57,7 @@
   value:
     listen_network: tcp
     listen_address: 127.0.0.1:7777
+    debug_listen_address: 127.0.0.1:17013
     disk_quota_enabled: false
     allow_host_access: true
     destroy_containers_on_start: true # avoids snapshots
