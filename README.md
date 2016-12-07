@@ -1,6 +1,6 @@
 # bosh-deployment
 
-- Requires new [BOSH CLI v0.0.120+](https://github.com/cloudfoundry/bosh-cli)
+- Requires new [BOSH CLI v0.0.131+](https://github.com/cloudfoundry/bosh-cli)
 
 AWS:
 
@@ -28,7 +28,7 @@ $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
   -v internal_cidr=10.0.0.0/24 \
   -v internal_gw=10.0.0.1 \
   -v internal_ip=10.0.0.6 \
-  -v private_key=...
+  --var-file private_key=~/Downloads/bosh.pem
 
 # Alias deployed Director
 $ bosh alias-env bosh-1 \
