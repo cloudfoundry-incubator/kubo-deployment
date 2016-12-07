@@ -11,7 +11,7 @@ clean_tmp() {
 trap clean_tmp EXIT
 
 echo "- AWS"
-bosh interpolate bosh.yml --var-errs \
+bosh interpolate bosh.yml \
   -o aws/cpi.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
@@ -26,10 +26,12 @@ bosh interpolate bosh.yml --var-errs \
   -v default_security_groups=[test] \
   -v private_key=test \
   -v subnet_id=test \
+  --var-errs \
+  --var-errs-unused \
   > /dev/null
 
 echo "- AWS with UAA"
-bosh interpolate bosh.yml --var-errs \
+bosh interpolate bosh.yml \
   -o aws/cpi.yml \
   -o uaa.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
@@ -45,10 +47,12 @@ bosh interpolate bosh.yml --var-errs \
   -v default_security_groups=[test] \
   -v private_key=test \
   -v subnet_id=test \
+  --var-errs \
+  --var-errs-unused \
   > /dev/null
 
 echo "- AWS with UAA for BOSH development"
-bosh interpolate bosh.yml --var-errs \
+bosh interpolate bosh.yml \
   -o aws/cpi.yml \
   -o uaa.yml \
   -o bosh-dev.yml \
@@ -60,20 +64,23 @@ bosh interpolate bosh.yml --var-errs \
   -v region=test \
   -v default_key_name=test \
   -v default_security_groups=[test] \
-  -v subnet_id=test \
+  --var-errs \
+  --var-errs-unused \
   > /dev/null
 
 echo "- AWS (cloud-config)"
-bosh interpolate aws/cloud-config.yml --var-errs \
+bosh interpolate aws/cloud-config.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v internal_cidr=test \
   -v internal_gw=test \
   -v az=test \
   -v subnet_id=test \
+  --var-errs \
+  --var-errs-unused \
   > /dev/null
 
 echo "- GCP"
-bosh interpolate bosh.yml --var-errs \
+bosh interpolate bosh.yml \
   -o gcp/cpi.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
@@ -85,10 +92,12 @@ bosh interpolate bosh.yml --var-errs \
   -v zone=test \
   -v network=test \
   -v subnetwork=test \
+  --var-errs \
+  --var-errs-unused \
   > /dev/null
 
 echo "- GCP with UAA"
-bosh interpolate bosh.yml --var-errs \
+bosh interpolate bosh.yml \
   -o gcp/cpi.yml \
   -o uaa.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
@@ -101,10 +110,12 @@ bosh interpolate bosh.yml --var-errs \
   -v zone=test \
   -v network=test \
   -v subnetwork=test \
+  --var-errs \
+  --var-errs-unused \
   > /dev/null
 
 echo "- GCP with BOSH Lite"
-bosh interpolate bosh.yml --var-errs \
+bosh interpolate bosh.yml \
   -o gcp/cpi.yml \
   -o bosh-lite.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
@@ -117,20 +128,24 @@ bosh interpolate bosh.yml --var-errs \
   -v zone=test \
   -v network=test \
   -v subnetwork=test \
+  --var-errs \
+  --var-errs-unused \
   > /dev/null
 
 echo "- GCP (cloud-config)"
-bosh interpolate gcp/cloud-config.yml --var-errs \
+bosh interpolate gcp/cloud-config.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v internal_cidr=test \
   -v internal_gw=test \
   -v zone=test \
   -v network=test \
   -v subnetwork=test \
+  --var-errs \
+  --var-errs-unused \
   > /dev/null
 
 echo "- Openstack"
-bosh interpolate bosh.yml --var-errs \
+bosh interpolate bosh.yml \
   -o openstack/cpi.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
@@ -147,19 +162,23 @@ bosh interpolate bosh.yml --var-errs \
   -v private_key=test \
   -v region=test \
   -v tenant=test \
+  --var-errs \
+  --var-errs-unused \
   > /dev/null
 
 echo "- Openstack (cloud-config)"
-bosh interpolate openstack/cloud-config.yml --var-errs \
+bosh interpolate openstack/cloud-config.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v internal_cidr=test \
   -v internal_gw=test \
   -v az=test \
   -v net_id=test \
+  --var-errs \
+  --var-errs-unused \
   > /dev/null
 
 echo "- vSphere"
-bosh interpolate bosh.yml --var-errs \
+bosh interpolate bosh.yml \
   -o vsphere/cpi.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
@@ -176,19 +195,23 @@ bosh interpolate bosh.yml --var-errs \
   -v vcenter_vms=test \
   -v vcenter_disks=test \
   -v vcenter_cluster=test \
+  --var-errs \
+  --var-errs-unused \
   > /dev/null
 
 echo "- vSphere (cloud-config)"
-bosh interpolate vsphere/cloud-config.yml --var-errs \
+bosh interpolate vsphere/cloud-config.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v internal_cidr=test \
   -v internal_gw=test \
   -v network_name=test \
   -v vcenter_cluster=test \
+  --var-errs \
+  --var-errs-unused \
   > /dev/null
 
 echo "- Azure"
-bosh interpolate bosh.yml --var-errs \
+bosh interpolate bosh.yml \
   -o azure/cpi.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
@@ -204,4 +227,6 @@ bosh interpolate bosh.yml --var-errs \
   -v resource_group_name=test \
   -v storage_account_name=test \
   -v default_security_group=test \
+  --var-errs \
+  --var-errs-unused \
   > /dev/null
