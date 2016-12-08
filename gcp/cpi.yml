@@ -3,6 +3,7 @@
   path: /releases/-
   value:
     name: bosh-google-cpi
+    version: 25.6.1
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-google-cpi-release?v=25.6.1
     sha1: fc8c7025c3ba3aef66e005a4bdf7fd3d5e997974
 
@@ -26,7 +27,7 @@
   value: {type: pd-standard}
 
 - type: replace
-  path: /networks/name=private/subnets/0/cloud_properties?
+  path: /networks/name=default/subnets/0/cloud_properties?
   value:
     network_name: ((network))
     subnetwork_name: ((subnetwork))

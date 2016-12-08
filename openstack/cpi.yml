@@ -3,6 +3,7 @@
   path: /releases/-
   value:
     name: bosh-openstack-cpi
+    version: 27
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-openstack-cpi-release?v=27
     sha1: 85e6244978f775c888bbd303b874a2c158eb43c4
 
@@ -20,7 +21,7 @@
     availability_zone: ((az))
 
 - type: replace
-  path: /networks/name=private/subnets/0/cloud_properties?
+  path: /networks/name=default/subnets/0/cloud_properties?
   value: {net_id: ((net_id))}
 
 # Enable registry job

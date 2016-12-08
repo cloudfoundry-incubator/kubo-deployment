@@ -41,6 +41,14 @@
   path: /instance_groups/name=bosh/azs?
   value: [z1]
 
+- type: replace
+  path: /update?
+  value:
+    canaries: 0
+    max_in_flight: 1
+    canary_watch_time: 30000-90000
+    update_watch_time: 30000-90000
+
 # remove create-env specifics
 - type: remove
   path: /cloud_provider

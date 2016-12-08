@@ -10,14 +10,14 @@ releases:
 
 resource_pools:
 - name: vms
-  network: private
+  network: default
 
 disk_pools:
 - name: disks
   disk_size: 32_768
 
 networks:
-- name: private
+- name: default
   type: manual
   subnets:
   - range: ((internal_cidr))
@@ -37,7 +37,7 @@ instance_groups:
   resource_pool: vms
   persistent_disk_pool: disks
   networks:
-  - name: private
+  - name: default
     static_ips: [((internal_ip))]
   properties:
     nats:

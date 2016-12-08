@@ -2,7 +2,7 @@
   path: /releases/-
   value:
     name: uaa
-    version: 22
+    version: 24
     url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=24
     sha1: d0feb5494153217f3d62b346f426ad2b2f43511a
 

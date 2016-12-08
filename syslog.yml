@@ -2,6 +2,7 @@
   path: /releases/-
   value:
     name: syslog
+    version: 7
     url: https://bosh.io/d/github.com/cloudfoundry/syslog-release?v=7
     sha1: 7aca1a3633f12cc5ce760812959e62b6e51b8641
 
