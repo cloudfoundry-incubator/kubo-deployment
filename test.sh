@@ -248,8 +248,8 @@ bosh interpolate bosh.yml \
   --var-errs-unused \
   > /dev/null
 
-echo "- VirtualBox (cloud-config)"
-bosh interpolate virtualbox/cloud-config.yml \
+echo "- Warden (cloud-config)"
+bosh interpolate warden/cloud-config.yml \
   --var-errs \
   --var-errs-unused \
   > /dev/null
