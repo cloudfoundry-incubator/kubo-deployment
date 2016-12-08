@@ -45,6 +45,7 @@
     username: registry
     password: ((registry_password))
     port: 25777
+    endpoint: http://registry:((registry_password))@((internal_ip)):25777
 
 # Add CPI job
 - type: replace
@@ -67,10 +68,12 @@
     auth_url: ((auth_url))
     username: ((openstack_username))
     api_key: ((openstack_password))
-    tenant: ((tenant))
+    domain: ((openstack_domain))
+    project: ((openstack_project))
     region: ((region))
     default_key_name: ((default_key_name))
     default_security_groups: ((default_security_groups))
+    human_readable_vm_names: true
 
 - type: replace
   path: /cloud_provider/ssh_tunnel?
