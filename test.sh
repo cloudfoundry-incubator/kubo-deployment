@@ -159,9 +159,10 @@ bosh interpolate bosh.yml \
   -v net_id=test \
   -v openstack_password=test \
   -v openstack_username=test \
+  -v openstack_domain=test \
+  -v openstack_project=test \
   -v private_key=test \
   -v region=test \
-  -v tenant=test \
   --var-errs \
   --var-errs-unused \
   > /dev/null
@@ -241,9 +242,6 @@ bosh interpolate bosh.yml \
   -v internal_gw=192.168.56.1 \
   -v internal_cidr=192.168.56.0/24 \
   -v network_name=vboxnet0 \
-  -v host_ip=172.20.10.4 \
-  -v host_username=test \
-  -v host_private_key=test \
   --var-errs \
   --var-errs-unused \
   > /dev/null
