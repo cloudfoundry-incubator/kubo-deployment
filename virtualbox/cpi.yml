@@ -33,10 +33,6 @@
     name: virtualbox_cpi
     release: bosh-virtualbox-cpi
     properties:
-      host: ((host_ip))
-      username: ((host_username))
-      private_key: ((host_private_key))
-
       # todo remove once cpi dont know about these
       agent:
         mbus: nats://nats:((nats_password))@((internal_ip)):4222
@@ -63,16 +59,3 @@
   value:
     name: virtualbox_cpi
     release: bosh-virtualbox-cpi
-
-# Configure CPI for create-env
-- type: replace
-  path: /cloud_provider/properties/host?
-  value: ((host_ip))
-
-- type: replace
-  path: /cloud_provider/properties/username?
-  value: ((host_username))
-
-- type: replace
-  path: /cloud_provider/properties/private_key?
-  value: ((host_private_key))
