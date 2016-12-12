@@ -3,9 +3,9 @@
   path: /releases/-
   value:
     name: bosh-virtualbox-cpi
-    version: 0.0.2
-    url: https://bosh.io/d/github.com/cppforlife/bosh-virtualbox-cpi-release?v=0.0.2
-    sha1: 807fba203ca71bea7b686ce1301d98ee29885fcc
+    version: 0.0.3
+    url: https://bosh.io/d/github.com/cppforlife/bosh-virtualbox-cpi-release?v=0.0.3
+    sha1: f3d2c4d6e8cb5a7cd2c5c6e2a766de74c9b399ce
 
 - type: replace
   path: /resource_pools/name=vms/stemcell?
