@@ -1,6 +1,6 @@
 # bosh-deployment
 
-- Requires new [BOSH CLI v0.0.131+](https://github.com/cloudfoundry/bosh-cli)
+- Requires new [BOSH CLI v0.0.140+](https://github.com/cloudfoundry/bosh-cli)
 
 AWS:
 
@@ -36,8 +36,8 @@ $ bosh alias-env bosh-1 \
   --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca)
 
 # Log in to the Director
-$ export BOSH_USER=admin
-$ export BOSH_PASSWORD=`bosh int ./creds.yml --path /admin_password`
+$ export BOSH_CLIENT=admin
+$ export BOSH_CLIENT_SECRET=`bosh int ./creds.yml --path /admin_password`
 
 # Update cloud config -- single az
 $ bosh -e bosh-1 update-cloud-config ~/workspace/bosh-deployment/aws/cloud-config.yml -l ./creds.yml
