@@ -11,6 +11,9 @@ releases:
 resource_pools:
 - name: vms
   network: default
+  env:
+    bosh:
+      password: '*'
 
 disk_pools:
 - name: disks
