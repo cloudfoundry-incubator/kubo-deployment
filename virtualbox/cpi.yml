@@ -43,9 +43,6 @@
         address: ((internal_ip))
         port: 25250
         provider: dav
-        director:
-          user: director
-          password: ((blobstore_director_password))
         agent:
           user: agent
           password: ((blobstore_agent_password))
