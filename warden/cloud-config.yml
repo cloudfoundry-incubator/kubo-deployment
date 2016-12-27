@@ -1,6 +1,7 @@
 azs:
 - name: z1
 - name: z2
+- name: z3
 
 vm_types:
 - name: default
@@ -13,7 +14,7 @@ networks:
 - name: default
   type: manual
   subnets:
-  - azs: [z1, z2]
+  - azs: [z1, z2, z3]
     range: 10.244.0.0/24
     gateway: 10.244.0.1
     static: [10.244.0.34]
