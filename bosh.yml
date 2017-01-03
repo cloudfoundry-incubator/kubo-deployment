@@ -93,8 +93,10 @@ instance_groups:
         ca_cert: ((director_ssl.ca))
       resurrector_enabled: true
     ntp: &ntp
-    - 0.pool.ntp.org
-    - 1.pool.ntp.org
+    - time1.google.com
+    - time2.google.com
+    - time3.google.com
+    - time4.google.com
     agent:
       mbus: nats://nats:((nats_password))@((internal_ip)):4222
 
