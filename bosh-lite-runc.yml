@@ -1,0 +1,24 @@
+- type: remove
+  path: /releases/name=garden-linux
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=garden/release
+  value: garden-runc
+
+- type: replace
+  path: /releases/-
+  value:
+    name: garden-runc
+    version: 1.0.4
+    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.0.4
+    sha1: ef218cc8cc2ea5a874a59becabdf957e52976939
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/garden
+  value:
+    listen_network: tcp
+    listen_address: 127.0.0.1:7777
+    debug_listen_address: 127.0.0.1:17013
+    allow_host_access: true
+    destroy_containers_on_start: true # avoids snapshots
+    default_container_grace_time: 0

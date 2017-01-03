@@ -268,6 +268,21 @@ bosh interpolate bosh.yml \
   --var-errs-unused \
   > /dev/null
 
+echo "- VirtualBox with BOSH Lite with garden-runc"
+bosh interpolate bosh.yml \
+  -o virtualbox/cpi.yml \
+  -o bosh-lite.yml \
+  -o bosh-lite-runc.yml \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v director_name=vbox \
+  -v internal_ip=192.168.56.6 \
+  -v internal_gw=192.168.56.1 \
+  -v internal_cidr=192.168.56.0/24 \
+  -v network_name=vboxnet0 \
+  --var-errs \
+  --var-errs-unused \
+  > /dev/null
+
 echo "- Warden (cloud-config)"
 bosh interpolate warden/cloud-config.yml \
   --var-errs \
