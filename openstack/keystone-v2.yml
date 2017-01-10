@@ -7,16 +7,15 @@
 
 - type: replace
   path: /instance_groups/name=bosh/properties/openstack/tenant?
-  value: ((tenant))
+  value: ((openstack_tenant))
 
 # Inside cloud_provider
 - type: remove
   path: /cloud_provider/properties/openstack/project
-  value: ((project))
 
 - type: remove
   path: /cloud_provider/properties/openstack/domain
-  value: ((domain))
 
 - type: replace
   path: /cloud_provider/properties/openstack/tenant?
+  value: ((openstack_tenant))
