@@ -112,6 +112,7 @@ bosh interpolate bosh.yml \
   -v gcp_credentials_json=test \
   -v project_id=test \
   -v zone=test \
+  -v tags=[internal,no-ip] \
   -v network=test \
   -v subnetwork=test \
   --var-errs \
@@ -130,6 +131,7 @@ bosh interpolate bosh.yml \
   -v gcp_credentials_json=test \
   -v project_id=test \
   -v zone=test \
+  -v tags=[internal,no-ip] \
   -v network=test \
   -v subnetwork=test \
   --var-errs \
@@ -148,6 +150,7 @@ bosh interpolate bosh.yml \
   -v gcp_credentials_json=test \
   -v project_id=test \
   -v zone=test \
+  -v tags=[internal,no-ip] \
   -v network=test \
   -v subnetwork=test \
   --var-errs \
