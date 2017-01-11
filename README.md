@@ -2,7 +2,10 @@
 
 - Requires new [BOSH CLI v0.0.146+](https://github.com/cloudfoundry/bosh-cli)
 
-AWS:
+Sample installation instructions:
+
+* [BOSH Lite on VirtualBox](docs/bosh-lite-on-vbox.md)
+* AWS (below)
 
 ```
 $ git clone https://github.com/cloudfoundry/bosh-deployment ~/workspace/bosh-deployment
