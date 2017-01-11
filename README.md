@@ -1,21 +1,21 @@
 # bosh-deployment
 
-- Requires new [BOSH CLI v0.0.140+](https://github.com/cloudfoundry/bosh-cli)
+- Requires new [BOSH CLI v0.0.146+](https://github.com/cloudfoundry/bosh-cli)
 
 AWS:
 
 ```
-$ cd ~/workspace
-
-$ git clone https://github.com/cloudfoundry/bosh-deployment
+$ git clone https://github.com/cloudfoundry/bosh-deployment ~/workspace/bosh-deployment
 
 # Create a directory to keep Director deployment
-$ mkdir bosh-1 && cd bosh-1
+$ mkdir -p ~/deployments/bosh-1
+
+$ cd ~/deployments/bosh-1
 
 # Deploy a Director -- ./creds.yml is generated automatically
 $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
   --state ./state.json \
-  --ops-file ~/workspace/bosh-deployment/aws/cpi.yml \
+  -o ~/workspace/bosh-deployment/aws/cpi.yml \
   --vars-store ./creds.yml \
   -v access_key_id=... \
   -v secret_access_key=... \
@@ -24,16 +24,14 @@ $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
   -v default_key_name=bosh \
   -v default_security_groups=[bosh] \
   -v subnet_id=subnet-... \
-  -v director_name=$(basename $PWD) \
+  -v director_name=bosh-1 \
   -v internal_cidr=10.0.0.0/24 \
   -v internal_gw=10.0.0.1 \
   -v internal_ip=10.0.0.6 \
   --var-file private_key=~/Downloads/bosh.pem
 
 # Alias deployed Director
-$ bosh alias-env bosh-1 \
-  -e `bosh int ./creds.yml --path /internal_ip` \
-  --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca)
+$ bosh alias-env bosh-1 -e 10.0.0.6 --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca)
 
 # Log in to the Director
 $ export BOSH_CLIENT=admin
@@ -54,7 +52,7 @@ To generate creds (without deploying anything) or just to check if your manifest
 ```
 $ bosh int ~/workspace/bosh-deployment/bosh.yml \
   --var-errs \
-  --ops-file ~/workspace/bosh-deployment/aws/cpi.yml \
+  -o ~/workspace/bosh-deployment/aws/cpi.yml \
   --vars-store ./creds.yml \
   -v access_key_id=... \
   -v secret_access_key=...
