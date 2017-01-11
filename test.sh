@@ -276,6 +276,7 @@ bosh interpolate bosh.yml \
   -o virtualbox/cpi.yml \
   -o bosh-lite.yml \
   -o bosh-lite-runc.yml \
+  -o jumpbox-user.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=vbox \
   -v internal_ip=192.168.56.6 \
