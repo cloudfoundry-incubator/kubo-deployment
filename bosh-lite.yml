@@ -45,6 +45,10 @@
   value: warden_cpi
 
 - type: replace
+  path: /instance_groups/name=bosh/properties/director/ignore_missing_gateway?
+  value: true
+
+- type: replace
   path: /instance_groups/name=bosh/properties/compiled_package_cache?
   value:
     provider: local
