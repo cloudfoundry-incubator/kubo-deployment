@@ -50,8 +50,6 @@
     $ export BOSH_CLIENT_SECRET=`bosh int ./creds.yml --path /admin_password`
     ```
 
-1. Continue using Director to install other software.
-
 1. Upload BOSH Lite stemcell
 
     ```
