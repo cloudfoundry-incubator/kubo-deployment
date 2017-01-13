@@ -165,6 +165,7 @@ bosh interpolate gcp/cloud-config.yml \
   -v zone=test \
   -v network=test \
   -v subnetwork=test \
+  -v tags=[tag] \
   --var-errs \
   --var-errs-unused \
   > /dev/null
