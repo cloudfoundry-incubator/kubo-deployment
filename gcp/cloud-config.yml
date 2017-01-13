@@ -36,7 +36,7 @@ networks:
       network_name: ((network))
       subnetwork_name: ((subnetwork))
       ephemeral_external_ip: true
-      tags: [internal, no-ip]
+      tags: ((tags))
 - name: vip
   type: vip
 
