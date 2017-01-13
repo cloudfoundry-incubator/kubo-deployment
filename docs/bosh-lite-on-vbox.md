@@ -1,6 +1,6 @@
 ## BOSH Lite on VirtualBox
 
-1. Make sure your machine has at least 8GB RAM, and 100GB free disk space. Smaller configurations may work.
+1. Check that your machine has at least 8GB RAM, and 100GB free disk space. Smaller configurations may work.
 
 1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 
@@ -21,7 +21,11 @@
     $ mkdir -p ~/deployments/vbox
 
     $ cd ~/deployments/vbox
+    ```
 
+    Below command assumes that you have configured Host-only network 'vboxnet0' with 192.168.50.0/24 ([details](https://github.com/cppforlife/bosh-virtualbox-cpi-release/blob/master/docs/networks-host-only.md)) and NAT network 'NatNetwork' with DHCP enabled ([details](https://github.com/cppforlife/bosh-virtualbox-cpi-release/blob/master/docs/networks-nat-network.md)).
+
+    ```
     $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
       --state ./state.json \
       -o ~/workspace/bosh-deployment/virtualbox/cpi.yml \
@@ -38,8 +42,6 @@
       -v outbound_network_name=NatNetwork
     ```
 
-    Note: Above assumes that you have configured Host-only network 'vboxnet0' with 192.168.50.0/24 and NAT network 'NatNetwork' with DHCP enabled.
-
 1. Alias and log into the Director
 
     ```
@@ -49,3 +51,15 @@
     ```
 
 1. Continue using Director to install other software.
+
+1. Upload BOSH Lite stemcell
+
+    ```
+    $ bosh -e vbox upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
+    ```
+
+1. Deploy example deployment
+
+    ```
+    $ bosh -e vbox -d zookeeper deploy <(wget -O- https://raw.githubusercontent.com/cppforlife/zookeeper-release/master/manifests/zookeeper.yml)
+    ```
