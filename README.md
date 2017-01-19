@@ -41,7 +41,11 @@ $ export BOSH_CLIENT=admin
 $ export BOSH_CLIENT_SECRET=`bosh int ./creds.yml --path /admin_password`
 
 # Update cloud config -- single az
-$ bosh -e bosh-1 update-cloud-config ~/workspace/bosh-deployment/aws/cloud-config.yml -l ./creds.yml
+$ bosh -e bosh-1 update-cloud-config ~/workspace/bosh-deployment/aws/cloud-config.yml \
+  -v az=us-east-1b \
+  -v subnet_id=subnet-... \
+  -v internal_cidr=10.0.0.0/24 \
+  -v internal_gw=10.0.0.1
 
 # Upload specific stemcell
 $ bosh -e bosh-1 upload-stemcell https://...
