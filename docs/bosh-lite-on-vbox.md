@@ -56,6 +56,12 @@
     $ bosh -e vbox upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
     ```
 
+1. Update cloud config
+
+    ```
+    $ bosh -e vbox update-cloud-config ~/workspace/bosh-deployment/warden/cloud-config.yml
+    ```
+
 1. Deploy example deployment
 
     ```
