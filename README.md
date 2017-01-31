@@ -34,7 +34,7 @@ $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
   --var-file private_key=~/Downloads/bosh.pem
 
 # Alias deployed Director
-$ bosh alias-env bosh-1 -e 10.0.0.6 --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca)
+$ bosh -e 10.0.0.6 --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca) alias-env bosh-1 
 
 # Log in to the Director
 $ export BOSH_CLIENT=admin
