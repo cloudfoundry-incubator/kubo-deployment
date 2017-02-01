@@ -5,14 +5,22 @@ set -eu
 vars_store_prefix=/tmp/bosh-deployment-test
 
 clean_tmp() {
+  rm -f $vars_store_prefix
   rm -f ${vars_store_prefix}.*
 }
 
 trap clean_tmp EXIT
 
+# Only used for tests below. Ignore it.
+function bosh() {
+  shift 1
+  command bosh int --var-errs --var-errs-unused ${@//--state=*/} > /dev/null
+}
+
 echo "- AWS"
-bosh interpolate bosh.yml \
+bosh create-env bosh.yml \
   -o aws/cpi.yml \
+  --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \
@@ -25,15 +33,13 @@ bosh interpolate bosh.yml \
   -v default_key_name=test \
   -v default_security_groups=[test] \
   -v private_key=test \
-  -v subnet_id=test \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v subnet_id=test
 
 echo "- AWS with UAA"
-bosh interpolate bosh.yml \
+bosh create-env bosh.yml \
   -o aws/cpi.yml \
   -o uaa.yml \
+  --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \
@@ -46,16 +52,14 @@ bosh interpolate bosh.yml \
   -v default_key_name=test \
   -v default_security_groups=[test] \
   -v private_key=test \
-  -v subnet_id=test \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v subnet_id=test
 
 echo "- AWS with UAA + config-server"
-bosh interpolate bosh.yml \
+bosh create-env bosh.yml \
   -o aws/cpi.yml \
   -o uaa.yml \
   -o config-server.yml \
+  --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \
@@ -68,10 +72,7 @@ bosh interpolate bosh.yml \
   -v default_key_name=test \
   -v default_security_groups=[test] \
   -v private_key=test \
-  -v subnet_id=test \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v subnet_id=test
 
 echo "- AWS with UAA for BOSH development"
 bosh interpolate bosh.yml \
@@ -85,25 +86,19 @@ bosh interpolate bosh.yml \
   -v secret_access_key=test \
   -v region=test \
   -v default_key_name=test \
-  -v default_security_groups=[test] \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v default_security_groups=[test]
 
 echo "- AWS (cloud-config)"
-bosh interpolate aws/cloud-config.yml \
-  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+bosh update-cloud-config aws/cloud-config.yml \
   -v internal_cidr=test \
   -v internal_gw=test \
   -v az=test \
-  -v subnet_id=test \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v subnet_id=test
 
 echo "- GCP"
-bosh interpolate bosh.yml \
+bosh create-env bosh.yml \
   -o gcp/cpi.yml \
+  --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \
@@ -114,15 +109,13 @@ bosh interpolate bosh.yml \
   -v zone=test \
   -v tags=[internal,no-ip] \
   -v network=test \
-  -v subnetwork=test \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v subnetwork=test
 
 echo "- GCP with UAA"
-bosh interpolate bosh.yml \
+bosh create-env bosh.yml \
   -o gcp/cpi.yml \
   -o uaa.yml \
+  --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \
@@ -133,15 +126,13 @@ bosh interpolate bosh.yml \
   -v zone=test \
   -v tags=[internal,no-ip] \
   -v network=test \
-  -v subnetwork=test \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v subnetwork=test
 
 echo "- GCP with BOSH Lite"
-bosh interpolate bosh.yml \
+bosh create-env bosh.yml \
   -o gcp/cpi.yml \
   -o bosh-lite.yml \
+  --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \
@@ -152,27 +143,21 @@ bosh interpolate bosh.yml \
   -v zone=test \
   -v tags=[internal,no-ip] \
   -v network=test \
-  -v subnetwork=test \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v subnetwork=test
 
 echo "- GCP (cloud-config)"
-bosh interpolate gcp/cloud-config.yml \
-  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+bosh update-cloud-config gcp/cloud-config.yml \
   -v internal_cidr=test \
   -v internal_gw=test \
   -v zone=test \
   -v network=test \
   -v subnetwork=test \
-  -v tags=[tag] \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v tags=[tag]
 
 echo "- Openstack"
-bosh interpolate bosh.yml \
+bosh create-env bosh.yml \
   -o openstack/cpi.yml \
+  --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \
@@ -188,25 +173,19 @@ bosh interpolate bosh.yml \
   -v openstack_domain=test \
   -v openstack_project=test \
   -v private_key=test \
-  -v region=test \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v region=test
 
 echo "- Openstack (cloud-config)"
-bosh interpolate openstack/cloud-config.yml \
-  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+bosh update-cloud-config openstack/cloud-config.yml \
   -v internal_cidr=test \
   -v internal_gw=test \
   -v az=test \
-  -v net_id=test \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v net_id=test
 
 echo "- vSphere"
-bosh interpolate bosh.yml \
+bosh create-env bosh.yml \
   -o vsphere/cpi.yml \
+  --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \
@@ -221,25 +200,19 @@ bosh interpolate bosh.yml \
   -v vcenter_templates=test \
   -v vcenter_vms=test \
   -v vcenter_disks=test \
-  -v vcenter_cluster=test \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v vcenter_cluster=test
 
 echo "- vSphere (cloud-config)"
-bosh interpolate vsphere/cloud-config.yml \
-  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+bosh update-cloud-config vsphere/cloud-config.yml \
   -v internal_cidr=test \
   -v internal_gw=test \
   -v network_name=test \
-  -v vcenter_cluster=test \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v vcenter_cluster=test
 
 echo "- Azure"
-bosh interpolate bosh.yml \
+bosh create-env bosh.yml \
   -o azure/cpi.yml \
+  --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \
@@ -253,43 +226,33 @@ bosh interpolate bosh.yml \
   -v client_secret=test \
   -v resource_group_name=test \
   -v storage_account_name=test \
-  -v default_security_group=test \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v default_security_group=test
 
 echo "- VirtualBox with BOSH Lite"
-bosh interpolate bosh.yml \
+bosh create-env bosh.yml \
   -o virtualbox/cpi.yml \
   -o bosh-lite.yml \
+  --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=vbox \
   -v internal_ip=192.168.56.6 \
   -v internal_gw=192.168.56.1 \
   -v internal_cidr=192.168.56.0/24 \
-  -v network_name=vboxnet0 \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v network_name=vboxnet0
 
 echo "- VirtualBox with BOSH Lite with garden-runc"
-bosh interpolate bosh.yml \
+bosh create-env bosh.yml \
   -o virtualbox/cpi.yml \
   -o bosh-lite.yml \
   -o bosh-lite-runc.yml \
   -o jumpbox-user.yml \
+  --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=vbox \
   -v internal_ip=192.168.56.6 \
   -v internal_gw=192.168.56.1 \
   -v internal_cidr=192.168.56.0/24 \
-  -v network_name=vboxnet0 \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+  -v network_name=vboxnet0
 
 echo "- Warden (cloud-config)"
-bosh interpolate warden/cloud-config.yml \
-  --var-errs \
-  --var-errs-unused \
-  > /dev/null
+bosh update-cloud-config warden/cloud-config.yml
