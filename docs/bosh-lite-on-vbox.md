@@ -67,3 +67,11 @@
     ```
     $ bosh -e vbox -d zookeeper deploy <(wget -O- https://raw.githubusercontent.com/cppforlife/zookeeper-release/master/manifests/zookeeper.yml)
     ```
+
+1. Optionally, set up a local route for `bosh ssh` command
+
+    ```
+    $ sudo route add -net 10.244.0.0/16    192.168.50.6 # Mac OS X
+    $ sudo route add -net 10.244.0.0/16 gw 192.168.50.6 # Linux
+    $ route add           10.244.0.0/16    192.168.50.6 # Windows
+    ```
