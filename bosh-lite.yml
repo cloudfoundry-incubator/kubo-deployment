@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: bosh-warden-cpi
-    version: 32
-    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-warden-cpi-32-ubuntu-trusty-3312.15-20170123-224748-672445827-20170123224752.tgz?versionId=RsHf.iuJJbd9a_mOgA4F2kNSxPoAj2LN
-    sha1: c6cfc83e1d68940dae108b68c41ba8f6078d31f2
+    version: 34
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-warden-cpi-34-ubuntu-trusty-3312.15-20170201-081004-654654371-20170201081008.tgz?versionId=uO9gUrQL0tF.i_9OFwi53U9CpVdsm8Rf
+    sha1: 53642f8485b3b601ac163f8ca07c7dc5dfb11531
 
 - type: replace
   path: /releases/-
