@@ -23,7 +23,7 @@
     $ cd ~/deployments/vbox
     ```
 
-    Below command will try automatically create Host-only network 'vboxnet0' with 192.168.50.0/24 ([details](https://github.com/cppforlife/bosh-virtualbox-cpi-release/blob/master/docs/networks-host-only.md)) and NAT network 'NatNetwork' with DHCP enabled ([details](https://github.com/cppforlife/bosh-virtualbox-cpi-release/blob/master/docs/networks-nat-network.md)).
+    Below command will try automatically create/enable Host-only network 'vboxnet0' with 192.168.50.0/24 ([details](https://github.com/cppforlife/bosh-virtualbox-cpi-release/blob/master/docs/networks-host-only.md)) and NAT network 'NatNetwork' with DHCP enabled ([details](https://github.com/cppforlife/bosh-virtualbox-cpi-release/blob/master/docs/networks-nat-network.md)).
 
     ```
     $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
