@@ -41,7 +41,7 @@
   value:
     enabled: true
     url: "https://((internal_ip)):8844/api/"
-    ca_cert: ((credhub-tls.ca))
+    ca_cert: ((credhub_tls.ca))
     uaa:
       url: "https://((internal_ip)):8443"
       ca_cert: ((uaa_ssl.ca))
@@ -57,7 +57,7 @@
     scope: ""
     authorities: credhub.read,credhub.write
     access-token-validity: 3600
-    secret: ((uaa-clients-director-to-credhub))
+    secret: ((uaa_clients_director_to_credhub))
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/credhub?
@@ -65,7 +65,7 @@
     override: true
     authorized-grant-types: password,refresh_token
     scope: credhub.read,credhub.write
-    authorities: uaa.resource 
+    authorities: ""
     access-token-validity: 60
     refresh-token-validity: 1800
     secret: ""
@@ -74,7 +74,7 @@
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users?/-
   value:
     name: credhub-cli
-    password: ((credhub-cli-password))
+    password: ((credhub_cli_password))
     groups: 
     - credhub.read
     - credhub.write
@@ -87,7 +87,7 @@
 - type: replace
   path: /variables/-
   value:
-    name: credhub-tls
+    name: credhub_tls
     type: certificate
     options:
       ca: default_ca
@@ -97,11 +97,11 @@
 - type: replace
   path: /variables/-
   value:
-    name: uaa-clients-director-to-credhub
+    name: uaa_clients_director_to_credhub
     type: password
 
 - type: replace
   path: /variables/-
   value:
-    name: credhub-cli-password
+    name: credhub_cli_password
     type: password
