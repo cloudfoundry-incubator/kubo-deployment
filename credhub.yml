@@ -25,7 +25,7 @@
           username: postgres
           password: ((postgres_password))
           database: credhub
-        tls: ((credhub-tls))
+        tls: ((credhub_tls))
         log_level: info
         encryption:
           provider: dev_internal
