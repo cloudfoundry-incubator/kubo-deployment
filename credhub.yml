@@ -1,0 +1,107 @@
+# Update with local file location
+- type: replace
+  path: /releases/-
+  value:
+    name: credhub
+    url: file:///tmp/credhub-0.3.1.tgz
+
+# Update dev_key with chosen value
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: credhub
+    release: credhub
+    properties:
+      credhub: 
+        port: 8844
+        user_management:
+          uaa:
+            url: "https://((internal_ip)):8443"
+            verification_key: ((uaa_jwt_signing_key.public_key))
+        data_storage:
+          type: postgres
+          host: 127.0.0.1
+          port: 5432
+          username: postgres
+          password: ((postgres_password))
+          database: credhub
+        tls: ((credhub-tls))
+        log_level: info
+        encryption:
+          provider: dev_internal
+          dev_key: ABCDEF0123456789ABCDEF0123456789 #Replace with chosen value - 32 hex characters 
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/postgres/additional_databases?/-
+  value: credhub
+
+# Configure Director
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/config_server?
+  value:
+    enabled: true
+    url: "https://((internal_ip)):8844/api/"
+    ca_cert: ((credhub-tls.ca))
+    uaa:
+      url: "https://((internal_ip)):8443"
+      ca_cert: ((uaa_ssl.ca))
+      client_id: director_to_credhub
+      client_secret: ((uaa-clients-director-to-credhub))
+
+# Configure UAA
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/director_to_credhub?
+  value:
+    override: true
+    authorized-grant-types: client_credentials
+    scope: ""
+    authorities: credhub.read,credhub.write
+    access-token-validity: 3600
+    secret: ((uaa-clients-director-to-credhub))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/credhub?
+  value:
+    override: true
+    authorized-grant-types: password,refresh_token
+    scope: credhub.read,credhub.write
+    authorities: uaa.resource 
+    access-token-validity: 60
+    refresh-token-validity: 1800
+    secret: ""
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users?/-
+  value:
+    name: credhub-cli
+    password: ((credhub-cli-password))
+    groups: 
+    - credhub.read
+    - credhub.write
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/jwt/revocable?
+  value: true
+
+# Variables
+- type: replace
+  path: /variables/-
+  value:
+    name: credhub-tls
+    type: certificate
+    options:
+      ca: default_ca
+      common_name: ((internal_ip))
+      alternative_names: [((internal_ip))]
+
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa-clients-director-to-credhub
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: credhub-cli-password
+    type: password
