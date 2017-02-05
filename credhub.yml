@@ -1,11 +1,11 @@
-# Update with local file location
+# CredHub release file location must be provided 
 - type: replace
   path: /releases/-
   value:
     name: credhub
-    url: file:///tmp/credhub-0.3.1.tgz
+    url: ((file_path_to_credhub_release))
 
-# Update dev_key with chosen value
+# A chosen dev_key value must be provided in the form of 32 hex characters 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
   value:
@@ -13,7 +13,6 @@
     release: credhub
     properties:
       credhub: 
-        port: 8844
         user_management:
           uaa:
             url: "https://((internal_ip)):8443"
@@ -26,10 +25,9 @@
           password: ((postgres_password))
           database: credhub
         tls: ((credhub_tls))
-        log_level: info
         encryption:
           provider: dev_internal
-          dev_key: ABCDEF0123456789ABCDEF0123456789 #Replace with chosen value - 32 hex characters 
+          dev_key: ((credhub_dev_key))
 
 - type: replace
   path: /instance_groups/name=bosh/properties/postgres/additional_databases?/-
