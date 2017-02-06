@@ -44,7 +44,7 @@
       url: "https://((internal_ip)):8443"
       ca_cert: ((uaa_ssl.ca))
       client_id: director_to_credhub
-      client_secret: ((uaa-clients-director-to-credhub))
+      client_secret: ((uaa_clients_director_to_credhub))
 
 # Configure UAA
 - type: replace
