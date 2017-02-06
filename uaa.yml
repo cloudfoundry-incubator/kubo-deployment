@@ -39,7 +39,7 @@
         scim:
           users:
           - name: admin
-            groups: [scim.write, scim.read, bosh.admin]
+            groups: [bosh.admin]
             password: ((admin_password))
         clients:
           bosh_cli:
@@ -50,13 +50,24 @@
             access-token-validity: 120 # 2 min
             refresh-token-validity: 86400 # 1 day
             secret: ""
+          admin:
+            override: true
+            authorized-grant-types: client_credentials
+            scope: ""
+            authorities: bosh.admin
+            secret: ((admin_password))
           hm:
             override: true
             authorized-grant-types: client_credentials
             scope: ""
             authorities: bosh.admin
             secret: ((hm_password))
-        admin: {client_secret: ((uaa_admin_client_secret))}
+          uaa_admin:
+            override: true
+            authorized-grant-types: client_credentials
+            scope: ""
+            authorities: clients.read,clients.write,clients.secret,uaa.admin,scim.read,scim.write,password.write
+            secret: ((uaa_admin_client_secret))
         login: {client_secret: ((uaa_login_client_secret))}
         zones: {internal: {hostnames: []}}
       login:
