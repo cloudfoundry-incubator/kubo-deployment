@@ -3,9 +3,9 @@
   path: /releases/-
   value:
     name: bosh-virtualbox-cpi
-    version: 0.0.8
-    url: https://bosh.io/d/github.com/cppforlife/bosh-virtualbox-cpi-release?v=0.0.8
-    sha1: 3c0a5b76f3787af6df94898a184471ee6b63c748
+    version: 0.0.9
+    url: https://bosh.io/d/github.com/cppforlife/bosh-virtualbox-cpi-release?v=0.0.9
+    sha1: d2f6151da88174b20c5a35e296a4583f83648ee5
 
 - type: replace
   path: /resource_pools/name=vms/stemcell?
@@ -20,11 +20,6 @@
     cpus: 2
     memory: 4096
     ephemeral_disk: 16_384
-
-- type: replace
-  path: /networks/name=default/subnets/0/cloud_properties?
-  value:
-    name: ((network_name))
 
 # Add CPI job
 - type: replace

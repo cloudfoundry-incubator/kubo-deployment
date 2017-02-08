@@ -259,8 +259,7 @@ bosh create-env bosh.yml \
   -v director_name=vbox \
   -v internal_ip=192.168.56.6 \
   -v internal_gw=192.168.56.1 \
-  -v internal_cidr=192.168.56.0/24 \
-  -v network_name=vboxnet0
+  -v internal_cidr=192.168.56.0/24
 
 echo "- VirtualBox with BOSH Lite with garden-runc"
 bosh create-env bosh.yml \
@@ -273,8 +272,7 @@ bosh create-env bosh.yml \
   -v director_name=vbox \
   -v internal_ip=192.168.56.6 \
   -v internal_gw=192.168.56.1 \
-  -v internal_cidr=192.168.56.0/24 \
-  -v network_name=vboxnet0
+  -v internal_cidr=192.168.56.0/24
 
 echo "- Warden (cloud-config)"
 bosh update-cloud-config warden/cloud-config.yml
