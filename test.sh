@@ -74,6 +74,28 @@ bosh create-env bosh.yml \
   -v private_key=test \
   -v subnet_id=test
 
+echo "- AWS with UAA + CredHub"
+bosh create-env bosh.yml \
+  -o aws/cpi.yml \
+  -o uaa.yml \
+  -o credhub.yml \
+  --state=$vars_store_prefix \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v director_name=test \
+  -v internal_cidr=test \
+  -v internal_gw=test \
+  -v internal_ip=test \
+  -v access_key_id=test \
+  -v secret_access_key=test \
+  -v az=test \
+  -v region=test \
+  -v default_key_name=test \
+  -v default_security_groups=[test] \
+  -v private_key=test \
+  -v subnet_id=test \
+  -v credhub_dev_key=test \
+  -v file_path_to_credhub_release=test
+
 echo "- AWS with UAA for BOSH development"
 bosh interpolate bosh.yml \
   -o aws/cpi.yml \
