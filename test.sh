@@ -97,7 +97,7 @@ bosh create-env bosh.yml \
   -v file_path_to_credhub_release=test
 
 echo "- AWS with UAA for BOSH development"
-bosh interpolate bosh.yml \
+bosh deploy bosh.yml \
   -o aws/cpi.yml \
   -o uaa.yml \
   -o bosh-dev.yml \
