@@ -1,0 +1,83 @@
+#!/bin/bash -e
+
+[ -z "$DEBUG" ] || set -x
+BOSH_ENV=$1
+pk_filename=$2
+current_directory=$(cd $(dirname ${BASH_SOURCE[0]})/.. && pwd)
+
+echo "====================================="
+echo "|         BOSH++ Deployer           |"
+echo "====================================="
+echo ""
+
+
+print_usage() {
+cat << EOF
+  Usage: $0 <BOSH environment path> [<private key filename>]
+
+  * Note: Private key filename is required for AWS, Azure and Openstack
+EOF
+}
+if [ ! -d "${BOSH_ENV}" ]; then
+  print_usage
+  exit 1
+fi
+
+main() {
+  iaas=$(cat "$BOSH_ENV"/iaas)
+  if [ "$iaas" != 'gcp' ] && [ "$iaas" != 'openstack' ]; then
+    echo "Supported platforms are: 'gcp', 'openstack'"
+    echo ""
+    print_usage
+    exit 1
+  fi
+
+  "deploy_$iaas"
+  generate_default_ca ${BOSH_ENV}
+}
+
+generate_default_ca() {
+  local bosh_env=$1
+
+  local credhub_password="$(bosh-cli int "${bosh_env}/creds.yml" --path '/credhub_user_password' | xargs echo -n)"
+  local bosh_hostname="$(bosh-cli int "${bosh_env}/director.yml" --path '/internal_ip' | xargs echo -n)"
+
+  credhub api --skip-tls-validation -s "${bosh_hostname}:8844"
+  credhub login -u credhub-user -p "${credhub_password}"
+  credhub ca-get -n default || credhub ca-generate -n default -c "${bosh_hostname}"
+}
+
+deploy_gcp() {
+    bosh-cli create-env  ${current_directory}/bosh-deployment/bosh.yml  \
+      --ops-file ${current_directory}/bosh-deployment/gcp/cpi.yml \
+      --ops-file ${current_directory}/bosh-deployment/uaa.yml \
+      --ops-file ${current_directory}/bosh-deployment/powerdns.yml \
+      --ops-file ${current_directory}/configurations/gcp/use_service_account.yml \
+      --ops-file ${current_directory}/configurations/generic/credhub.yml \
+      --ops-file ${current_directory}/configurations/generic/bosh-admin-client.yml \
+      --state "${BOSH_ENV}/state.json" \
+      --vars-store "${BOSH_ENV}/creds.yml" \
+      --vars-file "${BOSH_ENV}/director.yml"
+}
+
+deploy_openstack() {
+    if [ -z ${pk_filename} ]; then
+      print_usage
+      exit 1
+    fi
+
+    bosh-cli create-env  ${current_directory}/bosh-deployment/bosh.yml  \
+      --ops-file ${current_directory}/bosh-deployment/openstack/cpi.yml \
+      --ops-file ${current_directory}/bosh-deployment/uaa.yml \
+      --ops-file ${current_directory}/bosh-deployment/powerdns.yml \
+      --ops-file ${current_directory}/configurations/generic/credhub.yml \
+      --ops-file ${current_directory}/configurations/openstack/multi-tenant.yml \
+      --ops-file ${current_directory}/configurations/generic/bosh-admin-client.yml \
+      --state "${BOSH_ENV}/state.json" \
+      --vars-store "${BOSH_ENV}/creds.yml" \
+      --vars-file "${BOSH_ENV}/director.yml"  \
+      --vars-file "${BOSH_ENV}/director-secrets.yml"  \
+      --var-file private_key="${pk_filename}"
+}
+
+main

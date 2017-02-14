@@ -1,0 +1,123 @@
+- type: replace
+  path: /releases/name=bosh
+  value:
+    version: 261
+    url: ((bosh_release_url))
+    sha1: ((bosh_release_sha1))
+    name: bosh
+
+- type: replace
+  path: /releases/-
+  value:
+    name: credhub
+    version: 0.4.0
+    url: ((credhub_release_url))
+    sha1: cb4a522298db9de2e0c8392f6c4057198f3ba3b0
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: credhub
+    release: credhub
+    properties:
+      credhub:
+        port: 8844
+        user_management:
+          uaa:
+            url: "https://((internal_ip)):8443"
+            verification_key: ((uaa_jwt_signing_key.public_key))
+        data_storage:
+          type: postgres
+          host: 127.0.0.1
+          port: 5432
+          database: credhub
+          username: postgres
+          password: ((postgres_password))
+        tls:
+          certificate: ((director_ssl.certificate))
+          private_key: ((director_ssl.private_key))
+        encryption:
+          keys:
+            - provider_name: dev_internal
+              active: true
+              dev_key: ((credhub_encryption_key))
+          providers:
+            - name: dev_internal
+              type: dev_internal
+
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/credhub_cli?
+  value:
+    override: true
+    authorized-grant-types: password,refresh_token
+    scope: credhub.read,credhub.write
+    authorities: uaa.none
+    access-token-validity: 120
+    refresh-token-validity: 86400
+    secret: "" # <--- CLI expects this secret to be empty
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/director_credhub?
+  value:
+    override: true
+    authorized-grant-types: client_credentials
+    scope: uaa.none
+    authorities: credhub.read,credhub.write
+    access-token-validity: 43200
+    secret: ((director_credhub_client_secret))
+
+# Configure Director with config server
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/config_server?
+  value:
+    enabled: true
+    url: "https://((internal_ip)):8844/api/" # URL must contain /api/ path with trailing slash
+    ca_cert: ((config_server_ssl.ca))
+    uaa:
+      url: "https://((internal_ip)):8443"
+      ca_cert: ((uaa_ssl.ca))
+      client_id: director_credhub
+      client_secret: ((director_credhub_client_secret))
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/postgres/additional_databases?/-
+  value: credhub
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users/-
+  value:
+    name: credhub-user
+    password: ((credhub_user_password))
+    groups:
+    # Users must have both credhub.read and credhub.write access
+    - credhub.read
+    - credhub.write
+
+- type: replace
+  path: /variables/-
+  value:
+    name: director_credhub_client_secret
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: credhub_user_password
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: config_server_ssl
+    type: certificate
+    options:
+      ca: default_ca
+      common_name: ((internal_ip))
+      alternative_names: [((internal_ip))]
+
+- type: replace
+  path: /variables/-
+  value:
+    name: director_config_server_client_secret
+    type: password

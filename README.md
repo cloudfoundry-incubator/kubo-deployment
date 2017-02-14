@@ -39,3 +39,32 @@ The format for all configuration files is YAML. The main configuration is stored
 the properties have comments explaining their possible values and their purpose.
 
 ## Deploy BOSH++
+
+### What is BOSH++? 
+
+BOSH with integrated PowerDNS and CredHub. It is used to auto-generate certificates for kubelets. 
+You can generate certificate for kubelets manually and use them as part of deployment. In that case you can use 
+regular BOSH.
+
+### Deployment process
+
+When the environment preparation and configuration is completed, `BOSH++` can be
+easily deployed with a single command:
+
+```bash
+bin/deploy_bosh <path to configuration>
+```
+
+During the deployment, all the passwords and SSL certificates will be automatically
+generated. Most of them will be saved into the configuration path in a file called 
+`creds.yml`. Because this file will contain sensitive information, it is not recommended
+to store it in a VCS. This file is also required to successfully deploy the kubernetes
+service or the on-demand broker.
+ 
+Subsequent runs of `bin/bosh_deploy` will apply changes made to the configuration
+to an already existing BOSH++ installation, reusing the secrets stored in the `creds.yml`.
+
+Another file that gets created during initial deployment is called `state.json`. It contains
+the BOSH state identical to the one used by [bosh-init](https://bosh.io/docs/using-bosh-init.html).
+
+Additionally, the deployment script creates the `default` CA certificate within CredHub.
