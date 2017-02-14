@@ -15,7 +15,7 @@ upload_releases() {
     "dev")
       pushd ../ > /dev/null
 	create_and_upload_release 'kubo-release'
-	upload_release 'etcd-85.dev.1.tgz'
+	upload_release "https://s3.amazonaws.com/kubo-public/etcd-85%2Bdev.1.tgz"
       popd > /dev/null
       ;;
     "public")
