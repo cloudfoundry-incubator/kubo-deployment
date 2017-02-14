@@ -1,0 +1,6 @@
+project_id: # GCP project ID
+network: # GCP network
+subnetwork: # GCP subnetwork
+tags: # optional array for GCP instance tags
+zone: # name of GCP zone
+service_account: # name of the service account applied to BOSH director vm

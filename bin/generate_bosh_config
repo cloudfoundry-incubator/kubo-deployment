@@ -1,0 +1,63 @@
+#!/bin/bash -e
+
+set -o pipefail
+
+[ -z "$DEBUG" ] || set -x
+
+print_usage() {
+  echo ""
+  echo "Usage: $0 PATH NAME IAAS"
+  echo ""
+  echo "PATH - Path to create the environment folder"
+  echo "NAME - Name of the environment"
+  echo "IAAS - One of the currently supported IaaS platforms. Currently, gcp or openstack."
+}
+
+ensure_config_file() {
+  local src=$1
+  local generic_src=$2
+  local dest=$3
+
+  if [ -f "$dest" ]; then
+    echo "Skipping config generation because ${dest} already exists"
+  else
+    cat "$src" > "$dest"
+    echo "" >> "$dest"
+    cat "$generic_src" >> "$dest"
+    echo "Generated: $( pwd )/${dest}"
+  fi
+}
+
+main() {
+  local source_dir=$(cd $(dirname ${BASH_SOURCE[0]})/.. && pwd)
+
+  bosh_env_dir="${bosh_path}/${bosh_name}"
+  mkdir -p "$bosh_env_dir"
+  pushd "$bosh_env_dir" > /dev/null
+    ensure_config_file ${source_dir}/configurations/"$iaas"/project-config.yml ${source_dir}/configurations/generic/project-config.yml "director.yml"
+    ensure_config_file ${source_dir}/configurations/"$iaas"/project-secrets.yml ${source_dir}/configurations/generic/project-secrets.yml "director-secrets.yml"
+    echo "$iaas" > iaas
+    echo "Update any generated files for your environment before deployment"
+  popd > /dev/null
+}
+
+echo "====================================="
+echo "|  BOSH Kubo Environment Generator  |"
+echo "====================================="
+echo ""
+
+if [ $# != 3 ]; then
+  print_usage
+  exit 1
+fi
+
+bosh_path=$1
+bosh_name=$2
+iaas=$3
+
+if [ "$iaas" != 'gcp' ] && [ "$iaas" != 'openstack' ]; then
+  print_usage
+  exit 1
+fi
+
+main
