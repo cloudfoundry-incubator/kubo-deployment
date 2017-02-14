@@ -1,5 +1,55 @@
 # vim: set ft=sh
 
+get_bosh_secret() {
+  bosh-cli int ${BOSH_ENV}/creds.yml --path=/bosh_admin_client_secret | xargs echo -n
+}
+
+set_cloud_config() {
+  bin/generate_cloud_config ${BOSH_ENV} | BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli -n -e ${BOSH_NAME} update-cloud-config -
+}
+
+deploy_to_bosh() {
+  local bosh_manifest=$1
+
+  if [ $# -ne 1 ]; then
+    echo "Bosh manifest is required in $0:deploy_to_bosh()"
+    exit 1
+  fi
+
+  printf "${bosh_manifest}" | BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli -e "$BOSH_NAME" -d ${DEPLOYMENT_NAME} -n deploy --no-redact -
+}
+
+create_and_upload_release() {
+  local release_directory=$1
+  local release_name="${release_directory%-release}"
+
+  if release_dir_exists "$release_directory"; then
+    pushd "$release_directory"
+
+      BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli -e "$BOSH_NAME" create-release --force --name "${release_name}"
+      upload_release "--name=${release_name}" 
+    popd
+  else
+    echo "${release_directory} repo not found - skipping release create and upload"
+    if ! release_exists "${release_name}" ".*"; then
+      echo "${release_name} release not found on your BOSH director - unable to continue"
+      exit 1
+    fi
+  fi
+}
+
+upload_release() {
+  local release_name=$1
+
+  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli -e "$BOSH_NAME" upload-release "$release_name"
+}
+
+release_dir_exists() {
+  local release_directory="$1"
+
+  [ -d "$release_directory" ]
+}
+
 generate_manifest() {
   if [ $# -ne 3 ]; then
     echo "Required arguments are bosh_target, deployment_name and deployment_type in $0:generate_manifest()"
@@ -47,4 +97,46 @@ generate_manifest() {
 
     printf "%s" "${manifest}"
   popd > /dev/null
+}
+
+display_deployment_usage() {
+  echo "Usage: `basename $0` [BOSH_ENV] [DEPLOYMENT_NAME] [RELEASE_SOURCE]"
+  echo ""
+  echo "BOSH_ENV is the path to your BOSH environment configuration folder"
+  echo ""
+  echo "DEPLOYMENT_NAME is the name of your deployment and service broker"
+  echo ""
+  echo "RELEASE_SOURCE specifies where to find the required BOSH releases"
+  echo "  options:"
+  echo "     dev    - Build a dev release from the local machine."
+  echo "              Required binaries and repos should be in ../"
+  echo "     public - Use published releases from the internet" 
+  echo ""
+}
+
+parse_deployment_args() {
+  if [ $# -ne 2 ] && [ $# -ne 3 ]; then
+    echo $#
+    display_deployment_usage
+    exit  1
+  fi
+
+  BOSH_ENV="$(realpath ${1})"
+  DEPLOYMENT_NAME="${2}"
+  RELEASE_SOURCE="${3}"
+  BOSH_NAME="$(basename ${BOSH_ENV})"
+
+  case $RELEASE_SOURCE in
+    "dev"|"public") ;;
+    "") RELEASE_SOURCE="public";;
+    *) display_deployment_usage; exit 1;;
+  esac
+
+  if [ -e "${BOSH_ENV}/iaas" ]; then
+    BOSH_IAAS=$(cat "$BOSH_ENV"/iaas)
+  else
+   echo "BOSH_ENV not found"
+   display_deployment_usage
+   exit 1
+  fi
 }

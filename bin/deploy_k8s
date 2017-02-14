@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+set -o pipefail
+
+[ -z "$DEBUG" ] || set -x
+
+main() {
+  upload_releases
+  set_cloud_config
+  deploy_to_bosh "$(bin/generate_service_manifest ${BOSH_ENV} ${DEPLOYMENT_NAME})"
+}
+
+upload_releases() {
+  case $RELEASE_SOURCE in
+    "dev")
+      pushd ../ > /dev/null
+	create_and_upload_release 'kubo-release'
+	upload_release 'etcd-85.dev.1.tgz'
+      popd > /dev/null
+      ;;
+    "public")
+       echo "NYI: Releases not yet avaliable on a public endpoint"
+       exit 1
+      ;;
+    *)
+      echo "unknown RELEASE_SOURCE"
+      exit 1
+    esac
+}
+
+pushd "$(dirname "$0")/../" > /dev/null
+  . ./bin/lib/deploy_utils
+  parse_deployment_args $@
+  main
+popd > /dev/null

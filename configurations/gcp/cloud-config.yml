@@ -1,0 +1,57 @@
+---
+azs:
+- name: z1
+  cloud_properties:
+    zone: ((zone))
+
+networks:
+- name: &network_name ((deployments_network))
+  type: dynamic
+  subnets:
+  - range: ((internal_cidr))
+    gateway: ((internal_gw))
+    dns:
+    - ((internal_ip))
+    az: z1
+    cloud_properties:
+      network_name: ((network))
+      subnetwork_name: ((subnetwork))
+      ephemeral_external_ip: false
+
+vm_types:
+- name: odb
+  cloud_properties:
+    machine_type: g1-small
+    root_disk_size_gb: 20
+    root_disk_type: pd-ssd
+    tags:
+    - no-ip
+    
+- name: common
+  cloud_properties:
+    machine_type: n1-standard-1
+    root_disk_size_gb: 20
+    root_disk_type: pd-ssd
+    tags:
+    - no-ip
+
+- name: worker
+  cloud_properties:
+    machine_type: n1-standard-2
+    root_disk_size_gb: 100
+    root_disk_type: pd-ssd
+    tags:
+    - no-ip
+
+disk_types:
+- name: 10240
+  disk_size: 10240
+- name: 5120
+  disk_size: 5120
+
+compilation:
+  workers: 4
+  network: *network_name
+  az: z1
+  reuse_compilation_vms: true
+  vm_type: worker
