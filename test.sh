@@ -74,11 +74,12 @@ bosh create-env bosh.yml \
   -v private_key=test \
   -v subnet_id=test
 
-echo "- AWS with UAA + CredHub"
+echo "- AWS with UAA + CredHub + Turbulence"
 bosh create-env bosh.yml \
   -o aws/cpi.yml \
   -o uaa.yml \
   -o credhub.yml \
+  -o turbulence.yml \
   --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
