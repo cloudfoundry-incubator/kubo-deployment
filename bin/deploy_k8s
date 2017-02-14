@@ -22,6 +22,12 @@ upload_releases() {
        echo "NYI: Releases not yet avaliable on a public endpoint"
        exit 1
       ;;
+    "local")
+      pushd ../ > /dev/null
+        upload_release "kubo-release.tgz"
+        upload_release "etcd-85.dev.1.tgz"
+      popd > /dev/null
+      ;;
     *)
       echo "unknown RELEASE_SOURCE"
       exit 1

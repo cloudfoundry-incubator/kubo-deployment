@@ -111,6 +111,8 @@ display_deployment_usage() {
   echo "     dev    - Build a dev release from the local machine."
   echo "              Required binaries and repos should be in ../"
   echo "     public - Use published releases from the internet" 
+  echo "     local  - Use local releases"
+  echo "              Required binaries should be in ../"
   echo ""
 }
 
@@ -127,7 +129,7 @@ parse_deployment_args() {
   BOSH_NAME="$(basename ${BOSH_ENV})"
 
   case $RELEASE_SOURCE in
-    "dev"|"public") ;;
+    "dev"|"public"|"local") ;;
     "") RELEASE_SOURCE="public";;
     *) display_deployment_usage; exit 1;;
   esac
