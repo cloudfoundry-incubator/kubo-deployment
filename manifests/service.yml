@@ -1,0 +1,179 @@
+name: ((deployment_name))
+
+releases:
+- name: etcd
+  version: latest
+- name: kubo
+  version: latest
+- name: docker
+  version: 28.0.1
+  url: https://bosh.io/d/github.com/cf-platform-eng/docker-boshrelease?v=28.0.1
+  sha1: 448eaa2f478dc8794933781b478fae02aa44ed6b
+
+stemcells:
+- alias: trusty
+  os: ubuntu-trusty
+  version: ((stemcell_version))
+
+instance_groups:
+- name: etcd
+  instances: 3
+  networks:
+  - name: &network-name ((deployments_network))
+  azs: [z1]
+  jobs:
+  - name: etcd
+    release: etcd
+    properties:
+      etcd:
+        require_ssl: false
+        peer_require_ssl: false
+  - name: syslog-forwarding-setup
+    release: kubo
+    properties:
+      jobs-to-forward:
+      - etcd
+      syslog-endpoint: ((syslog-endpoint))
+  stemcell: trusty
+  vm_type: common
+  persistent_disk_type: 5120
+
+- name: master
+  instances: 2
+  networks:
+  - name: *network-name
+  azs: [z1]
+  jobs:
+  - name: kubernetes-api
+    release: kubo
+    properties:
+      admin-username: admin
+      admin-password: ((kubo-admin-password))
+      kubelet-password: ((kubelet-password))
+      tls:
+        kubernetes: ((tls-kubernetes))
+  - name: kubeconfig
+    release: kubo
+    properties:
+      kubernetes-api-url: &kubo_url "https://((cf-tcp-router-name)):((external-kubo-port))"
+      kubelet-password: ((kubelet-password))
+      tls:
+        kubernetes: ((tls-kubernetes))
+  - name: kubernetes-controller-manager
+    release: kubo
+  - name: kubernetes-scheduler
+    release: kubo
+  - name: kubernetes-system-specs
+    release: kubo
+    properties:
+      kubernetes-api-url: *kubo_url
+  - name: syslog-forwarding-setup
+    release: kubo
+    properties:
+      jobs-to-forward:
+      - kubernetes-api
+      - kubernetes-controller-manager
+      - kubernetes-scheduler
+      syslog-endpoint: ((syslog-endpoint))
+  - name: kubernetes-api-route-registrar
+    release: kubo
+    properties:
+      external_kubo_port: ((external-kubo-port))
+      cloud_foundry:
+        api_url: ((routing-cf-api-url))
+        uaa_url: ((routing-cf-uaa-url))
+        uaa_client_id: ((routing-cf-client-id))
+        uaa_client_secret: ((routing-cf-client-secret))
+  stemcell: trusty
+  vm_type: common
+
+- name: worker
+  instances: 3
+  networks:
+  - name: *network-name
+  azs: [z1]
+  jobs:
+  - name: flanneld
+    release: kubo
+  - name: docker
+    release: docker
+    properties:
+      docker:
+        flannel: true
+        iptables: false
+        ip_masq: false
+        log_level: error
+        storage_driver: overlay
+  - name: kubeconfig
+    release: kubo
+    properties:
+      kubernetes-api-url: *kubo_url
+      kubelet-password: ((kubelet-password))
+      tls:
+        kubernetes: ((tls-kubernetes))
+  - name: kubelet
+    release: kubo
+    properties:
+      kubernetes-api-url: *kubo_url
+      tls:
+        kubelet: ((tls-kubelet))
+  - name: kubernetes-proxy
+    release: kubo
+    properties:
+      kubernetes-api-url: *kubo_url
+  - name: syslog-forwarding-setup
+    release: kubo
+    properties:
+      jobs-to-forward:
+      - flanneld
+      - docker
+      - kubelet
+      - kubernetes-proxy
+      syslog-endpoint: ((syslog-endpoint))
+  stemcell: trusty
+  vm_type: common
+  persistent_disk_type: 10240
+- name: proxy
+  instances: 1
+  networks:
+  - name: *network-name
+  azs: [z1]
+  jobs:
+  - name: nginx
+    release: kubo
+  - name: flanneld
+    release: kubo
+  - name: kubeconfig
+    release: kubo
+    properties:
+      kubernetes-api-url: *kubo_url
+      kubelet-password: ((kubelet-password))
+      tls:
+        kubernetes: ((tls-kubernetes))
+  - name: kubernetes-proxy
+    release: kubo
+    properties:
+      kubernetes-api-url: *kubo_url
+  - name: syslog-forwarding-setup
+    release: kubo
+    properties:
+      jobs-to-forward:
+      - nginx
+      - flanneld
+      - kubernetes-proxy
+      syslog-endpoint: ((syslog-endpoint))
+  stemcell: trusty
+  vm_type: common
+
+update:
+  canaries: 1
+  max_in_flight: 1
+  serial: true
+  canary_watch_time: 1000-30000
+  update_watch_time: 1000-30000
+
+variables:
+- name: kubo-admin-password
+  type: password
+- name: kubelet-password
+  type: password

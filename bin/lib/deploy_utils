@@ -1,0 +1,50 @@
+# vim: set ft=sh
+
+generate_manifest() {
+  if [ $# -ne 3 ]; then
+    echo "Required arguments are bosh_target, deployment_name and deployment_type in $0:generate_manifest()"
+    exit 1
+  fi
+
+  if [[ ! $3 =~ ^(odb|service)$ ]]; then
+    echo "Supported deployment types are 'odb' and 'service' in $0:generate_manifest()"
+    exit 1
+  fi
+
+  local bosh_target=$1
+  local deployment_name=$2
+  local deployment_type=$3
+
+  pushd "$(dirname "${BASH_SOURCE[0]}")/../../" > /dev/null
+    manifest="$(cat "manifests/${deployment_type}.yml")"
+
+    if [ -e "${bosh_target}/${deployment_type}-${deployment_name}.yml" ]; then
+      manifest=$(printf "%s" "${manifest}" | bosh-cli int - --ops-file="${bosh_target}/${deployment_type}-${deployment_name}.yml")
+    fi
+
+    if [ -e "${bosh_target}/${deployment_type}-${deployment_name}-vars.yml" ]; then
+      manifest=$(printf "%s" "${manifest}" | bosh-cli int - --vars-file="${bosh_target}/${deployment_type}-${deployment_name}-vars.yml")
+    fi
+
+    manifest=$(printf "%s" "${manifest}" | bosh-cli int - \
+        --vars-file="${bosh_target}/director.yml" \
+        --var=deployment_name="${deployment_name}")
+
+    if [ -e "${bosh_target}/creds.yml" ]; then
+      manifest=$(printf "%s" "${manifest}" | bosh-cli int - --vars-file="${bosh_target}/creds.yml")
+    fi
+
+    if [ -e "${bosh_target}/${bosh_target}-secrets.yml" ]; then
+      # local deployment, fill in credentials if a secrets file exists.
+      # otherwise they will be filled in by CredHub
+      manifest=$(printf "%s" "${manifest}" | bosh-cli int - --vars-file="${bosh_target}/${bosh_target}-secrets.yml")
+    fi
+
+    manifest=$(printf "%s" "${manifest}" | bosh-cli int - \
+        --vars-store="${bosh_target}/${deployment_type}-${deployment_name}-creds.yml")
+
+    manifest=$(printf "%s" "${manifest}" | bosh-cli int - --ops-file=manifests/ops-files/remove-variables.yml)
+
+    printf "%s" "${manifest}"
+  popd > /dev/null
+}

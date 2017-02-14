@@ -1,0 +1,30 @@
+#!/bin/bash -e
+
+set -o pipefail
+
+[ -z "$DEBUG" ] || set -x
+
+bosh_env="${1}"
+deployment_name="${2}"
+
+if [ $# -ne 2 ]; then
+  echo "Usage: $0 [BOSH_ENV] [SERVICE_DEPLOYMENT_NAME]"
+  echo ""
+  echo "BOSH_ENV is the path to your BOSH++ config."
+  echo "If you have creds.yml in BOSH_ENV directory, they will be used for manifest generation"
+  echo "Otherwise your BOSH director will look for them in CredHub"
+  echo ""
+  echo "service_DEPLOYMENT_NAME is the name for your k8s service"
+  echo "bosh/<BOSH_TARGET>/service-<SERVICE_DEPLOYMENT_NAME>.yml file will be used during manifest generation"
+  exit 1
+fi
+
+main() {
+  pushd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null
+   # shellcheck disable=SC1091
+    . lib/deploy_utils > /dev/null
+    generate_manifest "${bosh_env}" "${deployment_name}" service
+  popd > /dev/null
+}
+
+main
