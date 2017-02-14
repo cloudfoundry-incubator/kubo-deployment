@@ -1,0 +1,53 @@
+---
+- type: replace
+  path: /releases/-
+  value:
+    name: bosh-virtualbox-cpi
+    version: 0.0.9
+    url: https://bosh.io/d/github.com/cppforlife/bosh-virtualbox-cpi-release?v=0.0.9
+    sha1: d2f6151da88174b20c5a35e296a4583f83648ee5
+
+- type: replace
+  path: /resource_pools/name=vms/stemcell?
+  value:
+    url: https://bosh.io/d/stemcells/bosh-vsphere-esxi-ubuntu-trusty-go_agent?v=3312.15
+    sha1: 60b8230da19d7e27b5101fc34f569e85eb5b3ad0
+
+# Configure sizes
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties?
+  value:
+    cpus: 2
+    memory: 4096
+    ephemeral_disk: 16_384
+
+# Add CPI job
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value: &cpi_job
+    name: virtualbox_cpi
+    release: bosh-virtualbox-cpi
+    properties:
+      # todo remove once cpi dont know about these
+      agent:
+        mbus: nats://nats:((nats_password))@((internal_ip)):4222
+      ntp:
+      - 0.pool.ntp.org
+      - 1.pool.ntp.org
+      blobstore:
+        address: ((internal_ip))
+        port: 25250
+        provider: dav
+        agent:
+          user: agent
+          password: ((blobstore_agent_password))
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/cpi_job?
+  value: virtualbox_cpi
+
+- type: replace
+  path: /cloud_provider/template?
+  value:
+    name: virtualbox_cpi
+    release: bosh-virtualbox-cpi
