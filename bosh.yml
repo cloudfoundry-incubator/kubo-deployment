@@ -1,0 +1,133 @@
+---
+name: bosh
+
+releases:
+- name: bosh
+  version: 260.5
+  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-260.5-ubuntu-trusty-3312.15-20170124-025145-688314225-20170124025151.tgz?versionId=XdnsJBm4uh.wTJ1aKy5BZ.B.NtBOZFTD
+  sha1: 16966c90fb3535a2de6e2e19bf8252524d2f2d27
+
+resource_pools:
+- name: vms
+  network: default
+  env:
+    bosh:
+      password: '*'
+
+disk_pools:
+- name: disks
+  disk_size: 32_768
+
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: ((internal_cidr))
+    gateway: ((internal_gw))
+    static: [((internal_ip))]
+    dns: [8.8.8.8]
+
+instance_groups:
+- name: bosh
+  instances: 1
+  jobs:
+  - {name: nats, release: bosh}
+  - {name: postgres-9.4, release: bosh}
+  - {name: blobstore, release: bosh}
+  - {name: director, release: bosh}
+  - {name: health_monitor, release: bosh}
+  resource_pool: vms
+  persistent_disk_pool: disks
+  networks:
+  - name: default
+    static_ips: [((internal_ip))]
+  properties:
+    nats:
+      address: 127.0.0.1
+      user: nats
+      password: ((nats_password))
+    postgres: &db
+      listen_address: 127.0.0.1
+      host: 127.0.0.1
+      user: postgres
+      password: ((postgres_password))
+      database: bosh
+      adapter: postgres
+    blobstore:
+      address: ((internal_ip))
+      port: 25250
+      provider: dav
+      director:
+        user: director
+        password: ((blobstore_director_password))
+      agent:
+        user: agent
+        password: ((blobstore_agent_password))
+    director:
+      address: 127.0.0.1
+      name: ((director_name))
+      db: *db
+      flush_arp: true
+      enable_post_deploy: true
+      generate_vm_passwords: true
+      enable_dedicated_status_worker: true
+      workers: 4
+      events:
+        record_events: true
+      ssl:
+        key: ((director_ssl.private_key))
+        cert: ((director_ssl.certificate))
+      user_management:
+        provider: local
+        local:
+          users:
+          - name: admin
+            password: ((admin_password))
+          - name: hm
+            password: ((hm_password))
+    hm:
+      director_account:
+        user: hm
+        password: ((hm_password))
+        ca_cert: ((director_ssl.ca))
+      resurrector_enabled: true
+    ntp: &ntp
+    - time1.google.com
+    - time2.google.com
+    - time3.google.com
+    - time4.google.com
+    agent:
+      mbus: nats://nats:((nats_password))@((internal_ip)):4222
+
+cloud_provider:
+  mbus: https://mbus:((mbus_bootstrap_password))@((internal_ip)):6868
+  properties:
+    agent: {mbus: "https://mbus:((mbus_bootstrap_password))@0.0.0.0:6868"}
+    blobstore: {provider: local, path: /var/vcap/micro_bosh/data/cache}
+    ntp: *ntp
+
+variables:
+- name: admin_password
+  type: password
+- name: blobstore_director_password
+  type: password
+- name: blobstore_agent_password
+  type: password
+- name: hm_password
+  type: password
+- name: mbus_bootstrap_password
+  type: password
+- name: nats_password
+  type: password
+- name: postgres_password
+  type: password
+- name: default_ca
+  type: certificate
+  options:
+    common_name: ca # todo fix
+- name: director_ssl
+  type: certificate
+  options:
+    ca: default_ca
+    common_name: ((internal_ip))
+    alternative_names: [((internal_ip))]
