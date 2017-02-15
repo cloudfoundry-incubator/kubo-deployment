@@ -4,22 +4,92 @@ set -o pipefail
 
 [ -z "$DEBUG" ] || set -x
 
+
+echo "====================================="
+echo "|     BOSH K8S Cluster Deployer     |"
+echo "====================================="
+echo ""
+
+if [ $# -ne 2 ] && [ $# -ne 3 ]; then
+  print_usage
+  exit  1
+fi
+
+
+print_usage() {
+  echo "Usage: `basename $0` [BOSH_ENV] [DEPLOYMENT_NAME] [RELEASE_SOURCE]"
+  echo ""
+  echo "BOSH_ENV is the path to your BOSH environment configuration folder"
+  echo ""
+  echo "DEPLOYMENT_NAME is the name of your kubo deployment"
+  echo ""
+  echo "RELEASE_SOURCE specifies where to find the required BOSH releases"
+  echo "  options:"
+  echo "     dev    - Build a dev release from the local machine."
+  echo "              Required binaries and repos should be in ../"
+  echo "     public - Use published releases from the internet"
+  echo "     local  - Use local releases"
+  echo "              Required binaries should be in ../"
+  echo ""
+}
+
 main() {
-  upload_releases
-  set_cloud_config
-  deploy_to_bosh "$(bin/generate_service_manifest ${BOSH_ENV} ${DEPLOYMENT_NAME})"
+  local bosh_env=$(cd "${1}"; pwd -P)
+  local deployment_name="${2}"
+  local release_source="${3}"
+  local bosh_iaas
+
+  if [ -e "${bosh_env}/iaas" ]; then
+    bosh_iaas=$(cat "${bosh_env}/iaas")
+  else
+   echo "${bosh_env} is not a valid BOSH environment."
+   echo "Please use 'generate_bosh_config' to create one."
+   print_usage
+   exit 1
+  fi
+
+  case ${release_source} in
+    "dev"|"public"|"local") ;;
+    "") release_source="public";;
+    *) print_usage; exit 1;;
+  esac
+
+
+  pushd $(dirname $0)/.. > /dev/null
+    . ./bin/lib/deploy_utils
+
+    export_bosh_environment ${bosh_env}
+
+    upload_releases ${release_source}
+    set_cloud_config
+    set_kubernetes_certificate_in_credhub "$(basename ${bosh_env})/${deployment_name}/tls-kubernetes"
+    deploy_to_bosh "$(bin/generate_service_manifest ${bosh_env} ${deployment_name})" ${deployment_name}
+  popd > /dev/null
+}
+
+set_kubernetes_certificate_in_credhub() {
+  local secret_path=$1
+  local credhub_user_password=$(get_setting "creds.yml" "/credhub_user_password")
+  local credhub_api_url=https://$(get_setting "director.yml" "/internal_ip"):8844
+  local tcp_router_ip=$(get_setting "director.yml" "/cf-tcp-router-name")
+
+  credhub login -u credhub-user -p ${credhub_user_password} -s ${credhub_api_url} --skip-tls-validation
+  credhub generate -n ${secret_path} -t certificate -c ${tcp_router_ip} -a ${tcp_router_ip} -O
 }
 
 upload_releases() {
-  case $RELEASE_SOURCE in
+  local release_source=$1
+
+  case ${release_source} in
     "dev")
       pushd ../ > /dev/null
-	create_and_upload_release 'kubo-release'
-	upload_release "https://s3.amazonaws.com/kubo-public/etcd-85%2Bdev.1.tgz"
+        create_and_upload_release 'kubo-release'
+        upload_release "https://s3.amazonaws.com/kubo-public/etcd-85%2Bdev.1.tgz"
       popd > /dev/null
       ;;
     "public")
-       echo "NYI: Releases not yet avaliable on a public endpoint"
+       upload_release "https://s3.amazonaws.com/kubo-public/etcd-85%2Bdev.1.tgz"
+       echo "NYI: Kubo release not yet available on a public endpoint"
        exit 1
       ;;
     "local")
@@ -29,13 +99,9 @@ upload_releases() {
       popd > /dev/null
       ;;
     *)
-      echo "unknown RELEASE_SOURCE"
+      echo "unknown RELEASE_SOURCE: '${release_source}'"
       exit 1
     esac
 }
 
-pushd "$(dirname "$0")/../" > /dev/null
-  . ./bin/lib/deploy_utils
-  parse_deployment_args $@
-  main
-popd > /dev/null
+main $@
