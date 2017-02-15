@@ -1,6 +1,6 @@
 # bosh-deployment
 
-- Requires new [BOSH CLI v0.0.146+](https://github.com/cloudfoundry/bosh-cli)
+- Requires new [BOSH CLI v2.0.1+](https://github.com/cloudfoundry/bosh-cli)
 
 Sample installation instructions:
 
@@ -34,7 +34,7 @@ $ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
   --var-file private_key=~/Downloads/bosh.pem
 
 # Alias deployed Director
-$ bosh -e 10.0.0.6 --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca) alias-env bosh-1 
+$ bosh -e 10.0.0.6 --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca) alias-env bosh-1
 
 # Log in to the Director
 $ export BOSH_CLIENT=admin
