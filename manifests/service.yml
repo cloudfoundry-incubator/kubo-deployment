@@ -131,7 +131,7 @@ instance_groups:
       - kubernetes-proxy
       syslog-endpoint: ((syslog-endpoint))
   stemcell: trusty
-  vm_type: common
+  vm_type: worker
   persistent_disk_type: 10240
 - name: proxy
   instances: 1

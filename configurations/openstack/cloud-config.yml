@@ -1,0 +1,40 @@
+azs:
+- name: z1
+  cloud_properties:
+    availability_zone: ((az))
+
+vm_types:
+- name: common
+  cloud_properties:
+    instance_type: m1.small
+    root_disk_size_gb: 20
+- name: worker
+  cloud_properties:
+    instance_type: m1.xlarge
+    root_disk_size_gb: 100
+
+disk_types:
+- name: 10240
+  disk_size: 10240
+- name: 5120
+  disk_size: 5120
+
+networks:
+- name: ((deployments_network))
+  type: dynamic
+  subnets:
+  - range: ((internal_cidr))
+    gateway: ((internal_gw))
+    azs: [z1]
+    dns: [((internal_ip))]
+    reserved:
+    - ((reserved_cidr))
+    cloud_properties:
+      net_id: ((net_id))
+
+compilation:
+  workers: 5
+  reuse_compilation_vms: true
+  az: z1
+  vm_type: worker
+  network: ((deployments_network))
