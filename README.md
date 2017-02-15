@@ -68,3 +68,27 @@ Another file that gets created during initial deployment is called `state.json`.
 the BOSH state identical to the one used by [bosh-init](https://bosh.io/docs/using-bosh-init.html).
 
 Additionally, the deployment script creates the `default` CA certificate within CredHub.
+
+## Deploy Kubo
+
+### Deployment Process
+
+Once BOSH++ is deployed, the Kubernetes BOSH release can be built and deployed with this command:
+
+```bash
+bin/deploy_k8s <BOSH_ENV> <DEPLOYMENT_NAME> <RELEASE_SOURCE>
+```
+
+The `RELEASE_SOURCE` parameter allows you to either build and deploy a local copy of the repository, or deploy our pre-built kubo-release tarball.
+
+#### Without internet access
+
+Perform the section above on your workstation and copy the blobs and releases to your `bosh-bastion` via SCP. Then update your director.yml config file to set the `etcd_release_url` and `kubo_release_url` fields to link to the local copies of those tarballs. The following example is for GCP and will be different on other providers.
+
+```bash
+# from your workstation
+gcloud compute copy-files "~/workspace/kubo-release/blobs/*" "$BOSH_ENV-bosh-bastion:kubo-release/blobs"
+gcloud compute copy-files "~/workspace/kubo-service-adapter-release/blobs/*" "$BOSH_ENV-bosh-bastion:kubo-release/blobs"
+gcloud compute copy-files "~/workspace/etcd.tgz" "$BOSH_ENV-bosh-bastion:/home/username/workspace/"
+gcloud compute copy-files "~/workspace/kubo-release.tgz" "$BOSH_ENV-bosh-bastion:/home/username/workspace/"
+```
