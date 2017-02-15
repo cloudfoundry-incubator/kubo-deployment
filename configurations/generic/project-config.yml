@@ -10,10 +10,6 @@ cf-tcp-router-name: # URL to TCP router. In PCF: tcp.<domain>
 routing-cf-api-url: # TCP routing API URL. In PCF: https://api.<system domain>
 routing-cf-client-id: # Routing UAA client name that will be used to register tcp routes
 routing-cf-uaa-url: # Routing UAA URL In PCF: https://uaa.<system domain>
-cf_nats_addresses: # An array of addresses of CF NATS machines for route registration
-cf_nats_port: # CF NATS port
-cf_nats_user: # CF NATS user
-cf_sys_domain: # CF system domain, e.g. sys.whatever.cf-app.com
 
 # we use BOSH 261 since CredHub 0.4 supports only it
 # CredHub 0.4 fixes important bug that breaks deployment
