@@ -84,18 +84,18 @@ upload_releases() {
     "dev")
       pushd ../ > /dev/null
         create_and_upload_release 'kubo-release'
-        upload_release "https://s3.amazonaws.com/kubo-public/etcd-85%2Bdev.1.tgz"
+        upload_release $(get_setting director.yml "/etcd_release_url")
       popd > /dev/null
       ;;
     "public")
-       upload_release "https://s3.amazonaws.com/kubo-public/etcd-85%2Bdev.1.tgz"
+       upload_release $(get_setting director.yml "/etcd_release_url")
        echo "NYI: Kubo release not yet available on a public endpoint"
        exit 1
       ;;
     "local")
       pushd ../ > /dev/null
         upload_release "kubo-release.tgz"
-        upload_release "etcd-85.dev.1.tgz"
+        upload_release $(get_setting director.yml "/etcd_release_url")
       popd > /dev/null
       ;;
     *)
