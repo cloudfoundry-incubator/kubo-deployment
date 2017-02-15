@@ -60,6 +60,7 @@ main() {
 
     export_bosh_environment ${bosh_env}
 
+    upload_stemcell
     upload_releases ${release_source}
     set_cloud_config
     set_kubernetes_certificate_in_credhub "$(basename ${bosh_env})/${deployment_name}/tls-kubernetes"
@@ -102,6 +103,12 @@ upload_releases() {
       echo "unknown RELEASE_SOURCE: '${release_source}'"
       exit 1
     esac
+}
+
+upload_stemcell() {
+  local director_name=$(get_setting director.yml /director_name)
+  local stemcell_version=$(get_setting director.yml /stemcell_version)
+  bosh-cli -e ${director_name} upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/google/bosh-stemcell-${stemcell_version}-google-kvm-ubuntu-trusty-go_agent.tgz"
 }
 
 main $@
