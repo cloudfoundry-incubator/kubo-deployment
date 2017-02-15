@@ -24,6 +24,7 @@ if [ ! -d "${BOSH_ENV}" ]; then
 fi
 
 main() {
+  . ./bin/lib/deploy_utils
   iaas=$(cat "$BOSH_ENV"/iaas)
   if [ "$iaas" != 'gcp' ] && [ "$iaas" != 'openstack' ]; then
     echo "Supported platforms are: 'gcp', 'openstack'"
@@ -34,6 +35,7 @@ main() {
 
   "deploy_$iaas"
   generate_default_ca ${BOSH_ENV}
+  setup_bosh_alias
 }
 
 generate_default_ca() {
