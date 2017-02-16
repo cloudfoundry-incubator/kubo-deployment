@@ -24,5 +24,6 @@ internal_cidr: # CIDR range that BOSH will deploy to
 internal_gw: # internal gateway
 
 stemcell_version: # version of the stemcell used in all Kubo deployments
+stemcell_url: # path to a stemcell used in all Kubo deployments
 syslog-endpoint: ""
 
