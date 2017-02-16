@@ -1,0 +1,32 @@
+#@IgnoreInspection BashAddShebang
+
+available_number() {
+  local number=$1
+  local blacklist=$2
+
+
+  if [[ ! ",${number}," =~ ",${blacklist}," ]]; then
+    echo ${number}
+  fi
+
+}
+
+
+
+get_next_number() {
+ local range=$1
+ local blacklist=$2
+
+ if [ "${range}" = "${blacklist}" ]; then
+    return
+ fi
+
+ IFS=','
+ for number in $range; do
+    ret=$(available_number "${number}" "${blacklist}")
+    if [ -n "$ret" ]; then
+      echo $ret
+      return
+    fi
+ done
+}
