@@ -94,8 +94,7 @@ bosh create-env bosh.yml \
   -v default_security_groups=[test] \
   -v private_key=test \
   -v subnet_id=test \
-  -v credhub_dev_key=test \
-  -v file_path_to_credhub_release=test
+  -v credhub_encryption_password=test
 
 echo "- AWS with UAA for BOSH development"
 bosh deploy bosh.yml \
