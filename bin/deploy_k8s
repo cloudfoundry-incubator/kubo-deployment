@@ -12,7 +12,7 @@ echo ""
 
 
 print_usage() {
-  echo "Usage: `basename $0` [BOSH_ENV] [DEPLOYMENT_NAME] [RELEASE_SOURCE]"
+  echo "Usage: $(basename "$0") [BOSH_ENV] [DEPLOYMENT_NAME] [RELEASE_SOURCE]"
   echo ""
   echo "BOSH_ENV is the path to your BOSH environment configuration folder"
   echo ""
@@ -55,16 +55,16 @@ main() {
   esac
 
 
-  pushd $(dirname $0)/.. > /dev/null
+  pushd "$(dirname "$0")/.." > /dev/null
     . ./bin/lib/deploy_utils
 
-    export_bosh_environment ${bosh_env}
+    export_bosh_environment "${bosh_env}"
 
     upload_stemcell
-    upload_releases ${release_source}
+    upload_releases "${release_source}"
     set_cloud_config
-    set_kubernetes_certificate_in_credhub "$(basename ${bosh_env})/${deployment_name}/tls-kubernetes"
-    deploy_to_bosh "$(bin/generate_service_manifest ${bosh_env} ${deployment_name})" ${deployment_name}
+    set_kubernetes_certificate_in_credhub "$(basename "${bosh_env}")/${deployment_name}/tls-kubernetes"
+    deploy_to_bosh "$(bin/generate_service_manifest "${bosh_env}" "${deployment_name}")" "${deployment_name}"
   popd > /dev/null
 }
 
@@ -74,8 +74,8 @@ set_kubernetes_certificate_in_credhub() {
   local credhub_api_url=https://$(get_setting "director.yml" "/internal_ip"):8844
   local tcp_router_ip=$(get_setting "director.yml" "/cf-tcp-router-name")
 
-  credhub login -u credhub-user -p ${credhub_user_password} -s ${credhub_api_url} --skip-tls-validation
-  credhub generate -n ${secret_path} -t certificate -c ${tcp_router_ip} -a ${tcp_router_ip} -O
+  credhub login -u credhub-user -p "${credhub_user_password}" -s "${credhub_api_url}" --skip-tls-validation
+  credhub generate -n "${secret_path}" -t certificate -c "${tcp_router_ip}" -a "${tcp_router_ip}" -O
 }
 
 upload_releases() {
@@ -111,4 +111,4 @@ upload_stemcell() {
   bosh-cli -e ${director_name} upload-stemcell ${stemcell_url}
 }
 
-main $@
+main "$@"
