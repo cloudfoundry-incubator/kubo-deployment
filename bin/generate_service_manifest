@@ -15,7 +15,7 @@ if [ $# -ne 2 ]; then
   echo "Otherwise your BOSH director will look for them in CredHub"
   echo ""
   echo "service_DEPLOYMENT_NAME is the name for your k8s service"
-  echo "bosh/<BOSH_TARGET>/service-<SERVICE_DEPLOYMENT_NAME>.yml file will be used during manifest generation"
+  echo "<BOSH_ENV>/service-<SERVICE_DEPLOYMENT_NAME>.yml file will be used during manifest generation"
   exit 1
 fi
 
