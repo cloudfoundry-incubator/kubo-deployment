@@ -32,16 +32,13 @@ main() {
   local bosh_env=$(cd "${1}"; pwd -P)
   local deployment_name="${2}"
   local release_source="${3}"
-  local bosh_iaas
 
   if [ $# -ne 2 ] && [ $# -ne 3 ]; then
     print_usage
     exit  1
   fi
 
-  if [ -e "${bosh_env}/iaas" ]; then
-    bosh_iaas=$(cat "${bosh_env}/iaas")
-  else
+  if [ ! -e "${bosh_env}/iaas" ]; then
    echo "${bosh_env} is not a valid BOSH environment."
    echo "Please use 'generate_bosh_config' to create one."
    print_usage
