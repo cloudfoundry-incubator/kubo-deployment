@@ -81,14 +81,38 @@ bin/deploy_k8s <BOSH_ENV> <DEPLOYMENT_NAME> <RELEASE_SOURCE>
 
 The `RELEASE_SOURCE` parameter allows you to either build and deploy a local copy of the repository, or deploy our pre-built kubo-release tarball.
 
-#### Without internet access
+Note that the scripts will:
 
-Perform the section above on your workstation and copy the blobs and releases to your `bosh-bastion` via SCP. Then update your director.yml config file to set the `etcd_release_url` and `kubo_release_url` fields to link to the local copies of those tarballs. The following example is for GCP and will be different on other providers.
+- Generate certificate in CredHub
+- upload any Cloud Config changes to the director
+- create the kubo release from source and upload it if RELEASE_SOURCE is dev
+or 
+- upload the kubo release tarball from specified location if RELEASE_SOURCE is local
+- regenerate the deployment manifest
+- kick off the deployment
 
+### Deployment using separate scripts
+
+#### Generate Cloud Config
+
+Kubo deployment uses [BOSH 2.0 Cloud Config](https://bosh.io/docs/cloud-config.html).
+
+The default cloud config for GCP uses n1-standard-1 VMs for supporting services and n1-standard-2 VMs
+for Kubernetes workers. The network properties are pulled in from the environment configuration file 
+which is stored at `<BOSH_ENV>/director.yml`.
+
+Cloud config can be generated using following command:
 ```bash
-# from your workstation
-gcloud compute copy-files "~/workspace/kubo-release/blobs/*" "$BOSH_ENV-bosh-bastion:kubo-release/blobs"
-gcloud compute copy-files "~/workspace/kubo-service-adapter-release/blobs/*" "$BOSH_ENV-bosh-bastion:kubo-release/blobs"
-gcloud compute copy-files "~/workspace/etcd.tgz" "$BOSH_ENV-bosh-bastion:/home/username/workspace/"
-gcloud compute copy-files "~/workspace/kubo-release.tgz" "$BOSH_ENV-bosh-bastion:/home/username/workspace/"
+bin/generate_cloud_config <BOSH_ENV>
 ```
+
+##### Create and upload release
+
+To create dev release, download the [kubo-release repository](https://github.com/pivotal-cf-experimental/kubo-release) 
+and follow [documentation](https://bosh.io/docs/create-release.html#dev-release)
+
+##### Generate manifest
+
+Manifest can be generated using command `bin/generate_service_manifest <BOSH_ENV> <DEPLOYMENT_NAME>`
+
+By default, the 
