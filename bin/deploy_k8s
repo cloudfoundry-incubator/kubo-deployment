@@ -107,8 +107,8 @@ upload_releases() {
 
 upload_stemcell() {
   local director_name=$(get_setting director.yml /director_name)
-  local stemcell_version=$(get_setting director.yml /stemcell_version)
-  bosh-cli -e ${director_name} upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/google/bosh-stemcell-${stemcell_version}-google-kvm-ubuntu-trusty-go_agent.tgz"
+  local stemcell_url=$(get_setting director.yml /stemcell_url)
+  bosh-cli -e ${director_name} upload-stemcell ${stemcell_url}
 }
 
 main $@
