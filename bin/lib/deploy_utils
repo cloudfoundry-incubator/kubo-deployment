@@ -34,16 +34,17 @@ deploy_to_bosh() {
 }
 
 create_and_upload_release() {
-  local release_dirname=$1
+  local repo_directory=$1
+  local release_dirname=$(basename $repo_directory)
   local release_name="${release_dirname%-release}"
 
-  if [ -d "$release_dirname" ]; then
-    pushd "$release_dirname"
+  if [ -d "$repo_directory" ]; then
+    pushd "$repo_directory"
       BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli -e "${BOSH_NAME}" create-release --force --name "${release_name}"
       upload_release "--name=${release_name}" 
     popd
   else
-    echo "${release_dirname} repo not found - unable to create the ${release_name} release"
+    echo "${repo_directory} repo not found - unable to create the ${repo_directory} release"
     exit 1
   fi
 }
