@@ -18,10 +18,11 @@ The scripts require custom configuration before the deployment can take place.
 
 The environment preparation is out of scope. Check [here](https://bosh.io/docs/init.html) for more documentation.
 
-## CloudFoundry
+## Cloud Foundry
 
-CloudFoundry deployment is out of scope. TCP router and the Routing API should be enabled on the CF
-installation. See [OSS CF](https://docs.cloudfoundry.org/adminguide/enabling-tcp-routing.html) or
+Cloud Foundry deployment is not covered in this document.
+
+TCP router and the Routing API should be enabled on the Cloud Foundry installation. See [OSS CF](https://docs.cloudfoundry.org/adminguide/enabling-tcp-routing.html) or
 [PCF](http://docs.pivotal.io/pivotalcf/1-8/opsguide/tcp-routing-ert-config.html) documentation for 
 further details.
 
@@ -77,7 +78,7 @@ Additionally, the deployment script creates the `default` CA certificate within 
 
 ## Deploy Kubo
 
-### Deployment Process
+### The Easy Way: Automated 
 
 Once BOSH++ is deployed, the Kubernetes BOSH release can be built and deployed with this command:
 
@@ -100,7 +101,7 @@ or
 By default, the deployment will use the latest versions of the releases. If releases were uploaded from different machines or 
 used different sources, deployment might use wrong release.
 
-### Deployment using separate scripts
+### The Hard Way: Step by Step 
 
 #### Generate Cloud Config
 
