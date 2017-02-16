@@ -10,11 +10,6 @@ echo "|     BOSH K8S Cluster Deployer     |"
 echo "====================================="
 echo ""
 
-if [ $# -ne 2 ] && [ $# -ne 3 ]; then
-  print_usage
-  exit  1
-fi
-
 
 print_usage() {
   echo "Usage: `basename $0` [BOSH_ENV] [DEPLOYMENT_NAME] [RELEASE_SOURCE]"
@@ -38,6 +33,11 @@ main() {
   local deployment_name="${2}"
   local release_source="${3}"
   local bosh_iaas
+
+  if [ $# -ne 2 ] && [ $# -ne 3 ]; then
+    print_usage
+    exit  1
+  fi
 
   if [ -e "${bosh_env}/iaas" ]; then
     bosh_iaas=$(cat "${bosh_env}/iaas")
