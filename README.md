@@ -89,7 +89,10 @@ Note that the scripts will:
 or 
 - upload the kubo release tarball from specified location if RELEASE_SOURCE is local
 - regenerate the deployment manifest
-- kick off the deployment
+- kick off the deployment using `bosh_admin` UAA client
+
+By default, the deployment will use the latest versions of the releases. If releases were uploaded from different machines or 
+used different sources, deployment might use wrong release.
 
 ### Deployment using separate scripts
 
@@ -115,4 +118,9 @@ and follow [documentation](https://bosh.io/docs/create-release.html#dev-release)
 
 Manifest can be generated using command `bin/generate_service_manifest <BOSH_ENV> <DEPLOYMENT_NAME>`
 
-By default, the 
+##### Deploy
+
+Run deployment using the following command: `bosh-cli -e <BOSH_ALIAS> -d <DEPLOYMENT_NAME> deploy <PATH to MANIFEST>`
+where `<BOSH_ALIAS>` is BOSH director name from configuration file or BOSH director address
+
+`bosh-cli` has to be authenticated to BOSH director
