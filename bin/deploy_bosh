@@ -31,9 +31,11 @@ main() {
     print_usage
     exit 1
   fi
-
-  "deploy_$iaas"
-  generate_default_ca ${BOSH_ENV}
+  pushd $(dirname $0)/.. > /dev/null
+    "deploy_$iaas"
+    generate_default_ca ${BOSH_ENV}
+    setup_bosh_alias
+  popd
 }
 
 generate_default_ca() {
@@ -78,6 +80,21 @@ deploy_openstack() {
       --vars-file "${BOSH_ENV}/director.yml"  \
       --vars-file "${BOSH_ENV}/director-secrets.yml"  \
       --var-file private_key="${pk_filename}"
+}
+
+setup_bosh_alias() {
+  . ./bin/lib/deploy_utils
+
+  local bosh_director_hostname=$(get_setting "director.yml" /internal_ip)
+  local bosh_director_name=$(get_setting "director.yml" /director_name)
+
+  if [ -z ${bosh_director_hostname} ]; then
+    echo "Expected bosh director IP address specified as 'internal_ip' in director.yml"
+    exit 1
+  fi
+
+  ca_cert=$(bosh-cli int ${BOSH_ENV}/creds.yml --path=/default_ca/ca)
+  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT=${ca_cert} bosh-cli alias-env "${bosh_director_name}" -e $bosh_director_hostname
 }
 
 main
