@@ -131,3 +131,17 @@ Run deployment using the following command: `bosh-cli -e <BOSH_ALIAS> -d <DEPLOY
 where `<BOSH_ALIAS>` is BOSH director name from configuration file or BOSH director address
 
 `bosh-cli` has to be authenticated to BOSH director
+
+## Accessing Kubo
+
+Configure kubectl for your Kubo instance with the following command: 
+
+```bash
+bin/set_kubeconfig <BOSH_ENV> <DEPLOYMENT_NAME>
+```
+
+You can now issue kubectl commands such as:
+```bash
+kubectl show pods --namespace=kube-system
+kubectl get nodes
+```
