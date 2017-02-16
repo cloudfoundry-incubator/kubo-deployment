@@ -1,0 +1,27 @@
+---
+resources:
+- name: git-kubo-deployment
+  type: git
+  source:
+    uri: git@github.com:pivotal-cf-experimental/kubo-deployment
+    branch: master
+    private_key: {{git-ssh-key}}
+
+jobs:
+- name: install-bosh
+  plan:
+  - task: gcp
+    config:
+      platform: linux
+      image_resource:
+      type: docker-image
+      source:
+        repository: pcfkubo/kubo-ci
+        tag: stable
+      params:
+        GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
+      run:
+        path: git-kubo-deployment/bin/deploy_bosh git-kubo-deployment/ci/environments/gcp gcp-ci
+      inputs:
+      - name: git-kubo-deployment
+
