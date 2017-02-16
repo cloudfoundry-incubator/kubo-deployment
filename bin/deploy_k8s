@@ -22,7 +22,7 @@ print_usage() {
   echo "  options:"
   echo "     dev    - Build a dev release from the local machine."
   echo "              Required binaries and repos should be in ../"
-  echo "     public - Use published releases from the internet"
+  echo "     public - (default) Use published releases from the internet"
   echo "     local  - Use local releases"
   echo "              Required binaries should be in ../"
   echo ""
@@ -85,8 +85,7 @@ upload_releases() {
       popd > /dev/null
       ;;
     "public")
-       echo "NYI: Kubo release not yet available on a public endpoint"
-       exit 1
+       upload_release $(get_setting director.yml "/kubo_release_url")
       ;;
     "local")
       pushd ../ > /dev/null

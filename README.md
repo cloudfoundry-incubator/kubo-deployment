@@ -12,15 +12,22 @@ You'll need the following tools on your machine to continue:
 
 # Deploy
 
-The scripts require custom config. 
+The scripts require custom configuration before the deployment can take place. 
 
 ## Environment preparation
 
 The environment preparation is out of scope. Check [here](https://bosh.io/docs/init.html) for more documentation.
 
-## CloudFoundry
+## Cloud Foundry
 
-CloudFoundry deployment is out of scope. 
+Cloud Foundry deployment is not covered in this document.
+
+TCP router and the Routing API should be enabled on the Cloud Foundry installation. See [OSS CF](https://docs.cloudfoundry.org/adminguide/enabling-tcp-routing.html) or
+[PCF](http://docs.pivotal.io/pivotalcf/1-8/opsguide/tcp-routing-ert-config.html) documentation for 
+further details.
+
+A UAA client with [appropriate authorities](https://github.com/cloudfoundry-incubator/routing-api#configure-oauth-clients-manually-using-uaac-cli-for-uaa)
+is required in order to register the TCP routes.
 
 ## Generate configuration
 
@@ -68,3 +75,59 @@ Another file that gets created during initial deployment is called `state.json`.
 the BOSH state identical to the one used by [bosh-init](https://bosh.io/docs/using-bosh-init.html).
 
 Additionally, the deployment script creates the `default` CA certificate within CredHub.
+
+## Deploy Kubo
+
+### The Easy Way: Automated 
+
+Once BOSH++ is deployed, the Kubernetes BOSH release can be built and deployed with this command:
+
+```bash
+bin/deploy_k8s <BOSH_ENV> <DEPLOYMENT_NAME> <RELEASE_SOURCE>
+```
+
+The `RELEASE_SOURCE` parameter allows you to either build and deploy a local copy of the repository, or deploy our pre-built kubo-release tarball, and is optional.
+
+Note that the scripts will:
+
+- Generate certificate in CredHub
+- upload any Cloud Config changes to the director
+- create the kubo release from source and upload it if RELEASE_SOURCE is dev
+or 
+- upload the kubo release tarball from specified location if RELEASE_SOURCE is local
+- regenerate the deployment manifest
+- kick off the deployment using `bosh_admin` UAA client
+
+By default, the deployment will use the latest versions of the releases. If releases were uploaded from different machines or 
+used different sources, deployment might use wrong release.
+
+### The Hard Way: Step by Step 
+
+#### Generate Cloud Config
+
+Kubo deployment uses [BOSH 2.0 Cloud Config](https://bosh.io/docs/cloud-config.html).
+
+The default cloud config for GCP uses n1-standard-1 VMs for supporting services and n1-standard-2 VMs
+for Kubernetes workers. The network properties are pulled in from the environment configuration file 
+which is stored at `<BOSH_ENV>/director.yml`.
+
+Cloud config can be generated using following command:
+```bash
+bin/generate_cloud_config <BOSH_ENV>
+```
+
+##### Create and upload release
+
+To create dev release, download the [kubo-release repository](https://github.com/pivotal-cf-experimental/kubo-release) 
+and follow [documentation](https://bosh.io/docs/create-release.html#dev-release)
+
+##### Generate manifest
+
+Manifest can be generated using command `bin/generate_service_manifest <BOSH_ENV> <DEPLOYMENT_NAME>`
+
+##### Deploy
+
+Run deployment using the following command: `bosh-cli -e <BOSH_ALIAS> -d <DEPLOYMENT_NAME> deploy <PATH to MANIFEST>`
+where `<BOSH_ALIAS>` is BOSH director name from configuration file or BOSH director address
+
+`bosh-cli` has to be authenticated to BOSH director
