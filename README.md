@@ -12,7 +12,7 @@ You'll need the following tools on your machine to continue:
 
 # Deploy
 
-The scripts require custom config. 
+The scripts require custom configuration before the deployment can take place. 
 
 ## Environment preparation
 
@@ -20,7 +20,13 @@ The environment preparation is out of scope. Check [here](https://bosh.io/docs/i
 
 ## CloudFoundry
 
-CloudFoundry deployment is out of scope. 
+CloudFoundry deployment is out of scope. TCP router and the Routing API should be enabled on the CF
+installation. See [OSS CF](https://docs.cloudfoundry.org/adminguide/enabling-tcp-routing.html) or
+[PCF](http://docs.pivotal.io/pivotalcf/1-8/opsguide/tcp-routing-ert-config.html) documentation for 
+further details.
+
+A UAA client with [appropriate authorities](https://github.com/cloudfoundry-incubator/routing-api#configure-oauth-clients-manually-using-uaac-cli-for-uaa)
+is required in order to register the TCP routes.
 
 ## Generate configuration
 
@@ -79,7 +85,7 @@ Once BOSH++ is deployed, the Kubernetes BOSH release can be built and deployed w
 bin/deploy_k8s <BOSH_ENV> <DEPLOYMENT_NAME> <RELEASE_SOURCE>
 ```
 
-The `RELEASE_SOURCE` parameter allows you to either build and deploy a local copy of the repository, or deploy our pre-built kubo-release tarball.
+The `RELEASE_SOURCE` parameter allows you to either build and deploy a local copy of the repository, or deploy our pre-built kubo-release tarball, and is optional.
 
 Note that the scripts will:
 
