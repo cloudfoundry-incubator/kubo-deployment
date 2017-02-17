@@ -4,12 +4,13 @@ resources:
   type: git
   source:
     uri: git@github.com:pivotal-cf-experimental/kubo-deployment
-    branch: master
+    branch: pr-e2e-ci
     private_key: {{git-ssh-key}}
 
 jobs:
 - name: install-bosh
   plan:
+  - get: git-kubo-deployment
   - task: gcp
     config:
       platform: linux
@@ -21,7 +22,18 @@ jobs:
       params:
         GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
       run:
-        path: git-kubo-deployment/bin/deploy_bosh git-kubo-deployment/ci/environments/gcp gcp-ci
+        path: sh
+        args:
+        - -ec
+        - |
+          echo $GCP_SERVICE_ACCOUNT > key.json
+          gcloud auth active-service-account bosh-deployer bosh-deployer@cf-pcf-kubo.iam.gserviceaccount.com --key-file=key.json
+          git-kubo-deployment/bin/deploy_bosh git-kubo-deployment/ci/environments/gcp
+          cp git-kubo-deployment/ci/environments/gcp/creds.yml bosh-creds/
+          cp git-kubo-deployment/ci/environments/gcp/*.json bosh-state/
+
       inputs:
       - name: git-kubo-deployment
-
+      outputs:
+      - name: bosh-state
+      - name: bosh-creds

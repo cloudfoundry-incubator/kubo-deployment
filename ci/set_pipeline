@@ -8,11 +8,13 @@ then
   exit 1
 fi
 
-pipeline_dir=$(dirname $0)
+pipeline_dir=$(dirname "$0")
 ssh_key=$(lpass show "Shared-London Services"/london-ci/git-ssh-key --notes)
+service_account=$(lpass show "Shared-Kubo/bosh-deployer service key" --notes)
 
 fly --target kubo sync
 fly --target kubo set-pipeline --pipeline kubo-deployment \
-  --config ${pipeline_dir}/pipeline.yml \
-  --var git-ssh-key="${ssh_key}"
+  --config "${pipeline_dir}/pipeline.yml" \
+  --var git-ssh-key="${ssh_key}" \
+  --var gcp-service-account="${service_account}"
 
