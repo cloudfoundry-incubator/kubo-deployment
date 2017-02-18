@@ -18,6 +18,7 @@ networks:
     range: 10.244.0.0/24
     gateway: 10.244.0.1
     static: [10.244.0.34]
+    reserved: []
 
 compilation:
   workers: 5
