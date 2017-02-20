@@ -3,7 +3,7 @@
 [ -z "$DEBUG" ] || set -x
 BOSH_ENV=$1
 pk_filename=$2
-current_directory=$(cd $(dirname ${BASH_SOURCE[0]})/.. && pwd)
+current_directory=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 
 echo "====================================="
 echo "|         BOSH++ Deployer           |"
@@ -31,9 +31,9 @@ main() {
     print_usage
     exit 1
   fi
-  pushd $(dirname $0)/.. > /dev/null
+  pushd "$(dirname "$0")/.." > /dev/null
     "deploy_$iaas"
-    generate_default_ca ${BOSH_ENV}
+    generate_default_ca "${BOSH_ENV}"
     setup_bosh_alias
   popd
 }
@@ -41,8 +41,9 @@ main() {
 generate_default_ca() {
   local bosh_env=$1
 
-  local credhub_password="$(bosh-cli int "${bosh_env}/creds.yml" --path '/credhub_user_password' | xargs echo -n)"
-  local bosh_hostname="$(bosh-cli int "${bosh_env}/director.yml" --path '/internal_ip' | xargs echo -n)"
+  local credhub_password bosh_hostname
+  credhub_password="$(bosh-cli int "${bosh_env}/creds.yml" --path '/credhub_user_password')"
+  bosh_hostname="$(bosh-cli int "${bosh_env}/director.yml" --path '/internal_ip')"
 
   credhub api --skip-tls-validation -s "${bosh_hostname}:8844"
   credhub login -u credhub-user -p "${credhub_password}"
@@ -50,31 +51,31 @@ generate_default_ca() {
 }
 
 deploy_gcp() {
-    bosh-cli create-env  ${current_directory}/bosh-deployment/bosh.yml  \
-      --ops-file ${current_directory}/bosh-deployment/gcp/cpi.yml \
-      --ops-file ${current_directory}/bosh-deployment/uaa.yml \
-      --ops-file ${current_directory}/bosh-deployment/powerdns.yml \
-      --ops-file ${current_directory}/configurations/gcp/use_service_account.yml \
-      --ops-file ${current_directory}/configurations/generic/credhub.yml \
-      --ops-file ${current_directory}/configurations/generic/bosh-admin-client.yml \
+    bosh-cli create-env "${current_directory}/bosh-deployment/bosh.yml"  \
+      --ops-file "${current_directory}/bosh-deployment/gcp/cpi.yml" \
+      --ops-file "${current_directory}/bosh-deployment/uaa.yml" \
+      --ops-file "${current_directory}/bosh-deployment/powerdns.yml" \
+      --ops-file "${current_directory}/configurations/generic/credhub.yml" \
+      --ops-file "${current_directory}/configurations/generic/bosh-admin-client.yml" \
+      --ops-file "${current_directory}/configurations/generic/bosh-admin-client.yml" \
       --state "${BOSH_ENV}/state.json" \
       --vars-store "${BOSH_ENV}/creds.yml" \
       --vars-file "${BOSH_ENV}/director.yml"
 }
 
 deploy_openstack() {
-    if [ -z ${pk_filename} ]; then
+    if [ -z "${pk_filename}" ]; then
       print_usage
       exit 1
     fi
 
-    bosh-cli create-env  ${current_directory}/bosh-deployment/bosh.yml  \
-      --ops-file ${current_directory}/bosh-deployment/openstack/cpi.yml \
-      --ops-file ${current_directory}/bosh-deployment/uaa.yml \
-      --ops-file ${current_directory}/bosh-deployment/powerdns.yml \
-      --ops-file ${current_directory}/configurations/generic/credhub.yml \
-      --ops-file ${current_directory}/configurations/openstack/multi-tenant.yml \
-      --ops-file ${current_directory}/configurations/generic/bosh-admin-client.yml \
+    bosh-cli create-env  "${current_directory}/bosh-deployment/bosh.yml"  \
+      --ops-file "${current_directory}/bosh-deployment/openstack/cpi.yml" \
+      --ops-file "${current_directory}/bosh-deployment/uaa.yml" \
+      --ops-file "${current_directory}/bosh-deployment/powerdns.yml" \
+      --ops-file "${current_directory}/configurations/generic/credhub.yml" \
+      --ops-file "${current_directory}/configurations/openstack/multi-tenant.yml" \
+      --ops-file "${current_directory}/configurations/generic/bosh-admin-client.yml" \
       --state "${BOSH_ENV}/state.json" \
       --vars-store "${BOSH_ENV}/creds.yml" \
       --vars-file "${BOSH_ENV}/director.yml"  \
@@ -83,18 +84,21 @@ deploy_openstack() {
 }
 
 setup_bosh_alias() {
+  # shellcheck disable=SC1091
   . ./bin/lib/deploy_utils
 
-  local bosh_director_hostname=$(get_setting "director.yml" /internal_ip)
-  local bosh_director_name=$(get_setting "director.yml" /director_name)
+  local bosh_director_hostname bosh_director_name
 
-  if [ -z ${bosh_director_hostname} ]; then
+  bosh_director_hostname=$(get_setting "director.yml" /internal_ip)
+  bosh_director_name=$(get_setting "director.yml" /director_name)
+
+  if [ -z "${bosh_director_hostname}" ]; then
     echo "Expected bosh director IP address specified as 'internal_ip' in director.yml"
     exit 1
   fi
 
-  ca_cert=$(bosh-cli int ${BOSH_ENV}/creds.yml --path=/default_ca/ca)
-  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT=${ca_cert} bosh-cli alias-env "${bosh_director_name}" -e $bosh_director_hostname
+  ca_cert=$(bosh-cli int "${BOSH_ENV}/creds.yml" --path=/default_ca/ca)
+  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli alias-env "${bosh_director_name}" -e "$bosh_director_hostname"
 }
 
 main
