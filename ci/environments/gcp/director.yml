@@ -6,8 +6,8 @@ tags:
   - internal
 zone: us-east1-c
 service_account: bosh-deployer@cf-pcf-kubo.iam.gserviceaccount.com
-internal_ip: 10.0.254.254
-bosh_hostname: 10.0.254.254
+internal_ip: 10.0.254.252
+bosh_hostname: 10.0.254.252
 
 deployments_network: kubo-network
 
