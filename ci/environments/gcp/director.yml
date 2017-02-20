@@ -21,8 +21,8 @@ routing-cf-uaa-url: # Routing UAA URL In PCF: https://uaa.<system domain>
 
 # we use BOSH 261 since CredHub 0.4 supports only it
 # CredHub 0.4 fixes important bug that breaks deployment
-bosh_release_url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=261
-bosh_release_sha1: b7855edc33ece92e9e8e1b5d03c5e2c897d426d8
+bosh_release_url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=261.1
+bosh_release_sha1: f46ad38ad49925e96ec93bd69d0e77f67ba07af9
 
 credhub_encryption_key: 0BCDEF0123456789ABCDEF0123456789
 
