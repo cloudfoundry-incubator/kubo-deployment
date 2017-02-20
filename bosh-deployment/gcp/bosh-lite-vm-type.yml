@@ -1,0 +1,5 @@
+---
+# Configure sizes for bosh-lite on gcp
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/machine_type
+  value: n1-standard-8

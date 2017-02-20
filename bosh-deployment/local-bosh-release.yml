@@ -1,0 +1,12 @@
+# Use local bosh release -- useful for testing
+
+- type: replace
+  path: /releases/name=bosh/url
+  value: file://((local_bosh_release))
+
+- type: remove
+  path: /releases/name=bosh/sha1
+
+- type: replace
+  path: /releases/name=bosh/version
+  value: create

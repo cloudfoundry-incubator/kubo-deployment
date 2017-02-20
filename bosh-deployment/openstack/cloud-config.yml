@@ -1,0 +1,45 @@
+azs:
+- name: z1
+  cloud_properties:
+    availability_zone: ((az))
+- name: z2
+  cloud_properties:
+    availability_zone: ((az))
+- name: z3
+  cloud_properties:
+    availability_zone: ((az))
+
+vm_types:
+- name: default
+  cloud_properties:
+    instance_type: m1.small
+- name: large
+  cloud_properties:
+    instance_type: m1.xlarge
+
+disk_types:
+- name: default
+  disk_size: 3000
+- name: large
+  disk_size: 50_000
+
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: ((internal_cidr))
+    gateway: ((internal_gw))
+    azs: [z1, z2, z3]
+    dns: [8.8.8.8]
+    reserved: []
+    cloud_properties:
+      net_id: ((net_id))
+- name: vip
+  type: vip
+
+compilation:
+  workers: 5
+  reuse_compilation_vms: true
+  az: z1
+  vm_type: default
+  network: default
