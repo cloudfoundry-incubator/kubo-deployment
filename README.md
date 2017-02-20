@@ -7,7 +7,7 @@ This repository contains automation scripts to deploy [Kubernetes](https://kuber
 
 You'll need the following tools on your machine to continue:
 
-- [bosh-cli](https://bosh.io/docs/cli-v2.html) for interacting with BOSH. Version 0.142 and above.
+- [bosh-cli](https://bosh.io/docs/cli-v2.html) for interacting with BOSH. Version 2.0.1 and above.
 - [credhub cli](https://github.com/pivotal-cf/credhub-cli) for interacting with CredHub. Version 0.4 only.
 
 # Deploy
