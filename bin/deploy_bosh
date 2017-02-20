@@ -2,7 +2,7 @@
 
 [ -z "$DEBUG" ] || set -x
 BOSH_ENV=$1
-pk_filename=$2
+key_filename=$2
 current_directory=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 
 echo "====================================="
@@ -10,15 +10,20 @@ echo "|         BOSH++ Deployer           |"
 echo "====================================="
 echo ""
 
-
 print_usage() {
 cat << EOF
-  Usage: $0 <BOSH environment path> [<private key filename>]
+  Usage: $0 <BOSH environment path> <private or service key filename>
 
-  * Note: Private key filename is required for AWS, Azure and Openstack
+  * Note: Private key is required for AWS, Azure and Openstack
+  * Service key is used for GCP
 EOF
 }
 if [ ! -d "${BOSH_ENV}" ]; then
+  print_usage
+  exit 1
+fi
+
+if [ -z "${key_filename}" ]; then
   print_usage
   exit 1
 fi
@@ -57,18 +62,13 @@ deploy_gcp() {
       --ops-file "${current_directory}/bosh-deployment/powerdns.yml" \
       --ops-file "${current_directory}/configurations/generic/credhub.yml" \
       --ops-file "${current_directory}/configurations/generic/bosh-admin-client.yml" \
-      --ops-file "${current_directory}/configurations/generic/bosh-admin-client.yml" \
       --state "${BOSH_ENV}/state.json" \
+      --var-file gcp_credentials_json="${key_filename}" \
       --vars-store "${BOSH_ENV}/creds.yml" \
       --vars-file "${BOSH_ENV}/director.yml"
 }
 
 deploy_openstack() {
-    if [ -z "${pk_filename}" ]; then
-      print_usage
-      exit 1
-    fi
-
     bosh-cli create-env  "${current_directory}/bosh-deployment/bosh.yml"  \
       --ops-file "${current_directory}/bosh-deployment/openstack/cpi.yml" \
       --ops-file "${current_directory}/bosh-deployment/uaa.yml" \
@@ -80,7 +80,7 @@ deploy_openstack() {
       --vars-store "${BOSH_ENV}/creds.yml" \
       --vars-file "${BOSH_ENV}/director.yml"  \
       --vars-file "${BOSH_ENV}/director-secrets.yml"  \
-      --var-file private_key="${pk_filename}"
+      --var-file private_key="${key_filename}"
 }
 
 setup_bosh_alias() {
