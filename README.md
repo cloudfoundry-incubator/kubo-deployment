@@ -142,7 +142,7 @@ bin/set_kubeconfig <BOSH_ENV> <DEPLOYMENT_NAME>
 
 You can now issue kubectl commands such as:
 ```bash
-kubectl show pods --namespace=kube-system
+kubectl get pods --namespace=kube-system
 kubectl get nodes
 ```
 
