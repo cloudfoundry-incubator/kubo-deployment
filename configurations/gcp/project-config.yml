@@ -1,6 +1,8 @@
 project_id: # GCP project ID
 network: # GCP network
 subnetwork: # GCP subnetwork
-tags: # optional array for GCP instance tags
+tags: # tags below are used if jumpbox and NAT were deployed using https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/blob/master/docs/bosh/main.tf
+  - "no-ip" # allow access to the Internet from BOSH director using NAT
+  - internal # allow access to the instances in same network from BOSH
 zone: # name of GCP zone
 service_account: # name of the service account applied to BOSH director vm
