@@ -11,5 +11,7 @@ jobs:
 - name: install-bosh
   plan:
   - get: git-kubo-deployment
-  - task: gcp
+  - task: install
     file: git-kubo-deployment/ci/tasks/install-bosh.yml
+    params:
+      GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
