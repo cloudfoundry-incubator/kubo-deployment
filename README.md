@@ -145,3 +145,7 @@ You can now issue kubectl commands such as:
 kubectl show pods --namespace=kube-system
 kubectl get nodes
 ```
+
+## Development
+
+This repo uses https://github.com/cloudfoundry/bosh-deployment as git subtree. Run command ` git subtree pull --prefix bosh-deployment git@github.com:cloudfoundry/bosh-deployment.git <ref>` to update subtree.
