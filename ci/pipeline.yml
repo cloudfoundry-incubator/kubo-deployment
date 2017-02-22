@@ -4,7 +4,7 @@ resources:
   type: git
   source:
     uri: git@github.com:pivotal-cf-experimental/kubo-deployment
-    branch: pr-e2e-ci
+    branch: master
     private_key: {{git-ssh-key}}
 
 - name: s3-bosh-state
