@@ -39,7 +39,22 @@ jobs:
   - aggregate:
     - put: s3-bosh-creds
       params:
-        file: bosh-creds/creds.yaml
+        file: bosh-creds/creds.yml
     - put: s3-bosh-state
       params:
         file: bosh-state/state.json
+
+- name: destroy-bosh
+  plan:
+  - aggregate:
+    - get: git-kubo-deployment
+      passed: [ 'install-bosh' ]
+      trigger: true
+    - get: s3-bosh-creds
+      passed: [ 'install-bosh' ]
+    - get: s3-bosh-state
+      passed: [ 'install-bosh' ]
+  - task: destroy
+    file: git-kubo-deployment/ci/tasks/destroy-bosh.yml
+    params:
+      GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
