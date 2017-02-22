@@ -40,7 +40,7 @@ main() {
 
   if [ ! -e "${bosh_env}/iaas" ]; then
    echo "${bosh_env} is not a valid BOSH environment."
-   echo "Please use 'generate_bosh_config' to create one."
+   echo "Please use 'generate_env_config' to create one."
    print_usage
    exit 1
   fi
