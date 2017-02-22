@@ -29,6 +29,7 @@ resources:
 
 jobs:
 - name: install-bosh
+  serial_groups: [ deploy-bosh ]
   plan:
   - get: git-kubo-deployment
     trigger: true
@@ -45,6 +46,7 @@ jobs:
         file: bosh-state/state.json
 
 - name: destroy-bosh
+  serial_groups: [ deploy-bosh ]
   plan:
   - aggregate:
     - get: git-kubo-deployment
