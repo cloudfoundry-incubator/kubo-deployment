@@ -277,3 +277,20 @@ bosh create-env bosh.yml \
 
 echo "- Warden (cloud-config)"
 bosh update-cloud-config warden/cloud-config.yml
+
+echo "- Docker"
+bosh create-env bosh.yml \
+  -o docker/cpi.yml \
+  -o jumpbox-user.yml \
+  --state=$vars_store_prefix \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v director_name=docker \
+  -v internal_cidr=10.245.0.0/16 \
+  -v internal_gw=10.245.0.1 \
+  -v internal_ip=10.245.0.10 \
+  -v docker_host=tcp://192.168.50.8:4243 \
+  -v docker_tls=ca_cert \
+  -v network=net3
+
+echo "- Docker (cloud-config)"
+bosh update-cloud-config docker/cloud-config.yml -v network=net3
