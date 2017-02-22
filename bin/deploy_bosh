@@ -12,10 +12,10 @@ echo ""
 
 print_usage() {
 cat << EOF
-  Usage: $0 <BOSH environment path> <private or service key filename>
+  Usage: $0 <BOSH environment path> <private or service account key filename for BOSH to use for deployments>
 
   * Note: Private key is required for AWS, Azure and Openstack
-  * Service key is used for GCP
+  * Service account key is required for GCP
 EOF
 }
 if [ ! -d "${BOSH_ENV}" ]; then
