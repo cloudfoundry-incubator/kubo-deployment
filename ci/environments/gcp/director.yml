@@ -5,7 +5,6 @@ tags:
   - "no-ip"
   - internal
 zone: us-east1-c
-service_account: bosh-deployer@cf-pcf-kubo.iam.gserviceaccount.com
 internal_ip: 10.0.254.252
 bosh_hostname: 10.0.254.252
 
