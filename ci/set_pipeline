@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+[ -z "$DEBUG" ] || set -x
+
+if ! which lpass > /dev/null 2>&1
+then
+  echo "must have lastpass CLI installed" >&2
+  exit 1
+fi
+
+pipeline_dir=$(dirname "$0")
+ssh_key=$(lpass show "Shared-London Services"/london-ci/git-ssh-key --notes)
+service_account=$(lpass show "Shared-Kubo/bosh-deployer service key" --notes)
+
+trap 'rm "$pipeline_dir/secrets.yml"' EXIT
+echo "---" > "$pipeline_dir/secrets.yml"
+lpass show "Shared-Kubo/CI/kubo-ci" --notes >> "$pipeline_dir/secrets.yml"
+
+fly --target kubo sync
+fly --target kubo set-pipeline --pipeline kubo-deployment \
+  --config "${pipeline_dir}/pipeline.yml" \
+  --load-vars-from "$pipeline_dir/secrets.yml" \
+  --var git-ssh-key="${ssh_key}" \
+  --var gcp-service-account="${service_account}"
+

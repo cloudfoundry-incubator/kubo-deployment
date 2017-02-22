@@ -1,0 +1,62 @@
+---
+resources:
+- name: git-kubo-deployment
+  type: git
+  source:
+    uri: git@github.com:pivotal-cf-experimental/kubo-deployment
+    branch: master
+    private_key: {{git-ssh-key}}
+
+- name: s3-bosh-state
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-pipeline
+    endpoint: s3-eu-west-1.amazonaws.com
+    region_name: eu-west-1
+    versioned_file: bosh/state.json
+
+- name: s3-bosh-creds
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-pipeline
+    endpoint: s3-eu-west-1.amazonaws.com
+    region_name: eu-west-1
+    versioned_file: bosh/creds.yml
+
+jobs:
+- name: install-bosh
+  serial_groups: [ deploy-bosh ]
+  plan:
+  - get: git-kubo-deployment
+    trigger: true
+  - task: install
+    file: git-kubo-deployment/ci/tasks/install-bosh.yml
+    params:
+      GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
+  - aggregate:
+    - put: s3-bosh-creds
+      params:
+        file: bosh-creds/creds.yml
+    - put: s3-bosh-state
+      params:
+        file: bosh-state/state.json
+
+- name: destroy-bosh
+  serial_groups: [ deploy-bosh ]
+  plan:
+  - aggregate:
+    - get: git-kubo-deployment
+      passed: [ 'install-bosh' ]
+      trigger: true
+    - get: s3-bosh-creds
+      passed: [ 'install-bosh' ]
+    - get: s3-bosh-state
+      passed: [ 'install-bosh' ]
+  - task: destroy
+    file: git-kubo-deployment/ci/tasks/destroy-bosh.yml
+    params:
+      GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
