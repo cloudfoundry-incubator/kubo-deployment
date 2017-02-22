@@ -4,7 +4,7 @@
   value:
     name: bosh-docker-cpi
     url: file:///tmp/docker-cpi-release
-    # todo version/sha1
+    sha1: local-file # todo
 
 - type: replace
   path: /resource_pools/name=vms/stemcell?
