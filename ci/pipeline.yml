@@ -12,7 +12,7 @@ resources:
   source:
     access_key_id: {{aws-access-key-id}}
     secret_access_key: {{aws-secret-access-key}}
-    bucket: kubo-pipelines
+    bucket: kubo-pipeline
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
     versioned_file: bosh/state.json
@@ -22,10 +22,10 @@ resources:
   source:
     access_key_id: {{aws-access-key-id}}
     secret_access_key: {{aws-secret-access-key}}
-    bucket: kubo-pipelines
+    bucket: kubo-pipeline
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
-    versioned_file: bosh/creds.yaml
+    versioned_file: bosh/creds.yml
 
 jobs:
 - name: install-bosh
