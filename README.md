@@ -31,6 +31,7 @@ is required in order to register the TCP routes.
 
 ## Glossary
 
+- Kubo - Kubernetes on BOSH
 - BOSH++ - BOSH with UAA, Credhub and PowerDNS
 - BOSH Configuration - Folder that contains all configuration files needed to deploy BOSH++, as well as all 
 configuration files that are generated while deploying BOSH++. Also called <BOSH_ENV>
