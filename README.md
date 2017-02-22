@@ -9,8 +9,8 @@ You'll need the following tools on your machine to continue:
 
 - [bosh-cli](https://bosh.io/docs/cli-v2.html) for interacting with BOSH. Version 2.0.1 and above. Please ensure the binary is installed as `bosh-cli` and not `bosh`.
 - [credhub cli](https://github.com/pivotal-cf/credhub-cli/releases/tag/0.4.0) for interacting with CredHub. Version 0.4 only.
-- Ruby 2.3+ (required by the bosh-cli to deploy BOSH++)
-- make (required by the bosh-cli to deploy BOSH++)
+- [Ruby 2.3+](https://www.ruby-lang.org/en/downloads) required by the bosh-cli to deploy BOSH++
+- [make](https://www.gnu.org/software/make) required by the bosh-cli to deploy BOSH++
 
 # Installation steps
 
