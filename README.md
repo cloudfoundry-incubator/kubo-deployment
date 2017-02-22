@@ -18,9 +18,9 @@ Here is an overview of the steps you would need to take in order to get a runnin
 
 1. [Setup IAAS](#Setup-IAAS)
 1. [Setup BOSH configuration files](#Setup-BOSH-configuration-files)
-1. Deploy BOSH++
-1. Deploy CF
-1. Deploy K8s
+1. [Deploy BOSH++](#Deploy-BOSH++)
+1. [Deploy CF](#Cloud-Foundry)
+1. [Deploy K8s](#Deploy-Kubo)
 1. Push your app!
 
 ## Setup IAAS
