@@ -1,0 +1,39 @@
+project_id: cf-pcf-kubo
+network: main-pcf-network
+subnetwork: kubo-ci
+tags: 
+  - "no-ip"
+  - internal
+zone: us-east1-c
+internal_ip: 10.0.254.252
+bosh_hostname: 10.0.254.252
+
+deployments_network: kubo-network
+
+cf_uaa_url: # URL of your CF UAA. In PCF: https://uaa.<system domain>
+cf_url: # URL of your CF API. In PCF: https://api.<system domain>
+cf_username: # Your CF username. It is used by ODB.
+cf-tcp-router-name: # URL to TCP router. In PCF: tcp.<domain>
+routing-cf-api-url: # TCP routing API URL. In PCF: https://api.<system domain>
+routing-cf-client-id: # Routing UAA client name that will be used to register tcp routes
+routing-cf-uaa-url: # Routing UAA URL In PCF: https://uaa.<system domain>
+
+# we use BOSH 261 since CredHub 0.4 supports only it
+# CredHub 0.4 fixes important bug that breaks deployment
+bosh_release_url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=261.1
+bosh_release_sha1: f46ad38ad49925e96ec93bd69d0e77f67ba07af9
+
+credhub_encryption_key: 0BCDEF0123456789ABCDEF0123456789
+
+director_name: I AM CI
+dns_recursor_ip: 10.0.254.1
+internal_cidr: 10.0.254.0/24
+internal_gw: 10.0.254.1
+
+stemcell_version: 3312.18
+stemcell_url: https://s3.amazonaws.com/bosh-gce-light-stemcells/light-bosh-stemcell-3312.18-google-kvm-ubuntu-trusty-go_agent.tgz
+syslog-endpoint: ""
+
+credhub_release_url: https://s3.amazonaws.com/kubo-public/credhub-0.4.0.tgz
+kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release.tgz
+

@@ -1,0 +1,64 @@
+#!/bin/bash -e
+
+[ -z "$DEBUG" ] || set -x
+BOSH_ENV=$1
+key_filename=$2
+current_directory=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+
+echo "====================================="
+echo "|         BOSH++ Destroyer          |"
+echo "====================================="
+echo ""
+
+print_usage() {
+cat << EOF
+  Usage: $0 <BOSH environment path> <private or service account key filename for BOSH to use for deployments>
+
+  * Note: Private key is required for AWS, Azure and Openstack
+  * Service account key is required for GCP
+EOF
+}
+if [ ! -d "${BOSH_ENV}" ]; then
+  print_usage
+  exit 1
+fi
+
+if [ -z "${key_filename}" ]; then
+  print_usage
+  exit 1
+fi
+
+main() {
+  iaas=$(cat "$BOSH_ENV"/iaas)
+  if [ "$iaas" != 'gcp' ]; then
+    echo "Supported platforms are: 'gcp'"
+    echo ""
+    print_usage
+    exit 1
+  fi
+  pushd "$(dirname "$0")/.." > /dev/null
+    "destroy_$iaas"
+  popd
+}
+
+destroy_gcp() {
+  . ./bin/lib/deploy_utils
+
+  local bosh_director_name
+
+  bosh_director_name=$(get_setting "director.yml" /director_name)
+  ca_cert=$(get_setting "creds.yml" /default_ca/ca)
+
+  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli delete-env -e "${bosh_director_name}" "${current_directory}/bosh-deployment/bosh.yml" \
+      --ops-file "${current_directory}/bosh-deployment/gcp/cpi.yml" \
+      --ops-file "${current_directory}/bosh-deployment/uaa.yml" \
+      --ops-file "${current_directory}/bosh-deployment/powerdns.yml" \
+      --ops-file "${current_directory}/configurations/generic/credhub.yml" \
+      --ops-file "${current_directory}/configurations/generic/bosh-admin-client.yml" \
+      --state "${BOSH_ENV}/state.json" \
+      --var-file gcp_credentials_json="${key_filename}" \
+      --vars-store "${BOSH_ENV}/creds.yml" \
+      --vars-file "${BOSH_ENV}/director.yml"
+}
+
+main
