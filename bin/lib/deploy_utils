@@ -30,7 +30,7 @@ deploy_to_bosh() {
     exit 1
   fi
 
-  printf "${bosh_manifest}" | BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli -e "$BOSH_NAME" -d ${deployment_name} -n deploy --no-redact -
+  echo "${bosh_manifest}" | BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli -e "$BOSH_NAME" -d ${deployment_name} -n deploy --no-redact -
 }
 
 create_and_upload_release() {
