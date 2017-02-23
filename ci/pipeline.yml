@@ -7,6 +7,14 @@ resources:
     branch: master
     private_key: {{git-ssh-key}}
 
+- name: kubo-lock
+  type: pool
+  source:
+    uri: git@github.com:pivotal-cf-experimental/kubo-locks.git
+    branch: master
+    private_key: {{git-ssh-key}}
+    pool: kubo-deployment
+
 - name: s3-bosh-state
   type: s3
   source:
@@ -28,11 +36,20 @@ resources:
     versioned_file: bosh/creds.yml
 
 jobs:
-- name: install-bosh
-  serial_groups: [ deploy-bosh ]
+- name: claim-lock
   plan:
   - get: git-kubo-deployment
     trigger: true
+  - put: kubo-lock
+    params: { acquire: true }
+
+- name: install-bosh
+  plan:
+  - get: git-kubo-deployment
+    trigger: true
+    passed: [ 'claim-lock' ]
+  - get: kubo-lock
+    passed: [ 'claim-lock' ]
   - task: install
     file: git-kubo-deployment/ci/tasks/install-bosh.yml
     params:
@@ -46,12 +63,13 @@ jobs:
         file: bosh-state/state.json
 
 - name: destroy-bosh
-  serial_groups: [ deploy-bosh ]
   plan:
   - aggregate:
     - get: git-kubo-deployment
       passed: [ 'install-bosh' ]
       trigger: true
+    - get: kubo-lock
+      passed: [ 'install-bosh' ]
     - get: s3-bosh-creds
       passed: [ 'install-bosh' ]
     - get: s3-bosh-state
@@ -60,3 +78,5 @@ jobs:
     file: git-kubo-deployment/ci/tasks/destroy-bosh.yml
     params:
       GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
+  - put: kubo-lock
+    params: { release: kubo-lock }
