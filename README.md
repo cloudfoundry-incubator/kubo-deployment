@@ -84,6 +84,14 @@ bin/deploy_bosh <path to configuration> <private or service account key filename
 As a pre-requisite, you will need to ensure that the machine you are running the command from has network access to the BOSH director. Else you may get the error
 
 ```
+Command 'deploy' failed:
+  Deploying:
+    Creating instance 'bosh/0':
+      Waiting until instance is ready:
+        Sending ping to the agent:
+          Performing request to agent endpoint 'https://mbus:294a691d057ede1af4f696aab36c4bc5@<bosh ip>:6868/agent':
+            Performing POST request:
+              Post https://mbus:294a691d057ede1af4f696aab36c4bc5@<bosh ip>:6868/agent: dial tcp <bosh ip>:6868: i/o timeout
 ```
 
 There are multiple ways to ensure access. A couple of examples
