@@ -11,6 +11,7 @@ fi
 pipeline_dir=$(dirname "$0")
 ssh_key=$(lpass show "Shared-Kubo/CI/git-ssh-key" --notes)
 service_account=$(lpass show "Shared-Kubo/CI/bosh-deployer service key" --notes)
+slack_url=$(lpass show "Shared-Kubo/CI/Slack Incoming Webhook" --url)
 
 trap 'rm "$pipeline_dir/secrets.yml"' EXIT
 echo "---" > "$pipeline_dir/secrets.yml"
@@ -21,5 +22,6 @@ fly --target kubo set-pipeline --pipeline kubo-deployment \
   --config "${pipeline_dir}/pipeline.yml" \
   --load-vars-from "$pipeline_dir/secrets.yml" \
   --var git-ssh-key="${ssh_key}" \
-  --var gcp-service-account="${service_account}"
+  --var gcp-service-account="${service_account}" \
+  --var slack-url="${slack_url}"
 

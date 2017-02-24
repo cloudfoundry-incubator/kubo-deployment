@@ -1,4 +1,11 @@
 ---
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
+
 resources:
 - name: git-kubo-deployment
   type: git
@@ -35,6 +42,11 @@ resources:
     region_name: eu-west-1
     versioned_file: bosh/creds.yml
 
+- name: slack-alert
+  type: slack-notification
+  source:
+    url: {{slack-url}}
+
 jobs:
 - name: claim-lock
   plan:
@@ -54,6 +66,14 @@ jobs:
     file: git-kubo-deployment/ci/tasks/install-bosh.yml
     params:
       GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Deploy BOSH failed:
+          http://p-concourse.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - aggregate:
     - put: s3-bosh-creds
       params:
@@ -77,6 +97,14 @@ jobs:
       passed: [ 'install-bosh' ]
   - task: install
     file: git-kubo-deployment/ci/tasks/deploy-k8s-instance.yml
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Deploy K8s failed:
+          http://p-concourse.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
 - name: destroy-bosh
   plan:
@@ -94,5 +122,13 @@ jobs:
     file: git-kubo-deployment/ci/tasks/destroy-bosh.yml
     params:
       GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Destroy BOSH failed:
+          http://p-concourse.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - put: kubo-lock
     params: { release: kubo-lock }
