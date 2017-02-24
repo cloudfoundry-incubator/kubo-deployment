@@ -85,7 +85,7 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Deploy BOSH failed:
-          http://p-concourse.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          https://p-concourse.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - aggregate:
     - put: s3-bosh-creds
       params:
@@ -117,7 +117,7 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Deploy K8s failed:
-          http://p-concourse.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          https://p-concourse.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
 - name: destroy-bosh
   plan:
@@ -142,6 +142,6 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Destroy BOSH failed:
-          http://p-concourse.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          https://p-concourse.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - put: kubo-lock
     params: { release: kubo-lock }
