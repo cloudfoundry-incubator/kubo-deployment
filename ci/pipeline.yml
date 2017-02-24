@@ -14,6 +14,13 @@ resources:
     branch: master
     private_key: {{git-ssh-key}}
 
+- name: git-kubo-release
+  type: git
+  source:
+    uri: git@github.com:pivotal-cf-experimental/kubo-release
+    branch: master
+    private_key: {{git-ssh-key}}
+
 - name: kubo-lock
   type: pool
   source:
@@ -50,8 +57,11 @@ resources:
 jobs:
 - name: claim-lock
   plan:
-  - get: git-kubo-deployment
-    trigger: true
+  - aggregate:
+    - get: git-kubo-release
+      trigger: true
+    - get: git-kubo-deployment
+      trigger: true
   - put: kubo-lock
     params: { acquire: true }
 
@@ -59,6 +69,8 @@ jobs:
   plan:
   - get: git-kubo-deployment
     trigger: true
+    passed: [ 'claim-lock' ]
+  - get: git-kubo-release
     passed: [ 'claim-lock' ]
   - get: kubo-lock
     passed: [ 'claim-lock' ]
@@ -86,9 +98,10 @@ jobs:
   plan:
   - aggregate:
     - get: git-kubo-deployment
-      trigger: true
       passed: [ 'install-bosh' ]
       trigger: true
+    - get: git-kubo-release
+      passed: [ 'install-bosh' ]
     - get: kubo-lock
       passed: [ 'install-bosh' ]
     - get: s3-bosh-creds
