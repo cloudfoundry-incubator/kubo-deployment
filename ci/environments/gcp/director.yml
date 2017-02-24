@@ -29,6 +29,7 @@ director_name: I AM CI
 dns_recursor_ip: 10.0.254.1
 internal_cidr: 10.0.254.0/24
 internal_gw: 10.0.254.1
+external-kubo-port: 6577
 
 stemcell_version: 3312.18
 stemcell_url: https://s3.amazonaws.com/bosh-gce-light-stemcells/light-bosh-stemcell-3312.18-google-kvm-ubuntu-trusty-go_agent.tgz
