@@ -5,7 +5,7 @@ set -o pipefail
 [ -z "$DEBUG" ] || set -x
 
 print_usage() {
-  echo "Usage: `basename $0` [BOSH_ENV]"
+  echo "Usage: $(basename "$0") [BOSH_ENV]"
   echo ""
   echo "BOSH_ENV is the path to your BOSH environment configuration folder"
   echo ""
@@ -13,29 +13,33 @@ print_usage() {
 }
 
 main() {
-  local bosh_env=$(cd "${1}"; pwd -P)
+  local bosh_env
+
+  bosh_env=$(cd "${1}"; pwd -P)
 
   if [ $# -ne 1 ]; then
     print_usage
     exit  1
   fi
 
-  pushd $(dirname $0)/.. > /dev/null
+  pushd "$(dirname "$0")/.." > /dev/null
+   # shellcheck disable=SC1091
     . ./bin/lib/deploy_utils
-    export_bosh_environment ${bosh_env}
-    
-    local bosh_director_hostname bosh_director_name
-  
+
+    export_bosh_environment "${bosh_env}"
+
+    local bosh_director_hostname
+
     bosh_director_hostname=$(get_setting "director.yml" /internal_ip)
-  
+
     if [ -z "${bosh_director_hostname}" ]; then
       echo "Expected bosh director IP address specified as 'internal_ip' in director.yml"
       exit 1
     fi
-  
+
     ca_cert=$(bosh-cli int "${bosh_env}/creds.yml" --path=/default_ca/ca)
     BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli alias-env "${BOSH_NAME}" -e "$bosh_director_hostname"
   popd > /dev/null
 }
 
-main $@
+main "$@"
