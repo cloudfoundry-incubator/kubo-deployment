@@ -9,8 +9,8 @@ then
 fi
 
 pipeline_dir=$(dirname "$0")
-ssh_key=$(lpass show "Shared-Kubo/CI/git-ssh-key --notes)
-service_account=$(lpass show "Shared-Kubo/bosh-deployer service key" --notes)
+ssh_key=$(lpass show "Shared-Kubo/CI/git-ssh-key" --notes)
+service_account=$(lpass show "Shared-Kubo/CI/bosh-deployer service key" --notes)
 
 trap 'rm "$pipeline_dir/secrets.yml"' EXIT
 echo "---" > "$pipeline_dir/secrets.yml"

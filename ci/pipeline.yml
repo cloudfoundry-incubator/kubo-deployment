@@ -62,10 +62,11 @@ jobs:
       params:
         file: bosh-state/state.json
 
-- name: destroy-bosh
+- name: run-k8s-tests
   plan:
   - aggregate:
     - get: git-kubo-deployment
+      trigger: true
       passed: [ 'install-bosh' ]
       trigger: true
     - get: kubo-lock
@@ -74,6 +75,21 @@ jobs:
       passed: [ 'install-bosh' ]
     - get: s3-bosh-state
       passed: [ 'install-bosh' ]
+  - task: install
+    file: git-kubo-deployment/ci/tasks/deploy-k8s-instance.yml
+
+- name: destroy-bosh
+  plan:
+  - aggregate:
+    - get: git-kubo-deployment
+      passed: [ 'run-k8s-tests' ]
+      trigger: true
+    - get: kubo-lock
+      passed: [ 'run-k8s-tests' ]
+    - get: s3-bosh-creds
+      passed: [ 'run-k8s-tests' ]
+    - get: s3-bosh-state
+      passed: [ 'run-k8s-tests' ]
   - task: destroy
     file: git-kubo-deployment/ci/tasks/destroy-bosh.yml
     params:
