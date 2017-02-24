@@ -24,16 +24,14 @@ vm_types:
     machine_type: n1-standard-1
     root_disk_size_gb: 20
     root_disk_type: pd-ssd
-    tags:
-    - no-ip
+    tags: ((tags))
 
 - name: worker
   cloud_properties:
     machine_type: n1-standard-2
     root_disk_size_gb: 100
     root_disk_type: pd-ssd
-    tags:
-    - no-ip
+    tags: ((tags))
 
 disk_types:
 - name: 10240
