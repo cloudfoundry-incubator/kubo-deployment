@@ -10,8 +10,4 @@ run:
 inputs:
   - name: git-kubo-deployment
   - name: git-kubo-release
-  - name: s3-bosh-state
   - name: s3-bosh-creds
-outputs:
-  - name: s3-k8s-service-creds
-  - name: s3-k8s-bosh-state
