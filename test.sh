@@ -168,6 +168,23 @@ bosh create-env bosh.yml \
   -v network=test \
   -v subnetwork=test
 
+echo "- GCP with BOSH Lite on Docker"
+bosh create-env bosh.yml \
+  -o gcp/cpi.yml \
+  -o bosh-lite-docker.yml \
+  --state=$vars_store_prefix \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v director_name=test \
+  -v internal_cidr=test \
+  -v internal_gw=test \
+  -v internal_ip=test \
+  -v gcp_credentials_json=test \
+  -v project_id=test \
+  -v zone=test \
+  -v tags=[internal,no-ip] \
+  -v network=test \
+  -v subnetwork=test
+
 echo "- GCP (cloud-config)"
 bosh update-cloud-config gcp/cloud-config.yml \
   -v internal_cidr=test \
