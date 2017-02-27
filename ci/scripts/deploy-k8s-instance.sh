@@ -15,7 +15,7 @@ credhub login -u credhub-user -p \
 credhub set -n \
   "$(bosh-cli int "$kubo_deployment_dir/ci/environments/gcp/director.yml" --path="/director_name" | xargs echo -n)/ci-service/routing-cf-client-secret" \
   -t password -c $(bosh-cli int "$kubo_deployment_dir/ci/environments/gcp/director.yml" --path="/cf-tcp-router-name" | xargs echo -n) \
-  -v "${ROUTING_CF_CLIENT_SECRET}" -O
+  -v "${ROUTING_CF_CLIENT_SECRET}" -O > /dev/null
 
 
 "$kubo_deployment_dir/bin/set_bosh_alias" "$kubo_deployment_dir/ci/environments/gcp"
