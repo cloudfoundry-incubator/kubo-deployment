@@ -11,7 +11,7 @@ resources:
   type: git
   source:
     uri: git@github.com:pivotal-cf-experimental/kubo-deployment
-    branch: master
+    branch: pr-deploy_k8s_ci
     private_key: {{git-ssh-key}}
 
 - name: git-kubo-release
@@ -110,6 +110,8 @@ jobs:
       passed: [ 'install-bosh' ]
   - task: install
     file: git-kubo-deployment/ci/tasks/deploy-k8s-instance.yml
+    params:
+      ROUTING_CF_CLIENT_SECRET: {{routing_cf_client_secret}}
     on_failure:
       put: slack-alert
       params:
