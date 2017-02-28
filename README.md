@@ -96,10 +96,10 @@ Command 'deploy' failed:
               Post https://mbus:294a691d057ede1af4f696aab36c4bc5@<bosh ip>:6868/agent: dial tcp <bosh ip>:6868: i/o timeout
 ```
 
-There are multiple ways to ensure access. A couple of options are:
+There are multiple ways to ensure access. A couple of options are
+
 1. Run the command from a Bastion VM you created previously as part of setup
 1. Use [sshuttle](https://github.com/apenwarr/sshuttle) to create a tunnel to your bastion VM. Example for GCP:
-
 ```
 sshuttle -r "${BOSH_ENV}-bosh-bastion.${GCP_ZONE}.${GCP_PROJECT_ID}" ${BOSH_SUBNET_CIDR_RANGE} # To establish a secure channel into the BOSH++ network
 ```
@@ -118,9 +118,11 @@ the BOSH state identical to the one used by [bosh-init](https://bosh.io/docs/usi
 
 Additionally, the deployment script creates the `default` CA certificate within CredHub.
 
-## Cloud Foundry
+## Deploy Cloud Foundry
 
 Cloud Foundry deployment is not covered in this document. You can use an existing CF deployment you may have, or deploy using instructions.
+
+To deploy open-source CF on GCP, follow the steps in this [deployment guide](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/cloudfoundry).
 
 Please ensure that instances of your CF deployment are able to communicate with other deployments deployed via BOSH++. This could simply mean deploying CF in the same network as K8s, or whitelisting traffic.
 
