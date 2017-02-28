@@ -55,12 +55,14 @@ main() {
   pushd "$(dirname "$0")/.." > /dev/null
     . ./bin/lib/deploy_utils
 
+    local bosh_director_name
     export_bosh_environment "${bosh_env}"
+    bosh_director_name=$(get_setting "director.yml" /director_name)
 
     upload_stemcell
     upload_releases "${release_source}"
     set_cloud_config
-    set_kubernetes_certificate_in_credhub "$(basename "${bosh_env}")/${deployment_name}/tls-kubernetes"
+    set_kubernetes_certificate_in_credhub "${bosh_director_name}/${deployment_name}/tls-kubernetes"
     deploy_to_bosh "$(bin/generate_service_manifest "${bosh_env}" "${deployment_name}")" "${deployment_name}"
   popd > /dev/null
 }
