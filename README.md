@@ -41,7 +41,9 @@ Here is an overview of the steps you would need to take in order to get a runnin
 
 ## Setup IAAS
 
-You will need to setup your IAAS before proceeding to installing BOSH. Check [here for instructions on how to setup GCP](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/bosh#configure-your-google-cloud-platform-environment) and [here for all other IAASes](https://bosh.io/docs/init.html). Please only follow the steps to pave your IAAS.
+For GCP: Check [here](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/bosh#configure-your-google-cloud-platform-environment) for instructions on how to setup GCP. Follow the steps included in the "Deploying Infrastructure" section to pave your GCP environment and to deploy a bastion VM using the provided Terraform script.
+
+For other IAAS: Please follow the steps [here](https://bosh.io/docs/init.html) for all other IAASes. 
 
 ## Setup BOSH configuration files
 
@@ -54,7 +56,7 @@ and the IaaS name.
 It will create a directory with the same name as the environment at the specified path, containing three files:
 - `iaas` which contains IaaS name
 - `director.yml` which contains public BOSH director, IaaS and network configurations
-- `director-secrets.yml` which contains secrets, such as OpenStack password
+- `director-secrets.yml` which contains secret configuration values, such as passwords and OAuth secrets
 
 ### Fill in configuration
 
@@ -94,9 +96,13 @@ Command 'deploy' failed:
               Post https://mbus:294a691d057ede1af4f696aab36c4bc5@<bosh ip>:6868/agent: dial tcp <bosh ip>:6868: i/o timeout
 ```
 
-There are multiple ways to ensure access. A couple of examples
-1. Run the command on a Bastion VM
-1. Use [sshuttle](https://github.com/apenwarr/sshuttle) to get access to VMs on the network
+There are multiple ways to ensure access. A couple of options are:
+1. Run the command from a Bastion VM you created previously as part of setup
+1. Use [sshuttle](https://github.com/apenwarr/sshuttle) to create a tunnel to your bastion VM. Example for GCP:
+
+```
+sshuttle -r "${BOSH_ENV}-bosh-bastion.${GCP_ZONE}.${GCP_PROJECT_ID}" ${BOSH_SUBNET_CIDR_RANGE} # To establish a secure channel into the BOSH++ network
+```
 
 During the deployment, all the passwords and SSL certificates will be automatically
 generated. Most of them will be saved into the configuration path in a file called
