@@ -94,7 +94,7 @@ jobs:
       params:
         file: bosh-state/state.json
 
-- name: run-k8s-tests
+- name: deploy-k8s
   plan:
   - aggregate:
     - get: git-kubo-deployment
@@ -102,13 +102,9 @@ jobs:
       trigger: true
     - get: git-kubo-release
       passed: [ 'install-bosh' ]
-    - get: kubo-lock
-      passed: [ 'install-bosh' ]
     - get: s3-bosh-creds
       passed: [ 'install-bosh' ]
-    - get: s3-bosh-state
-      passed: [ 'install-bosh' ]
-  - task: install
+  - task: deploy
     file: git-kubo-deployment/ci/tasks/deploy-k8s-instance.yml
     params:
       ROUTING_CF_CLIENT_SECRET: {{routing_cf_client_secret}}
@@ -121,18 +117,38 @@ jobs:
           Deploy K8s failed:
           https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
+- name: destroy-k8s
+  plan:
+  - aggregate:
+    - get: git-kubo-deployment
+      passed: [ 'deploy-k8s' ]
+      trigger: true
+    - get: s3-bosh-creds
+      passed: [ 'deploy-k8s' ]
+  - task: destroy-k8s
+    file: git-kubo-deployment/ci/tasks/destroy-k8s-instance.yml
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Destroy K8s failed:
+          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
+
 - name: destroy-bosh
   plan:
   - aggregate:
     - get: git-kubo-deployment
-      passed: [ 'run-k8s-tests' ]
+      passed: [ 'destroy-k8s' ]
       trigger: true
     - get: kubo-lock
-      passed: [ 'run-k8s-tests' ]
+      passed: [ 'install-bosh' ]
     - get: s3-bosh-creds
-      passed: [ 'run-k8s-tests' ]
+      passed: [ 'destroy-k8s' ]
     - get: s3-bosh-state
-      passed: [ 'run-k8s-tests' ]
+      passed: [ 'install-bosh' ]
   - task: destroy
     file: git-kubo-deployment/ci/tasks/destroy-bosh.yml
     params:

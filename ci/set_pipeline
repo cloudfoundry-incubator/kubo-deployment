@@ -16,7 +16,7 @@ slack_url=$(lpass show "Shared-Kubo/CI/Slack Incoming Webhook" --url)
 trap 'rm "$pipeline_dir/secrets.yml"' EXIT
 echo "---" > "$pipeline_dir/secrets.yml"
 lpass show "Shared-Kubo/CI/kubo-ci" --notes >> "$pipeline_dir/secrets.yml"
-#lpass show "Shared-Kubo/CI/routing_cf_client_secret" --notes >> "$pipeline_dir/secrets.yml"
+lpass show "Shared-Kubo/CI/routing_cf_client_secret" --notes >> "$pipeline_dir/secrets.yml"
 
 fly --target kubo sync
 fly --target kubo set-pipeline --pipeline kubo-deployment \
