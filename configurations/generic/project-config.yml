@@ -19,9 +19,9 @@ internal_gw: # internal gateway
 external-kubo-port: # Port to use for Kubernetes API
 
 director_name: # user friendly Director name
-dns_recursor_ip: # DNS IP address
+dns_recursor_ip: # DNS IP address for resolving non-BOSH hostnames
 
-stemcell_version: "" # version of the stemcell used in all Kubo deployments. Quote the version to satisfy YAML parsers
+stemcell_version: # version of the stemcell used in all Kubo deployments. Quote the version to satisfy YAML parsers
 stemcell_url: # path to a stemcell used in all Kubo deployments
 syslog-endpoint: ""
 
