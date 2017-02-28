@@ -5,7 +5,7 @@ image_resource:
     repository: pcfkubo/kubo-ci
     tag: stable
 run:
-  path: git-kubo-deployment/ci/scripts/destroy-k8s.sh
+  path: git-kubo-deployment/ci/scripts/destroy-k8s-instance.sh
 
 inputs:
   - name: s3-bosh-creds
