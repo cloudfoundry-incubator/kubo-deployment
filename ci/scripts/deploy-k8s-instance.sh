@@ -21,3 +21,5 @@ credhub set -n \
 "$kubo_deployment_dir/bin/set_bosh_alias" "$kubo_deployment_dir/ci/environments/gcp"
 # Deploy k8s
 "$kubo_deployment_dir/bin/deploy_k8s" "$kubo_deployment_dir/ci/environments/gcp" ci-service dev 
+
+cp "$kubo_deployment_dir/ci/environments/gcp/service-ci-service-creds.yml" "$PWD/service-creds/service-ci-service-creds.yml"

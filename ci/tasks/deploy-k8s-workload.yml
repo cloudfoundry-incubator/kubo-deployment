@@ -7,11 +7,8 @@ image_resource:
 params:
   ROUTING_CF_CLIENT_SECRET:
 run:
-  path: git-kubo-deployment/ci/scripts/deploy-k8s-instance.sh
+  path: git-kubo-deployment/ci/scripts/deploy-k8s-workload.sh
 
 inputs:
   - name: git-kubo-deployment
-  - name: git-kubo-release
-  - name: s3-bosh-creds
-outputs:
-  - name: service-creds
+  - name: s3-service-creds

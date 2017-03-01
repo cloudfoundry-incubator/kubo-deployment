@@ -49,6 +49,16 @@ resources:
     region_name: eu-west-1
     versioned_file: bosh/creds.yml
 
+- name: s3-service-creds
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-pipeline
+    endpoint: s3-eu-west-1.amazonaws.com
+    region_name: eu-west-1
+    versioned_file: bosh/service-ci-service-creds.yml
+
 - name: slack-alert
   type: slack-notification
   source:
@@ -116,12 +126,35 @@ jobs:
         text: |
           Deploy K8s failed:
           https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - aggregate:
+    - put: s3-service-creds
+      params:
+        file: service-creds/service-ci-service-creds.yml
+
+- name: deploy-workload
+  plan:
+  - aggregate:
+    - get: git-kubo-deployment
+      passed: [ 'deploy-k8s' ]
+      trigger: true
+    - get: s3-service-creds
+      passed: [ 'deploy-k8s' ]
+  - task: workload
+    file: git-kubo-deployment/ci/tasks/deploy-k8s-workload.sh
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Deploy K8s Workload failed:
+          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
 - name: destroy-k8s
   plan:
   - aggregate:
     - get: git-kubo-deployment
-      passed: [ 'deploy-k8s' ]
+      passed: [ 'deploy-workload' ]
       trigger: true
     - get: s3-bosh-creds
       passed: [ 'deploy-k8s' ]
