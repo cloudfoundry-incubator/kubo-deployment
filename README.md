@@ -8,6 +8,7 @@ This repository contains automation scripts to deploy a [Kubernetes](https://kub
 
 - Kubo - Kubernetes on BOSH
 - BOSH++ - BOSH with UAA, Credhub and PowerDNS
+- [Bastion](https://en.wikipedia.org/wiki/Jump_server) - A server within the kubo network that provides secure access to kubo.
 - BOSH Configuration - Folder that contains all configuration files needed to deploy BOSH++, as well as all 
 configuration files that are generated while deploying BOSH++. Also called `<BOSH_ENV>`
 - Environment Configuration and Environment Secrets - Configuration files that are used to deploy Kubo, these
@@ -43,7 +44,7 @@ Here is an overview of the steps you would need to take in order to get a runnin
 
 For GCP: Check [here](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/bosh#configure-your-google-cloud-platform-environment) for instructions on how to setup GCP. Follow the steps included in the "Deploying Infrastructure" section to pave your GCP environment and to deploy a bastion VM using the provided Terraform script.
 
-For other IAAS: Please follow the steps [here](https://bosh.io/docs/init.html) for all other IAASes. 
+For other IAAS: Please follow the steps [here](https://bosh.io/docs/init.html). 
 
 ## Setup BOSH configuration files
 
@@ -56,7 +57,7 @@ and the IaaS name.
 It will create a directory with the same name as the environment at the specified path, containing three files:
 - `iaas` which contains IaaS name
 - `director.yml` which contains public BOSH director, IaaS and network configurations
-- `director-secrets.yml` which contains secret configuration values, such as passwords and OAuth secrets
+- `director-secrets.yml` which contains sensitive configuration values, such as passwords and OAuth secrets
 
 ### Fill in configuration
 
@@ -101,7 +102,7 @@ There are multiple ways to ensure access. A couple of options are
 1. Run the command from a Bastion VM you created previously as part of setup
 1. Use [sshuttle](https://github.com/apenwarr/sshuttle) to create a tunnel to your bastion VM. Example for GCP:
 ```
-sshuttle -r "${BOSH_ENV}-bosh-bastion.${GCP_ZONE}.${GCP_PROJECT_ID}" ${BOSH_SUBNET_CIDR_RANGE} # To establish a secure channel into the BOSH++ network
+sshuttle -r <Bastion IP address> <BOSH IP address>/32 # To establish a secure channel to the BOSH Director
 ```
 
 During the deployment, all the passwords and SSL certificates will be automatically
