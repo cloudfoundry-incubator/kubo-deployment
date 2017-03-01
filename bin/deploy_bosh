@@ -6,7 +6,7 @@ key_filename=$2
 current_directory=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 
 echo "====================================="
-echo "|         BOSH++ Deployer           |"
+echo "|         KuBOSH Deployer           |"
 echo "====================================="
 echo ""
 
