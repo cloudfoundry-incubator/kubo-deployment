@@ -46,9 +46,10 @@ destroy_gcp() {
 
   local bosh_director_name
 
-  bosh_director_name=$(get_setting "director.yml" /director_name)
+  bosh_director_name=$(get_setting "director.yml" /internal_ip)
   ca_cert=$(get_setting "creds.yml" /default_ca/ca)
 
+  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli clean-up -e "${bosh_director_name}" --all
   BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli delete-env -e "${bosh_director_name}" "${current_directory}/bosh-deployment/bosh.yml" \
       --ops-file "${current_directory}/bosh-deployment/gcp/cpi.yml" \
       --ops-file "${current_directory}/bosh-deployment/uaa.yml" \
