@@ -12,31 +12,33 @@ echo ""
 
 
 print_usage() {
+  local release_path=$(cd $(basename "$0"/../..) > /dev/null; pwd)
   echo "Usage: $(basename "$0") [BOSH_ENV] [DEPLOYMENT_NAME] [RELEASE_SOURCE]"
   echo ""
   echo "BOSH_ENV is the path to your BOSH environment configuration folder"
   echo ""
   echo "DEPLOYMENT_NAME is the name of your kubo deployment"
   echo ""
-  echo "RELEASE_SOURCE specifies where to find the required BOSH releases"
+  echo "RELEASE_SOURCE specifies where to find the kubo BOSH release"
   echo "  options:"
   echo "     dev    - Build a dev release from the local machine."
-  echo "              Required binaries and repos should be in ../"
-  echo "     public - (default) Use published releases from the internet"
-  echo "     local  - Use local releases"
-  echo "              Required binaries should be in ../"
+  echo "              The kubo-release repo must exist in ${release_path}"
+  echo "     public - (default) Use published release from the Internet"
+  echo "              Uses 'kubo_release_url' from <BOSH_ENV>/director.yml"
+  echo "     local  - Use local tarball release"
+  echo "              The kubo-release.tgz must exist in ${release_path}"
   echo ""
 }
 
 main() {
-  local bosh_env=$(cd "${1}"; pwd -P)
-  local deployment_name="${2}"
-  local release_source="${3}"
-
   if [ $# -ne 2 ] && [ $# -ne 3 ]; then
     print_usage
     exit  1
   fi
+
+  local bosh_env=$(cd "${1}"; pwd -P)
+  local deployment_name="${2}"
+  local release_source="${3}"
 
   if [ ! -e "${bosh_env}/iaas" ]; then
    echo "${bosh_env} is not a valid BOSH environment."
