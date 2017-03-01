@@ -138,22 +138,35 @@ is required in order to register the TCP routes.
 
 ### The Easy Way: Automated
 
+> #### Offline notes
+> 
+> By default, BOSH will try to install two additional releases: `etcd` and `docker-boshrelease`. The public URLs for
+> these releases can be found at the top of the `manifests/service.yml` file. For offline deployment, these releases
+> have to be deployed to BOSH from the local filesystem:
+>  
+> ```
+> bosh-cli -e <BOSH director IP address> upload-release /path/to/release.tgz
+> ```
+> 
+> Please note that the releases should be uploaded to BOSH before running the `bin/deploy_k8s` command.
+
 Once BOSH++ is deployed, the Kubernetes BOSH release can be built and deployed with this command:
 
 ```bash
 bin/deploy_k8s <BOSH_ENV> <DEPLOYMENT_NAME> <RELEASE_SOURCE>
 ```
-
-The `RELEASE_SOURCE` parameter allows you to either build and deploy a local copy of the repository, or deploy our pre-built kubo-release tarball, and is optional.
+Where:
+- `<BOSH_ENV>` is the path to the BOSH configuration
+- `<DEPLOYMENT_NAME>` is a unique name for the kubo deployment
+- `<RELEASE_SOURCE>` **(optional)** Specifies which `kubo` BOSH release to use. The possible options are: `local`, `dev` and 
+  `public` (default). Run `bin/deploy-k8s --help` for more details. 
 
 Note that the scripts will:
 
-- Generate certificate in CredHub
-- upload any Cloud Config changes to the director
-- create the kubo release from source and upload it if RELEASE_SOURCE is dev
-or
-- upload the kubo release tarball from specified location if RELEASE_SOURCE is local
-- regenerate the deployment manifest
+- generate the CA certificate in CredHub
+- upload any Cloud Config changes to the BOSH director
+- upload the `kubo` release based on the `RELEASE_SOURCE` setting described above
+- regenerate the kubo deployment manifest
 - kick off the deployment using `bosh_admin` UAA client
 
 By default, the deployment will use the latest versions of the releases. If releases were uploaded from different machines or
