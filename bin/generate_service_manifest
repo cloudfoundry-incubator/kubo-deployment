@@ -10,7 +10,7 @@ deployment_name="${2}"
 if [ $# -ne 2 ]; then
   echo "Usage: $0 [BOSH_ENV] [SERVICE_DEPLOYMENT_NAME]"
   echo ""
-  echo "BOSH_ENV is the path to your BOSH++ config."
+  echo "BOSH_ENV is the path to your KuBOSH config."
   echo "If you have creds.yml in BOSH_ENV directory, they will be used for manifest generation"
   echo "Otherwise your BOSH director will look for them in CredHub"
   echo ""

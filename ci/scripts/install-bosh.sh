@@ -9,7 +9,7 @@ set -x
 export BOSH_LOG_LEVEL=debug
 export BOSH_LOG_PATH="$kubo_deployment_dir/bosh.log"
 
-# Deploy Bosh++
+# Deploy KuBOSH
 "$kubo_deployment_dir/bin/deploy_bosh" "$kubo_deployment_dir/ci/environments/gcp" "$PWD/key.json"
 
 cp "$kubo_deployment_dir/ci/environments/gcp/creds.yml" "$PWD/bosh-creds/"
