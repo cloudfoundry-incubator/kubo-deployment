@@ -137,6 +137,8 @@ jobs:
     - get: git-kubo-deployment
       passed: [ 'deploy-k8s' ]
       trigger: true
+    - get: s3-bosh-creds
+      passed: [ 'deploy-k8s' ]
     - get: s3-service-creds
       passed: [ 'deploy-k8s' ]
   - task: workload
@@ -157,7 +159,7 @@ jobs:
       passed: [ 'deploy-workload' ]
       trigger: true
     - get: s3-bosh-creds
-      passed: [ 'deploy-k8s' ]
+      passed: [ 'deploy-workload' ]
   - task: destroy-k8s
     file: git-kubo-deployment/ci/tasks/destroy-k8s-instance.yml
     on_failure:
