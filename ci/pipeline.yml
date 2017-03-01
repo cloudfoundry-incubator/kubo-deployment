@@ -198,3 +198,10 @@ jobs:
           https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - put: kubo-lock
     params: { release: kubo-lock }
+  - put: slack-alert
+    params:
+      silent: true
+      icon_emoji: ":frog:"
+      text: |
+        I am green and it'll do fine, it's beautiful
+        And I think it's what I want to be
