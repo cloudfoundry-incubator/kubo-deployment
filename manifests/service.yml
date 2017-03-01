@@ -30,12 +30,6 @@ instance_groups:
       etcd:
         require_ssl: false
         peer_require_ssl: false
-  - name: syslog-forwarding-setup
-    release: kubo
-    properties:
-      jobs-to-forward:
-      - etcd
-      syslog-endpoint: ((syslog-endpoint))
   stemcell: trusty
   vm_type: common
   persistent_disk_type: 5120
@@ -69,14 +63,6 @@ instance_groups:
     release: kubo
     properties:
       kubernetes-api-url: *kubo_url
-  - name: syslog-forwarding-setup
-    release: kubo
-    properties:
-      jobs-to-forward:
-      - kubernetes-api
-      - kubernetes-controller-manager
-      - kubernetes-scheduler
-      syslog-endpoint: ((syslog-endpoint))
   - name: kubernetes-api-route-registrar
     release: kubo
     properties:
@@ -123,15 +109,6 @@ instance_groups:
     release: kubo
     properties:
       kubernetes-api-url: *kubo_url
-  - name: syslog-forwarding-setup
-    release: kubo
-    properties:
-      jobs-to-forward:
-      - flanneld
-      - docker
-      - kubelet
-      - kubernetes-proxy
-      syslog-endpoint: ((syslog-endpoint))
   stemcell: trusty
   vm_type: worker
   persistent_disk_type: 10240
@@ -156,14 +133,6 @@ instance_groups:
     release: kubo
     properties:
       kubernetes-api-url: *kubo_url
-  - name: syslog-forwarding-setup
-    release: kubo
-    properties:
-      jobs-to-forward:
-      - nginx
-      - flanneld
-      - kubernetes-proxy
-      syslog-endpoint: ((syslog-endpoint))
   stemcell: trusty
   vm_type: common
 
