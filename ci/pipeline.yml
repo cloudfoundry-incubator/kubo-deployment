@@ -140,7 +140,7 @@ jobs:
     - get: s3-service-creds
       passed: [ 'deploy-k8s' ]
   - task: workload
-    file: git-kubo-deployment/ci/tasks/deploy-k8s-workload.sh
+    file: git-kubo-deployment/ci/tasks/deploy-k8s-workload.yml
     on_failure:
       put: slack-alert
       params:
