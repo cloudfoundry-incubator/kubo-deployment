@@ -78,11 +78,11 @@ jobs:
 - name: install-bosh
   plan:
   - get: git-kubo-deployment
-    trigger: true
     passed: [ 'claim-lock' ]
   - get: git-kubo-release
     passed: [ 'claim-lock' ]
   - get: kubo-lock
+    trigger: true
     passed: [ 'claim-lock' ]
   - task: install
     file: git-kubo-deployment/ci/tasks/install-bosh.yml
@@ -107,9 +107,11 @@ jobs:
 - name: deploy-k8s
   plan:
   - aggregate:
+    - get: kubo-lock
+      trigger: true
+      passed: [ 'install-bosh' ]
     - get: git-kubo-deployment
       passed: [ 'install-bosh' ]
-      trigger: true
     - get: git-kubo-release
       passed: [ 'install-bosh' ]
     - get: s3-bosh-creds
@@ -134,9 +136,11 @@ jobs:
 - name: deploy-workload
   plan:
   - aggregate:
+    - get: kubo-lock
+      trigger: true
+      passed: [ 'deploy-k8s' ]
     - get: git-kubo-deployment
       passed: [ 'deploy-k8s' ]
-      trigger: true
     - get: s3-bosh-creds
       passed: [ 'deploy-k8s' ]
     - get: s3-service-creds
@@ -155,9 +159,11 @@ jobs:
 - name: destroy-k8s
   plan:
   - aggregate:
+    - get: kubo-lock
+      trigger: true
+      passed: [ 'deploy-workload' ]
     - get: git-kubo-deployment
       passed: [ 'deploy-workload' ]
-      trigger: true
     - get: s3-bosh-creds
       passed: [ 'deploy-workload' ]
   - task: destroy-k8s
@@ -177,9 +183,9 @@ jobs:
   - aggregate:
     - get: git-kubo-deployment
       passed: [ 'destroy-k8s' ]
-      trigger: true
     - get: kubo-lock
-      passed: [ 'install-bosh' ]
+      trigger: true
+      passed: [ 'destroy-k8s' ]
     - get: s3-bosh-creds
       passed: [ 'destroy-k8s' ]
     - get: s3-bosh-state
