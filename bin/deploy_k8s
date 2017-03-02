@@ -103,9 +103,8 @@ upload_releases() {
 }
 
 upload_stemcell() {
-  local director_name=$(get_setting director.yml /director_name)
   local stemcell_url=$(get_setting director.yml /stemcell_url)
-  bosh-cli -e ${director_name} upload-stemcell ${stemcell_url}
+  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli -e "${BOSH_NAME}" upload-stemcell ${stemcell_url}
 }
 
 main "$@"
