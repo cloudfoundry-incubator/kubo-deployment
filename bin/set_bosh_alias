@@ -9,7 +9,7 @@ print_usage() {
   echo ""
   echo "BOSH_ENV is the path to your BOSH environment configuration folder"
   echo ""
-  echo "This script setups up an alias in bosh-cli for your BOSH_ENV"
+  echo "This script sets up an alias in bosh-cli for your BOSH_ENV"
 }
 
 main() {
