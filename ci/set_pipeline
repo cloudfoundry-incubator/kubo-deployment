@@ -2,6 +2,14 @@
 
 [ -z "$DEBUG" ] || set -x
 
+pipeline_type=$1
+if [ -z "$pipeline_type" ]; then
+  pipeline_type="master"
+fi
+
+pipeline_name="kubo-deployment"
+pipeline_filename="${pipeline_dir}/pipeline.yml"
+
 if ! which lpass > /dev/null 2>&1
 then
   echo "must have lastpass CLI installed" >&2
@@ -19,10 +27,9 @@ lpass show "Shared-Kubo/CI/kubo-ci" --notes >> "$pipeline_dir/secrets.yml"
 lpass show "Shared-Kubo/CI/routing_cf_client_secret" --notes >> "$pipeline_dir/secrets.yml"
 
 fly --target kubo sync
-fly --target kubo set-pipeline --pipeline kubo-deployment \
-  --config "${pipeline_dir}/pipeline.yml" \
+fly --target kubo set-pipeline --pipeline "$pipeline_name" \
+  --config "$pipeline_filename" \
   --load-vars-from "$pipeline_dir/secrets.yml" \
   --var git-ssh-key="${ssh_key}" \
   --var gcp-service-account="${service_account}" \
   --var slack-url="${slack_url}"
-
