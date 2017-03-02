@@ -44,13 +44,13 @@ main() {
 destroy_gcp() {
   . ./bin/lib/deploy_utils
 
-  local bosh_director_name
+  local bosh_director_ip
 
-  bosh_director_name=$(get_setting "director.yml" /internal_ip)
+  bosh_director_ip=$(get_setting "director.yml" /internal_ip)
   ca_cert="$(bosh-cli int "${BOSH_ENV}/creds.yml" --path="/default_ca/ca")"
 
-  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli clean-up -e "${bosh_director_name}" --all -n
-  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli delete-env -e "${bosh_director_name}" "${current_directory}/bosh-deployment/bosh.yml" \
+  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli clean-up -e "${bosh_director_ip}" --all -n
+  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli delete-env -e "${bosh_director_ip}" "${current_directory}/bosh-deployment/bosh.yml" \
       --ops-file "${current_directory}/bosh-deployment/gcp/cpi.yml" \
       --ops-file "${current_directory}/bosh-deployment/uaa.yml" \
       --ops-file "${current_directory}/bosh-deployment/powerdns.yml" \
