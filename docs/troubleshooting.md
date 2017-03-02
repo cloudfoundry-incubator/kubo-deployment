@@ -1,4 +1,4 @@
-# Known issues
+# Troubleshooting
 
 ## Problem
 
@@ -59,3 +59,23 @@ Various connectivity issues during deployment
 ### Solution
 
 Please make sure that all the host names used in the configuration are resolving to the correct IP addresses.
+
+## Problem
+
+Strange error when running bosh-cli 
+
+```
+bosh-cli -e p-kubo deployments
+Using environment 'p-kubo.p.kubo.cf-app.com' as '?'
+
+Finding deployments:
+  Performing request GET 'https://p-kubo.p.kubo.cf-app.com:25555/deployments':
+    Performing GET request:
+      Refreshing token: UAA responded with non-successful status code '401' response '{"error":"invalid_token","error_description":"The token expired, was revoked, or the token ID is incorrect: acc3bc0eeb2b4323995f6d5873d9f52e-r"}'
+
+Exit code 1
+```
+
+### Solution
+
+Please make sure that you are logged in. The password can be found in `<BOSH_ENV>/creds.yml`, in the `admin_password` field.
