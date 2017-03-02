@@ -220,3 +220,7 @@ kubectl get nodes
 ## Development
 
 This repo uses https://github.com/cloudfoundry/bosh-deployment as git subtree. Run command ` git subtree pull --prefix bosh-deployment git@github.com:cloudfoundry/bosh-deployment.git <ref>` to update subtree.
+
+## Troubleshooting
+
+Please refer to the [troubleshooting guide](docs/troubleshooting.md) to look for solutions to the most common issues. 
