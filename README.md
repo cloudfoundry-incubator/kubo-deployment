@@ -20,7 +20,21 @@ This repository contains automation scripts to deploy a [Kubernetes](https://kub
 
 ## Design
 
+### Components
 
+![Components of Kubo](docs/images/kubo-components.png)
+
+Kubo depends on Cloud Foundry to perform routing to the Kubernetes cluster. The Kubo deployment is responsible for anouncing these routes to the Cloud Foundry Routing API. A specialized BOSH director manages the virtual machines for the Kubo instance which handles VM creation, health checking, and resurrection of missing or unhealthy VMs. The BOSH director includes CredHub to handle certificate generation and secrets storage for the deployment and PowerDNS.
+
+Kubernetes applications deployed to a Kubo instance are not currently exposed to the outside world but may follow the same pattern of uitilizing the Cloud Foundry routing infrastructure in the future.
+
+### Networking Topology
+
+![Diagram describing how traffic is routed to Kubo](docs/images/kubo-network.png)
+
+The nodes that run the Kubernetes API (kube-master) register themselves with the Cloud Foundry TCP router. The TCP Router acts as the public endpoint for the Kubernetes API to route traffic to the master nodes of a Kubo instance. All traffic to the API goes through the Cloud Foundry TCP router and then to a healthy kube-master node. 
+
+The Cloud Foundry subnet must be able to route traffic directly to the Kubo subnet. It is recommended to keep them in seperate subnets when possible to avoid the BOSH directors from trying to provision the same addresses. This diagram specifies CIDR ranges for demonstration purposes as well as a public TCP router in front of Cloud Foundry which is typical.
 
 ## Glossary
 
