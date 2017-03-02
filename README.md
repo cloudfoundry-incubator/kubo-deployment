@@ -12,11 +12,11 @@ This repository contains automation scripts to deploy a [Kubernetes](https://kub
 
 ## Table of contents
 
-- [Design](#Design)
-- [Glossary](#Glossary)
-- [Installation](#Installation)
-- [Trouleshooting](#Troubleshooting)
-- [Contribution](#Contributing)
+- [Design](#design)
+- [Glossary](#glossary)
+- [Installation](#installation)
+- [Trouleshooting](#troubleshooting)
+- [Contribution](#contributing)
 
 ## Design
 
