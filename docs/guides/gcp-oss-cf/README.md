@@ -29,10 +29,10 @@ The rest of the document assumes you are logged into the `bosh-bastion` you depl
    git clone https://github.com/pivotal-cf-experimental/kubo-deployment.git
    ```
 
-1. `cd` into the examples directory
+1. `cd` into the guide directory
 
    ```
-   cd ~/kubo-deployment/examples/gcp-oss-cf
+   cd ~/kubo-deployment/docs/guides/gcp-oss-cf
    ```
 
 1. Export these values. If you haven't tweaked any settings then use these defaults:
@@ -93,8 +93,8 @@ The rest of the document assumes you are logged into the `bosh-bastion` you depl
 
 1. Populate the director configurations
    ```
-   erb examples/gcp-oss-cf/director.yml.erb > ${state_dir}/director.yml
-   erb examples/gcp-oss-cf/director-secrets.yml.erb > ${state_dir}/director-secrets.yml
+   erb docs/guides/gcp-oss-cf/gcp-oss-cf/director.yml.erb > ${state_dir}/director.yml
+   erb docs/guides/gcp-oss-cf/gcp-oss-cf/director-secrets.yml.erb > ${state_dir}/director-secrets.yml
    ```
 
 1. Generate a service account key for the bosh-user
