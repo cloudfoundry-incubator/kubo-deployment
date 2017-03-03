@@ -111,6 +111,31 @@ bosh deploy bosh.yml \
   -v default_key_name=test \
   -v default_security_groups=[test]
 
+echo "- AWS with external db"
+bosh create-env bosh.yml \
+  -o aws/cpi.yml \
+  -o external-db.yml \
+  --state=$vars_store_prefix \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v director_name=test \
+  -v internal_cidr=test \
+  -v internal_gw=test \
+  -v internal_ip=test \
+  -v access_key_id=test \
+  -v secret_access_key=test \
+  -v az=test \
+  -v region=test \
+  -v default_key_name=test \
+  -v default_security_groups=[test] \
+  -v private_key=test \
+  -v subnet_id=test \
+  -v external_db_host=test \
+  -v external_db_port=test \
+  -v external_db_user=test \
+  -v external_db_password=test \
+  -v external_db_adapter=test \
+  -v external_db_name=test
+
 echo "- AWS (cloud-config)"
 bosh update-cloud-config aws/cloud-config.yml \
   -v internal_cidr=test \
@@ -184,6 +209,29 @@ bosh create-env bosh.yml \
   -v tags=[internal,no-ip] \
   -v network=test \
   -v subnetwork=test
+
+echo "- GCP with external db"
+bosh create-env bosh.yml \
+  -o gcp/cpi.yml \
+  -o external-db.yml \
+  --state=$vars_store_prefix \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v director_name=test \
+  -v internal_cidr=test \
+  -v internal_gw=test \
+  -v internal_ip=test \
+  -v gcp_credentials_json=test \
+  -v project_id=test \
+  -v zone=test \
+  -v tags=[internal,no-ip] \
+  -v network=test \
+  -v subnetwork=test \
+  -v external_db_host=test \
+  -v external_db_port=test \
+  -v external_db_user=test \
+  -v external_db_password=test \
+  -v external_db_adapter=test \
+  -v external_db_name=test
 
 echo "- GCP (cloud-config)"
 bosh update-cloud-config gcp/cloud-config.yml \
