@@ -49,7 +49,7 @@ main() {
   lpass show "Shared-Kubo/CI/kubo-ci" --notes >> "${ci_dir}/secrets.yml"
   lpass show "Shared-Kubo/CI/routing_cf_client_secret" --notes >> "${ci_dir}/secrets.yml"
 
-  fly --target kubo sync
+  fly --target kubo sync > /dev/null
   fly --target kubo set-pipeline --pipeline "${pipeline_name}" \
     --config "${pipeline_filename}" \
     --load-vars-from "${ci_dir}/secrets.yml" \
