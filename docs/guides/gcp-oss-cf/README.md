@@ -93,8 +93,8 @@ The rest of the document assumes you are logged into the `bosh-bastion` you depl
 
 1. Populate the director configurations
    ```
-   erb docs/guides/gcp-oss-cf/gcp-oss-cf/director.yml.erb > ${state_dir}/director.yml
-   erb docs/guides/gcp-oss-cf/gcp-oss-cf/director-secrets.yml.erb > ${state_dir}/director-secrets.yml
+   erb docs/guides/gcp-oss-cf/director.yml.erb > ${state_dir}/director.yml
+   erb docs/guides/gcp-oss-cf/director-secrets.yml.erb > ${state_dir}/director-secrets.yml
    ```
 
 1. Generate a service account key for the bosh-user
