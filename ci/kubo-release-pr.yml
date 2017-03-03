@@ -12,19 +12,19 @@ resource_types:
 
 resources:
 - name: git-kubo-deployment
+  type: git
+  source:
+    uri: git@github.com:pivotal-cf-experimental/kubo-deployment
+    branch: master
+    private_key: {{git-ssh-key}}
+
+- name: git-kubo-release
   type: pull-request
   source:
-    repo: git@github.com:pivotal-cf-experimental/kubo-deployment
+    repo: git@github.com:pivotal-cf-experimental/kubo-release
     base: master
     private_key: {{git-ssh-key}}
     access_token: {{github-token-key}}
-
-- name: git-kubo-release
-  type: git
-  source:
-    uri: git@github.com:pivotal-cf-experimental/kubo-release
-    branch: master
-    private_key: {{git-ssh-key}}
 
 - name: kubo-lock
   type: pool
@@ -74,10 +74,9 @@ jobs:
   plan:
   - aggregate:
     - get: git-kubo-release
-      trigger: true
-    - get: git-kubo-deployment
       version: every
       trigger: true
+    - get: git-kubo-deployment
   - put: kubo-lock
     params: { acquire: true }
 

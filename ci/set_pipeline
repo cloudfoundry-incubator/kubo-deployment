@@ -1,35 +1,65 @@
 #!/bin/bash -e
 
-[ -z "$DEBUG" ] || set -x
+[ -z "${DEBUG}" ] || set -x
 
-pipeline_type=$1
-if [ -z "$pipeline_type" ]; then
-  pipeline_type="master"
-fi
+ci_dir=$(cd $(dirname $0); pwd)
 
-pipeline_name="kubo-deployment"
-pipeline_filename="${pipeline_dir}/pipeline.yml"
+echo "======================================="
+echo "| Setting kubo Concourse pipeline     |"
+echo "======================================="
+echo ""
 
-if ! which lpass > /dev/null 2>&1
-then
-  echo "must have lastpass CLI installed" >&2
+print_usage() {
+  echo "Usage:"
+  echo "    $0 <pipeline name>"
+  echo "    valid pipeline names: 'kubo-deployment', 'kubo-deployment-pr', 'kubo-release-pr'"
+}
+
+if [ $# -ne 1 ]; then
+  print_usage
   exit 1
 fi
 
-pipeline_dir=$(dirname "$0")
-ssh_key=$(lpass show "Shared-Kubo/CI/git-ssh-key" --notes)
-service_account=$(lpass show "Shared-Kubo/CI/bosh-deployer service key" --notes)
-slack_url=$(lpass show "Shared-Kubo/CI/Slack Incoming Webhook" --url)
+main() {
+  local pipeline_name=$1
+  local pipeline_filename="${ci_dir}/${pipeline_name}.yml"
 
-trap 'rm "$pipeline_dir/secrets.yml"' EXIT
-echo "---" > "$pipeline_dir/secrets.yml"
-lpass show "Shared-Kubo/CI/kubo-ci" --notes >> "$pipeline_dir/secrets.yml"
-lpass show "Shared-Kubo/CI/routing_cf_client_secret" --notes >> "$pipeline_dir/secrets.yml"
 
-fly --target kubo sync
-fly --target kubo set-pipeline --pipeline "$pipeline_name" \
-  --config "$pipeline_filename" \
-  --load-vars-from "$pipeline_dir/secrets.yml" \
-  --var git-ssh-key="${ssh_key}" \
-  --var gcp-service-account="${service_account}" \
-  --var slack-url="${slack_url}"
+  if [ ! -f ${pipeline_filename} ]; then
+    echo "Unknown pipeline name ${pipeline_name}"
+    print_usage
+    exit 1
+  fi
+
+
+  if [ -z  $(which lpass) ]; then
+    echo "Unable to locate the LastPass CLI"
+    print_usage
+    exit 1
+  fi
+
+  local ssh_key=$(lpass show "Shared-Kubo/CI/git-ssh-key" --notes)
+  local service_account=$(lpass show "Shared-Kubo/CI/bosh-deployer service key" --notes)
+  local slack_url=$(lpass show "Shared-Kubo/CI/Slack Incoming Webhook" --url)
+  local github_token=$(lpass show "Shared-Kubo/CI/pr-github-token" --notes)
+
+
+  trap 'rm "${ci_dir}/secrets.yml"' EXIT
+  echo "---" > "${ci_dir}/secrets.yml"
+  lpass show "Shared-Kubo/CI/kubo-ci" --notes >> "${ci_dir}/secrets.yml"
+  lpass show "Shared-Kubo/CI/routing_cf_client_secret" --notes >> "${ci_dir}/secrets.yml"
+
+  fly --target kubo sync
+  fly --target kubo set-pipeline --pipeline "${pipeline_name}" \
+    --config "${pipeline_filename}" \
+    --load-vars-from "${ci_dir}/secrets.yml" \
+    --var git-ssh-key="${ssh_key}" \
+    --var gcp-service-account="${service_account}" \
+    --var slack-url="${slack_url}" \
+    --var github-token-key="${github_token}"
+
+}
+
+pushd ${ci_dir} > /dev/null
+  main "$@"
+popd > /dev/null
