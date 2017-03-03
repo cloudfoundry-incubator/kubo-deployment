@@ -21,7 +21,7 @@ resources:
 - name: git-kubo-release
   type: pull-request
   source:
-    repo: git@github.com:pivotal-cf-experimental/kubo-release
+    repo: pivotal-cf-experimental/kubo-release
     base: master
     private_key: {{git-ssh-key}}
     access_token: {{github-token-key}}
