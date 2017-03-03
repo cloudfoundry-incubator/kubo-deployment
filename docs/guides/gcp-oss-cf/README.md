@@ -4,7 +4,7 @@
 
 1. Deploy a [bosh-bastion and BOSH director](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/bosh#deploy-bosh-on-google-cloud-platform)
 
-2. Deploy [Cloud Foundry](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/cloudfoundry#deploying-cloud-foundry-on-google-compute-engine) 
+2. Deploy [Cloud Foundry](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/cloudfoundry#deploying-cloud-foundry-on-google-compute-engine) with TCP routing
 
 ## Prepare Infrastructure
 
