@@ -91,7 +91,7 @@ The rest of the document assumes you are logged into the `bosh-bastion` you depl
    export kubo_subnet=$(terraform output -state=${kubo_terraform_state} kubo_subnet)
    export tcp_router_domain=tcp.$(terraform output -state=${cf_terraform_state} tcp_ip).xip.io
    export cf_system_domain=$(terraform output -state=${cf_terraform_state} ip).xip.io
-   export common_secret=c1oudwc0w
+   export common_secret=c1oudc0w
    ```
 
 1. Populate the director configurations
