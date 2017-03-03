@@ -71,6 +71,7 @@ resources:
 
 jobs:
 - name: claim-lock
+  max_in_flight: 1
   plan:
   - aggregate:
     - get: git-kubo-release
