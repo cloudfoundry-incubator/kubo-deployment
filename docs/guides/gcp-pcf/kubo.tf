@@ -13,11 +13,6 @@ variable "region" {
     default = "us-east1"
 }
 
-variable "kubo-region" {
-    type = "string"
-    default = "us-west1"
-}
-
 variable "zone" {
     type = "string"
     default = "us-east1-d"
@@ -38,18 +33,9 @@ variable "service_account_email" {
     default = ""
 }
 
-variable "baseip" {
-    type = "string"
-    default = "10.0.0.0"
-}
-
 provider "google" {
     project = "${var.projectid}"
     region = "${var.region}"
-}
-
-resource "google_compute_network" "bosh" {
-  name       = "${var.prefix}bosh"
 }
 
 resource "google_compute_route" "nat-primary" {
@@ -62,18 +48,11 @@ resource "google_compute_route" "nat-primary" {
   tags = ["no-ip"]
 }
 
-// Subnet for the BOSH director
-resource "google_compute_subnetwork" "bosh-subnet-1" {
-  name          = "${var.prefix}bosh-${var.region}"
-  ip_cidr_range = "${var.baseip}/24"
-  network       = "${google_compute_network.bosh.self_link}"
-}
-
 // Subnet for Kubo
 resource "google_compute_subnetwork" "kubo-subnet" {
   name          = "${var.prefix}kubo-${var.kubo_region}"
   region        = "${var.kubo_region}"
-  ip_cidr_range = "10.0.1.0/24"
+  ip_cidr_range = "10.0.123.0/24"
   network       = "https://www.googleapis.com/compute/v1/projects/${var.projectid}/global/networks/${var.network}"
 }
 
@@ -97,7 +76,7 @@ resource "google_compute_firewall" "bosh-bastion" {
 // Allow all traffic within subnet
 resource "google_compute_firewall" "intra-subnet-open" {
   name    = "${var.prefix}intra-subnet-open"
-  network = "${var.networks}"
+  network = "${var.network}"
 
   allow {
     protocol = "icmp"
@@ -129,7 +108,7 @@ resource "google_compute_instance" "bosh-bastion" {
   }
 
   network_interface {
-    subnetwork = "${google_compute_subnetwork.bosh-subnet-1.name}"
+    subnetwork = "${google_compute_subnetwork.kubo-subnet.name}"
     access_config {
       // Ephemeral IP
     }
@@ -169,7 +148,7 @@ export prefix=${var.prefix}
 export ssh_key_path=$HOME/.ssh/bosh
 
 # Vars from Terraform
-export subnetwork=${google_compute_subnetwork.bosh-subnet-1.name}
+export subnetwork=${google_compute_subnetwork.kubo-subnet.name}
 export network=${var.network}
 
 
@@ -193,6 +172,16 @@ chmod -R 777 /share
 wget https://releases.hashicorp.com/terraform/0.7.7/terraform_0.7.7_linux_amd64.zip
 unzip terraform*.zip -d /usr/local/bin
 rm /etc/motd
+
+cd
+sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.1-linux-amd64 -o /usr/bin/bosh-cli
+sudo chmod a+x /usr/bin/bosh-cli
+curl -L https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/0.4.0/credhub-linux-0.4.0.tgz | tar zxv
+chmod a+x credhub
+sudo mv credhub /usr/bin
+sudo curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/bin/kubectl
+sudo chmod a+x /usr/bin/kubectl
+git clone https://github.com/pivotal-cf-experimental/kubo-deployment.git
 EOT
 
   service_account {
@@ -214,7 +203,7 @@ resource "google_compute_instance" "nat-instance-private-with-nat-primary" {
   }
 
   network_interface {
-    subnetwork = "${google_compute_subnetwork.bosh-subnet-1.name}"
+    subnetwork = "${google_compute_subnetwork.kubo-subnet.name}"
     access_config {
       // Ephemeral IP
     }
