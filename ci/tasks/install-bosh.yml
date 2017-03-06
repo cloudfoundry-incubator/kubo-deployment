@@ -11,6 +11,7 @@ run:
 
 inputs:
 - name: git-kubo-deployment
+- name: kubo-lock
 outputs:
 - name: bosh-state
 - name: bosh-creds

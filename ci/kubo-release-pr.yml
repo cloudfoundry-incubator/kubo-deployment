@@ -72,7 +72,6 @@ resources:
 
 jobs:
 - name: claim-lock
-  max_in_flight: 1
   plan:
   - aggregate:
     - get: git-kubo-release
@@ -102,7 +101,7 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Deploy BOSH failed:
-          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - aggregate:
     - put: s3-bosh-creds
       params:
@@ -134,7 +133,7 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Deploy K8s failed:
-          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - aggregate:
     - put: s3-service-creds
       params:
@@ -161,7 +160,7 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Deploy K8s Workload failed:
-          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
 - name: destroy-k8s
   plan:
@@ -182,7 +181,7 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Destroy K8s failed:
-          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
 
 - name: destroy-bosh
@@ -208,7 +207,7 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Destroy BOSH failed:
-          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - put: kubo-lock
     params: { release: kubo-lock }
   - put: slack-alert
