@@ -51,7 +51,7 @@ are stored in `<BOSH_ENV>/director.yml` and `<BOSH_ENV>/director-secrets.yml`, r
 Please choose the guide below that matches your requirements
 
 1. Deploy Kubo from scratch with an open source Cloud Foundry installation on Google Cloud Platform - [guide](docs/guides/gcp-oss-cf)
-1. Deploy Kubo with a Pivotal Cloud Foundry installation using OpsMan - [guide](docs/guides/opsman-installation.md)
+1. Deploy Kubo with an existing Pivotal Cloud Foundry installation - [guide](docs/guides/gcp-pcf)
 1. Deploy Kubo step by step, allowing for customization - [guide](docs/guides/customized-installation.md)
 
 ## Troubleshooting

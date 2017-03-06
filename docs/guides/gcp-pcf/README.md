@@ -1,5 +1,9 @@
 # Example: Existing Pivotal Cloud Foundry and Kubo on GCP
 
+## Prerequisites
+
+1. These instructions assume that you have an installation of PCF running on GCP with the [Routing Release](https://github.com/cloudfoundry-incubator/routing-release) enabled
+
 ## Prepare Infrastructure
 
 1. In your existing Google Cloud Platform project, enable the following APIs:
@@ -14,6 +18,7 @@
   ```
   export project_id=$(gcloud config list 2>/dev/null | grep project | sed -e 's/project = //g')
   export network=<Network that your Cloud Foundry installation is running in>
+  export subnet_ip_prefix="10.0.1" # Create new subnet for deployment in $subnet_ip_prefix.0/24
   export region=us-east1
   export zone=us-east1-d
   export terraform_state_dir=~/kubo-env
@@ -79,6 +84,7 @@
       -var region=${region} \
       -var kubo_region=${kubo_region} \
       -var zone=${zone} \
+      -var subnet_ip_prefix=${subnet_ip_prefix} \
       -state=${kubo_terraform_state}
   ```
 
@@ -96,6 +102,7 @@
       -var region=${region} \
       -var kubo_region=${kubo_region} \
       -var zone=${zone} \
+      -var subnet_ip_prefix=${subnet_ip_prefix} \
       -state=${kubo_terraform_state}
   ```
 
@@ -114,11 +121,12 @@ Now you have the infrastructure ready to deploy a BOSH director.
   ```
   export project_id=$(gcloud config list 2>/dev/null | grep project | sed -e 's/project = //g')
   export network=<Network that your Cloud Foundry installation is running in>
-  export kubo_region=us-west1
-  export kubo_zone=us-west1-a
+  export kubo_region=us-east1
+  export kubo_zone=us-east1-d
   export kubo_env=kube
   export state_dir=~/kubo-env/${kubo_env}
   export common_secret=c1oudc0w
+  export subnet_ip_prefix="10.0.1" # Create new subnet for deployment in $subnet_ip_prefix.0/24
 
   export tcp_router_domain=[domain of TCP router]
   export cf_system_domain=[Cloud Foundry system domain]
@@ -154,7 +162,18 @@ Now you have the infrastructure ready to deploy a BOSH director.
    export service_account=bosh-user
    export service_account_creds=${state_dir}/service_account.json
    export service_account_email=${service_account}@${project_id}.iam.gserviceaccount.com
+   gcloud iam service-accounts create ${service_account}
    gcloud iam service-accounts keys create ${service_account_creds} --iam-account ${service_account_email}
+   gcloud projects add-iam-policy-binding ${project_id} \
+     --member serviceAccount:${service_account_email=} --role roles/compute.instanceAdmin
+   gcloud projects add-iam-policy-binding ${project_id} \
+     --member serviceAccount:${service_account_email=} --role roles/compute.storageAdmin
+   gcloud projects add-iam-policy-binding ${project_id} \
+     --member serviceAccount:${service_account_email=} --role roles/storage.admin
+   gcloud projects add-iam-policy-binding ${project_id} \
+     --member serviceAccount:${service_account_email=} --role  roles/compute.networkAdmin
+   gcloud projects add-iam-policy-binding ${project_id} \
+     --member serviceAccount:${service_account_email=} --role roles/iam.serviceAccountActor
    ```
 
 ## Deploy Kubo
