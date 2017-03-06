@@ -46,7 +46,7 @@ provider "google" {
 resource "google_compute_route" "nat-primary" {
   name        = "${var.prefix}nat-primary"
   dest_range  = "0.0.0.0/0"
-  network       = "${var.network}"
+  network       = ${var.network}
   next_hop_instance = "${google_compute_instance.nat-instance-private-with-nat-primary.name}"
   next_hop_instance_zone = "${var.zone}"
   priority    = 800
@@ -64,7 +64,7 @@ resource "google_compute_subnetwork" "kubo-subnet" {
 // Allow SSH to BOSH bastion
 resource "google_compute_firewall" "bosh-bastion" {
   name    = "${var.prefix}bosh-bastion"
-  network = "${var.network}"
+  network = ${var.network}
 
   allow {
     protocol = "icmp"
