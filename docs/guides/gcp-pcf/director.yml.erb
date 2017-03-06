@@ -1,11 +1,11 @@
 <% 
 require 'securerandom'
 
-['project_id', 'network', 'kubo_subnet', 'kubo_zone', 'network', 'tcp_router_domain', 'cf_system_domain'].each do |var|
+['project_id', 'network', 'kubo_subnet', 'kubo_zone', 'network', 'tcp_router_domain', 'cf_system_domain', 'subnet_ip_prefix'].each do |var|
    raise "Expected environment variable '#{var}' to be set" if ENV[var] == nil || ENV[var] == ""
 end
 
-ip_prefix = "10.0.1"
+ip_prefix = ENV['subnet_ip_prefix']
 %>
 
 project_id: <%= ENV['project_id'] %> # GCP project ID

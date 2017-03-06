@@ -33,6 +33,11 @@ variable "service_account_email" {
     default = ""
 }
 
+variable "var.subnet_ip_prefix" {
+    type = "string"
+    default = "10.0.1"
+}
+
 provider "google" {
     project = "${var.projectid}"
     region = "${var.region}"
@@ -52,7 +57,7 @@ resource "google_compute_route" "nat-primary" {
 resource "google_compute_subnetwork" "kubo-subnet" {
   name          = "${var.prefix}kubo-${var.kubo_region}"
   region        = "${var.kubo_region}"
-  ip_cidr_range = "10.0.1.0/24"
+  ip_cidr_range = "${var.subnet_ip_prefix}.0/24"
   network       = "https://www.googleapis.com/compute/v1/projects/${var.projectid}/global/networks/${var.network}"
 }
 
