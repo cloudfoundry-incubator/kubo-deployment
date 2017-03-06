@@ -10,3 +10,4 @@ run:
 inputs:
   - name: s3-bosh-creds
   - name: git-kubo-deployment
+  - name: kubo-lock
