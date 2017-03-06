@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-1. These instructions assume that you have an installation of PCF running on GCP with the [Routing Release](https://github.com/cloudfoundry-incubator/routing-release) enabled
+1. These instructions assume that you have an installation of Pivotal Cloud Foundry running on Google Cloud Platform with the [Routing Release](https://github.com/cloudfoundry-incubator/routing-release) enabled
 
 ## Prepare Infrastructure
 
@@ -19,8 +19,8 @@
   export project_id=$(gcloud config list 2>/dev/null | grep project | sed -e 's/project = //g')
   export network=<Network that your Cloud Foundry installation is running in>
   export subnet_ip_prefix="10.0.1" # Create new subnet for deployment in $subnet_ip_prefix.0/24
-  export region=us-east1
-  export zone=us-east1-d
+  export region=us-east1 # region that you will deploy BOSH in
+  export zone=us-east1-d # zone that you will deploy BOSH in
   export terraform_state_dir=~/kubo-env
   export service_account_email=terraform@${project_id}.iam.gserviceaccount.com
   ```
@@ -121,16 +121,16 @@ Now you have the infrastructure ready to deploy a BOSH director.
   ```
   export project_id=$(gcloud config list 2>/dev/null | grep project | sed -e 's/project = //g')
   export network=<Network that your Cloud Foundry installation is running in>
-  export kubo_region=us-east1
-  export kubo_zone=us-east1-d
+  export kubo_region=us-east1 # region to deploy the kubernetes cluster in
+  export kubo_zone=us-east1-d # zone to deploy the kubernetes cluster in
   export kubo_env=kube
   export state_dir=~/kubo-env/${kubo_env}
   export common_secret=c1oudc0w
-  export subnet_ip_prefix="10.0.1" # Create new subnet for deployment in $subnet_ip_prefix.0/24
+  export subnet_ip_prefix="10.0.1" # This is the same subnet that was created in the 'Deploy supporting infrastructure' section 
 
-  export tcp_router_domain=[domain of TCP router]
+  export tcp_router_domain=[domain of your existing TCP router]
   export cf_system_domain=[Cloud Foundry system domain]
-  export routing_cf_client_id=[client id for that can access TCP router]
+  export routing_cf_client_id=[client id that can access TCP router]
   export kubo_subnet=[name of subnet created by Terraform]
   ```
 
@@ -155,9 +155,9 @@ Now you have the infrastructure ready to deploy a BOSH director.
    erb docs/guides/gcp-pcf/director.yml.erb > ${state_dir}/director.yml
    ```
 
-1. Fill in the values in ${state_dir}/director-secrets.yml
+1. Fill in the values in `${state_dir}/director-secrets.yml`
 
-1. Generate a service account key for the bosh-user
+1. Create a bosh-user service account and generate a key for it
    ```
    export service_account=bosh-user
    export service_account_creds=${state_dir}/service_account.json
@@ -177,6 +177,8 @@ Now you have the infrastructure ready to deploy a BOSH director.
    ```
 
 ## Deploy Kubo
+
+> **Note:** All of these steps should be performed from the bosh bastion
 
 1. Deploy a BOSH director for Kubo
    ```
