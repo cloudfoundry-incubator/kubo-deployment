@@ -2,7 +2,7 @@
 
 [ -z "${DEBUG}" ] || set -x
 
-ci_dir=$(cd $(dirname $0); pwd)
+ci_dir="$(cd "$(dirname $0)"; pwd)"
 
 echo "======================================="
 echo "| Setting kubo Concourse pipeline     |"
@@ -12,7 +12,12 @@ echo ""
 print_usage() {
   echo "Usage:"
   echo "    $0 <pipeline name>"
-  echo "    valid pipeline names: 'kubo-deployment', 'kubo-deployment-pr', 'kubo-release-pr'"
+  echo ""
+  echo "    valid pipeline names:"
+  for name in ${ci_dir}/*.yml; do
+    local pipeline_name="$(basename "${name}")"
+    echo "        - ${pipeline_name%.yml}"
+  done
 }
 
 if [ $# -ne 1 ]; then
@@ -21,27 +26,35 @@ if [ $# -ne 1 ]; then
 fi
 
 main() {
-  local pipeline_name=$1
+  local pipeline_name="$1"
   local pipeline_filename="${ci_dir}/${pipeline_name}.yml"
+  local branch_name="master"
 
 
-  if [ ! -f ${pipeline_filename} ]; then
+  if [ ! -f "${pipeline_filename}" ]; then
     echo "Unknown pipeline name ${pipeline_name}"
     print_usage
     exit 1
   fi
 
 
-  if [ -z  $(which lpass) ]; then
+  if [ -z  "$(which lpass)" ]; then
     echo "Unable to locate the LastPass CLI"
     print_usage
     exit 1
   fi
 
-  local ssh_key=$(lpass show "Shared-Kubo/CI/git-ssh-key" --notes)
-  local service_account=$(lpass show "Shared-Kubo/CI/bosh-deployer service key" --notes)
-  local slack_url=$(lpass show "Shared-Kubo/CI/Slack Incoming Webhook" --url)
-  local github_token=$(lpass show "Shared-Kubo/CI/pr-github-token" --notes)
+  echo "${pipeline_name}"
+  local current_branch_regex='-current-branch$'
+  if [[ "${pipeline_name}" =~ $current_branch_regex ]]; then
+    local current_branch="$(git symbolic-ref -q HEAD)"
+    branch_name="${current_branch##refs/heads/}"
+  fi
+
+  local ssh_key="$(lpass show "Shared-Kubo/CI/git-ssh-key" --notes)"
+  local service_account="$(lpass show "Shared-Kubo/CI/bosh-deployer service key" --notes)"
+  local slack_url="$(lpass show "Shared-Kubo/CI/Slack Incoming Webhook" --url)"
+  local github_token="$(lpass show "Shared-Kubo/CI/pr-github-token" --notes)"
 
 
   trap 'rm "${ci_dir}/secrets.yml"' EXIT
@@ -56,10 +69,11 @@ main() {
     --var git-ssh-key="${ssh_key}" \
     --var gcp-service-account="${service_account}" \
     --var slack-url="${slack_url}" \
-    --var github-token-key="${github_token}"
+    --var github-token-key="${github_token}" \
+    --var branch-name="${branch_name}"
 
 }
 
-pushd ${ci_dir} > /dev/null
+pushd "${ci_dir}" > /dev/null
   main "$@"
 popd > /dev/null
