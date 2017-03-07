@@ -1,7 +1,7 @@
 <% 
 require 'securerandom'
 
-['project_id', 'network', 'kubo_subnet', 'kubo_zone', 'network', 'tcp_router_domain', 'cf_system_domain'].each do |var|
+%w(project_id network kubo_subnet kubo_zone network tcp_router_domain cf_system_domain).each do |var|
    raise "Expected environment variable '#{var}' to be set" if ENV[var] == nil || ENV[var] == ""
 end
 
