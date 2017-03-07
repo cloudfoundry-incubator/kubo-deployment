@@ -184,31 +184,18 @@ Now you have the infrastructure ready to deploy a BOSH director.
 
 > **Note:** All of these steps should be performed from the bosh bastion
 
-1. Deploy a BOSH director for Kubo
-   ```
-   bin/deploy_bosh ${state_dir} ${service_account_creds} 
-   ```
-
-1. Find the password for your BOSH director
-   ```
-   bosh-cli int ${state_dir}/creds.yml --path=/admin_password
-   ```
-
-1. Login with that password
-   ```
-   bosh-cli login -e ${kubo_env}
-
-   Email: admin
-   Password: [output of previous command]
-   ```
+1. Deploy KuBOSH
+  ```
+  bin/deploy_bosh ${state_dir} ${service_account_creds} 
+  ```
 
 1. Deploy Kubo
-   ```
-   bin/deploy_k8s ${state_dir} kube public
-   ```
+  ```
+  bin/deploy_k8s ${state_dir} kube public
+  ```
 
 1. Setup kubectl and access your new Kubernetes cluster
-   ```
-   bin/set_kubeconfig ${state_dir} kube
-   kubectl get pods --namespace=kube-system
-   ```
+  ```
+  bin/set_kubeconfig ${state_dir} kube
+  kubectl get pods --namespace=kube-system
+  ```
