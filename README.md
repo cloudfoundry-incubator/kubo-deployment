@@ -26,9 +26,9 @@ Kubernetes applications deployed to a Kubo instance are not currently exposed to
 
 ![Diagram describing how traffic is routed to Kubo](docs/images/kubo-network.png)
 
-The nodes that run the Kubernetes API (kube-master) register themselves with the Cloud Foundry TCP router. The TCP Router acts as the public endpoint for the Kubernetes API to route traffic to the master nodes of a Kubo instance. All traffic to the API goes through the Cloud Foundry TCP router and then to a healthy kube-master node. 
+The nodes that run the Kubernetes API (master) register themselves with the Cloud Foundry TCP router. The TCP Router acts as the public endpoint for the Kubernetes API to route traffic to the master nodes of a Kubo instance. All traffic to the API goes through the Cloud Foundry TCP router and then to a healthy node. 
 
-The Cloud Foundry subnet must be able to route traffic directly to the Kubo subnet. It is recommended to keep them in seperate subnets when possible to avoid the BOSH directors from trying to provision the same addresses. This diagram specifies CIDR ranges for demonstration purposes as well as a public TCP router in front of Cloud Foundry which is typical.
+The Cloud Foundry subnet must be able to route traffic directly to the Kubo subnet. It is recommended to keep them in seperate subnets when possible to avoid the BOSH directors from trying to provision the same addresses. This diagram specifies CIDR ranges for demonstration purposes as well as a public router in front of the Cloud Foundry gorouter and tcp-router which is typical.
 
 ## Glossary
 
