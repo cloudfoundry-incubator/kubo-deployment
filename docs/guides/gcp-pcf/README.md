@@ -130,7 +130,6 @@ Now you have the infrastructure ready to deploy a BOSH director.
   export kubo_zone=us-east1-d # zone to deploy the kubernetes cluster in
   export kubo_env=kube
   export state_dir=~/kubo-env/${kubo_env}
-  export common_secret=c1oudc0w
   export subnet_ip_prefix="10.0.1" # This is the same subnet that was created in the 'Deploy supporting infrastructure' section 
 
   export tcp_router_domain=[domain of your existing TCP router]
