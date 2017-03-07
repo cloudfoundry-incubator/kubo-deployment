@@ -122,6 +122,8 @@ Now you have the infrastructure ready to deploy a BOSH director.
   gcloud compute ssh bosh-bastion
   ```
 
+1. If you see a warning indicating the VM isn't ready, log out, wait a few moments, and log in again.
+
 1. Clone the [kubo-deployment](https://github.com/pivotal-cf-experimental/kubo-deployment) repo
 
   ```
