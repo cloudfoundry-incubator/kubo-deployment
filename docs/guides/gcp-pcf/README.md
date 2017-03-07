@@ -82,7 +82,6 @@
       -var network=${network} \
       -var projectid=${project_id} \
       -var region=${region} \
-      -var kubo_region=${kubo_region} \
       -var zone=${zone} \
       -var subnet_ip_prefix=${subnet_ip_prefix} \
       -state=${kubo_terraform_state}
@@ -100,7 +99,6 @@
       -var projectid=${project_id} \
       -var network=${network} \
       -var region=${region} \
-      -var kubo_region=${kubo_region} \
       -var zone=${zone} \
       -var subnet_ip_prefix=${subnet_ip_prefix} \
       -state=${kubo_terraform_state}
