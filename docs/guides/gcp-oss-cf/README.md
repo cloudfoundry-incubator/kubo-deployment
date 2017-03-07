@@ -115,19 +115,6 @@ The rest of the document assumes you are logged into the `bosh-bastion` you depl
    bin/deploy_bosh ${state_dir} ${service_account_creds} 
    ```
 
-1. Find the password for your BOSH director
-   ```
-   bosh-cli int ${state_dir}/creds.yml --path=/admin_password
-   ```
-
-1. Login with that password
-   ```
-   bosh-cli login -e ${kubo_env}
-
-   Email: admin
-   Password: [output of previous command]
-   ```
-
 1. Deploy Kubo
    ```
    bin/deploy_k8s ${state_dir} kube public
