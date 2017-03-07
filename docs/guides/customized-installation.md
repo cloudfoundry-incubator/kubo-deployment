@@ -6,6 +6,9 @@
 - [Ruby 2.3+](https://www.ruby-lang.org/en/downloads) required by the bosh-cli to deploy KuBOSH
 - [make](https://www.gnu.org/software/make) required by the bosh-cli to deploy KuBOSH
 - [Cloud Foundry](https://cloudfoundry.org) with [TCP Routing](https://docs.cloudfoundry.org/adminguide/enabling-tcp-routing.html)
+- CF UAA client with
+  [appropriate authorities](https://github.com/cloudfoundry-incubator/routing-api#configure-oauth-clients-manually-using-uaac-cli-for-uaa) 
+   is required in order to register the TCP routes.
 - IaaS specific tools to create VMs, credentials
 
 ## Infrastructure Setup
