@@ -1,0 +1,219 @@
+---
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
+- name: pull-request
+  type: docker-image
+  source:
+    repository: jtarchie/pr
+
+resources:
+- name: git-kubo-deployment
+  type: pull-request
+  source:
+    repo: git@github.com:pivotal-cf-experimental/kubo-deployment
+    base: master
+    private_key: {{git-ssh-key}}
+    access_token: 226c86a57244e4fe2b8ed8c6971ea917e418a929
+
+- name: git-kubo-release
+  type: git
+  source:
+    uri: git@github.com:pivotal-cf-experimental/kubo-release
+    branch: master
+    private_key: {{git-ssh-key}}
+
+- name: kubo-lock
+  type: pool
+  source:
+    uri: git@github.com:pivotal-cf-experimental/kubo-locks.git
+    branch: master
+    private_key: {{git-ssh-key}}
+    pool: kubo-deployment
+
+- name: s3-bosh-state
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-pipeline
+    endpoint: s3-eu-west-1.amazonaws.com
+    region_name: eu-west-1
+    versioned_file: bosh/state.json
+
+- name: s3-bosh-creds
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-pipeline
+    endpoint: s3-eu-west-1.amazonaws.com
+    region_name: eu-west-1
+    versioned_file: bosh/creds.yml
+
+- name: s3-service-creds
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-pipeline
+    endpoint: s3-eu-west-1.amazonaws.com
+    region_name: eu-west-1
+    versioned_file: bosh/service-ci-service-creds.yml
+
+- name: slack-alert
+  type: slack-notification
+  source:
+    url: {{slack-url}}
+
+jobs:
+- name: claim-lock
+  plan:
+  - aggregate:
+    - get: git-kubo-release
+      trigger: true
+    - get: git-kubo-deployment
+      version: every
+      trigger: true
+  - put: kubo-lock
+    params: { acquire: true }
+
+- name: install-bosh
+  plan:
+  - get: git-kubo-deployment
+    passed: [ 'claim-lock' ]
+  - get: git-kubo-release
+    passed: [ 'claim-lock' ]
+  - get: kubo-lock
+    trigger: true
+    passed: [ 'claim-lock' ]
+  - task: install
+    file: git-kubo-deployment/ci/tasks/install-bosh.yml
+    params:
+      GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Deploy BOSH failed:
+          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - aggregate:
+    - put: s3-bosh-creds
+      params:
+        file: bosh-creds/creds.yml
+    - put: s3-bosh-state
+      params:
+        file: bosh-state/state.json
+
+- name: deploy-k8s
+  plan:
+  - aggregate:
+    - get: kubo-lock
+      trigger: true
+      passed: [ 'install-bosh' ]
+    - get: git-kubo-deployment
+      passed: [ 'install-bosh' ]
+    - get: git-kubo-release
+      passed: [ 'install-bosh' ]
+    - get: s3-bosh-creds
+      passed: [ 'install-bosh' ]
+  - task: deploy
+    file: git-kubo-deployment/ci/tasks/deploy-k8s-instance.yml
+    params:
+      ROUTING_CF_CLIENT_SECRET: {{routing_cf_client_secret}}
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Deploy K8s failed:
+          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - aggregate:
+    - put: s3-service-creds
+      params:
+        file: service-creds/service-ci-service-creds.yml
+
+- name: deploy-workload
+  plan:
+  - aggregate:
+    - get: kubo-lock
+      trigger: true
+      passed: [ 'deploy-k8s' ]
+    - get: git-kubo-deployment
+      passed: [ 'deploy-k8s' ]
+    - get: s3-bosh-creds
+      passed: [ 'deploy-k8s' ]
+    - get: s3-service-creds
+      passed: [ 'deploy-k8s' ]
+  - task: workload
+    file: git-kubo-deployment/ci/tasks/deploy-k8s-workload.yml
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Deploy K8s Workload failed:
+          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
+- name: destroy-k8s
+  plan:
+  - aggregate:
+    - get: kubo-lock
+      trigger: true
+      passed: [ 'deploy-workload' ]
+    - get: git-kubo-deployment
+      passed: [ 'deploy-workload' ]
+    - get: s3-bosh-creds
+      passed: [ 'deploy-workload' ]
+  - task: destroy-k8s
+    file: git-kubo-deployment/ci/tasks/destroy-k8s-instance.yml
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Destroy K8s failed:
+          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
+
+- name: destroy-bosh
+  plan:
+  - aggregate:
+    - get: git-kubo-deployment
+      passed: [ 'destroy-k8s' ]
+    - get: kubo-lock
+      trigger: true
+      passed: [ 'destroy-k8s' ]
+    - get: s3-bosh-creds
+      passed: [ 'destroy-k8s' ]
+    - get: s3-bosh-state
+      passed: [ 'install-bosh' ]
+  - task: destroy
+    file: git-kubo-deployment/ci/tasks/destroy-bosh.yml
+    params:
+      GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Destroy BOSH failed:
+          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - put: kubo-lock
+    params: { release: kubo-lock }
+  - put: slack-alert
+    params:
+      silent: true
+      icon_emoji: ":frog:"
+      text: |
+        I am green and it'll do fine, it's beautiful
+        And I think it's what I want to be
