@@ -49,6 +49,28 @@ Please choose the guide below that matches your requirements
 1. Deploy Kubo with an existing Pivotal Cloud Foundry installation - [guide](docs/guides/gcp-pcf)
 1. Deploy Kubo step by step, allowing for customization - [guide](docs/guides/customized-installation.md)
 
+## Accessing Kubernetes dashboard
+
+1. Get the NodePort for the Kubernetes dashboard service
+
+   ```
+   kubectl describe service kubernetes-dashboard --namespace=kube-system
+   ```
+
+1. Get the IP address of one of the Kubernetes worker nodes
+
+   ```
+   bosh-cli -e kube vms
+   ```
+
+1. Setup [sshuttle](https://github.com/apenwarr/sshuttle) from your local machine to your KuBOSH Director
+
+   ```
+   sshuttle -r <local machine IP address> <KuBOSH Subnet CIDR>
+   ```
+
+1. View the Kubernetes dashboard from your browser at `<worker node IP>:<NodePort>`
+
 ## Delete resources
 
 ### Delete Kubernetes Cluster
