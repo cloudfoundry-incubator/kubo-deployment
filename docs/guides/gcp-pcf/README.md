@@ -122,6 +122,12 @@ Now you have the infrastructure ready to deploy a BOSH director.
   gcloud compute ssh bosh-bastion
   ```
 
+1. Clone the [kubo-deployment](https://github.com/pivotal-cf-experimental/kubo-deployment) repo
+
+  ```
+  git clone https://github.com/pivotal-cf-experimental/kubo-deployment.git
+  ```
+
 1.  Configure a few environment variables:
 
   ```

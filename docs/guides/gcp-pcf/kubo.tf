@@ -186,7 +186,6 @@ chmod a+x credhub
 sudo mv credhub /usr/bin
 sudo curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/bin/kubectl
 sudo chmod a+x /usr/bin/kubectl
-git clone https://github.com/pivotal-cf-experimental/kubo-deployment.git
 EOT
 
   service_account {
