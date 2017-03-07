@@ -79,3 +79,26 @@ Exit code 1
 ### Solution
 
 Please make sure that you are logged in. The password can be found in `<BOSH_ENV>/creds.yml`, in the `admin_password` field.
+
+
+## Problem
+
+Error when running `deploy_k8s` script with invalid UAAC credentials
+
+```
+Updating instance master: master/20f5c31f-4329-46a7-ae03-484f0a17f6a3 (0) (canary) (00:01:14)
+            Error: 'master/0 (20f5c31f-4329-46a7-ae03-484f0a17f6a3)' is not running after update. Review logs for failed jobs: kubernetes-api, kubernetes-controller-manager, kubernetes-scheduler, kubernetes-api-route-registrar
+Error: 'master/0 (20f5c31f-4329-46a7-ae03-484f0a17f6a3)' is not running after update. Review logs for failed jobs: kubernetes-api, kubernetes-controller-manager, kubernetes-scheduler, kubernetes-api-route-registrar
+```
+
+### Solution
+
+Please check the fields `routing-cf-client-id` in `<BOSH_ENV>/director.yml` and `routing-cf-client-secret` in `<BOSH_ENV>/director-secrets.yml` and ensure that the UAAC credentials that you are using are valid. You can use the [UAAC CLI](https://docs.cloudfoundry.org/adminguide/uaa-user-management.html) to create and manage credentials.
+
+## Problem
+
+Issues with permissions on service accounts
+
+### Solution
+
+If you see unexplained errors about service accounts not having the proper permissions, first check that the permissions were properly applied in the [Google Cloud Console](https://console.cloud.google.com/iam-admin/iam). If the permissions are set correctly but you are still seeing permission issues when using the account, try creating and using a new account with a different name.
