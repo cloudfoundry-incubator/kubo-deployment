@@ -13,7 +13,7 @@
 ## Setup the shell environment
 
 1. In your existing Google Cloud Platform project, enable the following API
-- [IAM API](https://console.cloud.google.com/apis/api/iam.googleapis.com/overview)
+    - [IAM API](https://console.cloud.google.com/apis/api/iam.googleapis.com/overview)
 
 1. In your existing Google Cloud Platform project, open Cloud Shell (the small `>_` prompt icon in the web console menu bar).
 
