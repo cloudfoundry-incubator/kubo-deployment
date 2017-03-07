@@ -74,9 +74,10 @@ This step sets up a subnetwork with a bastion VM and a set of firewall rules to 
   ```
 
 1. Create a folder to store the terraform output
-   ```
-   mkdir -p ${terraform_state_dir}
-   ```
+   
+  ```
+  mkdir -p ${terraform_state_dir}
+  ```
 
 1. View the Terraform execution plan to see the resources that will be created:
   ```
@@ -145,40 +146,40 @@ Now you have the infrastructure ready to deploy a BOSH director.
   ```
 
 1. `cd` to the `kubo-deployment` root
-   ```
-   cd ~/kubo-deployment
-   ```
+  ```
+  cd ~/kubo-deployment
+  ```
 
 1. Generate the environment configuration
-   ```
-   bin/generate_env_config ~/kubo-env ${kubo_env} gcp
-   ```
+  ```
+  bin/generate_env_config ~/kubo-env ${kubo_env} gcp
+  ```
 
 1. Populate the director configurations
-   ```
-   erb docs/guides/gcp-pcf/director.yml.erb > ${state_dir}/director.yml
-   ```
+  ```
+  erb docs/guides/gcp-pcf/director.yml.erb > ${state_dir}/director.yml
+  ```
 
 1. Fill in the values in `${state_dir}/director-secrets.yml`
 
 1. Create a bosh-user service account and generate a key for it
-   ```
-   export service_account=bosh-user
-   export service_account_creds=${state_dir}/service_account.json
-   export service_account_email=${service_account}@${project_id}.iam.gserviceaccount.com
-   gcloud iam service-accounts create ${service_account}
-   gcloud iam service-accounts keys create ${service_account_creds} --iam-account ${service_account_email}
-   gcloud projects add-iam-policy-binding ${project_id} \
-     --member serviceAccount:${service_account_email=} --role roles/compute.instanceAdmin
-   gcloud projects add-iam-policy-binding ${project_id} \
-     --member serviceAccount:${service_account_email=} --role roles/compute.storageAdmin
-   gcloud projects add-iam-policy-binding ${project_id} \
-     --member serviceAccount:${service_account_email=} --role roles/storage.admin
-   gcloud projects add-iam-policy-binding ${project_id} \
-     --member serviceAccount:${service_account_email=} --role  roles/compute.networkAdmin
-   gcloud projects add-iam-policy-binding ${project_id} \
-     --member serviceAccount:${service_account_email=} --role roles/iam.serviceAccountActor
-   ```
+  ```
+  export service_account=bosh-user
+  export service_account_creds=${state_dir}/service_account.json
+  export service_account_email=${service_account}@${project_id}.iam.gserviceaccount.com
+  gcloud iam service-accounts create ${service_account}
+  gcloud iam service-accounts keys create ${service_account_creds} --iam-account ${service_account_email}
+  gcloud projects add-iam-policy-binding ${project_id} \
+    --member serviceAccount:${service_account_email=} --role roles/compute.instanceAdmin
+  gcloud projects add-iam-policy-binding ${project_id} \
+    --member serviceAccount:${service_account_email=} --role roles/compute.storageAdmin
+  gcloud projects add-iam-policy-binding ${project_id} \
+    --member serviceAccount:${service_account_email=} --role roles/storage.admin
+  gcloud projects add-iam-policy-binding ${project_id} \
+    --member serviceAccount:${service_account_email=} --role  roles/compute.networkAdmin
+  gcloud projects add-iam-policy-binding ${project_id} \
+    --member serviceAccount:${service_account_email=} --role roles/iam.serviceAccountActor
+  ```
 
 ## Deploy Kubo
 
