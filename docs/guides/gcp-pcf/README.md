@@ -35,6 +35,8 @@
   gcloud config set compute/zone ${zone}
   gcloud config set compute/region ${region}
   ```
+  
+## Setup GCP account for terraform
 
 1. Create a service account and key:
 
@@ -60,8 +62,9 @@
 
 ## Deploy supporting infrastructure
 
+This step sets up a subnetwork with a bastion VM and a set of firewall rules to secure access to the kubo deployment.
+
 ### Steps
-> **Note:** All of these steps should be performed inside the Cloud Shell in your browser.
 
 1. Clone this repository and go into the installation docs directory:
 
