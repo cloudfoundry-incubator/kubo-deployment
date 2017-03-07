@@ -6,7 +6,7 @@
 
 2. Deploy [Cloud Foundry](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/cloudfoundry#deploying-cloud-foundry-on-google-compute-engine) with TCP routing
 
-## Prepare Infrastructure
+## Prepare GCP Infrastructure
 
 The rest of the document assumes you are logged into the `bosh-bastion` you deployed above. The remaining steps should all be done in succession from a single session to retain required environment variables.
 
