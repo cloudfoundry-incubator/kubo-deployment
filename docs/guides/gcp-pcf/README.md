@@ -2,9 +2,15 @@
 
 ## Prerequisites
 
-1. These instructions assume that you have an installation of Pivotal Cloud Foundry running on Google Cloud Platform with the [Routing Release](https://github.com/cloudfoundry-incubator/routing-release) enabled
+1. These instructions assume that you have an installation of Pivotal Cloud Foundry running on Google Cloud Platform with the [TCP Routing](http://docs.pivotal.io/pivotalcf/1-9/opsguide/tcp-routing-ert-config.html) enabled.
 
-## Prepare Infrastructure
+1. A UAA client with
+   [appropriate authorities](https://github.com/cloudfoundry-incubator/routing-api#configure-oauth-clients-manually-using-uaac-cli-for-uaa) 
+   is required in order to register the TCP routes.
+   
+> **Note:** All of the steps below should be performed inside the Cloud Shell in your browser.
+
+## Setup the shell environment
 
 1. In your existing Google Cloud Platform project, enable the following APIs:
 - [GCE API](https://console.developers.google.com/apis/api/compute_component/overview)
