@@ -13,9 +13,7 @@
 ## Setup the shell environment
 
 1. In your existing Google Cloud Platform project, enable the following APIs:
-- [GCE API](https://console.developers.google.com/apis/api/compute_component/overview)
 - [IAM API](https://console.cloud.google.com/apis/api/iam.googleapis.com/overview)
-- [Cloud Resource Manager API](https://console.cloud.google.com/apis/api/cloudresourcemanager.googleapis.com/overview)
 
 1. In your existing Google Cloud Platform project, open Cloud Shell (the small `>_` prompt icon in the web console menu bar).
 
