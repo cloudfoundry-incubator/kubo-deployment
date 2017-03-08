@@ -30,6 +30,12 @@
     nginx-2793416118-zyicv   1/1       Running   0          36s       10.200.62.2   10.244.4.10
   ```
 
+1. Get the IP address of one of the Kubernetes worker nodes
+
+   ```
+   bosh-cli -e kube vms
+   ```
+
 1. Test that nginx is really running by obtaining the service's NodePort, and curling that port on any of your worker nodes:
 
   ```
@@ -48,7 +54,7 @@
     No events.
   
   
-    curl 10.244.4.11:31043
+    curl <worker node IP>:<NodePort>
   ```
   
   This should display the standard nginx welcome page.
