@@ -2,7 +2,7 @@
 
 
 creds_path="${PWD}/s3-bosh-creds/creds.yml"
-. "$(dirname "$0")/environment.sh"
+. "$(dirname "$0")/lib/environment.sh"
 
 export BOSH_CLIENT="bosh_admin"
 export BOSH_CLIENT_SECRET="$(bosh-cli int "$creds_path" --path /bosh_admin_client_secret)"
