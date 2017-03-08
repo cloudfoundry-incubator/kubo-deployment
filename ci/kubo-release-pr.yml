@@ -81,6 +81,17 @@ jobs:
   - put: kubo-lock
     params: { acquire: true }
 
+- name: set-pr-pending
+  plan:
+  - get: git-kubo-release
+    version: every
+    trigger: true
+    passed: ['claim-lock']
+  - put: git-kubo-release
+    params:
+      path: git-kubo-release
+      status: pending
+
 - name: install-bosh
   plan:
   - get: git-kubo-deployment
@@ -286,3 +297,7 @@ jobs:
       silent: true
       icon_emoji: ":trex:"
       text_file: pr-slack-message/message.txt
+  - put: git-kubo-release
+    params:
+      path: git-kubo-release
+      status: success
