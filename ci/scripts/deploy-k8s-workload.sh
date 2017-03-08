@@ -1,6 +1,6 @@
 #!/bin/sh -ex
 
-. "$(dirname "$0")/environment.sh"
+. "$(dirname "$0")/lib/environment.sh"
 
 export BOSH_LOG_LEVEL=debug
 export BOSH_LOG_PATH="${KUBO_DEPLOYMENT_DIR}/bosh.log"

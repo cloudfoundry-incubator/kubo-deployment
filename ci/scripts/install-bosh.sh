@@ -2,7 +2,7 @@
 
 [ -z "$DEBUG" ] || set -x
 
-. "$(dirname "$0")/environment.sh"
+. "$(dirname "$0")/lib/environment.sh"
 
 printenv GCP_SERVICE_ACCOUNT > "$PWD/key.json"
 set -x
