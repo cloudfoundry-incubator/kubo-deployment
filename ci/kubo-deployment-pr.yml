@@ -77,7 +77,6 @@ jobs:
     - get: git-kubo-release
     - get: git-kubo-deployment
       version: every
-      trigger: true
   - put: kubo-lock
     params: { acquire: true }
 
