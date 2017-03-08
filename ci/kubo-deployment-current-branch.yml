@@ -93,7 +93,7 @@ jobs:
         silent: true
         icon_emoji: ":octopus:"
         text: |
-          Deploy BOSH failed:
+          Deploy BOSH on {{branch-name}} failed:
           https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - aggregate:
     - put: s3-bosh-creds
