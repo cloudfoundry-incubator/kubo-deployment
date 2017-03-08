@@ -54,7 +54,7 @@
     No events.
   
   
-    curl <worker node IP>:<NodePort>
+  curl <worker node IP>:<NodePort>
   ```
   
   This should display the standard nginx welcome page.
