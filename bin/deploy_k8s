@@ -36,7 +36,7 @@ main() {
     exit  1
   fi
 
-  local bosh_env=$(cd "${1}"; pwd -P)
+  local bosh_env="$(cd "${1}"; pwd -P)"
   local deployment_name="${2}"
   local release_source="${3}"
 
@@ -59,7 +59,7 @@ main() {
 
     local bosh_director_name
     export_bosh_environment "${bosh_env}"
-    bosh_director_name=$(get_setting "director.yml" /director_name)
+    bosh_director_name="$(get_setting "director.yml" /director_name)"
 
     upload_stemcell
     upload_releases "${release_source}"
@@ -71,9 +71,9 @@ main() {
 
 set_kubernetes_certificate_in_credhub() {
   local secret_path=$1
-  local credhub_user_password=$(get_setting "creds.yml" "/credhub_user_password")
-  local credhub_api_url=https://$(get_setting "director.yml" "/internal_ip"):8844
-  local tcp_router_ip=$(get_setting "director.yml" "/cf-tcp-router-name")
+  local credhub_user_password="$(get_setting "creds.yml" "/credhub_user_password")"
+  local credhub_api_url="https://$(get_setting "director.yml" "/internal_ip"):8844"
+  local tcp_router_ip="$(get_setting "director.yml" "/cf-tcp-router-name")"
 
   credhub login -u credhub-user -p "${credhub_user_password}" -s "${credhub_api_url}" --skip-tls-validation
   credhub generate -n "${secret_path}" -t certificate -c "${tcp_router_ip}" -a "${tcp_router_ip}" -O
@@ -89,7 +89,7 @@ upload_releases() {
       popd > /dev/null
       ;;
     "public")
-       upload_release $(get_setting director.yml "/kubo_release_url")
+       upload_release "$(get_setting director.yml "/kubo_release_url")"
       ;;
     "local")
       pushd ../ > /dev/null
@@ -103,8 +103,8 @@ upload_releases() {
 }
 
 upload_stemcell() {
-  local stemcell_url=$(get_setting director.yml /stemcell_url)
-  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli -e "${BOSH_NAME}" upload-stemcell ${stemcell_url}
+  local stemcell_url="$(get_setting director.yml /stemcell_url)"
+  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET="$(get_bosh_secret)" bosh-cli -e "${BOSH_NAME}" upload-stemcell ${stemcell_url}
 }
 
 main "$@"
