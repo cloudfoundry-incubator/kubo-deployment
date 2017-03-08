@@ -67,6 +67,7 @@ instance_groups:
     release: kubo
     properties:
       external_kubo_port: ((external-kubo-port))
+      external_kubo_hostname: ((cf-tcp-router-name))
       cloud_foundry:
         api_url: ((routing-cf-api-url))
         uaa_url: ((routing-cf-uaa-url))
