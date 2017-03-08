@@ -88,6 +88,7 @@ jobs:
   - get: git-kubo-release
     passed: [ 'claim-lock' ]
   - get: kubo-lock
+    version: every
     trigger: true
     passed: [ 'claim-lock' ]
   - task: install
@@ -95,13 +96,24 @@ jobs:
     params:
       GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
     on_failure:
-      put: slack-alert
-      params:
-        silent: true
-        icon_emoji: ":thumbsdown:"
-        text: |
-          Deploy BOSH failed:
-          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+      aggregate:
+      - do:
+        - task: alert-text
+          file: git-kubo-deployment/ci/tasks/generate-release-pr-messages.yml
+          params:
+            PR_STATUS: failed
+        - put: slack-alert
+          params:
+            silent: true
+            icon_emoji: ":red_circle:"
+            text_file: pr-slack-message/message.txt
+            text: |
+              $TEXT_FILE_CONTENT
+              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+      - put: git-kubo-release
+        params:
+          path: git-kubo-release
+          status: failure
   - aggregate:
     - put: s3-bosh-creds
       params:
@@ -115,6 +127,7 @@ jobs:
   - aggregate:
     - get: kubo-lock
       trigger: true
+      version: every
       passed: [ 'install-bosh' ]
     - get: git-kubo-deployment
       passed: [ 'install-bosh' ]
@@ -127,13 +140,24 @@ jobs:
     params:
       ROUTING_CF_CLIENT_SECRET: {{routing_cf_client_secret}}
     on_failure:
-      put: slack-alert
-      params:
-        silent: true
-        icon_emoji: ":thumbsdown:"
-        text: |
-          Deploy K8s failed:
-          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+      aggregate:
+      - do:
+        - task: alert-text
+          file: git-kubo-deployment/ci/tasks/generate-release-pr-messages.yml
+          params:
+            PR_STATUS: failed
+        - put: slack-alert
+          params:
+            silent: true
+            icon_emoji: ":red_circle:"
+            text_file: pr-slack-message/message.txt
+            text: |
+              $TEXT_FILE_CONTENT
+              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+      - put: git-kubo-release
+        params:
+          path: git-kubo-release
+          status: failure
   - aggregate:
     - put: s3-service-creds
       params:
@@ -144,6 +168,7 @@ jobs:
   - aggregate:
     - get: kubo-lock
       trigger: true
+      version: every
       passed: [ 'deploy-k8s' ]
     - get: git-kubo-deployment
       passed: [ 'deploy-k8s' ]
@@ -151,37 +176,64 @@ jobs:
       passed: [ 'deploy-k8s' ]
     - get: s3-service-creds
       passed: [ 'deploy-k8s' ]
+    - get: git-kubo-release
+      passed: [ 'deploy-k8s' ]
   - task: workload
     file: git-kubo-deployment/ci/tasks/deploy-k8s-workload.yml
     on_failure:
-      put: slack-alert
-      params:
-        silent: true
-        icon_emoji: ":thumbsdown:"
-        text: |
-          Deploy K8s Workload failed:
-          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+      aggregate:
+      - do:
+        - task: alert-text
+          file: git-kubo-deployment/ci/tasks/generate-release-pr-messages.yml
+          params:
+            PR_STATUS: failed
+        - put: slack-alert
+          params:
+            silent: true
+            icon_emoji: ":red_circle:"
+            text_file: pr-slack-message/message.txt
+            text: |
+              $TEXT_FILE_CONTENT
+              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+      - put: git-kubo-release
+        params:
+          path: git-kubo-release
+          status: failure
 
 - name: destroy-k8s
   plan:
   - aggregate:
     - get: kubo-lock
       trigger: true
+      version: every
       passed: [ 'deploy-workload' ]
     - get: git-kubo-deployment
       passed: [ 'deploy-workload' ]
     - get: s3-bosh-creds
       passed: [ 'deploy-workload' ]
+    - get: git-kubo-release
+      passed: [ 'deploy-workload' ]
   - task: destroy-k8s
     file: git-kubo-deployment/ci/tasks/destroy-k8s-instance.yml
     on_failure:
-      put: slack-alert
-      params:
-        silent: true
-        icon_emoji: ":thumbsdown:"
-        text: |
-          Destroy K8s failed:
-          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+      aggregate:
+      - do:
+        - task: alert-text
+          file: git-kubo-deployment/ci/tasks/generate-release-pr-messages.yml
+          params:
+            PR_STATUS: failed
+        - put: slack-alert
+          params:
+            silent: true
+            icon_emoji: ":red_circle:"
+            text_file: pr-slack-message/message.txt
+            text: |
+              $TEXT_FILE_CONTENT
+              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+      - put: git-kubo-release
+        params:
+          path: git-kubo-release
+          status: failure
 
 
 - name: destroy-bosh
@@ -191,29 +243,46 @@ jobs:
       passed: [ 'destroy-k8s' ]
     - get: kubo-lock
       trigger: true
+      version: every
       passed: [ 'destroy-k8s' ]
     - get: s3-bosh-creds
       passed: [ 'destroy-k8s' ]
     - get: s3-bosh-state
+      passed: [ 'install-bosh' ]
+    - get: git-kubo-release
       passed: [ 'install-bosh' ]
   - task: destroy
     file: git-kubo-deployment/ci/tasks/destroy-bosh.yml
     params:
       GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
     on_failure:
-      put: slack-alert
-      params:
-        silent: true
-        icon_emoji: ":thumbsdown:"
-        text: |
-          Destroy BOSH failed:
-          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+      aggregate:
+      - do:
+        - task: alert-text
+          file: git-kubo-deployment/ci/tasks/generate-release-pr-messages.yml
+          params:
+            PR_STATUS: failed
+        - put: slack-alert
+          params:
+            silent: true
+            icon_emoji: ":red_circle:"
+            text_file: pr-slack-message/message.txt
+            text: |
+              $TEXT_FILE_CONTENT
+              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+      - put: git-kubo-release
+        params:
+          path: git-kubo-release
+          status: failure
+
   - put: kubo-lock
     params: { release: kubo-lock }
+  - task: alert-text
+    file: git-kubo-deployment/ci/tasks/generate-release-pr-messages.yml
+    params:
+      PR_STATUS: succeeded
   - put: slack-alert
     params:
       silent: true
-      icon_emoji: ":frog:"
-      text: |
-        I am green and it'll do fine, it's beautiful
-        And I think it's what I want to be
+      icon_emoji: ":trex:"
+      text_file: pr-slack-message/message.txt
