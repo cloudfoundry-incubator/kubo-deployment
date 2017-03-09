@@ -66,6 +66,7 @@ resources:
 
 jobs:
 - name: claim-lock
+  max_in_flight: 1
   plan:
   - aggregate:
     - get: git-kubo-release
@@ -82,6 +83,7 @@ jobs:
   - get: git-kubo-release
     passed: [ 'claim-lock' ]
   - get: kubo-lock
+    version: every
     trigger: true
     passed: [ 'claim-lock' ]
   - task: install
@@ -95,7 +97,7 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Deploy BOSH failed:
-          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - aggregate:
     - put: s3-bosh-creds
       params:
@@ -108,6 +110,7 @@ jobs:
   plan:
   - aggregate:
     - get: kubo-lock
+      version: every
       trigger: true
       passed: [ 'install-bosh' ]
     - get: git-kubo-deployment
@@ -127,7 +130,7 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Deploy K8s failed:
-          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - aggregate:
     - put: s3-service-creds
       params:
@@ -137,6 +140,7 @@ jobs:
   plan:
   - aggregate:
     - get: kubo-lock
+      version: every
       trigger: true
       passed: [ 'deploy-k8s' ]
     - get: git-kubo-deployment
@@ -154,12 +158,13 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Deploy K8s Workload failed:
-          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
 - name: destroy-k8s
   plan:
   - aggregate:
     - get: kubo-lock
+      version: every
       trigger: true
       passed: [ 'deploy-workload' ]
     - get: git-kubo-deployment
@@ -175,7 +180,7 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Destroy K8s failed:
-          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
 
 - name: destroy-bosh
@@ -184,6 +189,7 @@ jobs:
     - get: git-kubo-deployment
       passed: [ 'destroy-k8s' ]
     - get: kubo-lock
+      version: every
       trigger: true
       passed: [ 'destroy-k8s' ]
     - get: s3-bosh-creds
@@ -201,7 +207,7 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Destroy BOSH failed:
-          https://p-concourse.sys.main.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - put: kubo-lock
     params: { release: kubo-lock }
   - put: slack-alert

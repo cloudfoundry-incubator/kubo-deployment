@@ -13,3 +13,4 @@ inputs:
   - name: git-kubo-deployment
   - name: s3-bosh-state
   - name: s3-bosh-creds
+  - name: kubo-lock

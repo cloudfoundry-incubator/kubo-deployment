@@ -1,19 +1,19 @@
 #!/bin/sh -ex
 
-kubo_deployment_dir="$(cd "$(dirname "$0")/../.."; pwd)"
+. "$(dirname "$0")/lib/environment.sh"
 
 export BOSH_LOG_LEVEL=debug
-export BOSH_LOG_PATH="$kubo_deployment_dir/bosh.log"
+export BOSH_LOG_PATH="${KUBO_DEPLOYMENT_DIR}/bosh.log"
 export DEBUG=1
 
-cp "$PWD/s3-service-creds/service-ci-service-creds.yml" "$kubo_deployment_dir/ci/environments/gcp/"
-cp "$PWD/s3-bosh-creds/creds.yml" "$kubo_deployment_dir/ci/environments/gcp/"
+cp "$PWD/s3-service-creds/service-ci-service-creds.yml" "${KUBO_ENVIRONMENT_DIR}/"
+cp "$PWD/s3-bosh-creds/creds.yml" "${KUBO_ENVIRONMENT_DIR}/"
 
 credhub login -u credhub-user -p \
-  "$(bosh-cli int "$kubo_deployment_dir/ci/environments/gcp/creds.yml" --path="/credhub_user_password" | xargs echo -n)" \
-  -s "https://$(bosh-cli int "$kubo_deployment_dir/ci/environments/gcp/director.yml" --path="/internal_ip" | xargs echo -n):8844" --skip-tls-validation
+  "$(bosh-cli int "${KUBO_ENVIRONMENT_DIR}/creds.yml" --path="/credhub_user_password" | xargs echo -n)" \
+  -s "https://$(bosh-cli int "${KUBO_ENVIRONMENT_DIR}/director.yml" --path="/internal_ip" | xargs echo -n):8844" --skip-tls-validation
 
-$kubo_deployment_dir/bin/set_kubeconfig "$kubo_deployment_dir/ci/environments/gcp" ci-service
-kubectl create -f $kubo_deployment_dir/ci/specs/nginx.yml
+"${KUBO_DEPLOYMENT_DIR}/bin/set_kubeconfig" "${KUBO_ENVIRONMENT_DIR}" ci-service
+kubectl create -f "${KUBO_DEPLOYMENT_DIR}/ci/specs/nginx.yml"
 # wait for deployment to finish
 kubectl rollout status deployment/nginx -w

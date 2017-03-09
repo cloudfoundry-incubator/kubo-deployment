@@ -5,13 +5,13 @@ image_resource:
     repository: pcfkubo/kubo-ci
     tag: stable
 params:
-  GCP_SERVICE_ACCOUNT: 
+  PR_STATUS:
+  PR_REPO: kubo-release
 run:
-  path: git-kubo-deployment/ci/scripts/install-bosh.sh
+  path: git-kubo-deployment/ci/scripts/generate-pr-message.sh
 
 inputs:
 - name: git-kubo-deployment
-- name: kubo-lock
+- name: git-kubo-release
 outputs:
-- name: bosh-state
-- name: bosh-creds
+- name: pr-slack-message
