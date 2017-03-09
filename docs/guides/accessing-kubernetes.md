@@ -34,6 +34,17 @@
 
    ```
    bosh-cli -e kube vms
+
+     Instance                                     Process State  AZ  IPs        VM CID                                   VM Type
+     etcd/bdaee053-f5e3-4f9d-b27e-02072595fc70    running        z1  10.0.1.2   vm-936a223a-5be0-487c-6e8c-b75ae1cb0015  common
+     etcd/c69ff1cd-050a-4201-bc73-b501b14fc71a    running        z1  10.0.1.6   vm-bd8f16d1-a582-4288-680f-50aa37c9c6f5  common
+     etcd/daef49a9-16e4-48c6-a362-85c560cf3d77    running        z1  10.0.1.12  vm-b7fa754c-906c-4c23-5850-312680e31abb  common
+     master/6b9a9502-da1c-4ae0-aba0-2eb06974be78  failing        z1  10.0.1.8   vm-91c08282-5c53-4523-6d5d-f94d7ac0b837  common
+     master/b9c3708b-8a0c-441d-9f83-4f4d19ef5234  running        z1  10.0.1.10  vm-3d7f9920-7bff-4463-5606-8aa1de747a95  common
+     proxy/b4820ea6-4fe8-4697-a87f-3286cd507f90   running        z1  10.0.1.5   vm-034f6216-7f06-4906-6aeb-039544f0f0c7  common
+     worker/1d878f78-0a2c-458d-b611-801a706fb74a  running        z1  10.0.1.11  vm-16ba24eb-7cc6-46c4-73ff-4033d80eb3b2  worker
+     worker/6897a986-14ae-4ea3-8849-4c930f903a7b  running        z1  10.0.1.9   vm-8077f674-1292-4f22-52c8-3b875c058fca  worker
+     worker/ae232a39-0930-4482-9213-c6ea5e1ddab1  running        z1  10.0.1.7   vm-04bcebfa-b2a8-4f40-6363-3762030ea52c  worker
    ```
 
 1. Test that nginx is really running by obtaining the service's NodePort, and curling that port on any of your worker nodes:
@@ -65,12 +76,36 @@
 
    ```
    kubectl describe service kubernetes-dashboard --namespace=kube-system
+
+     Name:                   kubernetes-dashboard
+     Namespace:              kube-system
+     Labels:                 app=kubernetes-dashboard
+     Selector:               app=kubernetes-dashboard
+     Type:                   NodePort
+     IP:                     10.100.200.123
+     Port:                   <unset> 80/TCP
+     NodePort:               <unset> 31000/TCP
+     Endpoints:              10.200.34.4:9090
+     Session Affinity:       None
+     No events.
    ```
 
 1. Get the IP address of one of the Kubernetes worker nodes
 
    ```
    bosh-cli -e kube vms
+
+     Instance                                     Process State  AZ  IPs        VM CID                                   VM Type
+     etcd/bdaee053-f5e3-4f9d-b27e-02072595fc70    running        z1  10.0.1.2   vm-936a223a-5be0-487c-6e8c-b75ae1cb0015  common
+     etcd/c69ff1cd-050a-4201-bc73-b501b14fc71a    running        z1  10.0.1.6   vm-bd8f16d1-a582-4288-680f-50aa37c9c6f5  common
+     etcd/daef49a9-16e4-48c6-a362-85c560cf3d77    running        z1  10.0.1.12  vm-b7fa754c-906c-4c23-5850-312680e31abb  common
+     master/6b9a9502-da1c-4ae0-aba0-2eb06974be78  failing        z1  10.0.1.8   vm-91c08282-5c53-4523-6d5d-f94d7ac0b837  common
+     master/b9c3708b-8a0c-441d-9f83-4f4d19ef5234  running        z1  10.0.1.10  vm-3d7f9920-7bff-4463-5606-8aa1de747a95  common
+     proxy/b4820ea6-4fe8-4697-a87f-3286cd507f90   running        z1  10.0.1.5   vm-034f6216-7f06-4906-6aeb-039544f0f0c7  common
+     worker/1d878f78-0a2c-458d-b611-801a706fb74a  running        z1  10.0.1.11  vm-16ba24eb-7cc6-46c4-73ff-4033d80eb3b2  worker
+     worker/6897a986-14ae-4ea3-8849-4c930f903a7b  running        z1  10.0.1.9   vm-8077f674-1292-4f22-52c8-3b875c058fca  worker
+     worker/ae232a39-0930-4482-9213-c6ea5e1ddab1  running        z1  10.0.1.7   vm-04bcebfa-b2a8-4f40-6363-3762030ea52c  worker
+
    ```
 
 1. Setup [sshuttle](https://github.com/apenwarr/sshuttle) from your local machine to your KuBOSH Director
