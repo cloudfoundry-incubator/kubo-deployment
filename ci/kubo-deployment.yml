@@ -59,6 +59,16 @@ resources:
     region_name: eu-west-1
     versioned_file: bosh/service-ci-service-creds.yml
 
+- name: s3-kubo-release-tarball
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-public
+    endpoint: s3-eu-west-1.amazonaws.com
+    region_name: eu-west-1
+    versioned_file: kubo-release-latest.tgz
+
 - name: slack-alert
   type: slack-notification
   source:
@@ -214,6 +224,34 @@ jobs:
         text: |
           Destroy BOSH failed:
           https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
+- name: upload-kubo-release
+  plan:
+  - aggregate:
+    - get: kubo-lock
+      version: every
+      trigger: true
+      passed: [ 'destroy-bosh' ]
+    - get: git-kubo-deployment
+      passed: [ 'destroy-bosh' ]
+    - get: s3-bosh-creds
+      passed: [ 'destroy-bosh' ]
+    - get: git-kubo-release
+      passed: [ 'deploy-k8s' ]
+  - task: upload
+    file: git-kubo-deployment/ci/tasks/upload-kubo-release-tarball.yml
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Destroy BOSH failed:
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - aggregate:
+    - put: s3-kubo-release-tarball
+      params:
+        file: kubo-release-latest.tgz
   - put: kubo-lock
     params: { release: kubo-lock }
   - put: slack-alert
