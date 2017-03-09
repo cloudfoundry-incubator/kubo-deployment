@@ -267,7 +267,7 @@ jobs:
     - get: s3-bosh-creds
       passed: [ 'destroy-k8s' ]
     - get: git-kubo-release
-      passed: [ 'install-bosh' ]
+      passed: [ 'destroy-k8s' ]
   - task: destroy
     file: git-kubo-deployment/ci/tasks/destroy-bosh.yml
     params:
