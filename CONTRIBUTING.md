@@ -1,7 +1,8 @@
 # Contributing to Kubo
 
 ## Contributor License Agreement
-If you have not previously done so, please fill out and submit the Contributor License Agreement. 
+If you have not previously done so, please fill out and submit the Contributor License Agreement.
+
 
 ## Developer Workflow
 1. Fork the project on [GitHub](https://github.com/pivotal-cf-experimental/kubo-deployment)
