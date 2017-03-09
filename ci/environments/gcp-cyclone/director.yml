@@ -1,0 +1,40 @@
+project_id: cf-pcf-kubo
+network: main-pcf-network
+subnetwork: kubo-cyclone-ci
+tags: 
+  - "no-ip"
+  - internal
+zone: us-east1-c
+internal_ip: 10.0.251.252
+bosh_hostname: 10.0.251.252
+
+deployments_network: kubo-network
+
+cf_uaa_url: https://uaa.sys.main.kubo.cf-app.com
+cf_url: https://api.sys.main.kubo.cf-app.com
+cf_username: admin
+cf-tcp-router-name: tcp.main.kubo.cf-app.com
+routing-cf-api-url: https://api.sys.main.kubo.cf-app.com
+routing-cf-client-id: tcp_emitter
+routing-cf-uaa-url: https://uaa.sys.main.kubo.cf-app.com
+
+# we use BOSH 261 since CredHub 0.4 supports only it
+# CredHub 0.4 fixes important bug that breaks deployment
+bosh_release_url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=261.1
+bosh_release_sha1: f46ad38ad49925e96ec93bd69d0e77f67ba07af9
+
+credhub_encryption_key: 0BCDEF0123456789ABCDEF0123456789
+
+director_name: I AM CI
+dns_recursor_ip: 10.0.251.1
+internal_cidr: 10.0.251.0/24
+internal_gw: 10.0.251.1
+external-kubo-port: 6251
+
+stemcell_version: 3312.18
+stemcell_url: https://s3.amazonaws.com/bosh-gce-light-stemcells/light-bosh-stemcell-3312.18-google-kvm-ubuntu-trusty-go_agent.tgz
+
+etcd_release_url: https://s3.amazonaws.com/kubo-public/etcd-85%2Bdev.1.tgz 
+credhub_release_url: https://s3.amazonaws.com/kubo-public/credhub-0.4.0.tgz
+kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release.tgz
+
