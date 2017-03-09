@@ -34,7 +34,4 @@ external-kubo-port: 6577
 stemcell_version: 3312.18
 stemcell_url: https://s3.amazonaws.com/bosh-gce-light-stemcells/light-bosh-stemcell-3312.18-google-kvm-ubuntu-trusty-go_agent.tgz
 
-etcd_release_url: https://s3.amazonaws.com/kubo-public/etcd-85%2Bdev.1.tgz 
 credhub_release_url: https://s3.amazonaws.com/kubo-public/credhub-0.4.0.tgz
-kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release.tgz
-
