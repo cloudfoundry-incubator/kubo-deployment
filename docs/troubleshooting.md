@@ -8,7 +8,7 @@ The error below occurs when deploying KuBOSH on GCP
 
 ### Solution
 
-Make sure that you have logged in with the newly created service account as described in 
+Make sure that you have logged in with the newly created service account as described in
 [GCP Setup](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/bosh#setup).
 
 ## Problem
@@ -43,7 +43,7 @@ The provided username and password combination are incorrect. Please validate yo
 ### Solution
 
 This is typically caused by version mismatch between the Credhub CLI and backend. The versions must match exactly.
-Please make sure that the installed Credhub CLI matches version in the 
+Please make sure that the installed Credhub CLI matches version in the
 [requirements section](../README.md#required-software):
 
 ```
@@ -62,7 +62,7 @@ Please make sure that all the host names used in the configuration are resolving
 
 ## Problem
 
-Strange error when running bosh-cli 
+Strange error when running bosh-cli
 
 ```
 bosh-cli -e p-kubo deployments
@@ -102,3 +102,17 @@ Issues with permissions on service accounts
 ### Solution
 
 If you see unexplained errors about service accounts not having the proper permissions, first check that the permissions were properly applied in the [Google Cloud Console](https://console.cloud.google.com/iam-admin/iam). If the permissions are set correctly but you are still seeing permission issues when using the account, try creating and using a new account with a different name.
+
+## Problem
+
+Error when running `deploy_k8s` script due to K8 API route registration failure
+
+```
+01:20:02 | Updating instance master: master/f4ded33c-c5a3-48a1-91ad-c89172ead74a (0) (canary) (00:01:09)
+            L Error: 'master/0 (f4ded33c-c5a3-48a1-91ad-c89172ead74a)' is not running after update. Review logs for failed jobs: kubernetes-api-route-registrar
+01:21:11 | Error: 'master/0 (f4ded33c-c5a3-48a1-91ad-c89172ead74a)' is not running after update. Review logs for failed jobs: kubernetes-api-route-registrar
+```
+
+### Solution
+
+Please check that the route to the TCP routing API URL is accessible.  The URL is defined in the field `routing-cf-api-url` in your `<BOSH_ENV>/director.yml`.

@@ -144,6 +144,8 @@ jobs:
       passed: [ 'install-bosh' ]
     - get: git-kubo-release
       passed: [ 'install-bosh' ]
+    - get: s3-bosh-state
+      passed: [ 'install-bosh' ]
     - get: s3-bosh-creds
       passed: [ 'install-bosh' ]
   - task: deploy
@@ -184,6 +186,8 @@ jobs:
       passed: [ 'deploy-k8s' ]
     - get: git-kubo-deployment
       passed: [ 'deploy-k8s' ]
+    - get: s3-bosh-state
+      passed: [ 'deploy-k8s' ]
     - get: s3-bosh-creds
       passed: [ 'deploy-k8s' ]
     - get: s3-service-creds
@@ -219,6 +223,8 @@ jobs:
       passed: [ 'deploy-workload' ]
     - get: git-kubo-deployment
       passed: [ 'deploy-workload' ]
+    - get: s3-bosh-state
+      passed: [ 'deploy-workload' ]
     - get: s3-bosh-creds
       passed: [ 'deploy-workload' ]
   - task: destroy-k8s
@@ -253,10 +259,10 @@ jobs:
       version: every
       trigger: true
       passed: [ 'destroy-k8s' ]
+    - get: s3-bosh-state
+      passed: [ 'destroy-k8s' ]
     - get: s3-bosh-creds
       passed: [ 'destroy-k8s' ]
-    - get: s3-bosh-state
-      passed: [ 'install-bosh' ]
   - task: destroy
     file: git-kubo-deployment/ci/tasks/destroy-bosh.yml
     params:
