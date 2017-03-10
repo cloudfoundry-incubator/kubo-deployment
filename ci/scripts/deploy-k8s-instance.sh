@@ -8,9 +8,6 @@ export DEBUG=1
 
 cp "$PWD/s3-bosh-creds/creds.yml" "${KUBO_ENVIRONMENT_DIR}/"
 
-ls "$PWD"
-ls "$PWD/s3-kubo-release-tarball-tmp"
-
 cp "$PWD/s3-kubo-release-tarball-tmp/kubo-release-latest.tgz" "${KUBO_DEPLOYMENT_DIR}/../kubo-release.tgz"
 
 credhub login -u credhub-user -p \
