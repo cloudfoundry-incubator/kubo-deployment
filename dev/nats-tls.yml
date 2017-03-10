@@ -1,15 +1,5 @@
 ---
 - type: remove
-  path: /releases/name=bosh/sha1
-
-- type: remove
-  path: /releases/name=bosh/version
-
-- type: replace
-  path: /releases/name=bosh/url
-  value: file://((custom_bosh_tgz_path))
-
-- type: remove
   path: /instance_groups/name=bosh/jobs/name=nats
 
 - type: replace
