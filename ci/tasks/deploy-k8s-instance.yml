@@ -10,7 +10,7 @@ run:
   path: git-kubo-deployment/ci/scripts/deploy-k8s-instance.sh
 
 inputs:
-  - name: kubo-release
+  - name: s3-kubo-release-tarball-tmp
   - name: git-kubo-deployment
   - name: s3-bosh-creds
   - name: kubo-lock
