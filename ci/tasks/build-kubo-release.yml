@@ -5,11 +5,11 @@ image_resource:
     repository: pcfkubo/kubo-ci
     tag: stable
 run:
-  path: git-kubo-deployment/ci/scripts/upload-kubo-release.sh
+  path: git-kubo-deployment/ci/scripts/build-kubo-release.sh
 
 inputs:
   - name: git-kubo-deployment
   - name: git-kubo-release
-  - name: s3-bosh-creds
+  - name: kubo-version
 outputs:
-  - name: s3-kubo-release-tarball
+  - name: kubo-release
