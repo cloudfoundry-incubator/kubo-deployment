@@ -126,3 +126,5 @@ The rest of the document assumes you are logged into the `bosh-bastion` you depl
    bin/set_kubeconfig ${state_dir} kube
    kubectl get pods --namespace=kube-system
    ```
+
+1. See additional [guide](../accessing-kubernetes.md) on accessing Kubernetes
