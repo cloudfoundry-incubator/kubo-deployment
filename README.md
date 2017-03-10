@@ -49,6 +49,24 @@ Please choose the guide below that matches your requirements
 1. Deploy Kubo with an existing Pivotal Cloud Foundry installation - [guide](docs/guides/gcp-pcf)
 1. Deploy Kubo step by step, allowing for customization - [guide](docs/guides/customized-installation.md)
 
+## Delete resources
+
+### Delete Kubernetes Cluster
+
+You can use the BOSH cli to delete your kubernetes deployment
+
+```
+bosh-cli -e kube -d kube delete-deployment
+```
+
+### Delete KuBOSH Director
+
+Use the following script to delete your KuBOSH director
+
+```
+bin/destroy_bosh ~/kubo-env/kube ~/kubo-env/kube/service_account.json
+```
+
 ## Troubleshooting
 
 Please refer to the [troubleshooting guide](docs/troubleshooting.md) to look for solutions to the most common issues. 
