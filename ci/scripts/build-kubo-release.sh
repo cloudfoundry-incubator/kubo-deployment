@@ -9,4 +9,4 @@ export BOSH_LOG_PATH="${KUBO_DEPLOYMENT_DIR}/bosh.log"
 version=$(cat kubo-version/version)
 
 cd git-kubo-release
-bosh-cli create-release --name "kubo" --tarball="../kubo-release/kubo-release-latest.tgz" --version=${version}
+bosh-cli create-release --name "kubo" --tarball="../kubo-release/kubo-release-${version}.tgz" --version=${version}
