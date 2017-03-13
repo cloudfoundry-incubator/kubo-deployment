@@ -65,9 +65,8 @@ resources:
     access_key_id: {{aws-access-key-id}}
     secret_access_key: {{aws-secret-access-key}}
     bucket: kubo-public
-    endpoint: s3-eu-west-1.amazonaws.com
-    region_name: eu-west-1
-    versioned_file: kubo-release-latest.tgz
+    endpoint: s3.amazonaws.com
+    regexp: kubo-release-latest.tgz
 
 - name: s3-kubo-release-tarball-tmp
   type: s3
