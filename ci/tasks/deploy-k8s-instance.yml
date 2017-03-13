@@ -14,5 +14,6 @@ inputs:
   - name: git-kubo-deployment
   - name: s3-bosh-creds
   - name: kubo-lock
+  - name: kubo-version
 outputs:
   - name: service-creds
