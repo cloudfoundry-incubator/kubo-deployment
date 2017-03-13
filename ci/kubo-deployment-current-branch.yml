@@ -162,9 +162,9 @@ jobs:
       passed: [ 'install-bosh' ]
     - get: git-kubo-release
       passed: [ 'install-bosh' ]
-    - put: s3-bosh-creds
+    - get: s3-bosh-creds
       passed: [ 'install-bosh' ]
-    - put: s3-bosh-state
+    - get: s3-bosh-state
       passed: [ 'install-bosh' ]
   - task: build-kubo-release
     file: git-kubo-deployment/ci/tasks/build-kubo-release.yml
@@ -338,12 +338,16 @@ jobs:
         text: |
           Kubo release build failed:
           https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-  - put: s3-kubo-release-tarball
-    params:
-      file: s3-kubo-release-tarball-tmp/kubo-release-*.tgz
-  - put: slack-alert
-    params:
-      silent: true
-      icon_emoji: ":chameleon:"
-      text: |
-        kubo-deployment Hypeline on branch {{branch-name}} is ready
+  - aggregate:
+    - put: s3-kubo-release-tarball
+      params:
+        file: s3-kubo-release-tarball-tmp/kubo-release-*.tgz
+    - put: s3-kubo-releases
+      params:
+        file: s3-kubo-release-tarball-tmp/kubo-release-*.tgz
+    - put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":chameleon:"
+        text: |
+          kubo-deployment Hypeline on branch {{branch-name}} is ready
