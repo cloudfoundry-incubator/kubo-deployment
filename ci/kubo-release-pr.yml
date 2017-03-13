@@ -40,7 +40,7 @@ resources:
   source:
     access_key_id: {{aws-access-key-id}}
     secret_access_key: {{aws-secret-access-key}}
-    bucket: kubo-pipeline
+    bucket: kubo-pipeline-store
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
     versioned_file: bosh/state.json
@@ -50,7 +50,7 @@ resources:
   source:
     access_key_id: {{aws-access-key-id}}
     secret_access_key: {{aws-secret-access-key}}
-    bucket: kubo-pipeline
+    bucket: kubo-pipeline-store
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
     versioned_file: bosh/creds.yml
@@ -60,7 +60,7 @@ resources:
   source:
     access_key_id: {{aws-access-key-id}}
     secret_access_key: {{aws-secret-access-key}}
-    bucket: kubo-pipeline
+    bucket: kubo-pipeline-store
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
     versioned_file: bosh/service-ci-service-creds.yml
