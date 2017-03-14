@@ -65,6 +65,26 @@ resources:
     region_name: eu-west-1
     versioned_file: bosh/service-ci-service-creds.yml
 
+- name: s3-kubo-release-tarball
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-pipeline-store
+    endpoint: s3-eu-west-1.amazonaws.com
+    region_name: eu-west-1
+    regexp: kubo-release-(.*).tgz
+
+- name: kubo-version
+  type: semver
+  source:
+    key: kubo-version
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-pipeline-store
+    endpoint: s3-eu-west-1.amazonaws.com
+    region_name: eu-west-1
+
 - name: slack-alert
   type: slack-notification
   source:
@@ -133,21 +153,65 @@ jobs:
       params:
         file: bosh-state/state.json
 
+- name: build-kubo-release
+  plan:
+  - aggregate:
+    - get: kubo-lock
+      version: every
+      trigger: true
+      passed: [ 'install-bosh' ]
+    - get: git-kubo-deployment
+      trigger: true
+      passed: [ 'install-bosh' ]
+    - get: kubo-version
+    - get: git-kubo-release
+      passed: [ 'install-bosh' ]
+    - get: s3-bosh-creds
+      passed: [ 'install-bosh' ]
+    - get: s3-bosh-state
+      passed: [ 'install-bosh' ]
+  - task: build-kubo-release
+    file: git-kubo-deployment/ci/tasks/build-kubo-release.yml
+    on_failure:
+      aggregate:
+      - do:
+        - task: alert-text
+          file: git-kubo-deployment/ci/tasks/generate-release-pr-messages.yml
+          params:
+            PR_STATUS: failed
+        - put: slack-alert
+          params:
+            silent: true
+            icon_emoji: ":red_circle:"
+            text_file: pr-slack-message/message.txt
+            text: |
+              $TEXT_FILE_CONTENT
+              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+      - put: git-kubo-release
+        params:
+          path: git-kubo-release
+          status: failure
+  - put: s3-kubo-release-tarball
+    params:
+      file: kubo-release/kubo-release-*.tgz
+
 - name: deploy-k8s
   plan:
   - aggregate:
     - get: kubo-lock
       trigger: true
       version: every
-      passed: [ 'install-bosh' ]
+      passed: [ 'build-kubo-release' ]
     - get: git-kubo-deployment
-      passed: [ 'install-bosh' ]
+      passed: [ 'build-kubo-release' ]
     - get: git-kubo-release
-      passed: [ 'install-bosh' ]
+      passed: [ 'build-kubo-release' ]
     - get: s3-bosh-state
-      passed: [ 'install-bosh' ]
+      passed: [ 'build-kubo-release' ]
     - get: s3-bosh-creds
-      passed: [ 'install-bosh' ]
+      passed: [ 'build-kubo-release' ]
+    - get: s3-kubo-release-tarball
+      passed: [ 'build-kubo-release' ]
   - task: deploy
     file: git-kubo-deployment/ci/tasks/deploy-k8s-instance.yml
     params:
@@ -171,10 +235,9 @@ jobs:
         params:
           path: git-kubo-release
           status: failure
-  - aggregate:
-    - put: s3-service-creds
-      params:
-        file: service-creds/service-ci-service-creds.yml
+  - put: s3-service-creds
+    params:
+      file: service-creds/service-ci-service-creds.yml
 
 - name: deploy-workload
   plan:
