@@ -20,13 +20,6 @@ resources:
     private_key: {{git-ssh-key}}
     access_token: {{github-token-key}}
 
-- name: git-kubo-release
-  type: git
-  source:
-    uri: git@github.com:pivotal-cf-experimental/kubo-release
-    branch: master
-    private_key: {{git-ssh-key}}
-
 - name: kubo-lock
   type: pool
   source:
@@ -40,7 +33,7 @@ resources:
   source:
     access_key_id: {{aws-access-key-id}}
     secret_access_key: {{aws-secret-access-key}}
-    bucket: kubo-pipeline
+    bucket: kubo-pipeline-store
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
     versioned_file: bosh/state.json
@@ -50,7 +43,7 @@ resources:
   source:
     access_key_id: {{aws-access-key-id}}
     secret_access_key: {{aws-secret-access-key}}
-    bucket: kubo-pipeline
+    bucket: kubo-pipeline-store
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
     versioned_file: bosh/creds.yml
@@ -60,10 +53,19 @@ resources:
   source:
     access_key_id: {{aws-access-key-id}}
     secret_access_key: {{aws-secret-access-key}}
-    bucket: kubo-pipeline
+    bucket: kubo-pipeline-store
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
     versioned_file: bosh/service-ci-service-creds.yml
+
+- name: s3-kubo-release-tarball
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-public
+    endpoint: s3.amazonaws.com
+    versioned_file: kubo-release-latest.tgz
 
 - name: slack-alert
   type: slack-notification
@@ -74,7 +76,6 @@ jobs:
 - name: claim-lock
   plan:
   - aggregate:
-    - get: git-kubo-release
     - get: git-kubo-deployment
       version: every
   - put: kubo-lock
@@ -95,8 +96,6 @@ jobs:
   plan:
   - aggregate:
     - get: git-kubo-deployment
-      passed: [ 'claim-lock' ]
-    - get: git-kubo-release
       passed: [ 'claim-lock' ]
     - get: kubo-lock
       version: every
@@ -142,8 +141,7 @@ jobs:
       passed: [ 'install-bosh' ]
     - get: git-kubo-deployment
       passed: [ 'install-bosh' ]
-    - get: git-kubo-release
-      passed: [ 'install-bosh' ]
+    - get: s3-kubo-release-tarball
     - get: s3-bosh-state
       passed: [ 'install-bosh' ]
     - get: s3-bosh-creds
