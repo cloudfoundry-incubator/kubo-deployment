@@ -327,10 +327,9 @@ jobs:
   plan:
   - aggregate:
     - get: git-kubo-deployment
-      passed: [ destroy-bosh ]
-      trigger: true
     - get: kubo-version
       passed: [ destroy-bosh ]
+      trigger: true
   - task: create-kubo-deployment-tarball
     file: git-kubo-deployment/ci/tasks/create-kubo-deployment-tarball.yml
   - aggregate:
