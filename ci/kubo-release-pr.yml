@@ -73,7 +73,7 @@ resources:
     bucket: kubo-pipeline-store
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
-    regexp: kubo-release-(.*).tgz
+    versioned_file: release-pr/kubo-release.tgz
 
 - name: kubo-version
   type: semver

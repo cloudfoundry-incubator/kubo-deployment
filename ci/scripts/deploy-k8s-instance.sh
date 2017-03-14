@@ -6,11 +6,11 @@ export BOSH_LOG_LEVEL=debug
 export BOSH_LOG_PATH="${KUBO_DEPLOYMENT_DIR}/bosh.log"
 export DEBUG=1
 
-version=$(cat kubo-version/version)
+tarball_name=$(ls $PWD/s3-kubo-release-tarball/kubo-release*.tgz | head -n1)
 
 cp "$PWD/s3-bosh-creds/creds.yml" "${KUBO_ENVIRONMENT_DIR}/"
 
-cp "$PWD/s3-kubo-release-tarball/kubo-release-${version}.tgz" "${KUBO_DEPLOYMENT_DIR}/../kubo-release.tgz"
+cp "$tarball_name" "${KUBO_DEPLOYMENT_DIR}/../kubo-release.tgz"
 
 credhub login -u credhub-user -p \
   "$(bosh-cli int "${KUBO_ENVIRONMENT_DIR}/creds.yml" --path="/credhub_user_password" | xargs echo -n)" \
