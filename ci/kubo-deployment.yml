@@ -220,6 +220,7 @@ jobs:
     - get: s3-kubo-release-tarball-tmp
       passed: [ 'build-kubo-release' ]
   - task: deploy
+    input_mapping: {s3-kubo-release-tarball: s3-kubo-release-tarball-tmp}
     file: git-kubo-deployment/ci/tasks/deploy-k8s-instance.yml
     params:
       ROUTING_CF_CLIENT_SECRET: {{routing_cf_client_secret}}
