@@ -66,7 +66,7 @@ resources:
     secret_access_key: {{aws-secret-access-key}}
     bucket: kubo-public
     endpoint: s3.amazonaws.com
-    regexp: kubo-release-latest.tgz
+    versioned_file: custom-build-kubo-release-latest.tgz
 
 - name: s3-kubo-release-tarball-tmp
   type: s3
@@ -86,7 +86,7 @@ resources:
     bucket: kubo-releases
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
-    regexp: kubo-release-(.*).tgz
+    regexp: current-branch/kubo-release-(.*).tgz
 
 - name: kubo-version
   type: semver
@@ -313,30 +313,33 @@ jobs:
   - put: kubo-lock
     params: { release: kubo-lock }
 
-- name: upload-kubo-release
+- name: upload-kubo-deployment
   plan:
   - aggregate:
     - get: git-kubo-deployment
+      passed: [ destroy-bosh ]
       trigger: true
-      passed: [ 'destroy-bosh' ]
     - get: kubo-version
-      passed: [ 'destroy-bosh' ]
-    - get: s3-bosh-creds
-      passed: [ 'destroy-bosh' ]
-    - get: git-kubo-release
-      passed: [ 'destroy-bosh' ]
-    - get: s3-kubo-release-tarball-tmp
-      passed: [ 'destroy-bosh' ]
-  - task: build-kubo-release
-    file: git-kubo-deployment/ci/tasks/build-kubo-release.yml
-    on_failure:
-      put: slack-alert
+      passed: [ destroy-bosh ]
+  - task: create-kubo-deployment-tarball
+    file: git-kubo-deployments/ci/tasks/create-kubo-deployment-tarball.yml
+  - aggregate:
+    - put: s3-kubo-deployment-tarball
       params:
-        silent: true
-        icon_emoji: ":thumbsdown:"
-        text: |
-          Kubo release build failed:
-          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+        file: tarballs/kubo-deployment-*.tgz
+    - put: s3-kubo-deployments
+      params:
+        file: tarballs/kubo-deployment-*.tgz
+
+
+- name: upload-kubo-release
+  plan:
+  - aggregate:
+    - get: s3-kubo-release-tarball-tmp
+      trigger: true
+      passed: [ destroy-bosh ]
+    - get: kubo-version
+      passed: [ destroy-bosh ]
   - aggregate:
     - put: s3-kubo-release-tarball
       params:
@@ -344,9 +347,16 @@ jobs:
     - put: s3-kubo-releases
       params:
         file: s3-kubo-release-tarball-tmp/kubo-release-*.tgz
-    - put: slack-alert
-      params:
-        silent: true
-        icon_emoji: ":chameleon:"
-        text: |
-          kubo-deployment Hypeline on branch {{branch-name}} is ready
+
+- name: success-notification
+  plan:
+  - aggregate:
+    - get: kubo-version
+      passed: [ upload-kubo-release, upload-kubo-deployment ]
+      trigger: true
+  - put: slack-alert
+    params:
+      silent: true
+      icon_emoji: ":chameleon:"
+      text: |
+        kubo-deployment pipeline on branch {{branch-name}} has succeeded
