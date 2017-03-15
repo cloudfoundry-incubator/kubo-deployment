@@ -42,7 +42,6 @@
       password: ((postgres_password))
       database: bosh
       adapter: postgres
-    http: {user: registry, password: ((registry_password)), port: 25777}
     username: registry
     password: ((registry_password))
     port: 25777
