@@ -111,7 +111,7 @@
 1. Setup [sshuttle](https://github.com/apenwarr/sshuttle) from your local machine to your KuBOSH Director
 
    ```
-   sshuttle -r <local machine IP address> <KuBOSH Subnet CIDR>
+   sshuttle -r <user@bosh-bastion IP addeess> <KuBOSH Subnet CIDR>
    ```
 
 1. View the Kubernetes dashboard from your browser at `<worker node IP>:<NodePort>`
