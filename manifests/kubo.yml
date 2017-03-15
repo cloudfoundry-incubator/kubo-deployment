@@ -40,6 +40,24 @@ instance_groups:
   - name: *network-name
   azs: [z1]
   jobs:
+
+  - name: route-sync
+    release: kubo
+    properties:
+      cloud_foundry:
+        api_url: ((routing-cf-api-url))
+        uaa_url: ((routing-cf-uaa-url))
+        routing_api_client_id: ((routing-cf-client-id))
+        routing_api_client_secret: ((routing-cf-client-secret))
+        skip_tls_verification: true
+        app_domain: ((routing-cf-app-url))
+      nats:
+        machines:
+        - ((internal_ip))
+        port: 4222
+        user: nats
+        password: ((nats_password))
+
   - name: kubernetes-api
     release: kubo
     properties:
