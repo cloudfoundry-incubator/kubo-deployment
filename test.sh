@@ -303,18 +303,47 @@ bosh create-env bosh.yml \
   --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
-  -v internal_cidr=test \
-  -v internal_gw=test \
-  -v internal_ip=test \
-  -v vnet_name=test \
-  -v subnet_name=test \
+  -v internal_cidr=10.0.0.0/24 \
+  -v internal_gw=10.0.0.1 \
+  -v internal_ip=10.0.0.4 \
+  -v vnet_name=boshvnet-crp \
+  -v subnet_name=Bosh \
   -v subscription_id=test \
   -v tenant_id=test \
   -v client_id=test \
   -v client_secret=test \
   -v resource_group_name=test \
   -v storage_account_name=test \
-  -v default_security_group=test
+  -v default_security_group=nsg-bosh
+
+echo "- Azure (custom-environment)"
+bosh create-env bosh.yml \
+  -o azure/custom-environment.yml \
+  --state=$vars_store_prefix \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -v director_name=test \
+  -v internal_cidr=10.0.0.0/24 \
+  -v internal_gw=10.0.0.1 \
+  -v internal_ip=10.0.0.4 \
+  -v vnet_name=boshvnet-crp \
+  -v subnet_name=Bosh \
+  -v environment=AzureChinaCloud \
+  -v subscription_id=test \
+  -v tenant_id=test \
+  -v client_id=test \
+  -v client_secret=test \
+  -v resource_group_name=test \
+  -v storage_account_name=test \
+  -v default_security_group=nsg-bosh
+
+echo "- Azure (cloud-config)"
+bosh update-cloud-config azure/cloud-config.yml \
+  -v az=test \
+  -v internal_cidr=10.0.16.0/24 \
+  -v internal_gw=10.0.16.1 \
+  -v vnet_name=boshvnet-crp \
+  -v subnet_name=CloudFoundry \
+  -v security_group=nsg-cf
 
 echo "- VirtualBox with BOSH Lite"
 bosh create-env bosh.yml \
