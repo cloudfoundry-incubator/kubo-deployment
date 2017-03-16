@@ -6,8 +6,11 @@ export BOSH_LOG_LEVEL=debug
 export BOSH_LOG_PATH="${KUBO_DEPLOYMENT_DIR}/bosh.log"
 export DEBUG=1
 
+tarball_name=$(ls $PWD/s3-kubo-release-tarball/kubo-release*.tgz | head -n1)
+
 cp "$PWD/s3-bosh-creds/creds.yml" "${KUBO_ENVIRONMENT_DIR}/"
-cp -r "$PWD/git-kubo-release" "$PWD/kubo-release"
+
+cp "$tarball_name" "${KUBO_DEPLOYMENT_DIR}/../kubo-release.tgz"
 
 credhub login -u credhub-user -p \
   "$(bosh-cli int "${KUBO_ENVIRONMENT_DIR}/creds.yml" --path="/credhub_user_password" | xargs echo -n)" \
@@ -20,6 +23,6 @@ credhub set -n \
 
 "${KUBO_DEPLOYMENT_DIR}/bin/set_bosh_alias" "${KUBO_ENVIRONMENT_DIR}"
 # Deploy k8s
-"${KUBO_DEPLOYMENT_DIR}/bin/deploy_k8s" "${KUBO_ENVIRONMENT_DIR}" ci-service dev
+"${KUBO_DEPLOYMENT_DIR}/bin/deploy_k8s" "${KUBO_ENVIRONMENT_DIR}" ci-service local
 
 cp "${KUBO_ENVIRONMENT_DIR}/service-ci-service-creds.yml" "$PWD/service-creds/service-ci-service-creds.yml"

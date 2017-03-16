@@ -34,7 +34,7 @@ resources:
   source:
     access_key_id: {{aws-access-key-id}}
     secret_access_key: {{aws-secret-access-key}}
-    bucket: kubo-pipeline
+    bucket: kubo-pipeline-store
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
     versioned_file: bosh/state.json
@@ -44,7 +44,7 @@ resources:
   source:
     access_key_id: {{aws-access-key-id}}
     secret_access_key: {{aws-secret-access-key}}
-    bucket: kubo-pipeline
+    bucket: kubo-pipeline-store
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
     versioned_file: bosh/creds.yml
@@ -54,10 +54,68 @@ resources:
   source:
     access_key_id: {{aws-access-key-id}}
     secret_access_key: {{aws-secret-access-key}}
-    bucket: kubo-pipeline
+    bucket: kubo-pipeline-store
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
     versioned_file: bosh/service-ci-service-creds.yml
+
+- name: s3-kubo-release-tarball-tmp
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-pipeline-store
+    endpoint: s3-eu-west-1.amazonaws.com
+    region_name: eu-west-1
+    regexp: kubo-release-(.*).tgz
+
+- name: s3-kubo-releases
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-releases
+    endpoint: s3-eu-west-1.amazonaws.com
+    region_name: eu-west-1
+    regexp: current-branch/kubo-release-(.*).tgz
+
+- name: s3-kubo-deployments
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-releases
+    endpoint: s3-eu-west-1.amazonaws.com
+    region_name: eu-west-1
+    regexp: current-branch/kubo-deployment-(.*).tgz
+
+- name: s3-kubo-release-tarball
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-public
+    endpoint: s3.amazonaws.com
+    versioned_file: custom-build-kubo-release-latest.tgz
+
+- name: s3-kubo-deployment-tarball
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-public
+    endpoint: s3.amazonaws.com
+    versioned_file: custom-build-kubo-deployment-latest.tgz
+
+- name: kubo-version
+  type: semver
+  source:
+    key: kubo-version
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: kubo-pipeline-store
+    endpoint: s3-eu-west-1.amazonaws.com
+    region_name: eu-west-1
 
 - name: slack-alert
   type: slack-notification
@@ -73,6 +131,9 @@ jobs:
     - get: git-kubo-deployment
   - put: kubo-lock
     params: { acquire: true }
+  - put: kubo-version
+    params:
+      pre: dev
 
 - name: install-bosh
   plan:
@@ -82,6 +143,8 @@ jobs:
   - get: kubo-lock
     version: every
     trigger: true
+    passed: [ 'claim-lock' ]
+  - get: kubo-version
     passed: [ 'claim-lock' ]
   - task: install
     file: git-kubo-deployment/ci/tasks/install-bosh.yml
@@ -103,7 +166,7 @@ jobs:
       params:
         file: bosh-state/state.json
 
-- name: deploy-k8s
+- name: build-kubo-release
   plan:
   - aggregate:
     - get: kubo-lock
@@ -111,14 +174,51 @@ jobs:
       trigger: true
       passed: [ 'install-bosh' ]
     - get: git-kubo-deployment
-    - get: git-kubo-release
+      trigger: true
       passed: [ 'install-bosh' ]
-    - get: s3-bosh-state
+    - get: kubo-version
+      passed: [ 'install-bosh' ]
+    - get: git-kubo-release
       passed: [ 'install-bosh' ]
     - get: s3-bosh-creds
       passed: [ 'install-bosh' ]
+    - get: s3-bosh-state
+      passed: [ 'install-bosh' ]
+  - task: build-kubo-release
+    file: git-kubo-deployment/ci/tasks/build-kubo-release.yml
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Kubo release build  on {{branch-name}} failed:
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - put: s3-kubo-release-tarball-tmp
+    params:
+      file: kubo-release/kubo-release-*.tgz
+
+- name: deploy-k8s
+  plan:
+  - aggregate:
+    - get: kubo-lock
+      version: every
+      trigger: true
+      passed: [ 'build-kubo-release' ]
+    - get: git-kubo-deployment
+    - get: git-kubo-release
+      passed: [ 'build-kubo-release' ]
+    - get: kubo-version
+      passed: [ 'build-kubo-release' ]
+    - get: s3-bosh-state
+      passed: [ 'build-kubo-release' ]
+    - get: s3-bosh-creds
+      passed: [ 'build-kubo-release' ]
+    - get: s3-kubo-release-tarball-tmp
+      passed: [ 'build-kubo-release' ]
   - task: deploy
     file: git-kubo-deployment/ci/tasks/deploy-k8s-instance.yml
+    input_mapping: {s3-kubo-release-tarball: s3-kubo-release-tarball-tmp}
     params:
       ROUTING_CF_CLIENT_SECRET: {{routing_cf_client_secret}}
     on_failure:
@@ -129,10 +229,9 @@ jobs:
         text: |
           Deploy K8s on branch {{branch-name}} failed:
           https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-  - aggregate:
-    - put: s3-service-creds
-      params:
-        file: service-creds/service-ci-service-creds.yml
+  - put: s3-service-creds
+    params:
+      file: service-creds/service-ci-service-creds.yml
 
 - name: deploy-workload
   plan:
@@ -146,7 +245,13 @@ jobs:
       passed: [ 'deploy-k8s' ]
     - get: s3-bosh-creds
       passed: [ 'deploy-k8s' ]
+    - get: kubo-version
+      passed: [ 'deploy-k8s' ]
+    - get: git-kubo-release
+      passed: [ 'deploy-k8s' ]
     - get: s3-service-creds
+      passed: [ 'deploy-k8s' ]
+    - get: s3-kubo-release-tarball-tmp
       passed: [ 'deploy-k8s' ]
   - task: workload
     file: git-kubo-deployment/ci/tasks/deploy-k8s-workload.yml
@@ -166,10 +271,14 @@ jobs:
       version: every
       trigger: true
       passed: [ 'deploy-workload' ]
+    - get: kubo-version
+      passed: [ 'deploy-workload' ]
     - get: git-kubo-deployment
     - get: s3-bosh-state
       passed: [ 'deploy-workload' ]
     - get: s3-bosh-creds
+      passed: [ 'deploy-workload' ]
+    - get: s3-kubo-release-tarball-tmp
       passed: [ 'deploy-workload' ]
   - task: destroy-k8s
     file: git-kubo-deployment/ci/tasks/destroy-k8s-instance.yml
@@ -191,9 +300,13 @@ jobs:
       version: every
       trigger: true
       passed: [ 'destroy-k8s' ]
+    - get: kubo-version
+      passed: [ 'destroy-k8s' ]
     - get: s3-bosh-state
       passed: [ 'destroy-k8s' ]
     - get: s3-bosh-creds
+      passed: [ 'destroy-k8s' ]
+    - get: s3-kubo-release-tarball-tmp
       passed: [ 'destroy-k8s' ]
   - task: destroy
     file: git-kubo-deployment/ci/tasks/destroy-bosh.yml
@@ -209,9 +322,50 @@ jobs:
           https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - put: kubo-lock
     params: { release: kubo-lock }
+
+- name: upload-kubo-deployment
+  plan:
+  - aggregate:
+    - get: git-kubo-deployment
+    - get: kubo-version
+      passed: [ destroy-bosh ]
+      trigger: true
+  - task: create-kubo-deployment-tarball
+    file: git-kubo-deployment/ci/tasks/create-kubo-deployment-tarball.yml
+  - aggregate:
+    - put: s3-kubo-deployment-tarball
+      params:
+        file: tarballs/kubo-deployment-*.tgz
+    - put: s3-kubo-deployments
+      params:
+        file: tarballs/kubo-deployment-*.tgz
+
+
+- name: upload-kubo-release
+  plan:
+  - aggregate:
+    - get: s3-kubo-release-tarball-tmp
+      trigger: true
+      passed: [ destroy-bosh ]
+    - get: kubo-version
+      passed: [ destroy-bosh ]
+  - aggregate:
+    - put: s3-kubo-release-tarball
+      params:
+        file: s3-kubo-release-tarball-tmp/kubo-release-*.tgz
+    - put: s3-kubo-releases
+      params:
+        file: s3-kubo-release-tarball-tmp/kubo-release-*.tgz
+
+- name: success-notification
+  plan:
+  - aggregate:
+    - get: kubo-version
+      passed: [ upload-kubo-release, upload-kubo-deployment ]
+      trigger: true
   - put: slack-alert
     params:
       silent: true
       icon_emoji: ":chameleon:"
       text: |
-        kubo-deployment Hypeline on branch {{branch-name}} is ready
+        kubo-deployment pipeline on branch {{branch-name}} has succeeded
