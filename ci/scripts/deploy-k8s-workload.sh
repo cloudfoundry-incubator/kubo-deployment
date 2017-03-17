@@ -19,17 +19,32 @@ kubectl create -f "${KUBO_DEPLOYMENT_DIR}/ci/specs/nginx.yml"
 kubectl rollout status deployment/nginx -w
 
 
-check_route() {
+check_tcp_route() {
   until curl $(bosh-cli int "${KUBO_ENVIRONMENT_DIR}/director.yml" --path="/cf-tcp-router-name"):$(kubectl describe service nginx | grep NodePort | tr -dc '0-9'); do
     sleep 1
   done
 }
-export -f check_route
+export -f check_tcp_route
 
-if timeout '60s' bash -c check_route
+check_http_route() {
+  until $(curl --output /dev/null --silent --head --fail nginx.default.$(bosh-cli int "${KUBO_ENVIRONMENT_DIR}/director.yml" --path="/routing-cf-app-domain-name")); do
+    sleep 1
+  done
+}
+export -f check_http_route
+
+if timeout '60s' bash -c check_tcp_route
 then
-  echo 'It is working'
+  echo 'TCP route sync is working'
 else
-  echo 'Nginx route is not exposed :('
+  echo 'Nginx TCP route is not exposed :('
+  exit 1
+fi
+
+if timeout '60s' bash -c check_http_route
+then
+  echo 'HTTP route sync is working'
+else
+  echo 'Nginx HTTP route is not exposed :('
   exit 1
 fi
