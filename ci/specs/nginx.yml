@@ -3,6 +3,8 @@ kind: Service
 metadata:
   labels:
     name: nginx
+    tcp-route-sync: "true"
+    http-route-sync: "true"
   name: nginx
 spec:
   ports:
