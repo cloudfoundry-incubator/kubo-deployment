@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/bash -ex
 
 . "$(dirname "$0")/lib/environment.sh"
 
@@ -17,3 +17,19 @@ credhub login -u credhub-user -p \
 kubectl create -f "${KUBO_DEPLOYMENT_DIR}/ci/specs/nginx.yml"
 # wait for deployment to finish
 kubectl rollout status deployment/nginx -w
+
+
+check_route() {
+  until curl $(bosh-cli int "${KUBO_ENVIRONMENT_DIR}/director.yml" --path="/cf-tcp-router-name"):$(kubectl describe service nginx | grep NodePort | tr -dc '0-9'); do
+    sleep 1
+  done
+}
+export -f check_route
+
+if timeout '60s' bash -c check_route
+then
+  echo 'It is working'
+else
+  echo 'Nginx route is not exposed :('
+  exit 1
+fi

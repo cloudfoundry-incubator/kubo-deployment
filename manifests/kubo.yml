@@ -50,7 +50,7 @@ instance_groups:
         routing_api_client_id: ((routing-cf-client-id))
         routing_api_client_secret: ((routing-cf-client-secret))
         skip_tls_verification: true
-        app_domain: ((routing-cf-app-url))
+        app_domain: ((routing-cf-app-domain-name))
       nats:
         machines:
         - ((internal_ip))

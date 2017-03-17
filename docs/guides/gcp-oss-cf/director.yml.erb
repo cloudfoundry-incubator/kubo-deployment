@@ -1,7 +1,7 @@
 <% 
 require 'securerandom'
 
-%w(project_id network kubo_subnet kubo_zone network tcp_router_domain cf_system_domain).each do |var|
+%w(project_id network kubo_subnet kubo_zone network tcp_router_domain cf_system_domain cf_apps_domain).each do |var|
    raise "Expected environment variable '#{var}' to be set" if ENV[var] == nil || ENV[var] == ""
 end
 
@@ -24,7 +24,7 @@ cf-tcp-router-name: <%= ENV['tcp_router_domain'] %> # Hostname of TCP router. Us
 routing-cf-api-url: https://api.<%= ENV['cf_system_domain'] %> # TCP routing API URL. In PCF: https://api.<system domain>
 routing-cf-client-id: tcp_emitter # Routing UAA client name that will be used to register tcp routes
 routing-cf-uaa-url: https://uaa.<%= ENV['cf_system_domain'] %> # Routing UAA URL In PCF: https://uaa.<system domain>
-routing-cf-app-domain-name: apps.<%= ENV['cf_system_domain'] %>  # Cloud Foundry apps domain
+routing-cf-app-domain-name: <%= ENV['cf_apps_domain'] %>  # Cloud Foundry apps domain
 
 # we use BOSH 261 since CredHub 0.4 supports only it
 # CredHub 0.4 fixes important bug that breaks deployment

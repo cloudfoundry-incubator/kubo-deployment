@@ -142,6 +142,7 @@ Now you have the infrastructure ready to deploy a BOSH director.
   export subnet_ip_prefix="10.0.1" # This is the same subnet that was created in the 'Deploy supporting infrastructure' section 
 
   export tcp_router_domain=[domain of your existing TCP router]
+  export cf_apps_domain=[Cloud Foundry apps domain]
   export cf_system_domain=[Cloud Foundry system domain]
   export routing_cf_client_id=[client id that can access TCP router]
   export kubo_subnet=[name of subnet created by Terraform]

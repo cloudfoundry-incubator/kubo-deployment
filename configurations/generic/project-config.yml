@@ -6,7 +6,7 @@ cf-tcp-router-name: # Hostname of TCP router. Use `cf domains` to find existing 
 routing-cf-api-url: # TCP routing API URL. In PCF: https://api.<system domain>
 routing-cf-client-id: # Routing UAA client name that will be used to register tcp routes
 routing-cf-uaa-url: # Routing UAA URL In PCF: https://uaa.<system domain>
-routing-cf-app-domain-name: apps.main.kubo.cf-app.com # Cloud Foundry apps domain
+routing-cf-app-domain-name: # Cloud Foundry apps domain
 
 # we use BOSH 261 since CredHub 0.4 supports only it
 # CredHub 0.4 fixes important bug that breaks deployment
