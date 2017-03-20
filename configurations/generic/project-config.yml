@@ -7,6 +7,7 @@ routing-cf-api-url: # TCP routing API URL. In PCF: https://api.<system domain>
 routing-cf-client-id: # Routing UAA client name that will be used to register tcp routes
 routing-cf-uaa-url: # Routing UAA URL In PCF: https://uaa.<system domain>
 routing-cf-app-domain-name: # Cloud Foundry apps domain
+routing_cf_nats_internal_ip: # Internal IP address of Cloud Foundry NATS
 
 # we use BOSH 261 since CredHub 0.4 supports only it
 # CredHub 0.4 fixes important bug that breaks deployment

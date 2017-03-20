@@ -18,6 +18,7 @@ routing-cf-api-url: https://api.sys.main.kubo.cf-app.com
 routing-cf-client-id: tcp_emitter
 routing-cf-uaa-url: https://uaa.sys.main.kubo.cf-app.com
 routing-cf-app-domain-name: apps.main.kubo.cf-app.com
+routing_cf_nats_internal_ip: 10.0.1.8
 
 # we use BOSH 261 since CredHub 0.4 supports only it
 # CredHub 0.4 fixes important bug that breaks deployment

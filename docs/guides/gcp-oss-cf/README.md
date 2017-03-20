@@ -93,6 +93,7 @@ The rest of the document assumes you are logged into the `bosh-bastion` you depl
    export tcp_router_domain=tcp.$(terraform output -state=${cf_terraform_state} tcp_ip).xip.io
    export cf_system_domain=$(terraform output -state=${cf_terraform_state} ip).xip.io
    export cf_apps_domain=$(terraform output -state=${cf_terraform_state} ip).xip.io
+   export cf_nats_internal_ip="0.nats.private.${kubo_env}.microbosh"
    export common_secret=c1oudc0w
    ```
 
