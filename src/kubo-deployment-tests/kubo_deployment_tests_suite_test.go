@@ -1,4 +1,4 @@
-package main_test
+package kubo_deployment_tests_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -9,5 +9,5 @@ import (
 
 func TestKuboDeploymentTests(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Kubo Deployment Test Suite")
+	RunSpecs(t, "KuboDeploymentTests Suite")
 }
