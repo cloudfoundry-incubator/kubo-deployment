@@ -126,6 +126,8 @@ jobs:
 - name: run-unit-tests
   plan:
   - get: git-kubo-deployment
+    version: every
+    trigger: true
   - get: git-kubo-release
     version: every
     trigger: true
