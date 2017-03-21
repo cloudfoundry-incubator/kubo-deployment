@@ -123,12 +123,30 @@ resources:
     url: {{slack-url}}
 
 jobs:
+- name: run-unit-tests
+  plan:
+  - get: git-kubo-deployment
+  - get: git-kubo-release
+    version: every
+    trigger: true
+  - task: run-unit-tests
+    file: git-kubo-deployment/ci/tasks/run-unit-tests.yml
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Kubo release unit tests failed:
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
 - name: claim-lock
   max_in_flight: 1
   plan:
   - aggregate:
     - get: git-kubo-release
       trigger: true
+      passed: [ 'run-unit-tests' ]
     - get: git-kubo-deployment
       trigger: true
   - put: kubo-lock
