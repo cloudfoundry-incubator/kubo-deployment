@@ -290,6 +290,16 @@ jobs:
         text: |
           Deploy K8s Workload on branch {{branch-name}} failed:
           https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - task: pod-to-pod
+    file: git-kubo-deployment/ci/tasks/pod-to-pod.yml
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":octopus:"
+        text: |
+          Pod to pod communication on branch {{branch-name}} failed:
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
 - name: destroy-k8s
   plan:
