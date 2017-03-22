@@ -11,7 +11,7 @@ This repository contains the documentation, automation, and manifests for deploy
 | Deploy K8s | [![Deploy K8s Badge](https://p-concourse.kubo.cf-app.com/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s/badge)](https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s) |
 | Run smoke tests | [![Run smoke tests Badge](https://p-concourse.kubo.cf-app.com/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-workload/badge)](https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment/jobs/deploy-workload) |
 
-See the complete pipeline at [https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment](https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment)
+See the [complete pipeline](https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment) for more details
 
 ## Table of Contents
 
