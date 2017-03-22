@@ -4,6 +4,15 @@ Kubo is a [BOSH](https://bosh.io/) release for Kubernetes. It provides a solutio
 
 This repository contains the documentation, automation, and manifests for deploying [kubo-release](https://github.com/pivotal-cf-experimental/kubo-release) with BOSH.
 
+## CI Status
+| Job | Status |
+|---------|--------|
+| Install KuBOSH | [![KuBOSH Badge](https://p-concourse.kubo.cf-app.com/api/v1/teams/main/pipelines/kubo-deployment/jobs/install-bosh/badge)](https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment/jobs/install-bosh) |
+| Deploy K8s | [![Deploy K8s Badge](https://p-concourse.kubo.cf-app.com/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s/badge)](https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s) |
+| Run smoke tests | [![Run smoke tests Badge](https://p-concourse.kubo.cf-app.com/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-workload/badge)](https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment/jobs/deploy-workload) |
+
+See the complete pipeline at [https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment](https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment)
+
 ## Table of Contents
 
 - [Design](#design)
