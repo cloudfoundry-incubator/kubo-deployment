@@ -382,10 +382,10 @@ jobs:
   plan:
   - aggregate:
     - get: s3-kubo-release-tarball-tmp
-      trigger: true
       passed: [ destroy-bosh ]
     - get: kubo-version
       passed: [ destroy-bosh ]
+      trigger: true
   - aggregate:
     - put: s3-kubo-release-tarball
       params:
