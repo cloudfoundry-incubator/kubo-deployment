@@ -25,7 +25,7 @@ routing-cf-api-url: https://api.<%= ENV['cf_system_domain'] %> # TCP routing API
 routing-cf-client-id: tcp_emitter # Routing UAA client name that will be used to register tcp routes
 routing-cf-uaa-url: https://uaa.<%= ENV['cf_system_domain'] %> # Routing UAA URL In PCF: https://uaa.<system domain>
 routing-cf-app-domain-name: <%= ENV['cf_apps_domain'] %>  # Cloud Foundry apps domain
-routing_cf_nats_internal_ip: <%= ENV['cf_nats_internal_ip'] %> # Internal IP address of Cloud Foundry NATS
+routing-cf-nats-internal-ip: <%= ENV['cf_nats_internal_ip'] %> # Internal IP address of Cloud Foundry NATS
 
 # we use BOSH 261 since CredHub 0.4 supports only it
 # CredHub 0.4 fixes important bug that breaks deployment

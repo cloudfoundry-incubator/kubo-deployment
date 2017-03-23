@@ -74,29 +74,29 @@
 
 ### Creating TCP Routes
 1. Add a label to your service where the label is named `tcp-route-sync` and the value of the label is the frontend port that you want to expose your application on
-```
-kubectl label services <your service name> tcp-route-sync=<frontend port>
-```
+   ```
+   kubectl label services <your service name> tcp-route-sync=<frontend port>
+   ```
 
 1. Access your service from your browser at `<Cloud Foundry tcp url>:<frontend port>`
 
-> **Note:** It may take up to 60 seconds for the route to be created
+   > **Note:** It may take up to 60 seconds for the route to be created
 
 ### Creating HTTP Routes
 1. Add a label to your service where the label is named `http-route-sync` and the value of the label is the name of the route that you want to create for your application
-```
-kubectl label services <your service name> http-route-sync=<route name>
-```
-
+   ```
+   kubectl label services <your service name> http-route-sync=<route name>
+   ```
+   
 1. Access your service from your browser at `<route name>.<Cloud Foundry apps domain>`
-
-> **Note:** It may take up to 60 seconds for the route to be created
-
+   
+   > **Note:** It may take up to 60 seconds for the route to be created
+   
 ### Example: Accessing the Kubernetes dashboard
-
+   
 1. Expose an HTTP route for the dashboard service
-```
-kubectl label services kubernetes-dashboard http-route-sync=dashboard
-```
-
+   ```
+   kubectl label services kubernetes-dashboard http-route-sync=dashboard
+   ```
+   
 1. View the Kubernetes dashboard from your browser at `dashboard.<Cloud Foundry apps domain>`

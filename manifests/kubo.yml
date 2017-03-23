@@ -53,7 +53,7 @@ instance_groups:
         app_domain: ((routing-cf-app-domain-name))
       nats:
         machines:
-        - ((routing_cf_nats_internal_ip))
+        - ((routing-cf-nats-internal-ip))
         port: 4222
         user: nats
         password: ((routing-cf-nats-password))

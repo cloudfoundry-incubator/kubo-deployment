@@ -146,7 +146,7 @@ Now you have the infrastructure ready to deploy a BOSH director.
   export cf_system_domain=[Cloud Foundry system domain]
   export routing_cf_client_id=[client id that can access TCP router]
   export kubo_subnet=[name of subnet created by Terraform]
-  export routing_cf_nats_internal_ip=[internal ip address of Cloud Foundry NATS]
+  export cf_nats_internal_ip=[internal ip address of Cloud Foundry NATS]
   ```
 
 1. Create a folder to store the environment configuration
