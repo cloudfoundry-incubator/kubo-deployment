@@ -1,0 +1,98 @@
+---
+- type: replace
+  path: /releases/-
+  value:
+    name: bosh-softlayer-cpi
+    version: 10
+    url: https://bosh.io/d/github.com/cloudfoundry/bosh-softlayer-cpi-release?v=10
+    sha1: f0209e5565b64beccffa4482945c865890b5ca71
+
+- type: replace
+  path: /resource_pools/name=vms/stemcell?
+  value:
+    url: https://bosh.io/d/stemcells/bosh-softlayer-xen-ubuntu-trusty-go_agent?v=3363.12.1
+    sha1: c5350a9e0b03a4f9af2b89525be620cb77bc6a4f
+
+- type: replace
+  path: /resource_pools/name=vms/env
+  value:
+    bosh:
+      keep_root_password: true
+
+# Configure sizes
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties?
+  value:
+    domain: ((sl_vm_domain))
+    vmNamePrefix: ((sl_vm_name_prefix))
+    ephemeralDiskSize: 100
+    startCpus: 4
+    maxMemory: 8192
+    deployedByBoshcli: true
+    datacenter:
+      name: ((sl_datacenter))
+    hourlyBillingFlag: true
+    networkComponents:
+    - maxSpeed: 100
+
+- type: replace
+  path: /disk_pools/name=disks/disk_size
+  value: 20_000
+
+- type: replace
+  path: /networks/name=default/subnets/0/dns
+  value: [8.8.8.8, 10.0.80.11, 10.0.80.12]
+
+- type: replace
+  path: /networks/-
+  value:
+    name: dynamic
+    type: dynamic
+    dns: [8.8.8.8, 10.0.80.11, 10.0.80.12]
+    cloud_properties:
+      PrimaryNetworkComponent:
+        NetworkVlan:
+          Id: ((sl_vlan_public))
+      PrimaryBackendNetworkComponent:
+        NetworkVlan:
+          Id: ((sl_vlan_private))
+
+# Add CPI job
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value: &cpi_job
+    name: softlayer_cpi
+    release: bosh-softlayer-cpi
+
+- type: replace
+  path: /instance_groups/name=bosh/networks/-
+  value:
+    name: dynamic
+
+- type: replace
+  path: /instance_groups/name=bosh/networks/name=default/default?
+  value: [gateway, dns]
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/cpi_job?
+  value: softlayer_cpi
+
+- type: replace
+  path: /cloud_provider/template?
+  value: *cpi_job
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/softlayer?
+  value: &softlayer
+    username: ((sl_username))
+    apiKey: ((sl_api_key))
+    featureOptions:
+      apiEndpoint: api.service.softlayer.com
+      apiRetryCount: 10
+      apiWaitTime: 5
+      createIscsiVolumeTimeout: 3600
+      createIscsiVolumePollingInterval: 5
+
+- type: replace
+  path: /cloud_provider/properties/softlayer?
+  value: *softlayer
