@@ -12,11 +12,11 @@ azs:
 vm_types:
 - name: default
   cloud_properties:
-    instance_type: m3.medium
+    instance_type: m4.large
     ephemeral_disk: {size: 25_000}
 - name: large
   cloud_properties:
-    instance_type: m3.xlarge
+    instance_type: m4.xlarge
     ephemeral_disk: {size: 50_000}
 
 disk_types:
