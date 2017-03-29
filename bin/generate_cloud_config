@@ -9,19 +9,18 @@ cat << EOF
   Usage: $0 <BOSH environment path>
 EOF
 }
-if [ $# -ne 1 ] ; then
-  print_usage
-  exit 1
-fi
-
-
-BOSH_ENV=$1
 
 main() {
+  if [ $# -ne 1 ] ; then
+    print_usage
+    exit 1
+  fi
+
+  BOSH_ENV=$1
   pushd "$(dirname "$0")/../" > /dev/null
     local bosh_iaas="$(cat ${BOSH_ENV}/iaas)"
     bosh-cli int "configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${BOSH_ENV}/director.yml
   popd > /dev/null
 }
 
-main
+[[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"
