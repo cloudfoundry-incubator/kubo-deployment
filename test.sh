@@ -358,7 +358,6 @@ bosh create-env bosh.yml \
 
 echo "- Azure (cloud-config)"
 bosh update-cloud-config azure/cloud-config.yml \
-  -v az=test \
   -v internal_cidr=10.0.16.0/24 \
   -v internal_gw=10.0.16.1 \
   -v vnet_name=boshvnet-crp \
