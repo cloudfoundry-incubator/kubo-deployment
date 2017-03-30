@@ -1,5 +1,6 @@
-#!/bin/bash -e
+#!/bin/bash
 
+set -e
 set -o pipefail
 
 [ -z "${DEBUG}" ] || set -x
@@ -16,8 +17,8 @@ main() {
     exit 1
   fi
 
-  BOSH_ENV=$1
-  pushd "$(dirname "$0")/../" > /dev/null
+  local BOSH_ENV="$1"
+  pushd "$(cd "$(dirname "$0")"; pwd)/../" > /dev/null
     local bosh_iaas="$(cat ${BOSH_ENV}/iaas)"
     bosh-cli int "configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${BOSH_ENV}/director.yml
   popd > /dev/null

@@ -2,9 +2,6 @@ package kubo_deployment_tests_test
 
 import (
 	"os"
-	"path/filepath"
-	"runtime"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/progrium/go-basher"
@@ -15,16 +12,6 @@ var credhubArgs [][]string
 func credhub(args []string) {
 	println("I can haz cheesybytez")
 	credhubArgs = append(credhubArgs, args)
-}
-
-func pathToScript(name string) string {
-	return pathFromRoot("bin/" + name)
-}
-
-func pathFromRoot(relativePath string) string {
-	_, filename, _, _ := runtime.Caller(0)
-	currentDir := filepath.Dir(filename)
-	return filepath.Join(currentDir, "..", "..", relativePath)
 }
 
 var _ = Describe("End 2 end run", func() {
