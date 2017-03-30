@@ -29,8 +29,6 @@
     startCpus: 4
     maxMemory: 8192
     deployedByBoshcli: true
-    datacenter:
-      name: ((sl_datacenter))
     hourlyBillingFlag: true
     networkComponents:
     - maxSpeed: 100
@@ -85,13 +83,7 @@
   path: /instance_groups/name=bosh/properties/softlayer?
   value: &softlayer
     username: ((sl_username))
-    apiKey: ((sl_api_key))
-    featureOptions:
-      apiEndpoint: api.service.softlayer.com
-      apiRetryCount: 10
-      apiWaitTime: 5
-      createIscsiVolumeTimeout: 3600
-      createIscsiVolumePollingInterval: 5
+    apiKey: ((sl_apiKey))
 
 - type: replace
   path: /cloud_provider/properties/softlayer?
