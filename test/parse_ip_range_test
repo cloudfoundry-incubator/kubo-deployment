@@ -1,0 +1,44 @@
+#!/bin/bash -e
+
+# To get the available TCP router ports:
+# cf curl /routing/v1/router_groups | bosh-cli int --path=/name=default-tcp/reservable_ports - | xargs echo -n
+# the resulting value is a comma separated list of numbers or ranges, e.g. "1020-1040,1055,4059"
+#
+#
+# Get the list of used ports
+# rtr list --api https://api.xxx.yyy --client-id <routing_api_client> --client-secret <routing_api_client_secret> --oauth-url https://uaa.xxx.yyy -k
+#
+#
+# get_next number should provide the next usable port number from the given settings
+
+. $(dirname $0)/../bin/lib/parse_number_range
+
+assert_equals() {
+  local expected=$1
+  local actual=$2
+
+  if [ "${expected}" != "${actual}" ]; then
+    echo "test failed, expected: $expected actual: $actual"
+    exit 1
+  else
+    echo "test passed."
+  fi
+}
+
+run_test() {
+  local expected=$1
+  local reserved_ports_config=$2
+  local ports_blacklist=$3
+  local actual=$(get_next_number ${reserved_ports_config} ${ports_blacklist})
+
+  assert_equals "${expected}" "${actual}"
+}
+
+
+run_test "1024" "1024" ""
+run_test "" "1024" "1024"
+run_test "1024" "1024,1025" ""
+run_test "1025" "1024,1025" "1024"
+run_test "" "1024,1025" "1024,1025"
+run_test "1036" "1036,1025" "1025"
+run_test "2001" "2001-2002" ""
