@@ -14,7 +14,22 @@ If you have not previously done so, please fill out and submit the [Contributor 
 Before making significant changes it's best to communicate with the maintainers of the project through [GitHub Issues](https://github.com/pivotal-cf-experimental/kubo-deployment/issues).
 
 ## Running Integration Tests
-Before submitting pull request please redeploy KuBosh, deploy service on it and try workload.
+
+Please make sure to run all tests before submitting a pull request.
+
+### Shell script tests
+
+This repo provides a test runner for running integration tests against the shell scripts. It requires [`ginkgo`](https://github.com/onsi/ginkgo) binary to be installed locally. To run the tests, execute `bin/run_tests` from the repository directory.
+
+### Deployment tests
+
+The sequence to run deployment tests includes the following steps:
+
+>  1. (re-)deploy KuBOSH
+>  1. deploy a kubernetes cluster on the new KuBOSH
+>  1. deploy a workload on the cluster and make sure it is working
+
+Optionally, it is possible to tear down the service by running `bosh-cli -e <BOSH_ENV> -d <CLUSTER_DEPLOYMENT_NAME> delete-deployment` followed by the `bin/destroy_bosh` command.
 
 ## Additional BOSH configuration
 We support only basic BOSH configuration. If you have some additional ops-file that will be useful for community, add them to https://github.com/cloudfoundry/bosh-deployment We have included this repo as a subtree and update it periodically.

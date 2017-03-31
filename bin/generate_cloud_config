@@ -1,5 +1,6 @@
-#!/bin/bash -e
+#!/bin/bash
 
+set -e
 set -o pipefail
 
 [ -z "${DEBUG}" ] || set -x
@@ -9,19 +10,18 @@ cat << EOF
   Usage: $0 <BOSH environment path>
 EOF
 }
-if [ $# -ne 1 ] ; then
-  print_usage
-  exit 1
-fi
-
-
-BOSH_ENV=$1
 
 main() {
-  pushd "$(dirname "$0")/../" > /dev/null
-    local bosh_iaas="$(cat ${BOSH_ENV}/iaas)"
-    bosh-cli int "configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${BOSH_ENV}/director.yml
+  if [ $# -ne 1 ] ; then
+    print_usage
+    exit 1
+  fi
+
+  local bosh_env=$(cd "$1"; pwd)
+  pushd "$(cd "$(dirname "$0")"; pwd)/../" > /dev/null
+    local bosh_iaas="$(cat ${bosh_env}/iaas)"
+    bosh-cli int "configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml
   popd > /dev/null
 }
 
-main
+[[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"
