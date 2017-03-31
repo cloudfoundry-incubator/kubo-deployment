@@ -135,7 +135,7 @@ jobs:
       put: slack-alert
       params:
         silent: true
-        icon_emoji: ":thumbsdown:"
+        icon_emoji: ":octopus:"
         text: |
           Kubo release unit tests failed:
           https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
@@ -145,7 +145,7 @@ jobs:
       put: slack-alert
       params:
         silent: true
-        icon_emoji: ":thumbsdown:"
+        icon_emoji: ":octopus:"
         text: |
           Kubo deployment unit tests failed:
           https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME

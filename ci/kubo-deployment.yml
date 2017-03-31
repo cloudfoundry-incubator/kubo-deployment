@@ -131,8 +131,8 @@ jobs:
   - get: git-kubo-release
     version: every
     trigger: true
-  - task: run-unit-tests
-    file: git-kubo-deployment/ci/tasks/run-unit-tests.yml
+  - task: run-release-unit-tests
+    file: git-kubo-deployment/ci/tasks/run-release-unit-tests.yml
     on_failure:
       put: slack-alert
       params:
@@ -140,6 +140,16 @@ jobs:
         icon_emoji: ":thumbsdown:"
         text: |
           Kubo release unit tests failed:
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - task: run-deployment-unit-tests
+    file: git-kubo-deployment/ci/tasks/run-deployment-unit-tests.yml
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Kubo deployment unit tests failed:
           https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
 - name: claim-lock

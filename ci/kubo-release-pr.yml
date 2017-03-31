@@ -102,7 +102,7 @@ jobs:
       path: git-kubo-release
       status: pending
   - task: run-unit-tests
-    file: git-kubo-deployment/ci/tasks/run-unit-tests.yml
+    file: git-kubo-deployment/ci/tasks/run-release-unit-tests.yml
     on_failure: &on_failure
       aggregate:
       - do:
