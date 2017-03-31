@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/bash -ex
 
 . "$(dirname "$0")/lib/environment.sh"
 
@@ -18,17 +18,24 @@ credhub login -u credhub-user -p \
   -s "https://${director_ip}:8844" --skip-tls-validation
 
 "${KUBO_DEPLOYMENT_DIR}/bin/set_kubeconfig" "${KUBO_ENVIRONMENT_DIR}" ci-service
-kubectl create -f "${KUBO_DEPLOYMENT_DIR}/ci/specs/guestbook.yml"
+kubectl apply -f "${KUBO_DEPLOYMENT_DIR}/ci/specs/guestbook.yml"
 # wait for deployment to finish
 kubectl rollout status deployment/frontend -w
 kubectl rollout status deployment/redis-master -w
 kubectl rollout status deployment/redis-slave -w
 
 worker_ip=$(BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=${client_secret} BOSH_CA_CERT="${bosh_ca_cert}" bosh-cli -e ${director_ip} vms | grep worker | head -n1 | awk '{print $4}' | xargs echo -n)
-wget -O - "http://${worker_ip}:30303/guestbook.php?cmd=set&key=messages&value=hellothere"
-result=$(wget -O - "http://${worker_ip}:30303/guestbook.php?cmd=get&key=messages" | grep hellothere)
+testvalue="hellothere$(date +'%N')"
+wget -O - "http://${worker_ip}:30303/guestbook.php?cmd=set&key=messages&value=${testvalue}"
 
-if [ -z result ] ; then
+if timeout 120 /bin/bash <<EOF
+  until wget -O - "http://${worker_ip}:30303/guestbook.php?cmd=get&key=messages" | grep ${testvalue}; do
+    sleep 2
+  done
+EOF
+then
+  echo "Guestbook app is up and running"
+else
   echo "Expected the sample guest book to display the stored value"
   exit 1
 fi
