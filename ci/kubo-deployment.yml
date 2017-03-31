@@ -297,6 +297,16 @@ jobs:
         text: |
           Deploy K8s Workload failed:
           https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - task: pod-to-pod
+    file: git-kubo-deployment/ci/tasks/pod-to-pod.yml
+    on_failure:
+      put: slack-alert
+      params:
+        silent: true
+        icon_emoji: ":thumbsdown:"
+        text: |
+          Pod to pod communication failed:
+          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
 - name: destroy-k8s
   plan:
