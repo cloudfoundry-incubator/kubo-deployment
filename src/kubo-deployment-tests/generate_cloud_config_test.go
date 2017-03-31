@@ -52,7 +52,7 @@ var _ = Describe("Generate cloud config", func() {
 	})
 
 	It("expands the bosh environment path to absolute value", func() {
-		command := exec.Command("generate_cloud_config", "../src/kubo-deployment-tests/resources/test_gcp")
+		command := exec.Command("./generate_cloud_config", "../src/kubo-deployment-tests/resources/test_gcp")
 		command.Stdout = bash.Stdout
 		command.Stderr = bash.Stderr
 		command.Dir = pathToScript("")
