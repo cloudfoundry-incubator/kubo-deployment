@@ -17,10 +17,10 @@ main() {
     exit 1
   fi
 
-  local BOSH_ENV="$1"
+  local bosh_env=$(cd "$1"; pwd)
   pushd "$(cd "$(dirname "$0")"; pwd)/../" > /dev/null
-    local bosh_iaas="$(cat ${BOSH_ENV}/iaas)"
-    bosh-cli int "configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${BOSH_ENV}/director.yml
+    local bosh_iaas="$(cat ${bosh_env}/iaas)"
+    bosh-cli int "configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml
   popd > /dev/null
 }
 

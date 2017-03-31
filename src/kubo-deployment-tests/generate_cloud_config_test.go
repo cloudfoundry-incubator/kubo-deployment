@@ -4,10 +4,10 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	basher "github.com/progrium/go-basher"
-	"os"
 	"github.com/onsi/gomega/gbytes"
 	"io"
 	"strings"
+	"os/exec"
 )
 
 var _ = Describe("Generate cloud config", func() {
@@ -15,6 +15,8 @@ var _ = Describe("Generate cloud config", func() {
 	var (
 		bash    *basher.Context
 		kuboEnv = pathFromRoot("src/kubo-deployment-tests/resources/test_gcp")
+		stdout *gbytes.Buffer
+		stderr *gbytes.Buffer
 	)
 
 	BeforeEach(func() {
@@ -22,23 +24,18 @@ var _ = Describe("Generate cloud config", func() {
 		bash.CopyEnv()
 		bash.Source(pathToScript("lib/deploy_utils"), nil)
 		bash.Source(pathToScript("generate_cloud_config"), nil)
-		if bash.HandleFuncs(os.Args) {
-			os.Exit(0)
-		}
 		bash.ExportFunc("bosh-cli", EmptyCallback)
 		bash.ExportFunc("popd", EmptyCallback)
 		bash.ExportFunc("pushd", EmptyCallback)
-	})
-
-	It("calls bosh-cli with appropriate arguments", func() {
-		stdout := gbytes.NewBuffer()
-		stderr := gbytes.NewBuffer()
+		bash.SelfPath = "/bin/echo"
+		stdout = gbytes.NewBuffer()
+		stderr = gbytes.NewBuffer()
 		bash.Stdout = io.MultiWriter(GinkgoWriter, stdout)
 		bash.Stderr = io.MultiWriter(GinkgoWriter, stderr)
 
+	})
 
-		bash.SelfPath = "/bin/echo"
-
+	It("calls bosh-cli with appropriate arguments", func() {
 		status, err := bash.Run("main", []string{kuboEnv})
 
 		Expect(err).NotTo(HaveOccurred())
@@ -48,26 +45,21 @@ var _ = Describe("Generate cloud config", func() {
 	})
 
 	It("fails with no arguments", func() {
-		stdout := gbytes.NewBuffer()
-		stderr := gbytes.NewBuffer()
-		bash.Stdout = io.MultiWriter(GinkgoWriter, stdout)
-		bash.Stderr = io.MultiWriter(GinkgoWriter, stderr)
-
-
-		bash.SelfPath = "/bin/echo"
-
 		status, err := bash.Run("main", []string{})
 
 		Expect(err).NotTo(HaveOccurred())
 		Expect(status).To(Equal(1))
 	})
 
-	It("should temporarily step into an upper level directory", func() {
-		stdout := gbytes.NewBuffer()
-		stderr := gbytes.NewBuffer()
-		bash.Stdout = io.MultiWriter(GinkgoWriter, stdout)
-		bash.Stderr = io.MultiWriter(GinkgoWriter, stderr)
+	It("expands the bosh environment path to absolute value", func() {
+		command := exec.Command("generate_cloud_config", "../src/kubo-deployment-tests/resources/test_gcp")
+		command.Stdout = bash.Stdout
+		command.Stderr = bash.Stderr
+		command.Dir = pathToScript("")
+		Expect(command.Run()).To(Succeed())
+	})
 
+	It("should temporarily step into an upper level directory", func() {
 		bash.Source("_", func(string) ([]byte, error) {
 			return []byte(`
 				callCounter=0
