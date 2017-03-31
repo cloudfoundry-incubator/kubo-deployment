@@ -231,6 +231,9 @@ jobs:
   - task: workload
     file: git-kubo-deployment/ci/tasks/deploy-k8s-workload.yml
     on_failure: *on_failure
+  - task: pod-to-pod
+    file: git-kubo-deployment/ci/tasks/pod-to-pod.yml
+    on_failure: *on_failure
 
 - name: destroy-k8s
   plan:

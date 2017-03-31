@@ -227,6 +227,27 @@ jobs:
         params:
           path: git-kubo-deployment
           status: failure
+  - task: pod-to-pod
+    file: git-kubo-deployment/ci/tasks/pod-to-pod.yml
+    on_failure:
+      aggregate:
+      - do:
+        - task: alert-text
+          file: git-kubo-deployment/ci/tasks/generate-deployment-pr-messages.yml
+          params:
+            PR_STATUS: failed
+        - put: slack-alert
+          params:
+            silent: true
+            icon_emoji: ":animal:"
+            text_file: pr-slack-message/message.txt
+            text: |
+              $TEXT_FILE_CONTENT
+              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+      - put: git-kubo-deployment
+        params:
+          path: git-kubo-deployment
+          status: failure
 
 - name: destroy-k8s
   plan:
