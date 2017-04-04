@@ -1,22 +1,20 @@
 package kubo_deployment_tests_test
 
 import (
+	"io"
+	"os/exec"
+	"strings"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	basher "github.com/progrium/go-basher"
 	"github.com/onsi/gomega/gbytes"
-	"io"
-	"strings"
-	"os/exec"
+	basher "github.com/progrium/go-basher"
 )
 
 var _ = Describe("Generate cloud config", func() {
 
 	var (
-		bash    *basher.Context
 		kuboEnv = pathFromRoot("src/kubo-deployment-tests/resources/test_gcp")
-		stdout *gbytes.Buffer
-		stderr *gbytes.Buffer
 	)
 
 	BeforeEach(func() {
@@ -24,9 +22,9 @@ var _ = Describe("Generate cloud config", func() {
 		bash.CopyEnv()
 		bash.Source(pathToScript("lib/deploy_utils"), nil)
 		bash.Source(pathToScript("generate_cloud_config"), nil)
-		bash.ExportFunc("bosh-cli", EmptyCallback)
-		bash.ExportFunc("popd", EmptyCallback)
-		bash.ExportFunc("pushd", EmptyCallback)
+		bash.ExportFunc("bosh-cli", emptyCallback)
+		bash.ExportFunc("popd", emptyCallback)
+		bash.ExportFunc("pushd", emptyCallback)
 		bash.SelfPath = "/bin/echo"
 		stdout = gbytes.NewBuffer()
 		stderr = gbytes.NewBuffer()
