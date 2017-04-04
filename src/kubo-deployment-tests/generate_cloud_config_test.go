@@ -1,14 +1,11 @@
 package kubo_deployment_tests_test
 
 import (
-	"io"
-	"os/exec"
-	"strings"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/onsi/gomega/gbytes"
-	basher "github.com/progrium/go-basher"
+	"strings"
+	"os/exec"
+	"fmt"
 )
 
 var _ = Describe("Generate cloud config", func() {
@@ -18,19 +15,12 @@ var _ = Describe("Generate cloud config", func() {
 	)
 
 	BeforeEach(func() {
-		bash, _ = basher.NewContext("/bin/bash", true)
-		bash.CopyEnv()
 		bash.Source(pathToScript("lib/deploy_utils"), nil)
 		bash.Source(pathToScript("generate_cloud_config"), nil)
-		bash.ExportFunc("bosh-cli", emptyCallback)
+		bash.ExportFunc("bosh-cli", emptyCallback )
 		bash.ExportFunc("popd", emptyCallback)
 		bash.ExportFunc("pushd", emptyCallback)
 		bash.SelfPath = "/bin/echo"
-		stdout = gbytes.NewBuffer()
-		stderr = gbytes.NewBuffer()
-		bash.Stdout = io.MultiWriter(GinkgoWriter, stdout)
-		bash.Stderr = io.MultiWriter(GinkgoWriter, stderr)
-
 	})
 
 	It("calls bosh-cli with appropriate arguments", func() {
@@ -75,8 +65,9 @@ var _ = Describe("Generate cloud config", func() {
 
 		errOutput := string(stderr.Contents())
 
-		// Our test executable is /bin/bash, so the path should be one level up: /bin/../
-		Expect(errOutput).To(ContainSubstring("[1] ::: pushd /bin/../"))
+		// Our test executable is ~/.basher/bash, so the path should be one level up
+		targetPath := strings.Replace(bashPath, "/bash",  "/../", 1)
+		Expect(errOutput).To(ContainSubstring(fmt.Sprintf("[1] ::: pushd %s", targetPath)))
 		Expect(errOutput).To(ContainSubstring("[2] ::: bosh-cli"))
 		Expect(errOutput).To(ContainSubstring("[3] ::: popd"))
 	})

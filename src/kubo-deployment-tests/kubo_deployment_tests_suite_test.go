@@ -21,8 +21,9 @@ var (
 	stdout *gbytes.Buffer
 	stderr *gbytes.Buffer
 
-	resourcesPath   string
-	environmentPath string
+	resourcesPath       = filepath.Join(pathFromRoot("src"), "kubo-deployment-tests", "resources")
+	invocationRecorder = filepath.Join(resourcesPath, "lib", "invocation_recorder.sh")
+	environmentPath = filepath.Join(resourcesPath, "environment")
 
 	emptyCallback = func([]string) {}
 	bashPath      string
@@ -47,42 +48,20 @@ var _ = BeforeSuite(func() {
 	extractBash()
 })
 
-var _ = BeforeEach(func() {
-	resourcesPath = filepath.Join(pathFromRoot("src"), "odb-deployment", "resources")
-	environmentPath = filepath.Join(resourcesPath, "environment")
+var _ = AfterSuite(func() {
+	os.Remove(bashPath)
+})
 
+var _ = BeforeEach(func() {
 	bash, _ = basher.NewContext(bashPath, true)
 
 	stdout = gbytes.NewBuffer()
 	stderr = gbytes.NewBuffer()
 	bash.Stdout = io.MultiWriter(GinkgoWriter, stdout)
 	bash.Stderr = io.MultiWriter(GinkgoWriter, stderr)
-	bash.Source("_", func(string) ([]byte, error) {
-		return []byte(`
-				callCounter=0
-				invocationRecorder() {
-				  local in_line_count=0
-				  declare -a in_lines
-				  while read -t0.05; do
-				    in_lines[in_line_count]="$REPLY"
-				    in_line_count=$(expr ${in_line_count} + 1)
-				  done
-				  callCounter=$(expr ${callCounter} + 1)
-				  (>&2 echo "[$callCounter] $@")
-				  if [ ${in_line_count} -gt 0 ]; then
-				    (>&2 echo "[$callCounter received] input:")
-				    (>&2 printf '%s\n' "${in_lines[@]}" )
-				    (>&2 echo "[$callCounter end received]")
-				  fi
-				}
-			`), nil
-	})
+	bash.Source(invocationRecorder, nil)
 
 	bash.CopyEnv()
-})
-
-var _ = AfterSuite(func() {
-	os.Remove(bashPath)
 })
 
 func extractBash() {
