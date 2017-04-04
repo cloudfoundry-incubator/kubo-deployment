@@ -68,13 +68,12 @@ var _ = BeforeEach(func() {
 				    in_line_count=$(expr ${in_line_count} + 1)
 				  done
 				  callCounter=$(expr ${callCounter} + 1)
-				  echo "[$callCounter] $@" | tee /dev/fd/2
+				  (>&2 echo "[$callCounter] $@")
 				  if [ ${in_line_count} -gt 0 ]; then
-				    echo "[$callCounter received] input:" | tee /dev/fd/2
-				    printf '%s\n' "${in_lines[@]}" | tee /dev/fd/2
-				    echo "[$callCounter end received]" | tee /dev/fd/2
+				    (>&2 echo "[$callCounter received] input:")
+				    (>&2 printf '%s\n' "${in_lines[@]}" )
+				    (>&2 echo "[$callCounter end received]")
 				  fi
-				  echo $PATH | tee /dev/fd/2
 				}
 			`), nil
 	})
