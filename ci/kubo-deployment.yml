@@ -253,6 +253,7 @@ jobs:
     file: git-kubo-deployment/ci/tasks/deploy-k8s-instance.yml
     params:
       ROUTING_CF_CLIENT_SECRET: {{routing_cf_client_secret}}
+      ROUTING_CF_NATS_PASSWORD: {{routing_cf_nats_password}}
     on_failure:
       put: slack-alert
       params:
