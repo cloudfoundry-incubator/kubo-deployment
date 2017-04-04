@@ -2,26 +2,19 @@ package kubo_deployment_tests_test
 
 import (
 	"os"
+	"path"
+	"io/ioutil"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/progrium/go-basher"
 )
 
-var credhubArgs [][]string
-
-func credhub(args []string) {
-	println("I can haz cheesybytez")
-	credhubArgs = append(credhubArgs, args)
-}
-
 var _ = Describe("End 2 end run", func() {
-	BeforeEach(func() {
-		credhubArgs = [][]string{{}}
-	})
+
+	var kuboEnv = pathFromRoot("src/kubo-deployment-tests/resources/test_gcp")
 
 	It("should work now", func() {
 		bash, _ := basher.NewContext("/bin/bash", true)
-		bash.ExportFunc("credhub", credhub)
 
 		bash.Stdout = GinkgoWriter
 		bash.Stderr = GinkgoWriter
@@ -35,10 +28,15 @@ var _ = Describe("End 2 end run", func() {
 			os.Exit(0)
 		}
 
-		_, err := bash.Run("main", []string{"one", "two"})
+		tmpdir := os.TempDir()
+		deployUtilContent := []byte("\n")
+
+		os.MkdirAll(path.Join(tmpdir, "lib"), os.FileMode(0755))
+   	ioutil.WriteFile(path.Join(tmpdir, "lib/deploy_utils"), deployUtilContent, 0755)
+
+		status, err := bash.Run("main", []string{kuboEnv, "two"})
 
 		Expect(err).NotTo(HaveOccurred())
-		// Expect(status).To(Equal(0))
-		Expect(credhubArgs).To(HaveLen(1))
+	  Expect(status).To(Equal(0))
 	})
 })
