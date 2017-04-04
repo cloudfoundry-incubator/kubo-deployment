@@ -6,6 +6,7 @@ image_resource:
     tag: stable
 params:
   ROUTING_CF_CLIENT_SECRET:
+  ROUTING_CF_NATS_INTERNAL_IP:
 run:
   path: git-kubo-deployment/ci/scripts/deploy-k8s-instance.sh
 
