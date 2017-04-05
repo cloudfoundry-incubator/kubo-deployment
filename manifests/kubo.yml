@@ -40,24 +40,6 @@ instance_groups:
   - name: *network-name
   azs: [z1]
   jobs:
-
-  - name: route-sync
-    release: kubo
-    properties:
-      cloud_foundry:
-        uaa_url: ((routing-cf-uaa-url))
-        routing_api_url: ((routing-cf-api-url))
-        routing_api_client_id: ((routing-cf-client-id))
-        routing_api_client_secret: ((routing-cf-client-secret))
-        skip_tls_verification: true
-        app_domain: ((routing-cf-app-domain-name))
-      nats:
-        machines:
-        - ((routing-cf-nats-internal-ip))
-        port: 4222
-        user: nats
-        password: ((routing-cf-nats-password))
-
   - name: kubernetes-api
     release: kubo
     properties:
@@ -136,6 +118,22 @@ instance_groups:
   - name: *network-name
   azs: [z1]
   jobs:
+  - name: route-sync
+    release: kubo
+    properties:
+      cloud_foundry:
+        uaa_url: ((routing-cf-uaa-url))
+        routing_api_url: ((routing-cf-api-url))
+        routing_api_client_id: ((routing-cf-client-id))
+        routing_api_client_secret: ((routing-cf-client-secret))
+        skip_tls_verification: true
+        app_domain: ((routing-cf-app-domain-name))
+      nats:
+        machines:
+        - ((routing-cf-nats-internal-ip))
+        port: 4222
+        user: nats
+        password: ((routing-cf-nats-password))
   - name: nginx
     release: kubo
   - name: flanneld
