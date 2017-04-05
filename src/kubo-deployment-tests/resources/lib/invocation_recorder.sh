@@ -13,5 +13,5 @@ invocationRecorder() {
     printf '%s\n' "${in_lines[@]}" > /dev/fd/2
     echo "[$callCounter end received]" > /dev/fd/2
   fi
-  echo $PATH | tee /dev/fd/2
+  echo $PATH > /dev/fd/2
 }
