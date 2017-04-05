@@ -56,15 +56,16 @@ upload_release() {
 
 generate_manifest() {
   if [ $# -ne 3 ]; then
-    echo "Required arguments are bosh_target and deployment_name in $0:generate_manifest()"
+    echo "Required arguments are <path to kubo bosh environment>, <deployment name> and <base manifest path> in ${BASH_SOURCE[0]}:generate_manifest()"
     exit 1
   fi
 
   local bosh_environment=$1
   local deployment_name=$2
+  local manifest_path=$3
 
   pushd "$(dirname "${BASH_SOURCE[0]}")/../../" > /dev/null
-    manifest="$(cat "manifests/service.yml")"
+    manifest="$(cat "${manifest_path}")"
 
     if [ -e "${bosh_environment}/service-${deployment_name}.yml" ]; then
       manifest=$(printf "%s" "${manifest}" | bosh-cli int - --ops-file="${bosh_environment}/service-${deployment_name}.yml")
