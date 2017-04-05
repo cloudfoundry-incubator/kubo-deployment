@@ -48,15 +48,6 @@ var _ = Describe("Generate cloud config", func() {
 	})
 
 	It("should temporarily step into an upper level directory", func() {
-		bash.Source("_", func(string) ([]byte, error) {
-			return []byte(`
-				callCounter=0
-				invocationRecorder() {
-					callCounter=$(expr $callCounter + 1)
-					echo "[$callCounter] $@" | tee /dev/fd/2
-				}
-			`), nil
-		})
 		bash.SelfPath = "invocationRecorder"
 
 		status, err := bash.Run("main", []string{kuboEnv})
