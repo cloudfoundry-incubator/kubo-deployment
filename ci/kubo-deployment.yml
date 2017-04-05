@@ -126,10 +126,8 @@ jobs:
 - name: run-unit-tests
   plan:
   - get: git-kubo-deployment
-    version: every
     trigger: true
   - get: git-kubo-release
-    version: every
     trigger: true
   - task: run-release-unit-tests
     file: git-kubo-deployment/ci/tasks/run-release-unit-tests.yml
@@ -157,9 +155,10 @@ jobs:
   plan:
   - aggregate:
     - get: git-kubo-release
-      trigger: true
       passed: [ 'run-unit-tests' ]
+      trigger: true
     - get: git-kubo-deployment
+      passed: [ 'run-unit-tests' ]
       trigger: true
   - put: kubo-lock
     params: { acquire: true }
