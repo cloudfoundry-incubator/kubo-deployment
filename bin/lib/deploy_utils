@@ -67,12 +67,12 @@ generate_manifest() {
   pushd "$(dirname "${BASH_SOURCE[0]}")/../../" > /dev/null
     manifest="$(cat "${manifest_path}")"
 
-    if [ -e "${bosh_environment}/service-${deployment_name}.yml" ]; then
-      manifest=$(echo "${manifest}" | bosh-cli int - --ops-file="${bosh_environment}/service-${deployment_name}.yml")
+    if [ -e "${bosh_environment}/${deployment_name}.yml" ]; then
+      manifest=$(echo "${manifest}" | bosh-cli int - --ops-file="${bosh_environment}/${deployment_name}.yml")
     fi
 
-    if [ -e "${bosh_environment}/service-${deployment_name}-vars.yml" ]; then
-      manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/service-${deployment_name}-vars.yml")
+    if [ -e "${bosh_environment}/${deployment_name}-vars.yml" ]; then
+      manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/${deployment_name}-vars.yml")
     fi
 
     manifest=$(echo "${manifest}" | bosh-cli int - \
@@ -90,7 +90,7 @@ generate_manifest() {
     fi
 
     manifest=$(echo "${manifest}" | bosh-cli int - \
-        --vars-store="${bosh_environment}/service-${deployment_name}-creds.yml")
+        --vars-store="${bosh_environment}/${deployment_name}-creds.yml")
 
     manifest=$(echo "${manifest}" | bosh-cli int - --ops-file=manifests/ops-files/remove-variables.yml)
 

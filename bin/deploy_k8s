@@ -65,7 +65,7 @@ main() {
     upload_releases "${release_source}"
     set_cloud_config
     set_kubernetes_certificate_in_credhub "${bosh_director_name}/${deployment_name}/tls-kubernetes"
-    deploy_to_bosh "$(bin/generate_service_manifest "${bosh_env}" "${deployment_name}")" "${deployment_name}"
+    deploy_to_bosh "$(bin/generate_kubo_manifest "${bosh_env}" "${deployment_name}")" "${deployment_name}"
   popd > /dev/null
 }
 

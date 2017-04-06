@@ -57,7 +57,7 @@ resources:
     bucket: kubo-pipeline-store
     endpoint: s3-eu-west-1.amazonaws.com
     region_name: eu-west-1
-    versioned_file: bosh/service-ci-service-creds.yml
+    versioned_file: bosh/ci-service-creds.yml
 
 - name: s3-kubo-release-tarball-tmp
   type: s3
@@ -258,7 +258,7 @@ jobs:
           https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - put: s3-service-creds
     params:
-      file: service-creds/service-ci-service-creds.yml
+      file: service-creds/ci-service-creds.yml
 
 - name: deploy-workload
   plan:

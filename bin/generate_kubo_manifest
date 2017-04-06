@@ -12,7 +12,7 @@ print_help() {
   echo "Otherwise your BOSH director will look for them in CredHub"
   echo ""
   echo "service_DEPLOYMENT_NAME is the name for your k8s service"
-  echo "<BOSH_ENV>/service-<SERVICE_DEPLOYMENT_NAME>.yml file will be used during manifest generation"
+  echo "<BOSH_ENV>/<SERVICE_DEPLOYMENT_NAME>.yml file will be used during manifest generation"
 }
 
 repo_directory() {
@@ -30,7 +30,7 @@ main() {
   pushd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null
    # shellcheck disable=SC1091
     . "$(repo_directory)/bin/lib/deploy_utils" > /dev/null
-    generate_manifest "${bosh_env}" "${deployment_name}" "$(repo_directory)/manifests/service.yml"
+    generate_manifest "${bosh_env}" "${deployment_name}" "$(repo_directory)/manifests/kubo.yml"
   popd > /dev/null
 }
 
