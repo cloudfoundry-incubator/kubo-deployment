@@ -18,7 +18,7 @@ get_setting() {
 }
 
 set_cloud_config() {
-  bin/generate_cloud_config ${BOSH_ENV} | BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli -n -e "${BOSH_NAME}" update-cloud-config -
+  $(cd $(dirname ${BASH_SOURCE[0]}); pwd)/../generate_cloud_config ${BOSH_ENV} | BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli -n -e "${BOSH_NAME}" update-cloud-config -
 }
 
 deploy_to_bosh() {
