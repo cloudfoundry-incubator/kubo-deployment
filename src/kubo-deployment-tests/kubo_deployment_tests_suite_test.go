@@ -22,6 +22,7 @@ var (
 	stderr *gbytes.Buffer
 
 	resourcesPath      = filepath.Join(pathFromRoot("src"), "kubo-deployment-tests", "resources")
+	testEnvironmentPath = filepath.Join(resourcesPath, "environments")
 	invocationRecorder = filepath.Join(resourcesPath, "lib", "invocation_recorder.sh")
 
 	emptyCallback = func([]string) {}

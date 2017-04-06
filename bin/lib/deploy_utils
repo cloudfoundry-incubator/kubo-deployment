@@ -68,31 +68,31 @@ generate_manifest() {
     manifest="$(cat "${manifest_path}")"
 
     if [ -e "${bosh_environment}/service-${deployment_name}.yml" ]; then
-      manifest=$(printf "%s" "${manifest}" | bosh-cli int - --ops-file="${bosh_environment}/service-${deployment_name}.yml")
+      manifest=$(echo "${manifest}" | bosh-cli int - --ops-file="${bosh_environment}/service-${deployment_name}.yml")
     fi
 
     if [ -e "${bosh_environment}/service-${deployment_name}-vars.yml" ]; then
-      manifest=$(printf "%s" "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/service-${deployment_name}-vars.yml")
+      manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/service-${deployment_name}-vars.yml")
     fi
 
-    manifest=$(printf "%s" "${manifest}" | bosh-cli int - \
+    manifest=$(echo "${manifest}" | bosh-cli int - \
         --vars-file="${bosh_environment}/director.yml" \
         --var=deployment_name="${deployment_name}")
 
     if [ -e "${bosh_environment}/creds.yml" ]; then
-      manifest=$(printf "%s" "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/creds.yml")
+      manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/creds.yml")
     fi
 
     if [ -e "${bosh_environment}/director-secrets.yml" ]; then
       # local deployment, fill in credentials if a secrets file exists.
       # otherwise they will be filled in by CredHub
-      manifest=$(printf "%s" "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/director-secrets.yml")
+      manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/director-secrets.yml")
     fi
 
-    manifest=$(printf "%s" "${manifest}" | bosh-cli int - \
+    manifest=$(echo "${manifest}" | bosh-cli int - \
         --vars-store="${bosh_environment}/service-${deployment_name}-creds.yml")
 
-    manifest=$(printf "%s" "${manifest}" | bosh-cli int - --ops-file=manifests/ops-files/remove-variables.yml)
+    manifest=$(echo "${manifest}" | bosh-cli int - --ops-file=manifests/ops-files/remove-variables.yml)
 
     printf "%s" "${manifest}"
   popd > /dev/null

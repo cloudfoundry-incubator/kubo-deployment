@@ -6,18 +6,17 @@ import (
 	"strings"
 	"os/exec"
 	"fmt"
+	"path/filepath"
 )
 
 var _ = Describe("Generate cloud config", func() {
 
-	var (
-		kuboEnv = pathFromRoot("src/kubo-deployment-tests/resources/test_gcp")
-	)
+	var kuboEnv = filepath.Join(testEnvironmentPath, "test_gcp")
 
 	BeforeEach(func() {
 		bash.Source(pathToScript("lib/deploy_utils"), nil)
 		bash.Source(pathToScript("generate_cloud_config"), nil)
-		bash.ExportFunc("bosh-cli", emptyCallback )
+		bash.ExportFunc("bosh-cli", emptyCallback)
 		bash.ExportFunc("popd", emptyCallback)
 		bash.ExportFunc("pushd", emptyCallback)
 		bash.SelfPath = "/bin/echo"
@@ -40,7 +39,7 @@ var _ = Describe("Generate cloud config", func() {
 	})
 
 	It("expands the bosh environment path to absolute value", func() {
-		command := exec.Command("./generate_cloud_config", "../src/kubo-deployment-tests/resources/test_gcp")
+		command := exec.Command("./generate_cloud_config", "../src/kubo-deployment-tests/resources/environments/test_gcp")
 		command.Stdout = bash.Stdout
 		command.Stderr = bash.Stderr
 		command.Dir = pathToScript("")
@@ -57,7 +56,7 @@ var _ = Describe("Generate cloud config", func() {
 		errOutput := string(stderr.Contents())
 
 		// Our test executable is ~/.basher/bash, so the path should be one level up
-		targetPath := strings.Replace(bashPath, "/bash",  "/../", 1)
+		targetPath := strings.Replace(bashPath, "/bash", "/../", 1)
 		Expect(errOutput).To(ContainSubstring(fmt.Sprintf("[1] ::: pushd %s", targetPath)))
 		Expect(errOutput).To(ContainSubstring("[2] ::: bosh-cli"))
 		Expect(errOutput).To(ContainSubstring("[3] ::: popd"))
