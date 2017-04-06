@@ -86,7 +86,7 @@ upload_releases() {
 
   case ${release_source} in
     "dev")
-      pushd ../ > /dev/null
+      pushd "$(repo_directory)/../" > /dev/null
         create_and_upload_release 'kubo-release'
       popd > /dev/null
       ;;
@@ -94,7 +94,7 @@ upload_releases() {
        upload_release "$(get_setting director.yml "/kubo_release_url")"
       ;;
     "local")
-      pushd ../ > /dev/null
+      pushd "$(repo_directory)/../" > /dev/null
         upload_release "kubo-release.tgz"
       popd > /dev/null
       ;;
