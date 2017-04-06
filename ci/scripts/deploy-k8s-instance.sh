@@ -25,4 +25,4 @@ credhub set -n \
 # Deploy k8s
 "${KUBO_DEPLOYMENT_DIR}/bin/deploy_k8s" "${KUBO_ENVIRONMENT_DIR}" ci-service local
 
-cp "${KUBO_ENVIRONMENT_DIR}/service-ci-service-creds.yml" "$PWD/service-creds/service-ci-service-creds.yml"
+cp "${KUBO_ENVIRONMENT_DIR}/ci-service-creds.yml" "$PWD/service-creds/ci-service-creds.yml"

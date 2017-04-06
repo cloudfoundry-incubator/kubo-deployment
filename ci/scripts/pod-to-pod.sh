@@ -6,7 +6,7 @@ export BOSH_LOG_LEVEL=debug
 export BOSH_LOG_PATH="${KUBO_DEPLOYMENT_DIR}/bosh.log"
 export DEBUG=1
 
-cp "$PWD/s3-service-creds/service-ci-service-creds.yml" "${KUBO_ENVIRONMENT_DIR}/"
+cp "$PWD/s3-service-creds/ci-service-creds.yml" "${KUBO_ENVIRONMENT_DIR}/"
 cp "$PWD/s3-bosh-creds/creds.yml" "${KUBO_ENVIRONMENT_DIR}/"
 
 bosh_ca_cert=$(bosh-cli int "${KUBO_ENVIRONMENT_DIR}/creds.yml" --path=/default_ca/ca)

@@ -12,7 +12,7 @@ import (
 
 var _ = Describe("Generate manifest", func() {
 	BeforeEach(func() {
-		bash.Source(pathToScript("generate_service_manifest"), nil)
+		bash.Source(pathToScript("generate_kubo_manifest"), nil)
 		bash.Source("_", func(string) ([]byte, error) {
 			return []byte(fmt.Sprintf(`repo_directory() { echo -n "%s"; }`, pathFromRoot(""))), nil
 		})
@@ -70,7 +70,7 @@ var _ = Describe("Generate manifest", func() {
 
 		It("should genrate K8s creds for reuse", func() {
 			bash.Run("main", []string{kuboEnv, "generis"})
-			_, err := os.Stat(filepath.Join(kuboEnv, "service-generis-creds.yml"))
+			_, err := os.Stat(filepath.Join(kuboEnv, "generis-creds.yml"))
 			Expect(err).NotTo(HaveOccurred())
 		})
 
