@@ -101,7 +101,21 @@ var _ = Describe("Generate manifest", func() {
 		})
 
 		It("uses ops-files to modify the manifest", func() {
+			opsfileEnv := filepath.Join(testEnvironmentPath, "with_ops")
+			status, err := bash.Run("main", []string{opsfileEnv, "name"})
 
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+			Expect(stdout).To(gbytes.Say("\n  os: MALARIA0\n"))
+		})
+
+		It("uses vars-files to modify the manifest", func() {
+			opsfileEnv := filepath.Join(testEnvironmentPath, "with_vars")
+			status, err := bash.Run("main", []string{opsfileEnv, "name"})
+			
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+			Expect(stdout).To(gbytes.Say("\n        uaa_client_secret: With turkey drink water\n"))
 		})
 	})
 })
