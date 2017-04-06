@@ -30,6 +30,10 @@ print_usage() {
   echo ""
 }
 
+repo_directory() {
+  echo -n $(cd "$(dirname ${BASH_SOURCE[0]})/.."; pwd)
+}
+
 main() {
   if [ $# -ne 2 ] && [ $# -ne 3 ]; then
     print_usage
@@ -54,19 +58,17 @@ main() {
   esac
 
 
-  pushd "$(dirname "$0")/.." > /dev/null
-    . ./bin/lib/deploy_utils
+  . "$(repo_directory)/bin/lib/deploy_utils"
 
-    local bosh_director_name
-    export_bosh_environment "${bosh_env}"
-    bosh_director_name="$(get_setting "director.yml" /director_name)"
+  local bosh_director_name
+  export_bosh_environment "${bosh_env}"
+  bosh_director_name="$(get_setting "director.yml" /director_name)"
 
-    upload_stemcell
-    upload_releases "${release_source}"
-    set_cloud_config
-    set_kubernetes_certificate_in_credhub "${bosh_director_name}/${deployment_name}/tls-kubernetes"
-    deploy_to_bosh "$(bin/generate_kubo_manifest "${bosh_env}" "${deployment_name}")" "${deployment_name}"
-  popd > /dev/null
+  upload_stemcell
+  upload_releases "${release_source}"
+  set_cloud_config
+  set_kubernetes_certificate_in_credhub "${bosh_director_name}/${deployment_name}/tls-kubernetes"
+  deploy_to_bosh "$("$(repo_directory)/bin/generate_kubo_manifest" "${bosh_env}" "${deployment_name}")" "${deployment_name}"
 }
 
 set_kubernetes_certificate_in_credhub() {
@@ -107,4 +109,4 @@ upload_stemcell() {
   BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET="$(get_bosh_secret)" bosh-cli -e "${BOSH_NAME}" upload-stemcell ${stemcell_url}
 }
 
-main "$@"
+[[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"

@@ -16,7 +16,7 @@ print_help() {
 }
 
 repo_directory() {
-  echo -n $(cd $(dirname $BASH_SOURCE[0]); pwd)
+  echo -n $(cd "$(dirname ${BASH_SOURCE[0]})/.."; pwd)
 }
 
 main() {
