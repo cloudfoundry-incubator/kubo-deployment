@@ -33,10 +33,12 @@ This guide assumes the machine you're executing commands from has proper access 
 Generate the configuration using templates for your IaaS with the following command:
 
 ```bash
-bin/generate_env_config <BOSH_ENV> <BOSH_NAME> <IAAS>
+bin/generate_env_config <path/to/generation/target/folder> <BOSH_NAME> <IAAS>
 ```
 
-It will create a directory with the same name as the environment at the specified path, containing three files:
+> Run `bin/generate_env_config --help` for more detailed information.
+
+This will create a directory with the same name as the environment at the specified path, containing three files:
 - `iaas` which contains IaaS name
 - `director.yml` which contains public BOSH director, IaaS and network configurations. ([example](https://github.com/pivotal-cf-experimental/kubo-deployment/blob/master/ci/environments/gcp/director.yml))
 - `director-secrets.yml` which contains sensitive configuration values, such as passwords and OAuth secrets
@@ -69,7 +71,30 @@ Pick a deployment name and generate a manifest.
 
 ```bash
 bin/generate_service_manifest <BOSH_ENV> <DEPLOYMENT_NAME> > <BOSH_ENV>/service-manifest.yml
-# modify it? 
+```
+The generation of the manifest can be customized in the following ways:
+
+1. Variables in the manifest template can be substituted using an external file. Place a file named 
+  `service-<DEPLOYMENT_NAME>-vars.yml` into the environment folder, and specify the variables as key-value
+  pairs, e.g.:
+  ```yaml
+  routing-cf-client-secret: SuperSecretPa$$phrase
+  ```
+
+1. Parts of the service manifest can be manipulated using 
+  [go-patch](https://github.com/cppforlife/go-patch/blob/master/docs/examples.md) ops-files.
+  To use this method, place a file named `service-<DEPLOYMENT_NAME>.yml` into the environment folder
+  and fill it with go-patch instructions, e.g.:
+  ```yaml
+  - type: replace
+    path: /releases/name=etcd
+    value: 
+      name: etcd
+      version: 0.99.0
+  ```
+
+If needed, the generated manifest can be modified manually before being fed into `bosh-cli`:
+```bash
 bosh-cli -e <BOSH_NAME> -d <DEPLOYMENT_NAME> deploy <BOSH_ENV>/service-manifest.yml
 ```
 

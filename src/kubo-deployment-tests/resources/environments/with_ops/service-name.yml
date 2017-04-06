@@ -1,0 +1,4 @@
+- type: replace
+  path: /stemcells/0/os
+  value: MALARIA0
+
