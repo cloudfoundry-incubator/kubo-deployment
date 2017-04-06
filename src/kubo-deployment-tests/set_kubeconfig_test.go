@@ -9,11 +9,12 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
+	"path/filepath"
 )
 
 var _ = Describe("set_kubeconfig", func() {
 
-	var kuboEnv = pathFromRoot("src/kubo-deployment-tests/resources/test_gcp")
+	var kuboEnv =  filepath.Join(testEnvironmentPath, "test_gcp")
 
 	BeforeEach(func() {
 		bash.Source(pathToScript("lib/deploy_utils"), nil)
