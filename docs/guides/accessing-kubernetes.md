@@ -96,7 +96,7 @@
    
 1. Expose an HTTP route for the dashboard service
    ```
-   kubectl label services kubernetes-dashboard http-route-sync=dashboard
+   kubectl label services kubernetes-dashboard http-route-sync=dashboard --namespace=kube-system
    ```
    
 1. View the Kubernetes dashboard from your browser at `dashboard.<Cloud Foundry apps domain>`
