@@ -26,6 +26,19 @@ kubectl rollout status deployment/redis-slave -w
 
 worker_ip=$(BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=${client_secret} BOSH_CA_CERT="${bosh_ca_cert}" bosh-cli -e ${director_ip} vms | grep worker | head -n1 | awk '{print $4}' | xargs echo -n)
 testvalue="hellothere$(date +'%N')"
+
+if timeout 120 /bin/bash <<EOF
+  until wget -O - 'http://${worker_ip}:30303/guestbook.php?cmd=set&key=messages&value=${testvalue}' | grep '{"message": "Updated"}'; do
+    sleep 2
+  done
+EOF
+then
+  echo "Posted the test value to guestbook"
+else
+  echo "Unable to post test value to guestbook"
+  exit 1
+fi
+
 wget -O - "http://${worker_ip}:30303/guestbook.php?cmd=set&key=messages&value=${testvalue}"
 
 if timeout 120 /bin/bash <<EOF
@@ -34,8 +47,8 @@ if timeout 120 /bin/bash <<EOF
   done
 EOF
 then
-  echo "Guestbook app is up and running"
+  echo "Successfully read the test value from guestbook"
 else
-  echo "Expected the sample guest book to display the stored value"
+  echo "Expected the sample guest book to display the test value"
   exit 1
 fi
