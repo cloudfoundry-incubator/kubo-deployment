@@ -79,14 +79,25 @@ jobs:
     version: every
   - task: run-deployment-unit-tests
     file: git-kubo-deployment/ci/tasks/run-deployment-unit-tests.yml
-    on_failure:
-      put: slack-alert
-      params:
-        silent: true
-        icon_emoji: ":thumbsdown:"
-        text: |
-          Kubo deployment unit tests failed:
-          https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    on_failure: &on_failure
+      aggregate:
+      - do:
+        - task: alert-text
+          file: git-kubo-deployment/ci/tasks/generate-deployment-pr-messages.yml
+          params:
+            PR_STATUS: failed
+        - put: slack-alert
+          params:
+            silent: true
+            icon_emoji: ":animal:"
+            text_file: pr-slack-message/message.txt
+            text: |
+              $TEXT_FILE_CONTENT
+              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+      - put: git-kubo-deployment
+        params:
+          path: git-kubo-deployment
+          status: failure
 
 - name: claim-lock
   plan:
@@ -94,6 +105,7 @@ jobs:
     - get: git-kubo-deployment
       passed: ['run-unit-tests' ]
       version: every
+      trigger: true
   - put: kubo-lock
     params: { acquire: true }
 
@@ -121,25 +133,7 @@ jobs:
     file: git-kubo-deployment/ci/tasks/install-bosh.yml
     params:
       GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
-    on_failure:
-      aggregate:
-      - do:
-        - task: alert-text
-          file: git-kubo-deployment/ci/tasks/generate-deployment-pr-messages.yml
-          params:
-            PR_STATUS: failed
-        - put: slack-alert
-          params:
-            silent: true
-            icon_emoji: ":animal:"
-            text_file: pr-slack-message/message.txt
-            text: |
-              $TEXT_FILE_CONTENT
-              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-      - put: git-kubo-deployment
-        params:
-          path: git-kubo-deployment
-          status: failure
+    on_failure: *on_failure
   - aggregate:
     - put: s3-bosh-creds
       params:
@@ -166,25 +160,7 @@ jobs:
     file: git-kubo-deployment/ci/tasks/deploy-k8s-instance.yml
     params:
       ROUTING_CF_CLIENT_SECRET: {{routing_cf_client_secret}}
-    on_failure:
-      aggregate:
-      - do:
-        - task: alert-text
-          file: git-kubo-deployment/ci/tasks/generate-deployment-pr-messages.yml
-          params:
-            PR_STATUS: failed
-        - put: slack-alert
-          params:
-            silent: true
-            icon_emoji: ":animal:"
-            text_file: pr-slack-message/message.txt
-            text: |
-              $TEXT_FILE_CONTENT
-              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-      - put: git-kubo-deployment
-        params:
-          path: git-kubo-deployment
-          status: failure
+    on_failure: *on_failure
 
   - aggregate:
     - put: s3-service-creds
@@ -208,46 +184,11 @@ jobs:
       passed: [ 'deploy-k8s' ]
   - task: workload
     file: git-kubo-deployment/ci/tasks/deploy-k8s-workload.yml
-    on_failure:
-      aggregate:
-      - do:
-        - task: alert-text
-          file: git-kubo-deployment/ci/tasks/generate-deployment-pr-messages.yml
-          params:
-            PR_STATUS: failed
-        - put: slack-alert
-          params:
-            silent: true
-            icon_emoji: ":animal:"
-            text_file: pr-slack-message/message.txt
-            text: |
-              $TEXT_FILE_CONTENT
-              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-      - put: git-kubo-deployment
-        params:
-          path: git-kubo-deployment
-          status: failure
+    on_failure: *on_failure
+
   - task: pod-to-pod
     file: git-kubo-deployment/ci/tasks/pod-to-pod.yml
-    on_failure:
-      aggregate:
-      - do:
-        - task: alert-text
-          file: git-kubo-deployment/ci/tasks/generate-deployment-pr-messages.yml
-          params:
-            PR_STATUS: failed
-        - put: slack-alert
-          params:
-            silent: true
-            icon_emoji: ":animal:"
-            text_file: pr-slack-message/message.txt
-            text: |
-              $TEXT_FILE_CONTENT
-              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-      - put: git-kubo-deployment
-        params:
-          path: git-kubo-deployment
-          status: failure
+    on_failure: *on_failure
 
 - name: destroy-k8s
   plan:
@@ -264,26 +205,7 @@ jobs:
       passed: [ 'deploy-workload' ]
   - task: destroy-k8s
     file: git-kubo-deployment/ci/tasks/destroy-k8s-instance.yml
-    on_failure:
-      aggregate:
-      - do:
-        - task: alert-text
-          file: git-kubo-deployment/ci/tasks/generate-deployment-pr-messages.yml
-          params:
-            PR_STATUS: failed
-        - put: slack-alert
-          params:
-            silent: true
-            icon_emoji: ":animal:"
-            text_file: pr-slack-message/message.txt
-            text: |
-              $TEXT_FILE_CONTENT
-              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-      - put: git-kubo-deployment
-        params:
-          path: git-kubo-deployment
-          status: failure
-
+    on_failure: *on_failure
 
 - name: destroy-bosh
   plan:
@@ -302,25 +224,7 @@ jobs:
     file: git-kubo-deployment/ci/tasks/destroy-bosh.yml
     params:
       GCP_SERVICE_ACCOUNT: {{gcp-service-account}}
-    on_failure:
-      aggregate:
-      - do:
-        - task: alert-text
-          file: git-kubo-deployment/ci/tasks/generate-deployment-pr-messages.yml
-          params:
-            PR_STATUS: failed
-        - put: slack-alert
-          params:
-            silent: true
-            icon_emoji: ":animal:"
-            text_file: pr-slack-message/message.txt
-            text: |
-              $TEXT_FILE_CONTENT
-              https://p-concourse.kubo.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-      - put: git-kubo-deployment
-        params:
-          path: git-kubo-deployment
-          status: failure
+    on_failure: *on_failure
   - put: kubo-lock
     params: { release: kubo-lock }
   - task: alert-text
