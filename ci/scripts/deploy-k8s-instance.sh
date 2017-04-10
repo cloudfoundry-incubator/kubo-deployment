@@ -16,9 +16,12 @@ credhub login -u credhub-user -p \
   "$(bosh-cli int "${KUBO_ENVIRONMENT_DIR}/creds.yml" --path="/credhub_user_password" | xargs echo -n)" \
   -s "https://$(bosh-cli int "${KUBO_ENVIRONMENT_DIR}/director.yml" --path="/internal_ip" | xargs echo -n):8844" --skip-tls-validation
 credhub set -n \
+  "$(bosh-cli int "${KUBO_ENVIRONMENT_DIR}/director.yml" --path="/director_name" | xargs echo -n)/ci-service/routing-cf-nats-password" \
+  -t password -v "${ROUTING_CF_NATS_PASSWORD}" -O > /dev/null
+
+credhub set -n \
   "$(bosh-cli int "${KUBO_ENVIRONMENT_DIR}/director.yml" --path="/director_name" | xargs echo -n)/ci-service/routing-cf-client-secret" \
-  -t password -c "$(bosh-cli int "${KUBO_ENVIRONMENT_DIR}/director.yml" --path="/cf-tcp-router-name" | xargs echo -n)" \
-  -v "${ROUTING_CF_CLIENT_SECRET}" -O > /dev/null
+  -t password -v "${ROUTING_CF_CLIENT_SECRET}" -O > /dev/null
 
 
 "${KUBO_DEPLOYMENT_DIR}/bin/set_bosh_alias" "${KUBO_ENVIRONMENT_DIR}"

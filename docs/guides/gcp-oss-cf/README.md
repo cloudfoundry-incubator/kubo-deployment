@@ -92,6 +92,8 @@ The rest of the document assumes you are logged into the `bosh-bastion` you depl
    export kubo_subnet=$(terraform output -state=${kubo_terraform_state} kubo_subnet)
    export tcp_router_domain=tcp.$(terraform output -state=${cf_terraform_state} tcp_ip).xip.io
    export cf_system_domain=$(terraform output -state=${cf_terraform_state} ip).xip.io
+   export cf_apps_domain=$(terraform output -state=${cf_terraform_state} ip).xip.io
+   export cf_nats_internal_ip=$(gcloud compute instances list --filter='((tags.items:cf-nats))' | sed -n 2p | awk '{ print $4 }' | xargs echo -n)
    export common_secret=c1oudc0w
    ```
 

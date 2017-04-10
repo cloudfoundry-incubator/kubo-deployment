@@ -2,7 +2,7 @@
 
 [ -z "${DEBUG}" ] || set -x
 
-ci_dir="$(cd "$(dirname $0)"; pwd)"
+ci_dir="$(cd "$(dirname "$0")"; pwd)"
 
 echo "======================================="
 echo "| Setting kubo Concourse pipeline     |"
@@ -15,7 +15,8 @@ print_usage() {
   echo ""
   echo "    valid pipeline names:"
   for name in ${ci_dir}/*.yml; do
-    local pipeline_name="$(basename "${name}")"
+    local pipeline_name
+    pipeline_name="$(basename "${name}")"
     echo "        - ${pipeline_name%.yml}"
   done
 }
@@ -47,20 +48,22 @@ main() {
   echo "${pipeline_name}"
   local current_branch_regex='-current-branch$'
   if [[ "${pipeline_name}" =~ $current_branch_regex ]]; then
-    local current_branch="$(git symbolic-ref -q HEAD)"
+    local current_branch
+    current_branch="$(git symbolic-ref -q HEAD)"
     branch_name="${current_branch##refs/heads/}"
   fi
 
-  local ssh_key="$(lpass show "Shared-Kubo/CI/git-ssh-key" --notes)"
-  local service_account="$(lpass show "Shared-Kubo/CI/bosh-deployer service key" --notes)"
-  local slack_url="$(lpass show "Shared-Kubo/CI/Slack Incoming Webhook" --url)"
-  local github_token="$(lpass show "Shared-Kubo/CI/pr-github-token" --notes)"
+  local ssh_key service_account slack_url github_token
+  ssh_key="$(lpass show "Shared-Kubo/CI/git-ssh-key" --notes)"
+  service_account="$(lpass show "Shared-Kubo/CI/bosh-deployer service key" --notes)"
+  slack_url="$(lpass show "Shared-Kubo/CI/Slack Incoming Webhook" --url)"
+  github_token="$(lpass show "Shared-Kubo/CI/pr-github-token" --notes)"
 
 
   trap 'rm "${ci_dir}/secrets.yml"' EXIT
   echo "---" > "${ci_dir}/secrets.yml"
   lpass show "Shared-Kubo/CI/kubo-ci" --notes >> "${ci_dir}/secrets.yml"
-  lpass show "Shared-Kubo/CI/routing_cf_client_secret" --notes >> "${ci_dir}/secrets.yml"
+  lpass show "Shared-Kubo/CI/CF" --notes >> "${ci_dir}/secrets.yml"
 
   fly --target kubo sync > /dev/null
   fly --target kubo set-pipeline --pipeline "${pipeline_name}" \
