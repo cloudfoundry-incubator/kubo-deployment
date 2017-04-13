@@ -27,7 +27,7 @@ print_help() {
 }
 
 repo_directory() {
-  echo -n $(cd "$(dirname ${BASH_SOURCE[0]})/.."; pwd)
+  echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)"
 }
 
 main() {
@@ -39,7 +39,7 @@ main() {
   local bosh_env="${1}"
   local deployment_name="${2}"
   pushd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null
-   # shellcheck disable=SC1091
+   # shellcheck disable=SC1090
     . "$(repo_directory)/bin/lib/deploy_utils" > /dev/null
     generate_manifest "${bosh_env}" "${deployment_name}" "$(repo_directory)/manifests/kubo.yml"
   popd > /dev/null
