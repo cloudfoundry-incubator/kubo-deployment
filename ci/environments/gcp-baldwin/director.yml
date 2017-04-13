@@ -6,13 +6,9 @@ tags:
   - internal
 zone: us-east1-c
 internal_ip: 10.0.252.252
-bosh_hostname: 10.0.252.252
 
 deployments_network: kubo-network
 
-cf_uaa_url: https://uaa.sys.main.kubo.cf-app.com
-cf_url: https://api.sys.main.kubo.cf-app.com
-cf_username: admin
 cf-tcp-router-name: tcp.main.kubo.cf-app.com
 routing-cf-api-url: https://api.sys.main.kubo.cf-app.com
 routing-cf-client-id: tcp_emitter
