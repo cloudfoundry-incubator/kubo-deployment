@@ -1,13 +1,15 @@
 package kubo_deployment_tests_test
 
 import (
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-	. "github.com/onsi/ginkgo/extensions/table"
-	"path/filepath"
 	"fmt"
-	"github.com/onsi/gomega/gbytes"
 	"os"
+	"os/exec"
+	"path/filepath"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/extensions/table"
+	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gbytes"
 )
 
 var _ = Describe("Generate manifest", func() {
@@ -112,10 +114,18 @@ var _ = Describe("Generate manifest", func() {
 		It("uses vars-files to modify the manifest", func() {
 			opsfileEnv := filepath.Join(testEnvironmentPath, "with_vars")
 			status, err := bash.Run("main", []string{opsfileEnv, "name"})
-			
+
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 			Expect(stdout).To(gbytes.Say("\n        uaa_client_secret: With turkey drink water\n"))
 		})
+	})
+
+	It("expands the bosh environment path to absolute value", func() {
+		command := exec.Command("./generate_kubo_manifest", "../src/kubo-deployment-tests/resources/environments/test_gcp", "name")
+		command.Stdout = bash.Stdout
+		command.Stderr = bash.Stderr
+		command.Dir = pathToScript("")
+		Expect(command.Run()).To(Succeed())
 	})
 })
