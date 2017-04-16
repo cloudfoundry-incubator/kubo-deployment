@@ -33,7 +33,7 @@ networks:
     gateway: ((internal_gw))
     azs: [z1, z2, z3]
     dns: [8.8.8.8]
-    reserved: []
+    reserved: [((internal_gw))/30]
     cloud_properties:
       subnet: ((subnet_id))
 - name: vip
