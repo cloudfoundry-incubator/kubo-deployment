@@ -6,6 +6,7 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	"path"
 	"fmt"
+	"path/filepath"
 )
 
 var _ = Describe("Deploy KuBOSH", func() {
@@ -28,13 +29,13 @@ var _ = Describe("Deploy KuBOSH", func() {
 			Entry("has three arguments", []string{"gcp", "foo", "bar"}),
 		)
 
-		It("requires a valid environment path", func() {
+		It("is given an invalid environment path", func() {
 			code, err := bash.Run(pathToScript("deploy_bosh"), []string{pathFromRoot(""), pathFromRoot("README.md")})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).NotTo(Equal(0))
 		})
 
-		It("requires and existing file", func() {
+		It("is given a non-existing file", func() {
 			code, err := bash.Run(pathToScript("deploy_bosh"), []string{validEnvironment, pathFromRoot("non-existing.file")})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).NotTo(Equal(0))
@@ -45,13 +46,18 @@ var _ = Describe("Deploy KuBOSH", func() {
 		BeforeEach(func() {
 			bash.SelfPath = "invocationRecorder"
 			bash.Source(pathToScript("deploy_bosh"), nil)
+			boshCliMock := filepath.Join(resourcesPath, "lib", "bosh_cli_mock.sh")
+			bash.Source(boshCliMock, nil)
 			bash.Source("_", func(string) ([]byte, error) {
-				repoDirectory := fmt.Sprintf(`repo_directory() { echo "%s"; }`, pathFromRoot(""))
+				repoDirectory := fmt.Sprintf(`
+				repo_directory() { echo "%s"; }
+				export -f bosh-cli
+				`, pathFromRoot(""))
 				return []byte(repoDirectory), nil
 			})
 		})
 
-		FIt("runs with a valid environment and an extra file", func() {
+		It("runs with a valid environment and an extra file", func() {
 			bash.Debug = true
 			code, err := bash.Run("main", []string{validEnvironment, pathFromRoot("README.md")})
 			Expect(err).NotTo(HaveOccurred())
