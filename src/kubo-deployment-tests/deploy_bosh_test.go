@@ -12,6 +12,7 @@ import (
 
 var _ = Describe("Deploy KuBOSH", func() {
 	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp")
+	validGcpCredsEnvironment := path.Join(testEnvironmentPath, "test_gcp_with_creds")
 	validOpenstackEnvironment := path.Join(testEnvironmentPath, "test_openstack")
 	BeforeEach(func() {
 		bash.ExportFunc("credhub", emptyCallback)
@@ -92,4 +93,48 @@ var _ = Describe("Deploy KuBOSH", func() {
 		})
 	})
 
+	Context("CA generation", func() {
+		BeforeEach(func() {
+			bash.SelfPath = "invocationRecorder"
+			bash.Source(pathToScript("deploy_bosh"), nil)
+			bash.Source("_", func(string) ([]byte, error) {
+				repoDirectory := fmt.Sprintf(`repo_directory() { echo "%s"; }`, pathFromRoot(""))
+				return []byte(repoDirectory), nil
+			})
+		})
+
+		It("runs with an environment", func() {
+			code, err := bash.Run("generate_default_ca", []string{validGcpCredsEnvironment})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+		})
+
+		It("logins to credhub", func() {
+			bash.Run("generate_default_ca", []string{validGcpCredsEnvironment})
+			Expect(stderr).To(gbytes.Say("credhub api --skip-tls-validation -s internal.ip:8844"))
+			Expect(stderr).To(gbytes.Say("credhub login -u credhub-user -p password"))
+		})
+
+		It("gets the default CA", func() {
+			bash.Run("generate_default_ca", []string{validGcpCredsEnvironment})
+			Expect(stderr).To(gbytes.Say("credhub login"))
+			Expect(stderr).To(gbytes.Say("credhub ca-get -n default"))
+			Expect(stderr).NotTo(gbytes.Say("credhub ca-generate"))
+		})
+
+		It("Generates a CA if is isn't found", func() {
+			bash.Source("", func(string) ([]byte, error) {
+				return []byte(`
+				credhub-mock() {
+				  if [ $3 == 'ca-get' ]; then
+				    return 1
+				  fi
+				}
+				`), nil
+			})
+			bash.Run("generate_default_ca", []string{validGcpCredsEnvironment})
+			Expect(stderr).To(gbytes.Say("credhub ca-get -n default"))
+			Expect(stderr).To(gbytes.Say("credhub ca-generate -n default -c internal.ip"))
+		})
+	})
 })

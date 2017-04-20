@@ -16,7 +16,7 @@ invocationRecorder() {
   echo $PATH > /dev/fd/2
 
   if [ 0 -eq $(type "${2}-mock" > /dev/null 2>&1; echo $?) ]; then
-    echo $("${2}-mock" "$@")
+    "${2}-mock" "$@"
   fi
 }
 export -f invocationRecorder

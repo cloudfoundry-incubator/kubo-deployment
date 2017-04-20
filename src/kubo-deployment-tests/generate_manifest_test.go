@@ -10,6 +10,7 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
+	"strings"
 )
 
 var _ = Describe("Generate manifest", func() {
@@ -37,7 +38,9 @@ var _ = Describe("Generate manifest", func() {
 		AfterEach(func() {
 			files, _ := filepath.Glob(testEnvironmentPath + "/**/*creds.yml")
 			for _, f := range files {
-				os.Remove(f)
+				if ! strings.Contains(f, "with_creds/creds.yml") {
+					os.Remove(f)
+				}
 			}
 		})
 
