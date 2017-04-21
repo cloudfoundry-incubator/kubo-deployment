@@ -53,13 +53,14 @@ var _ = AfterSuite(func() {
 })
 
 var _ = BeforeEach(func() {
-	bash, _ = basher.NewContext(bashPath, true)
+	bash, _ = basher.NewContext(bashPath, false)
 
 	stdout = gbytes.NewBuffer()
 	stderr = gbytes.NewBuffer()
 	bash.Stdout = io.MultiWriter(GinkgoWriter, stdout)
 	bash.Stderr = io.MultiWriter(GinkgoWriter, stderr)
 	bash.Source(invocationRecorder, nil)
+	bash.SelfPath = "/bin/echo"
 
 	bash.CopyEnv()
 })

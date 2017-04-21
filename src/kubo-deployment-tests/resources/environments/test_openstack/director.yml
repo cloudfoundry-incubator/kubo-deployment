@@ -6,7 +6,7 @@ tags: # tags below are used if jumpbox and NAT were deployed using https://githu
   - internal # allow access to the instances in same network from BOSH
 zone: # name of GCP zone
 
-internal_ip: internal.ip # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into.
+internal_ip: # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into. 
 
 deployments_network: network-name # Network name to deploy service in your cloud config
 

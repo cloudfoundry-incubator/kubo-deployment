@@ -1,4 +1,4 @@
-callCounter=0
+export callCounter=0
 invocationRecorder() {
   local in_line_count=0
   declare -a in_lines
@@ -14,4 +14,9 @@ invocationRecorder() {
     echo "[$callCounter end received]" > /dev/fd/2
   fi
   echo $PATH > /dev/fd/2
+
+  if [ 0 -eq $(type "${2}-mock" > /dev/null 2>&1; echo $?) ]; then
+    "${2}-mock" "$@"
+  fi
 }
+export -f invocationRecorder
