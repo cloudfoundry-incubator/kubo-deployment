@@ -4,8 +4,6 @@ image_resource:
   source:
     repository: pcfkubo/kubo-ci
     tag: stable
-params:
-  GCP_SERVICE_ACCOUNT: 
 run:
   path: git-kubo-deployment/ci/scripts/destroy-bosh.sh
 
