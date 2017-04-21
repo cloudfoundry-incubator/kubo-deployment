@@ -50,8 +50,15 @@ var _ = Describe("set_kubeconfig", func() {
 		Entry("three parameters", []string{"a", "b", "c"}),
 		Entry("with missing environemnt", []string{"/missing", "a"}),
 	)
+
 	Context("when correct parameters are provided", func() {
 		BeforeEach(func() {
+			bash.Source("__", func(string) ([]byte, error) {
+				return []byte(`bosh-cli() {
+					[ "$4" == "/iaas" ] && echo "gcp";
+					return 0;
+				}`), nil
+			})
 			status, err := bash.Run("main", []string{kuboEnv, "deployment-name"})
 
 			Expect(err).NotTo(HaveOccurred())

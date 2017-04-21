@@ -1,3 +1,4 @@
+iaas: gcp
 project_id: # GCP project ID
 network: # GCP network
 subnetwork: # GCP subnetwork
@@ -6,7 +7,7 @@ tags: # tags below are used if jumpbox and NAT were deployed using https://githu
   - internal # allow access to the instances in same network from BOSH
 zone: # name of GCP zone
 
-internal_ip: # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into. 
+internal_ip: # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into.
 
 deployments_network: network-name # Network name to deploy service in your cloud config
 
@@ -34,4 +35,3 @@ stemcell_url: # path to a stemcell used in all Kubo deployments
 
 credhub_release_url: https://s3.amazonaws.com/kubo-public/credhub-0.4.0.tgz
 kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release-latest.tgz
-

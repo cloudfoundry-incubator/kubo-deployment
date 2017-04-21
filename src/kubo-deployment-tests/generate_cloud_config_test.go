@@ -23,12 +23,20 @@ var _ = Describe("Generate cloud config", func() {
 	})
 
 	It("calls bosh-cli with appropriate arguments", func() {
+		bash.Source("__", func(string) ([]byte, error) {
+			return []byte(`bosh-cli() {
+				[ "$4" == "/iaas" ] && echo "gcp";
+				[ "$4" != "/iaas" ] && echo "bosh-cli $@";
+				return 0;
+			}`), nil
+		})
+
 		status, err := bash.Run("main", []string{kuboEnv})
 
 		Expect(err).NotTo(HaveOccurred())
 		Expect(status).To(Equal(0))
 		lines := strings.Split(string(stdout.Contents()), "\n")
-		Expect(lines).To(ContainElement("::: bosh-cli int configurations/gcp/cloud-config.yml --vars-file " + kuboEnv + "/director.yml"))
+		Expect(lines).To(ContainElement("bosh-cli int configurations/gcp/cloud-config.yml --vars-file " + kuboEnv + "/director.yml"))
 	})
 
 	It("fails with no arguments", func() {

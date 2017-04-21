@@ -8,7 +8,7 @@ set -o pipefail
 echo "====================================="
 echo "|     BOSH K8S Cluster Deployer     |"
 echo "====================================="
-echo ""
+echo
 
 
 print_usage() {
