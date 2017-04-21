@@ -4,8 +4,6 @@ image_resource:
   source:
     repository: pcfkubo/kubo-ci
     tag: stable
-params:
-  ROUTING_CF_CLIENT_SECRET:
 run:
   path: git-kubo-deployment/ci/scripts/deploy-k8s-workload.sh
 
