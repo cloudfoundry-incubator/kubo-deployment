@@ -28,10 +28,15 @@ if [ -z "${key_filename}" ]; then
   exit 1
 fi
 
+repo_directory() {
+  echo -n $(cd "$(dirname ${BASH_SOURCE[0]})/.."; pwd)
+}
+
 main() {
   iaas=$(cat "$BOSH_ENV"/iaas)
-  if [ "$iaas" != 'gcp' ]; then
-    echo "Supported platforms are: 'gcp'"
+  
+  if [ "$iaas" != 'gcp' ] && [ "$iaas" != 'openstack' ]; then
+    echo "Supported platforms are: 'gcp', 'openstack'"
     echo ""
     print_usage
     exit 1
@@ -51,15 +56,38 @@ destroy_gcp() {
 
   BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli clean-up -e "${bosh_director_ip}" --all -n
   BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli delete-env -e "${bosh_director_ip}" "${current_directory}/bosh-deployment/bosh.yml" \
-      --ops-file "${current_directory}/bosh-deployment/gcp/cpi.yml" \
-      --ops-file "${current_directory}/bosh-deployment/uaa.yml" \
-      --ops-file "${current_directory}/bosh-deployment/powerdns.yml" \
-      --ops-file "${current_directory}/configurations/generic/credhub.yml" \
-      --ops-file "${current_directory}/configurations/generic/bosh-admin-client.yml" \
-      --state "${BOSH_ENV}/state.json" \
-      --var-file gcp_credentials_json="${key_filename}" \
-      --vars-store "${BOSH_ENV}/creds.yml" \
-      --vars-file "${BOSH_ENV}/director.yml"
+    --ops-file "$(repo_directory)/bosh-deployment/gcp/cpi.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
+    --ops-file "$(repo_directory)/configurations/generic/credhub.yml" \
+    --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
+    --state "${BOSH_ENV}/state.json" \
+    --var-file gcp_credentials_json="${key_filename}" \
+    --vars-store "${BOSH_ENV}/creds.yml" \
+    --vars-file "${BOSH_ENV}/director.yml"
 }
 
-main
+destroy_openstack() {
+  . ./bin/lib/deploy_utils
+
+  local bosh_director_ip
+
+  bosh_director_ip=$(get_setting "director.yml" /internal_ip)
+  ca_cert="$(bosh-cli int "${BOSH_ENV}/creds.yml" --path="/default_ca/ca")"
+
+  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli clean-up -e "${bosh_director_ip}" --all -n
+  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli delete-env -e "${bosh_director_ip}" "${current_directory}/bosh-deployment/bosh.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/openstack/cpi.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
+    --ops-file "$(repo_directory)/configurations/generic/credhub.yml" \
+    --ops-file "$(repo_directory)/configurations/openstack/multi-tenant.yml" \
+    --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
+    --state "${BOSH_ENV}/state.json" \
+    --vars-store "${BOSH_ENV}/creds.yml" \
+    --vars-file "${BOSH_ENV}/director.yml"  \
+    --vars-file "${BOSH_ENV}/director-secrets.yml"  \
+    --var-file private_key="${key_filename}"
+}
+
+[[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"
