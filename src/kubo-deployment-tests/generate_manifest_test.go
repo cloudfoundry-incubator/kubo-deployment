@@ -131,4 +131,12 @@ var _ = Describe("Generate manifest", func() {
 		command.Dir = pathToScript("")
 		Expect(command.Run()).To(Succeed())
 	})
+
+	It("runs from any location", func() {
+		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_gcp", "name")
+		command.Stdout = bash.Stdout
+		command.Stderr = bash.Stderr
+		command.Dir = pathFromRoot("")
+		Expect(command.Run()).To(Succeed())
+	})
 })
