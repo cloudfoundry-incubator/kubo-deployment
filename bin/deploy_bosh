@@ -24,7 +24,8 @@ repo_directory() {
 
 main() {
   local env_path extra_filename iaas
-  env_path="$1"
+  env_path=$(cd ${1}; pwd)
+
   if [ ! -d "${env_path}" ]; then
     print_usage
     exit 1

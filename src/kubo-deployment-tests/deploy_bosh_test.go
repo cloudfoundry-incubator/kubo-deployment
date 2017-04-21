@@ -91,6 +91,14 @@ var _ = Describe("Deploy KuBOSH", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 		})
+
+		It("expands the environment path", func() {
+			relativePath := testEnvironmentPath + "/../environments/test_gcp"
+			code, err := bash.Run("main", []string{relativePath, pathFromRoot("README.md")})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr).NotTo(gbytes.Say("\\.\\./environments/test_gcp"))
+		})
 	})
 
 	Context("CA generation", func() {
