@@ -4,7 +4,8 @@
 
 . "$(dirname "$0")/lib/environment.sh"
 
-printenv GCP_SERVICE_ACCOUNT > "$PWD/key.json"
+bosh-cli int kubo-lock/metadata --path=/gcp_service_account > "$PWD/key.json"
+
 set -x
 export BOSH_LOG_LEVEL=debug
 export BOSH_LOG_PATH="${KUBO_DEPLOYMENT_DIR}/bosh.log"
