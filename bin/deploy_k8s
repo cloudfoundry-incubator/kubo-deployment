@@ -44,7 +44,7 @@ main() {
   local deployment_name="${2}"
   local release_source="${3}"
 
-  if [ ! -e "${bosh_env}/iaas" ]; then
+  if [ -z "$(bosh-cli int ${bosh_env}/director.yml --path /iaas)" ]; then
    echo "${bosh_env} is not a valid BOSH environment."
    echo "Please use 'generate_env_config' to create one."
    print_usage

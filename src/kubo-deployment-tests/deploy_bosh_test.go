@@ -1,12 +1,12 @@
 package kubo_deployment_tests_test
 
 import (
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-	. "github.com/onsi/ginkgo/extensions/table"
-	"path"
 	"fmt"
-	"path/filepath"
+	"path"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/extensions/table"
+	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 )
 
@@ -50,13 +50,18 @@ var _ = Describe("Deploy KuBOSH", func() {
 	Context("succeeds", func() {
 		BeforeEach(func() {
 			bash.SelfPath = "invocationRecorder"
-			bash.ExportFunc("bosh-cli", emptyCallback)
 			bash.Source(pathToScript("deploy_bosh"), nil)
-			boshCliMock := filepath.Join(resourcesPath, "lib", "bosh_cli_mock.sh")
-			bash.Source(boshCliMock, nil)
 			bash.Source("_", func(string) ([]byte, error) {
 				repoDirectory := fmt.Sprintf(`
 				repo_directory() { echo "%s"; }
+				bosh-cli() {
+					if [ $1 == 'int' ]; then
+					  $(which bosh-cli) "$@"
+					else
+						echo "bosh-cli $@" >&2
+				  fi
+					return 0
+				}
 				export -f bosh-cli
 				`, pathFromRoot(""))
 				return []byte(repoDirectory), nil
