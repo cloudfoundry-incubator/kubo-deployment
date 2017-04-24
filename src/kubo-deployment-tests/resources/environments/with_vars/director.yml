@@ -36,4 +36,3 @@ stemcell_url: # path to a stemcell used in all Kubo deployments
 credhub_release_url: https://s3.amazonaws.com/kubo-public/credhub-0.4.0.tgz
 kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release-latest.tgz
 
-routing-cf-client-secret: With turkey drink water
