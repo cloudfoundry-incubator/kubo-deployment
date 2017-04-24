@@ -1,9 +1,6 @@
 #!/bin/bash -e
 
 [ -z "$DEBUG" ] || set -x
-BOSH_ENV=$1
-key_filename=$2
-current_directory=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 
 echo "====================================="
 echo "|         KuBOSH Destroyer          |"
@@ -18,48 +15,79 @@ cat << EOF
   * Service account key is required for GCP
 EOF
 }
-if [ ! -d "${BOSH_ENV}" ]; then
-  print_usage
-  exit 1
-fi
 
-if [ -z "${key_filename}" ]; then
-  print_usage
-  exit 1
-fi
+repo_directory() {
+  echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)"
+}
+
+set_bosh_environment() {
+  local bosh_env="$1"
+  export BOSH_CLIENT=bosh_admin
+
+  BOSH_CLIENT_SECRET=$(bosh-cli int "$bosh_env"/creds.yml --path=/bosh_admin_client_secret)
+  BOSH_CA_CERT=$(bosh-cli int "$bosh_env"/creds.yml --path=/default_ca/ca)
+  BOSH_ENVIRONMENT=$(bosh-cli int "$bosh_env"/director.yml --path=/internal_ip)
+  export BOSH_CLIENT_SECRET BOSH_CA_CERT BOSH_ENVIRONMENT
+}
 
 main() {
-  iaas=$(cat "$BOSH_ENV"/iaas)
-  if [ "$iaas" != 'gcp' ]; then
-    echo "Supported platforms are: 'gcp'"
+  local bosh_env extra_filename iaas
+
+  bosh_env="$1"
+
+  if [ ! -d "${bosh_env}" ]; then
+    print_usage
+    exit 1
+  fi
+  iaas=$(cat "$bosh_env"/iaas)
+
+  if [ "$iaas" != 'gcp' ] && [ "$iaas" != 'openstack' ]; then
+    echo "Supported platforms are: 'gcp', 'openstack'"
     echo ""
     print_usage
     exit 1
   fi
-  pushd "$(dirname "$0")/.." > /dev/null
-    "destroy_$iaas"
-  popd
+
+  extra_filename="$2"
+  if [ -z "${extra_filename}" ]; then
+    print_usage
+    exit 1
+  fi
+
+  set_bosh_environment "${bosh_env}"
+  "destroy_$iaas" "$@"
 }
 
 destroy_gcp() {
-  . ./bin/lib/deploy_utils
+  local bosh_env service_account
 
-  local bosh_director_ip
+  bosh_env="$1"
+  service_account="$2"
 
-  bosh_director_ip=$(get_setting "director.yml" /internal_ip)
-  ca_cert="$(bosh-cli int "${BOSH_ENV}/creds.yml" --path="/default_ca/ca")"
-
-  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli clean-up -e "${bosh_director_ip}" --all -n
-  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli delete-env -e "${bosh_director_ip}" "${current_directory}/bosh-deployment/bosh.yml" \
-      --ops-file "${current_directory}/bosh-deployment/gcp/cpi.yml" \
-      --ops-file "${current_directory}/bosh-deployment/uaa.yml" \
-      --ops-file "${current_directory}/bosh-deployment/powerdns.yml" \
-      --ops-file "${current_directory}/configurations/generic/credhub.yml" \
-      --ops-file "${current_directory}/configurations/generic/bosh-admin-client.yml" \
-      --state "${BOSH_ENV}/state.json" \
-      --var-file gcp_credentials_json="${key_filename}" \
-      --vars-store "${BOSH_ENV}/creds.yml" \
-      --vars-file "${BOSH_ENV}/director.yml"
+  bosh-cli clean-up --all -n
+  bosh-cli delete-env "$(repo_directory)/bosh-deployment/bosh.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/gcp/cpi.yml" \
+    --state "${bosh_env}/state.json" \
+    --var-file gcp_credentials_json="${service_account}" \
+    --vars-store "${bosh_env}/creds.yml" \
+    --vars-file "${bosh_env}/director.yml"
 }
 
-main
+destroy_openstack() {
+  local bosh_env key_filename
+
+  bosh_env="$1"
+  key_filename="$2"
+
+  bosh-cli clean-up --all -n
+  bosh-cli delete-env "$(repo_directory)/bosh-deployment/bosh.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/openstack/cpi.yml" \
+    --ops-file "$(repo_directory)/configurations/openstack/multi-tenant.yml" \
+    --state "${bosh_env}/state.json" \
+    --vars-store "${bosh_env}/creds.yml" \
+    --vars-file "${bosh_env}/director.yml"  \
+    --vars-file "${bosh_env}/director-secrets.yml"  \
+    --var-file private_key="${key_filename}"
+}
+
+[[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"
