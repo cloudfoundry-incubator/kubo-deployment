@@ -1,12 +1,13 @@
 package kubo_deployment_tests_test
 
 import (
+	"fmt"
+	"os/exec"
+	"path/filepath"
+	"strings"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"strings"
-	"os/exec"
-	"fmt"
-	"path/filepath"
 )
 
 var _ = Describe("Generate cloud config", func() {

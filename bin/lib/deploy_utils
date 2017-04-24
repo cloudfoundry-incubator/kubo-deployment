@@ -14,7 +14,7 @@ get_setting() {
   local file_name=$1
   local value_path=$2
 
-  bosh-cli int ${BOSH_ENV}/${file_name} --path=${value_path} | xargs echo -n
+  bosh-cli int ${BOSH_ENV}/${file_name} --path "${value_path}" | xargs echo -n
 }
 
 set_cloud_config() {
