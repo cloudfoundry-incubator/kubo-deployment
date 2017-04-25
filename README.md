@@ -51,7 +51,8 @@ $ bosh -e bosh-1 update-cloud-config ~/workspace/bosh-deployment/aws/cloud-confi
 $ bosh -e bosh-1 upload-stemcell https://...
 
 # Get a deployment running
-$ bosh -e bosh-1 -d zookeeper deploy ~/workspace/zookeeper-release/manifests/example.yml
+$ git clone https://github.com/cppforlife/zookeeper-release ~/workspace/zookeeper-release
+$ bosh -e bosh-1 -d zookeeper deploy ~/workspace/zookeeper-release/manifests/zookeeper.yml
 ```
 
 To generate creds (without deploying anything) or just to check if your manifest builds:
