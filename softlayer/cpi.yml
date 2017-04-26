@@ -83,7 +83,7 @@
   path: /instance_groups/name=bosh/properties/softlayer?
   value: &softlayer
     username: ((sl_username))
-    apiKey: ((sl_apiKey))
+    apiKey: ((sl_api_key))
 
 - type: replace
   path: /cloud_provider/properties/softlayer?
