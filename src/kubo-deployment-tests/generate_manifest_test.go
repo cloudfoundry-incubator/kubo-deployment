@@ -114,6 +114,33 @@ var _ = Describe("Generate manifest", func() {
 			Expect(stdout).To(gbytes.Say("\n  os: MALARIA0\n"))
 		})
 
+		It("applies http proxy settings if they exist", func() {
+			opsfileEnv := filepath.Join(testEnvironmentPath, "with_http_proxy")
+			status, err := bash.Run("main", []string{opsfileEnv, "name"})
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+			Expect(stdout).To(gbytes.Say("\n          http_proxy: my.proxy.com\n"))
+		})
+
+		It("applies https proxy settings if they exist", func() {
+			opsfileEnv := filepath.Join(testEnvironmentPath, "with_https_proxy")
+			status, err := bash.Run("main", []string{opsfileEnv, "name"})
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+			Expect(stdout).To(gbytes.Say("\n          https_proxy: my.sslproxy.com\n"))
+		})
+
+		It("applies http no_proxy settings if they exist", func() {
+			opsfileEnv := filepath.Join(testEnvironmentPath, "with_no_proxy")
+			status, err := bash.Run("main", []string{opsfileEnv, "name"})
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+			Expect(stdout).To(gbytes.Say("\n          no_proxy: dont.proxy.me\n"))
+		})
+
 		It("uses vars-files to modify the manifest", func() {
 			opsfileEnv := filepath.Join(testEnvironmentPath, "with_vars")
 			status, err := bash.Run("main", []string{opsfileEnv, "name"})

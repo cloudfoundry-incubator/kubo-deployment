@@ -40,7 +40,7 @@ create_and_upload_release() {
   if [ -d "$release_dirname" ]; then
     pushd "$release_dirname"
       BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli -e "${BOSH_NAME}" create-release --force --name "${release_name}"
-      upload_release "--name=${release_name}" 
+      upload_release "--name=${release_name}"
     popd
   else
     echo "${release_dirname} repo not found - unable to create the ${release_name} release"
@@ -75,9 +75,19 @@ generate_manifest() {
     manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/${deployment_name}-vars.yml")
   fi
 
-  manifest=$(echo "${manifest}" | bosh-cli int - \
-      --vars-file="${bosh_environment}/director.yml" \
-      --var=deployment_name="${deployment_name}")
+  if bosh-cli int "${bosh_environment}/director.yml" --path='/http_proxy'; then
+    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${bosh_deployment_directory}/manifests/ops-files/add-http-proxy.yml")
+  fi
+
+  if bosh-cli int "${bosh_environment}/director.yml" --path='/https_proxy'; then
+    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${bosh_deployment_directory}/manifests/ops-files/add-https-proxy.yml")
+  fi
+
+  if bosh-cli int "${bosh_environment}/director.yml" --path='/no_proxy'; then
+    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${bosh_deployment_directory}/manifests/ops-files/add-no-proxy.yml")
+  fi
+
+  manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/director.yml" --var=deployment_name="${deployment_name}")
 
   if [ -e "${bosh_environment}/creds.yml" ]; then
     manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/creds.yml")
@@ -89,11 +99,9 @@ generate_manifest() {
     manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/director-secrets.yml")
   fi
 
-  manifest=$(echo "${manifest}" | bosh-cli int - \
-      --vars-store="${bosh_environment}/${deployment_name}-creds.yml")
+  manifest=$(echo "${manifest}" | bosh-cli int - --vars-store="${bosh_environment}/${deployment_name}-creds.yml")
 
   manifest=$(echo "${manifest}" | bosh-cli int - --ops-file="${bosh_deployment_directory}/manifests/ops-files/remove-variables.yml")
 
   printf "%s" "${manifest}"
 }
-
