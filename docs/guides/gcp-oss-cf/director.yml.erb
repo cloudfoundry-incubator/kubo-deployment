@@ -1,4 +1,4 @@
-<% 
+<%
 require 'securerandom'
 
 %w(project_id network kubo_subnet kubo_zone network tcp_router_domain cf_system_domain cf_apps_domain cf_nats_internal_ip).each do |var|
@@ -11,12 +11,12 @@ ip_prefix = "10.0.1"
 project_id: <%= ENV['project_id'] %> # GCP project ID
 network: <%= ENV['network'] %> # GCP network
 subnetwork: <%= ENV['kubo_subnet'] %> # GCP subnetwork
-tags: 
+tags:
   - "no-ip" # allow access to the Internet from BOSH director using NAT
   - internal # allow access to the instances in same network from BOSH
 zone: <%= ENV['kubo_zone'] %> # name of GCP zone
 
-internal_ip: <%= ip_prefix %>.6 # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into. 
+internal_ip: <%= ip_prefix %>.6 # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into.
 
 deployments_network: <%= ENV['network'] %> # Network name to deploy service in your cloud config
 
@@ -48,3 +48,7 @@ syslog-endpoint: ""
 credhub_release_url: https://s3.amazonaws.com/kubo-public/credhub-0.4.0.tgz
 kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release-latest.tgz
 
+# uncomment these fields to configure proxy settings for docker
+# http_proxy:
+# https_proxy:
+# no_proxy:
