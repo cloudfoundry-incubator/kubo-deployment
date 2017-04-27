@@ -6,11 +6,14 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	yaml "gopkg.in/yaml.v2"
+
+	"strings"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
-	"strings"
 )
 
 var _ = Describe("Generate manifest", func() {
@@ -38,7 +41,7 @@ var _ = Describe("Generate manifest", func() {
 		AfterEach(func() {
 			files, _ := filepath.Glob(testEnvironmentPath + "/**/*creds.yml")
 			for _, f := range files {
-				if ! strings.Contains(f, "with_creds/creds.yml") {
+				if !strings.Contains(f, "with_creds/creds.yml") {
 					os.Remove(f)
 				}
 			}
@@ -165,5 +168,33 @@ var _ = Describe("Generate manifest", func() {
 		command.Stderr = bash.Stderr
 		command.Dir = pathFromRoot("")
 		Expect(command.Run()).To(Succeed())
+	})
+
+	It("should generate a valid manifest", func() {
+		files, _ := filepath.Glob(testEnvironmentPath + "/*")
+		for _, env := range files {
+			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name")
+			out := gbytes.NewBuffer()
+			command.Stdout = out
+			command.Dir = pathFromRoot("")
+			Expect(command.Run()).To(Succeed())
+
+			var output map[string]interface{}
+			Expect(yaml.Unmarshal(out.Contents(), &output)).To(
+				Succeed(), fmt.Sprintf("Could not generate manifest for %s %s", env, string(stdout.Contents())))
+		}
+	})
+
+	It("should not write anything to stderr", func() {
+		files, _ := filepath.Glob(testEnvironmentPath + "/*")
+		for _, env := range files {
+			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name")
+			errBuffer := gbytes.NewBuffer()
+			command.Stdout = GinkgoWriter
+			command.Stderr = errBuffer
+			command.Dir = pathFromRoot("")
+			Expect(command.Run()).To(Succeed())
+			Expect(string(errBuffer.Contents())).To(HaveLen(0))
+		}
 	})
 })
