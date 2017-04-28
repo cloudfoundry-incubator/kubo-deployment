@@ -2,9 +2,9 @@ name: ((deployment_name))
 
 releases:
 - name: etcd
-  version: 85+dev.1
-  url: https://s3.amazonaws.com/kubo-public/etcd-85%2Bdev.1.tgz
-  sha1: 3e2aa617afee3ce522effead79c6ab3cf73ec38b
+  version: 86+dev.1
+  url: https://storage.googleapis.com/kubo-etcd/kubo-etcd-release-86%2Bdev.1.tgz
+  sha1: d83336233ea9abf08de6264c06f16b131c5a0d77
 - name: kubo
   version: latest
 - name: docker
