@@ -92,7 +92,7 @@ instance_groups:
         ip_masq: false
         log_level: error
         storage_driver: overlay
-        env: {}
+      env: {}
   - name: kubeconfig
     release: kubo
     properties:
