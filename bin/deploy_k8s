@@ -27,6 +27,7 @@ print_usage() {
   echo "              Uses 'kubo_release_url' from <BOSH_ENV>/director.yml"
   echo "     local  - Use local tarball release"
   echo "              The kubo-release.tgz must exist in ${release_path}"
+  echo "     skip   - Use releases already uploaded to the BOSH director"
   echo ""
 }
 
@@ -52,7 +53,7 @@ main() {
   fi
 
   case ${release_source} in
-    "dev"|"public"|"local") ;;
+    "dev"|"public"|"local"|"skip") ;;
     "") release_source="public";;
     *) print_usage; exit 1;;
   esac
@@ -98,6 +99,9 @@ upload_releases() {
         upload_release "kubo-release.tgz"
       popd > /dev/null
       ;;
+    "skip")
+    	echo "Skipped uploading releases"
+	;;
     *)
       echo "unknown RELEASE_SOURCE: '${release_source}'"
       exit 1
