@@ -16,6 +16,7 @@ networks:
   subnets:
   - azs: [z1, z2, z3]
     range: 10.245.0.0/16
+    dns: [8.8.8.8]
     gateway: 10.245.0.1
     static: [10.245.0.34]
     cloud_properties:
