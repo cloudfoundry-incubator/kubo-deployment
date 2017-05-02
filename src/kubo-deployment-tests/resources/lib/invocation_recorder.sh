@@ -14,7 +14,7 @@ invocationRecorder() {
     echo "[$callCounter end received]" > /dev/fd/2
   fi
 
-  if [ 0 -eq $(type "${2}-mock" > /dev/null 2>&1; echo $?) ]; then
+  if type "${2}-mock" &> /dev/null ; then
     "${2}-mock" "$@"
   fi
 }
