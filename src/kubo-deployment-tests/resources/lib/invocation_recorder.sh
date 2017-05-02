@@ -2,7 +2,7 @@ export callCounter=0
 invocationRecorder() {
   local in_line_count=0
   declare -a in_lines
-  while read -t0.05; do
+  while read -t0.1; do
     in_lines[in_line_count]="$REPLY"
     in_line_count=$(expr ${in_line_count} + 1)
   done
