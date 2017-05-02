@@ -123,7 +123,7 @@ var _ = Describe("Generate manifest", func() {
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
-			Expect(stdout).To(gbytes.Say("\n          http_proxy: my.proxy.com\n"))
+			Expect(stdout).To(gbytes.Say("\n        http_proxy: my.proxy.com\n"))
 		})
 
 		It("applies https proxy settings if they exist", func() {
@@ -132,7 +132,7 @@ var _ = Describe("Generate manifest", func() {
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
-			Expect(stdout).To(gbytes.Say("\n          https_proxy: my.sslproxy.com\n"))
+			Expect(stdout).To(gbytes.Say("\n        https_proxy: my.sslproxy.com\n"))
 		})
 
 		It("applies http no_proxy settings if they exist", func() {
@@ -141,7 +141,7 @@ var _ = Describe("Generate manifest", func() {
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
-			Expect(stdout).To(gbytes.Say("\n          no_proxy: dont.proxy.me\n"))
+			Expect(stdout).To(gbytes.Say("\n        no_proxy: dont.proxy.me\n"))
 		})
 
 		It("uses vars-files to modify the manifest", func() {
