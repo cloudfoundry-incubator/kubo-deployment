@@ -7,7 +7,9 @@ routing-cf-api-url: # TCP routing API URL. In PCF: https://api.<system domain>
 routing-cf-client-id: # Routing UAA client name that will be used to register tcp routes
 routing-cf-uaa-url: # Routing UAA URL In PCF: https://uaa.<system domain>
 routing-cf-app-domain-name: # Cloud Foundry apps domain
-routing-cf-nats-internal-ip: # Internal IP address of Cloud Foundry NATS
+routing-cf-nats-internal-ips: # An array of internal IP address of Cloud Foundry NATS, e.g. [ '1.2.3.4' ]
+routing-cf-nats-username: nats
+routing-cf-nats-port: 4222
 
 # we use BOSH 261 since CredHub 0.4 supports only it
 # CredHub 0.4 fixes important bug that breaks deployment
@@ -27,7 +29,7 @@ stemcell_version: # version of the stemcell used in all Kubo deployments. Quote 
 stemcell_url: # path to a stemcell used in all Kubo deployments
 
 credhub_release_url: https://s3.amazonaws.com/kubo-public/credhub-0.4.0.tgz
-kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release-latest.tgz
+kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest.tgz
 
 # uncomment these fields to configure proxy settings for docker
 # http_proxy:
