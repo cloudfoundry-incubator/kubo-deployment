@@ -13,7 +13,6 @@ invocationRecorder() {
     printf '%s\n' "${in_lines[@]}" > /dev/fd/2
     echo "[$callCounter end received]" > /dev/fd/2
   fi
-  echo $PATH > /dev/fd/2
 
   if [ 0 -eq $(type "${2}-mock" > /dev/null 2>&1; echo $?) ]; then
     "${2}-mock" "$@"
