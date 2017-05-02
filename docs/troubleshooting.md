@@ -1,6 +1,19 @@
 # Troubleshooting
 
-## Problem
+## Table of contents
+
+ - [Unable to create Google Storage Bucket when deploying KuBOSH](#unable-to-create-google-storage-bucket-when-deploying-kubosh)
+ - [Service account permission errors during KuBOSH deployment](#service-account-permission-errors-during-kubosh-deployment)
+ - [I/O timeout when deploying KuBOSH](#i-o-timeout-when-deploying-kubosh)
+ - [Unable to login to CredHub](#unable-to-login-to-credhub)
+ - [bosh-cli 401 error for UAA](#bosh-cli-401-error-for-uaa)
+ - [Master is not running after the update](#master-is-not-running-after-the-update)
+ - [Timeout failures during OSS deployment](#timeout-failures-during-oss-deployment)
+ - [K8s deployment fails after KuBOSH is redeployed](#k8s-deployment-fails-after-kubosh-is-redeployed)
+ - [Worker failure during deployment of second cluster](#worker-failure-during-deployment-of-second-cluster)
+ - [Other connectivity issues](#other-connectivity-issues)
+
+## Unable to create Google Storage Bucket when deploying KuBOSH
 
 The error below occurs when deploying KuBOSH on GCP
 
@@ -11,7 +24,15 @@ The error below occurs when deploying KuBOSH on GCP
 Make sure that you have logged in with the newly created service account as described in
 [GCP Setup](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/bosh#setup).
 
-## Problem
+## Service account permission errors during KuBOSH deployment
+
+Various service account permission issues may prevent KuBOSH deployment
+
+### Solution
+
+Verify that the correct permissions are applied in the [Google Cloud Console](https://console.cloud.google.com/iam-admin/iam). If the permissions are set correctly, but you are still experiencing permission issues, try creating a new account with a different name.
+
+## I/O timeout when deploying KuBOSH
 
 When deploying KuBOSH via an `sshuttle` connection, the following error might occur:
 
@@ -32,7 +53,7 @@ where `10.0.0.4` is the KuBOSH IP address.
 
 Restart the `sshuttle` connection.
 
-## Problem
+## Unable to login to CredHub
 
 A KuBOSH or kubo deployment may fail with the following error:
 
@@ -52,15 +73,7 @@ CLI Version: 0.4.0
 Server Version: 0.4.0
 ```
 
-## Problem
-
-Various connectivity issues during deployment
-
-### Solution
-
-Please make sure that all the host names used in the configuration are resolving to the correct IP addresses.
-
-## Problem
+## bosh-cli 401 error for UAA
 
 Strange error when running bosh-cli
 
@@ -78,12 +91,12 @@ Exit code 1
 
 ### Solution
 
-Please make sure that you are logged in. The password can be found in `<BOSH_ENV>/creds.yml`, in the `admin_password` field.
+Please make sure that you are logged in with `bosh-cli`. The password can be found in `<BOSH_ENV>/creds.yml`, in the `admin_password` field.
 
 
-## Problem
+## Master is not running after the update
 
-Error when running `deploy_k8s` script with invalid UAAC credentials
+The following error may be displayed when running `deploy_k8s` script
 
 ```
 Updating instance master: master/20f5c31f-4329-46a7-ae03-484f0a17f6a3 (0) (canary) (00:01:14)
@@ -91,35 +104,19 @@ Updating instance master: master/20f5c31f-4329-46a7-ae03-484f0a17f6a3 (0) (canar
 Error: 'master/0 (20f5c31f-4329-46a7-ae03-484f0a17f6a3)' is not running after update. Review logs for failed jobs: kubernetes-api, kubernetes-controller-manager, kubernetes-scheduler, kubernetes-api-route-registrar
 ```
 
-### Solution
+### Possible solutions
+
+#### Check the CF credentials
 
 Please check the fields `routing-cf-client-id` in `<BOSH_ENV>/director.yml` and `routing-cf-client-secret` in `<BOSH_ENV>/director-secrets.yml` and ensure that the UAAC credentials that you are using are valid. You can use the [UAAC CLI](https://docs.cloudfoundry.org/adminguide/uaa-user-management.html) to create and manage credentials.
 
-## Problem
-
-Issues with permissions on service accounts
-
-### Solution
-
-If you see unexplained errors about service accounts not having the proper permissions, first check that the permissions were properly applied in the [Google Cloud Console](https://console.cloud.google.com/iam-admin/iam). If the permissions are set correctly but you are still seeing permission issues when using the account, try creating and using a new account with a different name.
-
-## Problem
-
-Error when running `deploy_k8s` script due to K8 API route registration failure
-
-```
-01:20:02 | Updating instance master: master/f4ded33c-c5a3-48a1-91ad-c89172ead74a (0) (canary) (00:01:09)
-            L Error: 'master/0 (f4ded33c-c5a3-48a1-91ad-c89172ead74a)' is not running after update. Review logs for failed jobs: kubernetes-api-route-registrar
-01:21:11 | Error: 'master/0 (f4ded33c-c5a3-48a1-91ad-c89172ead74a)' is not running after update. Review logs for failed jobs: kubernetes-api-route-registrar
-```
-
-### Solution
-
+#### Check the accessibility of the routing API URL
+ 
 Please check that the route to the TCP routing API URL is accessible.  The URL is defined in the field `routing-cf-api-url` in your `<BOSH_ENV>/director.yml`.
 
-## Problem
+## Timeout failures during OSS deployment
 
-Failures during [OSS deployment](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/cloudfoundry) due to timeouts. Failure to deploy Kubo alongside an OSS deployment due to timeouts.
+kubo [OSS deployment](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/cloudfoundry) may fail due to timeouts.
 
 ### Solution
 
@@ -127,9 +124,9 @@ Retry the deployment commands. This can be caused by the default preemptable com
 
 If you have access to a domain then you can increase reliability by using it for your Cloud Foundry deployment. If you do not mind the increased cost you can remove the [preemptable](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/src/bosh-google-cpi#bosh-resource-pool-options) property from the compilation workers in the Cloud Foundry manifest.
 
-## Problem
+## K8s deployment fails after KuBOSH is redeployed
 
-Failure when deploying K8S after complete redeployment of KuBOSH.
+When deploying K8S following a redeployment of KuBOSH, the following error message may be displayed:
 
 ```
 $ bin/deploy_k8s <BOSH_ENV> <NAME> public
@@ -152,3 +149,22 @@ Reset BOSH alias to use new SSL certificate.
 ```
 $ bin/set_bosh_alias <BOSH_ENV>
 ```
+
+## Worker failure during deployment of second cluster
+
+```
+Updating instance worker: worker/aca2bddf-59b1-4802-a9c5-e09aa09a0efd (0) (canary) (00:03:57)
+L Error: Action Failed get_task: Task 75bce522-4fba-4295-7b8c-d63d86f7dcc6 result: 1 of 1 post-start scripts failed. Failed Jobs: kubelet.
+```
+
+### Solution
+
+Make sure that port specified as `external-kubo-port` is not already in use by another kubo cluster. The value in `director.yml` can be overridden using [var-files](./docs/guides/customized-installation.md#generate-manifest-and-deploy) for different clusters.   
+
+## Other connectivity issues
+
+Various connectivity issues may arise during deployment
+
+### Solution
+
+Please make sure that all the host names used in the configuration are resolving to the correct IP addresses.
