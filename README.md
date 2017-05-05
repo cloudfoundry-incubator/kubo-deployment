@@ -1,6 +1,15 @@
 # bosh-deployment
 
-- Requires new [BOSH CLI v2.0.1+](https://github.com/cloudfoundry/bosh-cli)
+Requires new BOSH CLI v2:
+
+* [CLI v2](https://bosh.io/docs/cli-v2.html)
+    * [`create-env` Dependencies](https://bosh.io/docs/cli-env-deps.html)
+    * [Differences between CLI v2 vs v1](https://bosh.io/docs/cli-global-flags.html)
+    * [Global Flags](https://bosh.io/docs/cli-global-flags.html)
+    * [Environments](https://bosh.io/docs/cli-envs.html)
+    * [Operations files](https://bosh.io/docs/cli-ops-files.html)
+    * [Variable Interpolation](https://bosh.io/docs/cli-int.html)
+    * [Tunneling](https://bosh.io/docs/cli-tunnel.html)
 
 Sample installation instructions:
 
