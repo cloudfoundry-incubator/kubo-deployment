@@ -71,6 +71,10 @@ generate_manifest() {
     manifest=$(echo "${manifest}" | bosh-cli int - --ops-file="${bosh_environment}/${deployment_name}.yml")
   fi
 
+  if [ -e "${bosh_environment}/${deployment_name}-vars.yml" ]; then
+    manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/${deployment_name}-vars.yml")
+  fi
+
   if bosh-cli int "${bosh_environment}/director.yml" --path='/http_proxy' &>/dev/null; then
     manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${bosh_deployment_directory}/manifests/ops-files/add-http-proxy.yml")
   fi
@@ -82,13 +86,6 @@ generate_manifest() {
   if bosh-cli int "${bosh_environment}/director.yml" --path='/no_proxy' &>/dev/null; then
     manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${bosh_deployment_directory}/manifests/ops-files/add-no-proxy.yml")
   fi
-
-  manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${bosh_deployment_directory}/manifests/ops-files/cf-routing.yml")
-
-  if [ -e "${bosh_environment}/${deployment_name}-vars.yml" ]; then
-    manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/${deployment_name}-vars.yml")
-  fi
-
 
   manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/director.yml" --var=deployment_name="${deployment_name}")
 
