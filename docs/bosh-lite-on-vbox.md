@@ -75,7 +75,7 @@
     $ route add           10.244.0.0/16    192.168.50.6 # Windows
     ```
 
-1. In case you need to SSH into the Director VM, see [Jumpbox user](docs/jumpbox-user.md).
+1. In case you need to SSH into the Director VM, see [Jumpbox user](jumpbox-user.md).
 
 1. In case VirtualBox VM shuts down or reboots
 
