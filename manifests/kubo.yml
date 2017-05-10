@@ -51,7 +51,7 @@ instance_groups:
   - name: kubeconfig
     release: kubo
     properties:
-      kubernetes-api-url: &kubo_url "https://((cf-tcp-router-name)):((external-kubo-port))"
+      kubernetes-api-url: &kubo_url "((kubernetes-api-url))"
       kubelet-password: ((kubelet-password))
       tls:
         kubernetes: ((tls-kubernetes))
@@ -63,15 +63,6 @@ instance_groups:
     release: kubo
     properties:
       kubernetes-api-url: *kubo_url
-  - name: kubernetes-api-route-registrar
-    release: kubo
-    properties:
-      external_kubo_port: ((external-kubo-port))
-      cloud_foundry:
-        api_url: ((routing-cf-api-url))
-        uaa_url: ((routing-cf-uaa-url))
-        uaa_client_id: ((routing-cf-client-id))
-        uaa_client_secret: ((routing-cf-client-secret))
   stemcell: trusty
   vm_type: common
 
@@ -119,21 +110,6 @@ instance_groups:
   - name: *network-name
   azs: [z1]
   jobs:
-  - name: route-sync
-    release: kubo
-    properties:
-      cloud_foundry:
-        uaa_url: ((routing-cf-uaa-url))
-        routing_api_url: ((routing-cf-api-url))
-        routing_api_client_id: ((routing-cf-client-id))
-        routing_api_client_secret: ((routing-cf-client-secret))
-        skip_tls_verification: true
-        app_domain: ((routing-cf-app-domain-name))
-      nats:
-        machines: ((routing-cf-nats-internal-ips))
-        port: ((routing-cf-nats-port))
-        user: ((routing-cf-nats-username))
-        password: ((routing-cf-nats-password))
   - name: nginx
     release: kubo
   - name: flanneld
