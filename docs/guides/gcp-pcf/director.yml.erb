@@ -8,6 +8,7 @@ end
 ip_prefix = ENV['subnet_ip_prefix']
 %>
 
+iaas: gcp
 project_id: <%= ENV['project_id'] %> # GCP project ID
 network: <%= ENV['network'] %> # GCP network
 subnetwork: <%= ENV['kubo_subnet'] %> # GCP subnetwork
@@ -25,7 +26,8 @@ routing-cf-api-url: https://api.<%= ENV['cf_system_domain'] %> # TCP routing API
 routing-cf-client-id: <%= ENV['routing_cf_client_id'] %> # Routing UAA client name that will be used to register tcp routes
 routing-cf-uaa-url: https://uaa.<%= ENV['cf_system_domain'] %> # Routing UAA URL In PCF: https://uaa.<system domain>
 routing-cf-app-domain-name: <%= ENV['cf_apps_domain'] %> # Cloud Foundry apps domain
-routing-cf-nats-internal-ip: <%= ENV['cf_nats_internal_ip'] %> # Internal IP address of Cloud Foundry NATS
+routing-cf-nats-internal-ip: 
+  - <%= ENV['cf_nats_internal_ip'] %> # Internal IP address of Cloud Foundry NATS
 
 
 # we use BOSH 261 since CredHub 0.4 supports only it
