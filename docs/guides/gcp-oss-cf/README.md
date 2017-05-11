@@ -2,10 +2,8 @@
 
 ## Prerequisites
 
-1. Deploy a [bosh-bastion and BOSH director](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/bosh#deploy-bosh-on-google-cloud-platform)
-
-1. Deploy [Cloud Foundry](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/cloudfoundry#deploying-cloud-foundry-on-google-compute-engine) with TCP routing
-
+1. Configure GCP project and deploy BOSH bastion using following 
+   [Terraform file](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/blob/master/docs/bosh/main.tf)
 
 ## Prepare GCP Infrastructure
 
@@ -42,10 +40,10 @@ The rest of the document assumes you are logged into the `bosh-bastion` you depl
 1. Export these values. If you haven't tweaked any settings then use these defaults:
 
    ```
+   export project_id=<name of project>
+   export network=<network created using terraform script above. By default - bosh>
    export kubo_region=us-west1
    export kubo_zone=us-west1-a
-   export cf_terraform_state=/share/docs/cloudfoundry/terraform.tfstate
-   export network=$(terraform output -state=${cf_terraform_state} network)
    export kubo_env=kube
    export state_dir=~/kubo-env/${kubo_env}
    export kubo_terraform_state=${state_dir}/terraform.tfstate
@@ -76,31 +74,15 @@ The rest of the document assumes you are logged into the `bosh-bastion` you depl
 
 ## Configure Kubo
 
-1. `cd` to the `kubo-deployment` root
-   ```
-   cd ~/kubo-deployment
-   ```
-
-1. Generate the environment configuration
-   ```
-   bin/generate_env_config ~/kubo-env ${kubo_env} gcp
-   ```
-
 1. Retrieve the outputs of your Terraform run to be used in your Kubo deployment
 
    ```
    export kubo_subnet=$(terraform output -state=${kubo_terraform_state} kubo_subnet)
-   export tcp_router_domain=tcp.$(terraform output -state=${cf_terraform_state} tcp_ip).xip.io
-   export cf_system_domain=$(terraform output -state=${cf_terraform_state} ip).xip.io
-   export cf_apps_domain=$(terraform output -state=${cf_terraform_state} ip).xip.io
-   export cf_nats_internal_ip=$(gcloud compute instances list --filter='((tags.items:cf-nats))' | sed -n 2p | awk '{ print $4 }' | xargs echo -n)
-   export common_secret=c1oudc0w
    ```
 
 1. Populate the director configurations
    ```
    erb docs/guides/gcp-oss-cf/director.yml.erb > ${state_dir}/director.yml
-   erb docs/guides/gcp-oss-cf/director-secrets.yml.erb > ${state_dir}/director-secrets.yml
    ```
 
 1. Generate a service account key for the bosh-user

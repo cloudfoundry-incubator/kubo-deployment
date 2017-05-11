@@ -21,6 +21,37 @@ provider "google" {
     region = "${var.kubo_region}"
 }
 
+// Static IP address for HTTP forwarding rule
+resource "google_compute_address" "kubo-tcp" {
+  name = "${var.prefix}kubo"
+}
+
+// TCP Load Balancer
+resource "google_compute_target_pool" "kubo-tcp-public" {
+    name = "${var.prefix}kubo-tcp-public"
+}
+
+resource "google_compute_forwarding_rule" "kubo-tcp" {
+  name        = "${var.prefix}kubo-tcp"
+  target      = "${google_compute_target_pool.kubo-tcp-public.self_link}"
+  port_range  = "8443"
+  ip_protocol = "TCP"
+  ip_address  = "${google_compute_address.kubo-tcp.address}"
+}
+
+resource "google_compute_firewall" "kubo-tcp-public" {
+  name    = "${var.prefix}kubo-tcp-public"
+  network       = "${var.network}"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["8443"]
+  }
+
+  target_tags = ["master"]
+}
+
+
 // Subnet for Kubo 
 resource "google_compute_subnetwork" "kubo-subnet" {
   name          = "${var.prefix}kubo-${var.kubo_region}"
