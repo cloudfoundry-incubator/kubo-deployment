@@ -43,7 +43,7 @@
   path: /instance_groups/name=bosh/properties/director/config_server?
   value:
     enabled: true
-    url: "https://127.0.0.1:8844/api/"
+    url: "https://((internal_ip)):8844/api/"
     ca_cert: ((credhub_tls.ca))
     uaa:
       url: "https://((internal_ip)):8443"
