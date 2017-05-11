@@ -64,3 +64,6 @@ output "kubo_subnet" {
    value = "${google_compute_subnetwork.kubo-subnet.name}"
 }
 
+output "kubo_master_target_pool" {
+   value = "${google_compute_target_pool.kubo-tcp-public.name}"
+}

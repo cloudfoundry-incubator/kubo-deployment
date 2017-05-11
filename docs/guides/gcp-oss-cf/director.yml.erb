@@ -1,7 +1,7 @@
 <%
 require 'securerandom'
 
-%w(project_id network kubo_subnet kubo_zone network).each do |var|
+%w(project_id network kubo_subnet kubo_master_target_pool kubo_zone network).each do |var|
    raise "Expected environment variable '#{var}' to be set" if ENV[var] == nil || ENV[var] == ""
 end
 
@@ -15,6 +15,7 @@ subnetwork: <%= ENV['kubo_subnet'] %> # GCP subnetwork
 tags:
   - "no-ip" # allow access to the Internet from BOSH director using NAT
   - internal # allow access to the instances in same network from BOSH
+master_target_pool: kubo_master_target_pool
 zone: <%= ENV['kubo_zone'] %> # name of GCP zone
 
 internal_ip: <%= ip_prefix %>.6 # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into.
