@@ -78,6 +78,7 @@ The rest of the document assumes you are logged into the `bosh-bastion` you depl
 
    ```
    export kubo_subnet=$(terraform output -state=${kubo_terraform_state} kubo_subnet)
+   export kubo_master_target_pool=$(terraform output -state=${kubo_terraform_state} kubo_master_target_pool)
    ```
 
 1. Populate the director configurations
