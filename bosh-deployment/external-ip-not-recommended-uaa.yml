@@ -1,0 +1,17 @@
+# WARNING: We do not recommend to expose UAA and any other services over public addresses.
+
+- type: replace
+  path: /variables/name=uaa_ssl/options/alternative_names/-
+  value: ((external_ip))
+
+- type: replace
+  path: /variables/name=uaa_service_provider_ssl/options/alternative_names/-
+  value: ((external_ip))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/url
+  value: "https://((external_ip)):8443"
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/user_management/uaa/url
+  value: "https://((external_ip)):8443"

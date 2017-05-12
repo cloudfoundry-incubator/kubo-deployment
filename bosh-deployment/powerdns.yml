@@ -11,7 +11,7 @@
 - type: replace
   path: /instance_groups/name=bosh/properties/dns?
   value:
-    address: 127.0.0.1
+    address: ((internal_ip))
     db:
       database: powerdns
       host: 127.0.0.1
