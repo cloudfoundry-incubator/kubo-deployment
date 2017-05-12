@@ -1,19 +1,19 @@
-# CredHub release file location must be provided 
 - type: replace
   path: /releases/-
   value:
     name: credhub
-    url: ((file_path_to_credhub_release))
+    version: 0.7.0
+    url: https://bosh.io/d/github.com/pivotal-cf/credhub-release?v=0.7.0
+    sha1: c1d0eb7e0b1a03831cd102b740b47673cda9b350
 
-# A chosen dev_key value must be provided in the form of 32 hex characters 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
   value:
     name: credhub
     release: credhub
     properties:
-      credhub: 
-        user_management:
+      credhub:
+        authentication:
           uaa:
             url: "https://((internal_ip)):8443"
             verification_key: ((uaa_jwt_signing_key.public_key))
@@ -26,8 +26,13 @@
           database: credhub
         tls: ((credhub_tls))
         encryption:
-          provider: dev_internal
-          dev_key: ((credhub_dev_key))
+          providers:
+          - name: internal
+            type: internal
+          keys:
+          - provider_name: internal
+            encryption_password: ((credhub_encryption_password))
+            active: true
 
 - type: replace
   path: /instance_groups/name=bosh/properties/postgres/additional_databases?/-
@@ -58,7 +63,7 @@
     secret: ((uaa_clients_director_to_credhub))
 
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/credhub?
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/credhub_cli?
   value:
     override: true
     authorized-grant-types: password,refresh_token
@@ -73,7 +78,7 @@
   value:
     name: credhub-cli
     password: ((credhub_cli_password))
-    groups: 
+    groups:
     - credhub.read
     - credhub.write
 
@@ -100,6 +105,12 @@
       ca: credhub_ca
       common_name: ((internal_ip))
       alternative_names: [((internal_ip))]
+
+- type: replace
+  path: /variables/-
+  value:
+    name: credhub_encryption_password
+    type: password
 
 - type: replace
   path: /variables/-
