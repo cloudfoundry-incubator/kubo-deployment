@@ -1,8 +1,8 @@
-# Example: Existing Pivotal Cloud Foundry and Kubo on GCP
+# Example: Existing Cloud Foundry and Kubo on GCP
 
 ## Prerequisites
 
-1. These instructions assume that you have an installation of Pivotal Cloud Foundry running on Google Cloud Platform with the [TCP Routing](http://docs.pivotal.io/pivotalcf/1-9/opsguide/tcp-routing-ert-config.html) enabled.
+1. These instructions assume that you have an installation of Cloud Foundry running on Google Cloud Platform with the TCP Routing enabled. See the docs for [PCF](http://docs.pivotal.io/pivotalcf/1-9/opsguide/tcp-routing-ert-config.html) or [OSS CF](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/cloudfoundry#deploying-cloud-foundry-on-google-compute-engine).
 
 1. A UAA client with
    [appropriate authorities](https://github.com/cloudfoundry-incubator/routing-api#configure-oauth-clients-manually-using-uaac-cli-for-uaa) 
