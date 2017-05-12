@@ -55,8 +55,8 @@ The Cloud Foundry subnet must be able to route traffic directly to the Kubo subn
 
 Please choose the guide below that matches your requirements
 
-1. Deploy Kubo from scratch with an open source Cloud Foundry installation on Google Cloud Platform - [guide](docs/guides/gcp-oss-cf)
-1. Deploy Kubo with an existing Pivotal Cloud Foundry installation - [guide](docs/guides/gcp-pcf)
+1. Deploy Kubo from scratch with an open source Cloud Foundry installation on Google Cloud Platform - [guide](docs/guides/gcp-oss)
+1. Deploy Kubo with an existing Pivotal Cloud Foundry installation - [guide](docs/guides/gcp-cf)
 1. Deploy Kubo step by step, allowing for customization - [guide](docs/guides/customized-installation.md)
 
 ## Delete resources
