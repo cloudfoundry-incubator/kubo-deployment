@@ -33,7 +33,7 @@ set_bosh_environment() {
 main() {
   local bosh_env extra_filename iaas
 
-  bosh_env="$1"
+  bosh_env=$(cd "${1}"; pwd)
 
   if [ ! -d "${bosh_env}" ]; then
     print_usage
@@ -55,7 +55,7 @@ main() {
   fi
 
   set_bosh_environment "${bosh_env}"
-  "destroy_$iaas" "$@"
+  "destroy_$iaas" "${bosh_env}" "${@:2}"
 }
 
 destroy_gcp() {
