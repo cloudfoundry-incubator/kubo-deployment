@@ -3,21 +3,21 @@
   path: /releases/-
   value:
     name: bosh-aws-cpi
-    version: 60
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=60
-    sha1: 8e40a9ff892204007889037f094a1b0d23777058
+    version: 65
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=65
+    sha1: 26b3a5c43e6f82594a373309a495660d6db26254
 
 - type: replace
   path: /resource_pools/name=vms/stemcell?
   value:
-    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3312.15
-    sha1: f5e78f61b8026377300db544e9d3ca0b89516af3
+    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3363.20
+    sha1: 16f1aa2a272befe87a9f0805ae9d367c8e2802ea
 
 # Configure AWS sizes
 - type: replace
   path: /resource_pools/name=vms/cloud_properties?
   value:
-    instance_type: m3.xlarge
+    instance_type: m4.xlarge
     ephemeral_disk: {size: 25_000, type: gp2}
     availability_zone: ((az))
 

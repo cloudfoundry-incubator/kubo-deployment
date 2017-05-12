@@ -15,11 +15,18 @@ networks:
   type: manual
   subnets:
   - azs: [z1, z2, z3]
+    range: 10.245.0.0/16
     dns: [8.8.8.8]
-    range: 10.244.0.0/24
-    gateway: 10.244.0.1
-    static: [10.244.0.34]
-    reserved: []
+    gateway: 10.245.0.1
+    static: [10.245.0.34]
+    cloud_properties:
+      name: ((network))
+
+vm_extensions:
+- name: all_ports
+  cloud_properties:
+    ports:
+    - 22/tcp
 
 compilation:
   workers: 5
