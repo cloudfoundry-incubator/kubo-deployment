@@ -1,12 +1,4 @@
 - type: replace
-  path: /releases/name=bosh
-  value:
-    version: 261
-    url: ((bosh_release_url))
-    sha1: ((bosh_release_sha1))
-    name: bosh
-
-- type: replace
   path: /releases/-
   value:
     name: credhub
