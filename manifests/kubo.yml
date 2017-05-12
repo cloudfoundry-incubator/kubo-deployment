@@ -51,7 +51,7 @@ instance_groups:
   - name: kubeconfig
     release: kubo
     properties:
-      kubernetes-api-url: &kubo_url "((kubernetes-api-url))"
+      kubernetes-api-url: &kubo_url "((kubernetes_api_url))"
       kubelet-password: ((kubelet-password))
       tls:
         kubernetes: ((tls-kubernetes))
@@ -64,7 +64,7 @@ instance_groups:
     properties:
       kubernetes-api-url: *kubo_url
   stemcell: trusty
-  vm_type: common
+  vm_type: master
 
 - name: worker
   instances: 3
