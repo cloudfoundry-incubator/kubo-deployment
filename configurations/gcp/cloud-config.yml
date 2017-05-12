@@ -26,6 +26,14 @@ vm_types:
     root_disk_type: pd-ssd
     tags: ((tags))
 
+- name: master
+  cloud_properties:
+    machine_type: n1-standard-1
+    root_disk_size_gb: 20
+    root_disk_type: pd-ssd
+    tags: ((tags))
+    target_pool: ((master_target_pool))
+
 - name: worker
   cloud_properties:
     machine_type: n1-standard-2
