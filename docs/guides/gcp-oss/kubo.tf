@@ -67,3 +67,7 @@ output "kubo_subnet" {
 output "kubo_master_target_pool" {
    value = "${google_compute_target_pool.kubo-tcp-public.name}"
 }
+
+output "master_lb_ip_address" {
+  value = "${google_compute_address.kubo-tcp.address}"
+}
