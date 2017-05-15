@@ -140,3 +140,22 @@ variables:
   type: password
 - name: kubelet-password
   type: password
+- name: tls-ca
+  type: certificate 
+  options: 
+    common_name: "KuBo CA"
+    is_ca: true
+- name: tls-kubernetes
+  type: certificate 
+  options: 
+    ca: tls-ca
+    common_name: *kubo_url
+    alternative_names: 
+    - *kubo_url
+- name: tls-kubelet
+  type: certificate 
+  options: 
+    ca: tls-ca
+    common_name: *kubo_url
+    alternative_names: 
+    - *kubo_url
