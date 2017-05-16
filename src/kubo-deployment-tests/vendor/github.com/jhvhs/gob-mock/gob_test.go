@@ -207,6 +207,16 @@ var _ = Describe("Integration", func() {
 			Expect(stdout).NotTo(gbytes.Say("honey"))
 			Expect(string(stdout.Contents())).To(ContainSubstring("berries"))
 		})
+
+		It("does not propagate a subshell error when calling through", func() {
+			sourceString(`test_main() { me=$(ls /bogus); }`)
+			gobs := []Gob{MockOrCallThrough("ls", "echo wild", "[ 1 -eq 1 ]")}
+			ApplyMocks(bash, gobs)
+			status, err := bash.Run("test_main", []string{})
+
+			Expect(status).To(Equal(0))
+			Expect(err).ToNot(HaveOccurred())
+		})
 	})
 
 })
