@@ -6,8 +6,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	. "github.com/jhvhs/gob-mock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gbytes"
 )
 
 var _ = Describe("Generate cloud config", func() {
@@ -17,27 +19,18 @@ var _ = Describe("Generate cloud config", func() {
 	BeforeEach(func() {
 		bash.Source(pathToScript("lib/deploy_utils"), nil)
 		bash.Source(pathToScript("generate_cloud_config"), nil)
-		bash.ExportFunc("bosh-cli", emptyCallback)
-		bash.ExportFunc("popd", emptyCallback)
-		bash.ExportFunc("pushd", emptyCallback)
-		bash.SelfPath = "/bin/echo"
+		mocks := []Gob{Spy("pushd"), Spy("popd"), Spy("bosh-cli")}
+		ApplyMocks(bash, mocks)
 	})
 
 	It("calls bosh-cli with appropriate arguments", func() {
-		bash.Source("__", func(string) ([]byte, error) {
-			return []byte(`bosh-cli() {
-				[ "$4" == "/iaas" ] && echo "gcp";
-				[ "$4" != "/iaas" ] && echo "bosh-cli $@";
-				return 0;
-			}`), nil
-		})
-
+		boshMock := Mock("bosh-cli", `[ "$4" == "/iaas" ] && echo "gcp"`)
+		ApplyMocks(bash, []Gob{boshMock})
 		status, err := bash.Run("main", []string{kuboEnv})
 
 		Expect(err).NotTo(HaveOccurred())
 		Expect(status).To(Equal(0))
-		lines := strings.Split(string(stdout.Contents()), "\n")
-		Expect(lines).To(ContainElement("bosh-cli int configurations/gcp/cloud-config.yml --vars-file " + kuboEnv + "/director.yml"))
+		Expect(stderr).To(gbytes.Say("bosh-cli int configurations/gcp/cloud-config.yml --vars-file " + kuboEnv + "/director.yml"))
 	})
 
 	It("fails with no arguments", func() {
@@ -56,18 +49,16 @@ var _ = Describe("Generate cloud config", func() {
 	})
 
 	It("should temporarily step into an upper level directory", func() {
-		bash.SelfPath = "invocationRecorder"
 
 		status, err := bash.Run("main", []string{kuboEnv})
 		Expect(err).NotTo(HaveOccurred())
 		Expect(status).To(Equal(0))
 
-		errOutput := string(stderr.Contents())
 
 		// Our test executable is ~/.basher/bash, so the path should be one level up
 		targetPath := strings.Replace(bashPath, "/bash", "/../", 1)
-		Expect(errOutput).To(ContainSubstring(fmt.Sprintf("[1] ::: pushd %s", targetPath)))
-		Expect(errOutput).To(ContainSubstring("[2] ::: bosh-cli"))
-		Expect(errOutput).To(ContainSubstring("[3] ::: popd"))
+		Expect(stderr).To(gbytes.Say(fmt.Sprintf("<1> pushd %s", targetPath)))
+		Expect(stderr).To(gbytes.Say("<2> bosh-cli"))
+		Expect(stderr).To(gbytes.Say("<3> popd"))
 	})
 })

@@ -1,26 +1,31 @@
 package kubo_deployment_tests_test
 
 import (
-	"fmt"
 	"path"
 
+	. "github.com/jhvhs/gob-mock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 )
 
+
 var _ = Describe("Deploy KuBOSH", func() {
 	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp")
 	validGcpCredsEnvironment := path.Join(testEnvironmentPath, "test_gcp_with_creds")
 	validOpenstackEnvironment := path.Join(testEnvironmentPath, "test_openstack")
-	BeforeEach(func() {
-		bash.ExportFunc("credhub", emptyCallback)
+
+	JustBeforeEach(func() {
+		ApplyMocks(bash, []Gob{Spy("credhub")})
+		bash.Source("", func(string) ([]byte, error) {
+			return repoDirectoryFunction, nil
+		})
 	})
 
 	Context("fails", func() {
 		BeforeEach(func() {
-			bash.ExportFunc("bosh-cli", emptyCallback)
+			ApplyMocks(bash, []Gob{Stub("bosh-cli")})
 		})
 
 		DescribeTable("when wrong number of arguments is used", func(params []string) {
@@ -49,23 +54,9 @@ var _ = Describe("Deploy KuBOSH", func() {
 
 	Context("succeeds", func() {
 		BeforeEach(func() {
-			bash.SelfPath = "invocationRecorder"
 			bash.Source(pathToScript("deploy_bosh"), nil)
-			bash.Source("_", func(string) ([]byte, error) {
-				repoDirectory := fmt.Sprintf(`
-				repo_directory() { echo "%s"; }
-				bosh-cli() {
-					if [ $1 == 'int' ]; then
-					  $(which bosh-cli) "$@"
-					else
-						echo "bosh-cli $@" >&2
-				  fi
-					return 0
-				}
-				export -f bosh-cli
-				`, pathFromRoot(""))
-				return []byte(repoDirectory), nil
-			})
+			boshMock := MockOrCallThrough("bosh-cli", `echo "bosh-cli $@" >&2`, "[ $1 == 'int' ]")
+			ApplyMocks(bash, []Gob{boshMock})
 		})
 
 		It("runs with a valid environment and an extra file", func() {
@@ -108,12 +99,7 @@ var _ = Describe("Deploy KuBOSH", func() {
 
 	Context("CA generation", func() {
 		BeforeEach(func() {
-			bash.SelfPath = "invocationRecorder"
 			bash.Source(pathToScript("deploy_bosh"), nil)
-			bash.Source("_", func(string) ([]byte, error) {
-				repoDirectory := fmt.Sprintf(`repo_directory() { echo "%s"; }`, pathFromRoot(""))
-				return []byte(repoDirectory), nil
-			})
 		})
 
 		It("runs with an environment", func() {
@@ -136,15 +122,8 @@ var _ = Describe("Deploy KuBOSH", func() {
 		})
 
 		It("Generates a CA if is isn't found", func() {
-			bash.Source("", func(string) ([]byte, error) {
-				return []byte(`
-				credhub-mock() {
-				  if [ $3 == 'ca-get' ]; then
-				    return 1
-				  fi
-				}
-				`), nil
-			})
+			credhubMock := `if [[ "$1" == "ca-get" ]]; then return 1; fi`
+			ApplyMocks(bash, []Gob{Mock("credhub", credhubMock)})
 			bash.Run("generate_default_ca", []string{validGcpCredsEnvironment})
 			Expect(stderr).To(gbytes.Say("credhub ca-get -n default"))
 			Expect(stderr).To(gbytes.Say("credhub ca-generate -n default -c internal.ip"))
