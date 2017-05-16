@@ -21,12 +21,12 @@
 
   ```
   export project_id=$(gcloud config list 2>/dev/null | grep project | sed -e 's/project = //g')
-  export network=<Network that your Cloud Foundry installation is running in>
   export subnet_ip_prefix="10.0.1" # Create new subnet for deployment in $subnet_ip_prefix.0/24
   export region=us-east1 # region that you will deploy BOSH in
   export zone=us-east1-d # zone that you will deploy BOSH in
   export terraform_state_dir=~/kubo-env
   export service_account_email=terraform@${project_id}.iam.gserviceaccount.com
+  export network=<Network that your Cloud Foundry installation is running in>
   ```
 
 1. Configure `gcloud` to use your preferred region and zone:
@@ -70,7 +70,7 @@ This step sets up a subnetwork with a bastion VM and a set of firewall rules to 
 
   ```
   git clone https://github.com/pivotal-cf-experimental/kubo-deployment.git
-  cd kubo-deployment/docs/guides/gcp-pcf
+  cd kubo-deployment/docs/guides/gcp-cf
   ```
 
 1. Create a folder to store the terraform output
@@ -92,7 +92,7 @@ This step sets up a subnetwork with a bastion VM and a set of firewall rules to 
       -var region=${region} \
       -var zone=${zone} \
       -var subnet_ip_prefix=${subnet_ip_prefix} \
-      -state=${kubo_terraform_state}
+      -state=${terraform_state_dir}
   ```
 
 1. Create the resources (should take between 60-90 seconds):
@@ -109,7 +109,7 @@ This step sets up a subnetwork with a bastion VM and a set of firewall rules to 
       -var region=${region} \
       -var zone=${zone} \
       -var subnet_ip_prefix=${subnet_ip_prefix} \
-      -state=${kubo_terraform_state}
+      -state=${terraform_state_dir}
   ```
 
 Now you have the infrastructure ready to deploy a BOSH director.
@@ -134,13 +134,13 @@ Now you have the infrastructure ready to deploy a BOSH director.
 
   ```
   export project_id=$(gcloud config list 2>/dev/null | grep project | sed -e 's/project = //g')
-  export network=<Network that your Cloud Foundry installation is running in>
   export kubo_region=us-east1 # region to deploy the kubernetes cluster in
   export kubo_zone=us-east1-d # zone to deploy the kubernetes cluster in
   export kubo_env=kube
   export state_dir=~/kubo-env/${kubo_env}
   export subnet_ip_prefix="10.0.1" # This is the same subnet that was created in the 'Deploy supporting infrastructure' section 
 
+  export network=<Network that your Cloud Foundry installation is running in>
   export tcp_router_domain=[domain of your existing TCP router]
   export cf_apps_domain=[Cloud Foundry apps domain]
   export cf_system_domain=[Cloud Foundry system domain]
@@ -167,7 +167,7 @@ Now you have the infrastructure ready to deploy a BOSH director.
 
 1. Populate the director configurations
   ```
-  erb docs/guides/gcp-pcf/director.yml.erb > ${state_dir}/director.yml
+  erb docs/guides/gcp-cf/director.yml.erb > ${state_dir}/director.yml
   ```
 
 1. Fill in the values in `${state_dir}/director-secrets.yml`
