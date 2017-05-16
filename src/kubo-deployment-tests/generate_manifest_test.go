@@ -20,7 +20,7 @@ var _ = Describe("Generate manifest", func() {
 	BeforeEach(func() {
 		bash.Source(pathToScript("generate_kubo_manifest"), nil)
 		bash.Source("_", func(string) ([]byte, error) {
-			return []byte(fmt.Sprintf(`repo_directory() { echo -n "%s"; }`, pathFromRoot(""))), nil
+			return repoDirectoryFunction, nil
 		})
 	})
 
