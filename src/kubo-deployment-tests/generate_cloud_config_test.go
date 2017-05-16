@@ -21,7 +21,6 @@ var _ = Describe("Generate cloud config", func() {
 		bash.Source(pathToScript("generate_cloud_config"), nil)
 		mocks := []Gob{Spy("pushd"), Spy("popd"), Spy("bosh-cli")}
 		ApplyMocks(bash, mocks)
-		bash.SelfPath = "/bin/echo"
 	})
 
 	It("calls bosh-cli with appropriate arguments", func() {

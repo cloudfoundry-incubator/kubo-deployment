@@ -54,7 +54,6 @@ var _ = Describe("Deploy KuBOSH", func() {
 
 	Context("succeeds", func() {
 		BeforeEach(func() {
-			bash.SelfPath = "/bin/echo"
 			bash.Source(pathToScript("deploy_bosh"), nil)
 			boshMock := MockOrCallThrough("bosh-cli", `echo "bosh-cli $@" >&2`, "[ $1 == 'int' ]")
 			ApplyMocks(bash, []Gob{boshMock})
@@ -100,7 +99,6 @@ var _ = Describe("Deploy KuBOSH", func() {
 
 	Context("CA generation", func() {
 		BeforeEach(func() {
-			bash.SelfPath = "/bin/echo"
 			bash.Source(pathToScript("deploy_bosh"), nil)
 		})
 

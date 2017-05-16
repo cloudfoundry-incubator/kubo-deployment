@@ -23,10 +23,8 @@ var (
 
 	resourcesPath         = filepath.Join(pathFromRoot("src"), "kubo-deployment-tests", "resources")
 	testEnvironmentPath   = filepath.Join(resourcesPath, "environments")
-	invocationRecorder    = filepath.Join(resourcesPath, "lib", "invocation_recorder.sh")
 	repoDirectoryFunction = []byte(fmt.Sprintf(`repo_directory() { echo "%s"; }`, pathFromRoot("")))
 
-	emptyCallback = func([]string) {}
 	bashPath      string
 )
 
@@ -60,7 +58,6 @@ var _ = BeforeEach(func() {
 	stderr = gbytes.NewBuffer()
 	bash.Stdout = io.MultiWriter(GinkgoWriter, stdout)
 	bash.Stderr = io.MultiWriter(GinkgoWriter, stderr)
-	bash.Source(invocationRecorder, nil)
 	bash.SelfPath = "/bin/echo"
 
 	bash.CopyEnv()

@@ -26,7 +26,6 @@ var _ = Describe("set_kubeconfig", func() {
 			[ "$2" == "/kubo-admin-password" ] && echo "sekret"`)
 		mocks := []Gob{Spy("kubectl"), Spy("bosh-cli"), Spy("credhub"), getSetting}
 		ApplyMocks(bash, mocks)
-		bash.SelfPath = "/bin/echo"
 
 		tmpdir := os.TempDir()
 		deployUtilContent := []byte("\n")

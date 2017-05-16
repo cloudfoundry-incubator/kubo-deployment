@@ -48,7 +48,6 @@ var _ = Describe("Destroy KuBOSH", func() {
 
 	Context("succeeds", func() {
 		BeforeEach(func() {
-			bash.SelfPath = "/bin/echo"
 			bash.Source(pathToScript("destroy_bosh"), nil)
 			bashMock := MockOrCallThrough("bosh-cli", `echo "bosh-cli $@" >&2`, `[[ "$1" == "int" ]]`)
 			ApplyMocks(bash, []Gob{bashMock})
