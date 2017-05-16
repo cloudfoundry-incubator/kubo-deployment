@@ -1,10 +1,13 @@
-hash: c200fbc04fc001cc695e32aa3969d03e0b9a41e9614921c1e205a718099444b3
-updated: 2017-03-16T14:23:43.594102133Z
+hash: 322b732fb2a9f02a3b10cf1bb0f95652b6a9a136a1c8b9e33edc9b6646d9df25
+updated: 2017-05-16T18:59:32.250308626+01:00
 imports:
+- name: github.com/jhvhs/gob-mock
+  version: e58bd8b75cf4e94f686cf0447f6f22d4b69db8ea
 - name: github.com/onsi/ginkgo
   version: 43e2af1f01ace55adbb6d7d0f30416476db1baae
   subpackages:
   - config
+  - extensions/table
   - internal/codelocation
   - internal/containernode
   - internal/failer
@@ -22,6 +25,7 @@ imports:
   version: c90bd38f8da6e92f8b114953db2f0ad7361fb4b4
   subpackages:
   - format
+  - gbytes
   - internal/assertion
   - internal/asyncassertion
   - internal/oraclematcher
@@ -36,7 +40,7 @@ imports:
   version: 6a5b35fcdaea1ddfc145720efc903869413629e7
 testImports:
 - name: github.com/kardianos/osext
-  version: 9d302b58e975387d0b4d9be876622c86cefe64be
+  version: ae77be60afb1dcacde03767a8c37337fad28ac14
 - name: github.com/mitchellh/go-homedir
   version: b8bc1bf767474819792c23f32d8286a45736f1c6
 - name: golang.org/x/sys
