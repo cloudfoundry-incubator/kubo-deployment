@@ -20,7 +20,11 @@ main() {
   local bosh_env=$(cd "$1"; pwd)
   pushd "$(cd "$(dirname "$0")"; pwd)/../" > /dev/null
     local bosh_iaas="$(bosh-cli int ${bosh_env}/director.yml --path '/iaas')"
-    bosh-cli int "configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml
+    local cloud_config=$(bosh-cli int "configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
+    if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" = "iaas" ]; then
+      cloud_config=$(echo "$cloud_config" | bosh-cli int - --ops-file="manifests/ops-files/load_balancer_target_pools.yml")
+    fi
+    printf "%s" "${cloud_config}"
   popd > /dev/null
 }
 
