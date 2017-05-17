@@ -104,6 +104,29 @@ instance_groups:
   stemcell: trusty
   vm_type: worker
   persistent_disk_type: 10240
+- name: proxy
+  instances: 1
+  networks:
+  - name: *network-name
+  azs: [z1]
+  jobs:
+  - name: nginx
+    release: kubo
+  - name: flanneld
+    release: kubo
+  - name: kubeconfig
+    release: kubo
+    properties:
+      kubernetes-api-url: *kubo_url
+      kubelet-password: ((kubelet-password))
+      tls:
+        kubernetes: ((tls-kubernetes))
+  - name: kubernetes-proxy
+    release: kubo
+    properties:
+      kubernetes-api-url: *kubo_url
+  stemcell: trusty
+  vm_type: common
 
 update:
   canaries: 1
