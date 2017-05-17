@@ -20,9 +20,6 @@ The rest of the document assumes you are logged into the `bosh-bastion` you depl
    ```
    sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.1-linux-amd64 -o /usr/bin/bosh-cli
    sudo chmod a+x /usr/bin/bosh-cli
-   curl -L https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/0.4.0/credhub-linux-0.4.0.tgz | tar zxv
-   chmod a+x credhub
-   sudo mv credhub /usr/bin
    sudo curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/bin/kubectl
    sudo chmod a+x /usr/bin/kubectl
    ```
