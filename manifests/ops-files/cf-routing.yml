@@ -13,12 +13,6 @@
 - type: replace
   path: /instance_groups/name=worker/jobs/name=kubernetes-proxy/properties/kubernetes-api-url
   value: "https://((cf-tcp-router-name)):((external-kubo-port))"
-- type: replace
-  path: /instance_groups/name=proxy/jobs/name=kubeconfig/properties/kubernetes-api-url
-  value: "https://((cf-tcp-router-name)):((external-kubo-port))"
-- type: replace
-  path: /instance_groups/name=proxy/jobs/name=kubernetes-proxy/properties/kubernetes-api-url
-  value: "https://((cf-tcp-router-name)):((external-kubo-port))"
 
 - type: replace
   path: /instance_groups/name=master/jobs/-
@@ -34,20 +28,43 @@
         uaa_client_secret: ((routing-cf-client-secret))
 
 - type: replace
-  path: /instance_groups/name=proxy/jobs/-
+  path: /instance_groups/-
   value:
-    name: route-sync
-    release: kubo
-    properties:
-      cloud_foundry:
-        uaa_url: ((routing-cf-uaa-url))
-        routing_api_url: ((routing-cf-api-url))
-        routing_api_client_id: ((routing-cf-client-id))
-        routing_api_client_secret: ((routing-cf-client-secret))
-        skip_tls_verification: true
-        app_domain: ((routing-cf-app-domain-name))
-      nats:
-        machines: ((routing-cf-nats-internal-ips))
-        port: ((routing-cf-nats-port))
-        user: ((routing-cf-nats-username))
-        password: ((routing-cf-nats-password))
+    name: proxy
+    instances: 1
+    networks:
+    - name: ((deployments_network))
+    azs: [z1]
+    jobs:
+    - name: nginx
+      release: kubo
+    - name: flanneld
+      release: kubo
+    - name: kubeconfig
+      release: kubo
+      properties:
+        kubernetes-api-url: "https://((cf-tcp-router-name)):((external-kubo-port))"
+        kubelet-password: ((kubelet-password))
+        tls:
+          kubernetes: ((tls-kubernetes))
+    - name: kubernetes-proxy
+      release: kubo
+      properties:
+        kubernetes-api-url: "https://((cf-tcp-router-name)):((external-kubo-port))"
+    - name: route-sync
+      release: kubo
+      properties:
+        cloud_foundry:
+          uaa_url: ((routing-cf-uaa-url))
+          routing_api_url: ((routing-cf-api-url))
+          routing_api_client_id: ((routing-cf-client-id))
+          routing_api_client_secret: ((routing-cf-client-secret))
+          skip_tls_verification: true
+          app_domain: ((routing-cf-app-domain-name))
+        nats:
+          machines: ((routing-cf-nats-internal-ips))
+          port: ((routing-cf-nats-port))
+          user: ((routing-cf-nats-username))
+          password: ((routing-cf-nats-password))
+    stemcell: trusty
+    vm_type: common
