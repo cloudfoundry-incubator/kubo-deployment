@@ -1,0 +1,12 @@
+vcenter_ip: # vCenter Host IP
+vcenter_user: # vCenter Username
+vcenter_dc: # vCenter Datacenter Name
+vcenter_vms: # vCenter VM Folder Name
+vcenter_templates: # vCenter Template Folder Name
+vcenter_disks: # vCenter Disk Folder Name
+vcenter_ds: # vCenter Ephemeral Datastore Name
+vcenter_cluster: # vCenter Cluster
+vcenter_rp: # vCenter Resource Pool
+
+network_name: # Network name to deploy service in your cloud config
+reserved_ips: # List of Reserved IPs from the CIDR of the subnet
