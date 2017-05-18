@@ -5,13 +5,31 @@
 - [credhub cli](https://github.com/pivotal-cf/credhub-cli/releases/tag/0.4.0) for interacting with CredHub. Version 0.4 only.
 - [Ruby 2.3+](https://www.ruby-lang.org/en/downloads) required by the bosh-cli to deploy KuBOSH
 - [make](https://www.gnu.org/software/make) required by the bosh-cli to deploy KuBOSH
+- IaaS specific tools to create VMs, credentials
+
+## Infrastructure Setup
+
+Kubo has two options for routing traffic to the cluster, using an IaaS load balancer, or using Cloud Foundry's routers.
+
+### Option 1: IaaS Load Balancer
+
+Kubo can be deployed with an IaaS load balancer that has a static external IP address and a forwarding rule to route traffic to the master nodes. If possible create a new subnet for Kubo to give it space and IP isolatuon. The following table specifies the needed routes and firewall rules
+
+| Description                | Source                     | Destination              | Ports                                  |
+|----------------------------|----------------------------|--------------------------|----------------------------------------|
+| Access to KuBosh           | Your machine               | KuBosh                   | 2555/tcp, 6868/tcp, 8443/tcp, 8844/tcp |
+| BOSH Management            | worker, master nodes       | KuBosh                   | 0-65535/tcp, 0-65535/udp               |
+| Kubernetes API Endpoint    | Your machine, worker nodes | IaaS load balancer       | 8443/tcp                               |
+| PowerDNS                   | worker, master nodes       | KuBosh                   | 53/tcp                                 |
+| Kubernetes API routing     | IaaS load balancer         | master nodes             | 8443/tcp                               |
+
+### Option 2: Cloud Foundry Routers
+
+This option has 2 additional dependencies:
 - [Cloud Foundry](https://cloudfoundry.org) with [TCP Routing](https://docs.cloudfoundry.org/adminguide/enabling-tcp-routing.html)
 - CF UAA client with
   [appropriate authorities](https://github.com/cloudfoundry-incubator/routing-api#configure-oauth-clients-manually-using-uaac-cli-for-uaa) 
    is required in order to register the TCP routes.
-- IaaS specific tools to create VMs, credentials
-
-## Infrastructure Setup
 
 Kubo needs to be in a network that is routable to your Cloud Foundry deployment. When Kubo announces routes to Cloud Foundry it will report the primary IP of the machine. On GCP this means that even if you give assign ephemeral external IPs to the instances they will report their internal network IP. If possible create a seperate subnet for Kubo to give it space and IP isolatuon. The following table specifies the needed routes and firewall rules
 
@@ -26,7 +44,7 @@ Kubo needs to be in a network that is routable to your Cloud Foundry deployment.
 
 ## Accessing the Kubo network
 
-This guide assumes the machine you're executing commands from has proper access to the network Kubo/Cloud Foundry are deployed on. The easiest way to do this is to deploy a [jump box/bastion](https://en.wikipedia.org/wiki/Jump_server) on the Kubo subnet. You can then SSH into the machine and issue commands or use a tool like [sshuttle](https://github.com/apenwarr/sshuttle) to act as a VPN to your Kubo subnet.
+This guide assumes the machine you're executing commands from has proper access to the network Kubo will be deployed on. The easiest way to do this is to deploy a [jump box/bastion](https://en.wikipedia.org/wiki/Jump_server) on the Kubo subnet. You can then SSH into the machine and issue commands or use a tool like [sshuttle](https://github.com/apenwarr/sshuttle) to act as a VPN to your Kubo subnet.
 
 ## Configure and deploy KuBosh
 
@@ -53,7 +71,7 @@ Credentials and SSL certificates for the environment will be generated and saved
 
 Subsequent runs of `bin/bosh_deploy` will apply changes made to the configuration to an already existing KuBOSH installation, reusing the credentials stored in the `creds.yml`.
 
-Another file that gets created during initial deployment is called `state.json`. It contains the BOSH state identical to the one used by .
+Another file that gets created during initial deployment is called `state.json`.
 
 ## Setup Cloud Config
 
@@ -61,7 +79,7 @@ Generate the Cloud Config and set it on your bosh director
 
 ```bash
 bin/generate_cloud_config <BOSH_ENV> > <BOSH_ENV>/cloud-config.yml
-# modify it?
+# modify it as necessary
 bosh-cli -e <BOSH_NAME> update-cloud-config <BOSH_ENV>/cloud-config.yml
 ```
 
