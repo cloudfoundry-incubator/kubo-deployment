@@ -64,7 +64,7 @@ generate_manifest() {
   local deployment_name=$2
   local manifest_path=$3
 
-  bosh_deployment_directory=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../"; pwd)
+  manifest_dir=$(cd "$(dirname "${manifest_path}")"; pwd)
   manifest="$(cat "${manifest_path}")"
 
   if [ -e "${bosh_environment}/${deployment_name}.yml" ]; then
@@ -72,18 +72,18 @@ generate_manifest() {
   fi
 
   if bosh-cli int "${bosh_environment}/director.yml" --path='/http_proxy' &>/dev/null; then
-    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${bosh_deployment_directory}/manifests/ops-files/add-http-proxy.yml")
+    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/add-http-proxy.yml")
   fi
 
   if bosh-cli int "${bosh_environment}/director.yml" --path='/https_proxy' &>/dev/null; then
-    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${bosh_deployment_directory}/manifests/ops-files/add-https-proxy.yml")
+    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/add-https-proxy.yml")
   fi
 
   if bosh-cli int "${bosh_environment}/director.yml" --path='/no_proxy' &>/dev/null; then
-    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${bosh_deployment_directory}/manifests/ops-files/add-no-proxy.yml")
+    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/add-no-proxy.yml")
   fi
 
-  manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${bosh_deployment_directory}/manifests/ops-files/cf-routing.yml")
+  manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/cf-routing.yml")
 
   if [ -e "${bosh_environment}/${deployment_name}-vars.yml" ]; then
     manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/${deployment_name}-vars.yml")
@@ -104,7 +104,7 @@ generate_manifest() {
 
   manifest=$(echo "${manifest}" | bosh-cli int - --vars-store="${bosh_environment}/${deployment_name}-creds.yml")
 
-  manifest=$(echo "${manifest}" | bosh-cli int - --ops-file="${bosh_deployment_directory}/manifests/ops-files/remove-variables.yml")
+  manifest=$(echo "${manifest}" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-variables.yml")
 
   printf "%s" "${manifest}"
 }
