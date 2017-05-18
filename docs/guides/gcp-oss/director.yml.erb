@@ -1,7 +1,7 @@
 <%
 require 'securerandom'
 
-%w(project_id network kubo_subnet kubo_master_target_pool kubernetes_api_ip kubo_zone network).each do |var|
+%w(project_id network kubo_subnet kubo_master_target_pool kubo_worker_target_pool kubernetes_api_ip kubo_zone network).each do |var|
    raise "Expected environment variable '#{var}' to be set" if ENV[var] == nil || ENV[var] == ""
 end
 
@@ -45,6 +45,7 @@ kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release-latest.tgz
 routing_mode: iaas
 kubernetes_api_ip: <%= ENV['kubernetes_api_ip'] %> # IP address that can be used to reach the Kubernetes API, usually the address of a load balancer
 master_target_pool: <%= ENV['kubo_master_target_pool'] %> # target pool that master nodes will be a part of
+worker_target_pool: <%= ENV['kubo_worker_target_pool'] %> # target pool that worker nodes will be a part of
 
 # CF routing mode settings
 # Uncomment and configure the lines below to leverage CF routing instead of IaaS routing
