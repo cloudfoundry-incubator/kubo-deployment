@@ -72,6 +72,8 @@
 
 ## Accessing Kubernetes services
 
+If you deployed Kubo using the Cloud Foundry routers, you can expose routes to your services in the following way:
+
 ### Creating TCP Routes
 1. Add a label to your service where the label is named `tcp-route-sync` and the value of the label is the frontend port that you want to expose your application on
    ```
