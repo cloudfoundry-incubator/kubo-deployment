@@ -12,6 +12,7 @@ import (
 
 var _ = Describe("Destroy KuBOSH", func() {
 	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp_with_creds")
+	validvSphereEnvironment := path.Join(testEnvironmentPath, "test_vsphere")
 	validOpenstackEnvironment := path.Join(testEnvironmentPath, "test_openstack")
 
 	Context("fails", func() {
@@ -75,6 +76,14 @@ var _ = Describe("Destroy KuBOSH", func() {
 			code, err := bash.Run("main", []string{validGcpEnvironment, pathFromRoot("README.md")})
 			Expect(stderr).To(gbytes.Say("bosh-cli delete-env"))
 			Expect(stderr).To(gbytes.Say("/bosh-deployment/gcp/cpi.yml"))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+		})
+
+		It("destroys a vSphere environment", func() {
+			code, err := bash.Run("main", []string{validvSphereEnvironment, pathFromRoot("README.md")})
+			Expect(stderr).To(gbytes.Say("bosh-cli delete-env"))
+			Expect(stderr).To(gbytes.Say("/bosh-deployment/vsphere/cpi.yml"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 		})
