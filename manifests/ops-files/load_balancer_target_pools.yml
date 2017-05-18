@@ -1,3 +1,6 @@
 - type: replace
   path: /vm_types/name=master/cloud_properties/target_pool?
   value: ((master_target_pool))
+- type: replace
+  path: /vm_types/name=worker/cloud_properties/target_pool?
+  value: ((worker_target_pool))

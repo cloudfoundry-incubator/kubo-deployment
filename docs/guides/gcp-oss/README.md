@@ -85,6 +85,7 @@ The remaining steps should all be done in succession from a single session to re
    ```bash
    export kubo_subnet=$(terraform output -state=${kubo_terraform_state} kubo_subnet)
    export kubo_master_target_pool=$(terraform output -state=${kubo_terraform_state} kubo_master_target_pool)
+   export kubo_worker_target_pool=$(terraform output -state=${kubo_terraform_state} kubo_worker_target_pool)
    export kubernetes_api_ip="$(terraform output -state=${kubo_terraform_state} master_lb_ip_address)"
    ```
 
