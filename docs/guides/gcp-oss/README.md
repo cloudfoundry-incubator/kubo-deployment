@@ -40,19 +40,19 @@ The remaining steps should all be done in succession from a single session to re
 1. `cd` into the guide directory
 
    ```bash
-   cd ~/kubo-deployment/docs/guides/gcp-oss-cf
+   cd ~/kubo-deployment/docs/guides/gcp-oss
    ```
 
 1. Export these values. If you haven't tweaked any settings then use these defaults:
 
    ```bash
-   export project_id=<name of project>
-   export network=<network created using terraform script above. By default - bosh>
+   export project_id=$(gcloud config get-value project)
    export kubo_region=us-west1
    export kubo_zone=us-west1-a
    export kubo_env=kube
    export state_dir=~/kubo-env/${kubo_env}
    export kubo_terraform_state=${state_dir}/terraform.tfstate
+   export network=<network created using terraform script above. By default - bosh>
    ``` 
 
 1. Create a folder to store the environment configuration
@@ -85,7 +85,7 @@ The remaining steps should all be done in succession from a single session to re
    ```bash
    export kubo_subnet=$(terraform output -state=${kubo_terraform_state} kubo_subnet)
    export kubo_master_target_pool=$(terraform output -state=${kubo_terraform_state} kubo_master_target_pool)
-   export kubernetes_api_url="$(terraform output -state=${kubo_terraform_state} master_lb_ip_address):8443"
+   export kubernetes_api_ip="$(terraform output -state=${kubo_terraform_state} master_lb_ip_address)"
    ```
 
 1. Populate the director configurations
