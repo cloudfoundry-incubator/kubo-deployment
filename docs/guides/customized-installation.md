@@ -9,10 +9,6 @@
 
 ## Infrastructure Setup
 
-Kubo has two options for routing traffic to the cluster, using an IaaS load balancer, or using Cloud Foundry's routers.
-
-### Option 1: IaaS Load Balancer
-
 Kubo can be deployed with an IaaS load balancer that has a static external IP address and a forwarding rule to route traffic to the master nodes. If possible create a new subnet for Kubo to give it space and IP isolatuon. The following table specifies the needed routes and firewall rules
 
 | Description                | Source                     | Destination              | Ports                                  |
@@ -22,25 +18,6 @@ Kubo can be deployed with an IaaS load balancer that has a static external IP ad
 | Kubernetes API Endpoint    | Your machine, worker nodes | IaaS load balancer       | 8443/tcp                               |
 | PowerDNS                   | worker, master nodes       | KuBosh                   | 53/tcp                                 |
 | Kubernetes API routing     | IaaS load balancer         | master nodes             | 8443/tcp                               |
-
-### Option 2: Cloud Foundry Routers
-
-This option has 2 additional dependencies:
-- [Cloud Foundry](https://cloudfoundry.org) with [TCP Routing](https://docs.cloudfoundry.org/adminguide/enabling-tcp-routing.html)
-- CF UAA client with
-  [appropriate authorities](https://github.com/cloudfoundry-incubator/routing-api#configure-oauth-clients-manually-using-uaac-cli-for-uaa) 
-   is required in order to register the TCP routes.
-
-Kubo needs to be in a network that is routable to your Cloud Foundry deployment. When Kubo announces routes to Cloud Foundry it will report the primary IP of the machine. On GCP this means that even if you give assign ephemeral external IPs to the instances they will report their internal network IP. If possible create a seperate subnet for Kubo to give it space and IP isolatuon. The following table specifies the needed routes and firewall rules
-
-| Description                | Source                     | Destination              | Ports                                  |
-|----------------------------|----------------------------|--------------------------|----------------------------------------|
-| Access to KuBosh           | Your machine               | KuBosh                   | 2555/tcp, 6868/tcp, 8443/tcp, 8844/tcp |
-| BOSH Management            | worker, master nodes       | KuBosh                   | 0-65535/tcp, 0-65535/udp               |
-| Kubernetes API Endpoint    | Your machine, worker nodes | Cloud Foundry tcp-router | external-kubo-port/tcp                 |
-| PowerDNS                   | worker, master nodes       | KuBosh                   | 53/tcp                                 |
-| Kubernetes API routing     | Cloud Foundry tcp-router   | master nodes             | external-kubo-port/tcp                 |
-| Cloud Foundry API Endpoint | worker nodes               | Cloud Foundry API        | 443/tcp                                |
 
 ## Accessing the Kubo network
 
@@ -96,7 +73,7 @@ The generation of the manifest can be customized in the following ways:
   `<DEPLOYMENT_NAME>-vars.yml` into the environment folder, and specify the variables as key-value
   pairs, e.g.:
   ```yaml
-  routing-cf-client-secret: SuperSecretPa$$phrase
+  super-secret-secret: SuperSecretPa$$phrase
   ```
 
 1. Parts of the service manifest can be manipulated using 

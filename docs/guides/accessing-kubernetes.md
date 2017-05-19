@@ -72,33 +72,25 @@
 
 ## Accessing Kubernetes services
 
-If you deployed Kubo using the Cloud Foundry routers, you can expose routes to your services in the following way:
+To expose services running in your Kubernetes cluster, use the service type `NodePort` when deploying your service to Kubernetes. We do not currently support the type `LoadBalancer`, but we plan to soon with Github issue [#47](https://github.com/pivotal-cf-experimental/kubo-release/issues/47) in the [kubo-release](https://github.com/pivotal-cf-experimental/kubo-release) repository. Until this issue is resolved, an additional load balancer is provisioned using Terraform during the setup in our guide. If your service is exposed with a NodePort, you can access the service using the external IP address of the kubo-workers load balancer and the node port of your service.
 
-### Creating TCP Routes
-1. Add a label to your service where the label is named `tcp-route-sync` and the value of the label is the frontend port that you want to expose your application on
+### Example: Accessing the Kubernetes dashboard on GCP
+   
+1. Find the IP address of your worker load balancer
+
    ```
-   kubectl label services <your service name> tcp-route-sync=<frontend port>
+   gcloud compute addresses list | grep kubo-workers
+
+     kubo-workers    us-west1  XX.XXX.X.XXX     IN_USE
    ```
 
-1. Access your service from your browser at `<Cloud Foundry tcp url>:<frontend port>`
+1. Find the Node Port of the kubernetes-dashboard service
 
-   > **Note:** It may take up to 60 seconds for the route to be created
+   ```
+   kubectl describe service kubernetes-dashboard --namespace kube-system  | grep NodePort
 
-### Creating HTTP Routes
-1. Add a label to your service where the label is named `http-route-sync` and the value of the label is the name of the route that you want to create for your application
+     Type:                   NodePort
+     NodePort:               <unset> 31000/TCP
    ```
-   kubectl label services <your service name> http-route-sync=<route name>
-   ```
-   
-1. Access your service from your browser at `<route name>.<Cloud Foundry apps domain>`
-   
-   > **Note:** It may take up to 60 seconds for the route to be created
-   
-### Example: Accessing the Kubernetes dashboard
-   
-1. Expose an HTTP route for the dashboard service
-   ```
-   kubectl label services kubernetes-dashboard http-route-sync=dashboard --namespace=kube-system
-   ```
-   
-1. View the Kubernetes dashboard from your browser at `dashboard.<Cloud Foundry apps domain>`
+
+1. Access your service from your browser at `<IP address of load balancer>:<NodePort>`
