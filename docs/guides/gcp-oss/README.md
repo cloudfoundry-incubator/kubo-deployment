@@ -2,9 +2,8 @@
 
 ## Prerequisites
 
-1. Configure GCP project and deploy BOSH bastion by following 
-  [these instructions](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/blob/c2cdba4f2ac8944ce7eb9749f053d45588932e3b/docs/bosh/README.md)
-  up to the "Deploy BOSH" step. 
+1. Configure a GCP project and deploy a BOSH bastion by following the "Configure your Google Cloud Platform environmen" and "Deploy supporting infrastructure" steps in
+  [these instructions](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/blob/c2cdba4f2ac8944ce7eb9749f053d45588932e3b/docs/bosh/README.md).
 
 ## Prepare GCP Infrastructure
 
