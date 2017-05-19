@@ -65,7 +65,7 @@ main() {
   export_bosh_environment "${bosh_env}"
   bosh_director_name="$(get_setting "director.yml" /director_name)"
 
-  upload_stemcell
+  upload_stemcell "${release_source}"
   upload_releases "${release_source}"
   set_cloud_config
   set_kubernetes_certificate_in_credhub "${bosh_director_name}/${deployment_name}/tls-kubernetes"
@@ -109,6 +109,8 @@ upload_releases() {
 }
 
 upload_stemcell() {
+  local release_source=$1
+  
   if [ "${release_source}" != "skip" ]; then
     local stemcell_url="$(get_setting director.yml /stemcell_url)"
     BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET="$(get_bosh_secret)" bosh-cli -e "${BOSH_NAME}" upload-stemcell ${stemcell_url}
