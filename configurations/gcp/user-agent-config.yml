@@ -1,0 +1,4 @@
+---
+- type: replace
+  path: /cloud_provider/properties/google/user_agent_prefix?
+  value: "kubo/0.0.3"
