@@ -74,6 +74,7 @@ deploy_gcp() {
     --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
     --ops-file "$(repo_directory)/configurations/generic/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
+    --ops-file "${current_directory}/configurations/gcp/user-agent-config.yml" \
     --state "${bosh_env}/state.json" \
     --var-file gcp_credentials_json="${service_account_filename}" \
     --vars-store "${bosh_env}/creds.yml" \
