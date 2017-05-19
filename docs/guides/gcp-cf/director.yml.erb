@@ -21,11 +21,6 @@ internal_ip: <%= ip_prefix %>.6 # Internal ip address of the BOSH director. Plea
 
 deployments_network: <%= ENV['network'] %> # Network name to deploy service in your cloud config
 
-# we use BOSH 261 since CredHub 0.4 supports only it
-# CredHub 0.4 fixes important bug that breaks deployment
-bosh_release_url: http://bosh.io/d/github.com/cloudfoundry/bosh?v=261.2 # URL to  261 bosh-director release https://s3.amazonaws.com/kubo-public/bosh-dev-release.tgz, or link to a local file
-bosh_release_sha1: d4635b4b82b0dc5fd083b83eb7e7405832f6654b # SHA1 of latest stable 261 bosh-director release
-
 credhub_encryption_key: <%= SecureRandom.hex(16) %> # 16 byte number in HEX format: i.e. ABCDEF0123456789ABCDEF0123456789
 
 internal_cidr: <%= ip_prefix %>.0/24 # CIDR range that BOSH will deploy to
