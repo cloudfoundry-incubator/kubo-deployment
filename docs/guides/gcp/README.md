@@ -39,7 +39,7 @@ The remaining steps should all be done in succession from a single session to re
 1. `cd` into the guide directory
 
    ```bash
-   cd ~/kubo-deployment/docs/guides/gcp-oss
+   cd ~/kubo-deployment/docs/guides/gcp
    ```
 
 1. Export these values. If you haven't tweaked any settings then use these defaults:
