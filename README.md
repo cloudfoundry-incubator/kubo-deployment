@@ -59,7 +59,7 @@ The Cloud Foundry subnet must be able to route traffic directly to the Kubo subn
 
 Please choose the guide below that matches your requirements
 
-1. [Recommended] Deploy Kubo from scratch on Google Cloud Platform - [guide](docs/guides/gcp-oss)
+1. [Recommended] Deploy Kubo from scratch on Google Cloud Platform - [guide](docs/guides/gcp)
 1. Deploy Kubo using an existing Cloud Foundry installation for routing on Google Cloud Platform - [guide](docs/guides/gcp-cf)
 1. Deploy Kubo step by step, allowing for customization - [guide](docs/guides/customized-installation.md)
 
