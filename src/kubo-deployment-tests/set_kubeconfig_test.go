@@ -4,12 +4,13 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"path/filepath"
 
+	. "github.com/jhvhs/gob-mock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
-	"path/filepath"
 )
 
 var _ = Describe("set_kubeconfig", func() {
@@ -19,18 +20,12 @@ var _ = Describe("set_kubeconfig", func() {
 	BeforeEach(func() {
 		bash.Source(pathToScript("lib/deploy_utils"), nil)
 		bash.Source(pathToScript("set_kubeconfig"), nil)
-		bash.Source("__", func(string) ([]byte, error) {
-			return []byte(`get_setting() {
-				[ "$2" == "/external-kubo-port" ] && echo "some-port";
-				[ "$2" == "/cf-tcp-router-name" ] && echo "some-url";
-				[ "$2" == "/kubo-admin-password" ] && echo "sekret";
-				return 0;
-			}`), nil
-		})
-		bash.ExportFunc("kubectl", emptyCallback)
-		bash.ExportFunc("bosh-cli", emptyCallback)
-		bash.ExportFunc("credhub", emptyCallback)
-		bash.SelfPath = "invocationRecorder"
+		getSetting := Mock("get_setting",
+			`[ "$2" == "/external-kubo-port" ] && echo "some-port"
+			[ "$2" == "/cf-tcp-router-name" ] && echo "some-url"
+			[ "$2" == "/kubo-admin-password" ] && echo "sekret"`)
+		mocks := []Gob{Spy("kubectl"), Spy("bosh-cli"), Spy("credhub"), getSetting}
+		ApplyMocks(bash, mocks)
 
 		tmpdir := os.TempDir()
 		deployUtilContent := []byte("\n")
@@ -48,24 +43,21 @@ var _ = Describe("set_kubeconfig", func() {
 		Entry("no params", []string{}),
 		Entry("single parameter", []string{"a"}),
 		Entry("three parameters", []string{"a", "b", "c"}),
-		Entry("with missing environemnt", []string{"/missing", "a"}),
+		Entry("with missing environment", []string{"/missing", "a"}),
 	)
 
 	Context("when correct parameters are provided", func() {
 		BeforeEach(func() {
-			bash.Source("__", func(string) ([]byte, error) {
-				return []byte(`bosh-cli() {
-					[ "$4" == "/iaas" ] && echo "gcp";
-					return 0;
-				}`), nil
-			})
+			mocks := []Gob{Mock("bosh-cli", `[ "$4" == "/iaas" ] && echo "gcp"`)}
+			ApplyMocks(bash, mocks)
+
 			status, err := bash.Run("main", []string{kuboEnv, "deployment-name"})
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 		})
 
-		It("should set cluser config on kubectl", func() {
+		It("should set cluster config on kubectl", func() {
 			Expect(stderr).To(gbytes.Say("kubectl config set-cluster deployment-name --server=https://some-url:some-port"))
 		})
 

@@ -27,6 +27,6 @@ credhub_release_url: https://s3.amazonaws.com/kubo-public/credhub-0.4.0.tgz
 kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest.tgz
 
 # uncomment these fields to configure proxy settings for docker
-# http_proxy:
-# https_proxy:
-# no_proxy:
+# http_proxy: # e.g. http://my.proxy.local:73636
+# https_proxy: # e.g. https://secure.proxy.local:5566
+# no_proxy: # e.g. '1.2.3.4,2.3.4.5'

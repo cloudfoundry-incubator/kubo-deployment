@@ -1,19 +1,19 @@
 package kubo_deployment_tests_test
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
+	"path/filepath"
+	"runtime"
+	"testing"
 
 	homedir "github.com/mitchellh/go-homedir"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 	basher "github.com/progrium/go-basher"
-
-	"path/filepath"
-	"runtime"
-	"testing"
 )
 
 var (
@@ -21,11 +21,10 @@ var (
 	stdout *gbytes.Buffer
 	stderr *gbytes.Buffer
 
-	resourcesPath      = filepath.Join(pathFromRoot("src"), "kubo-deployment-tests", "resources")
-	testEnvironmentPath = filepath.Join(resourcesPath, "environments")
-	invocationRecorder = filepath.Join(resourcesPath, "lib", "invocation_recorder.sh")
+	resourcesPath         = filepath.Join(pathFromRoot("src"), "kubo-deployment-tests", "resources")
+	testEnvironmentPath   = filepath.Join(resourcesPath, "environments")
+	repoDirectoryFunction = []byte(fmt.Sprintf(`repo_directory() { echo "%s"; }`, pathFromRoot("")))
 
-	emptyCallback = func([]string) {}
 	bashPath      string
 )
 
@@ -59,7 +58,6 @@ var _ = BeforeEach(func() {
 	stderr = gbytes.NewBuffer()
 	bash.Stdout = io.MultiWriter(GinkgoWriter, stdout)
 	bash.Stderr = io.MultiWriter(GinkgoWriter, stderr)
-	bash.Source(invocationRecorder, nil)
 	bash.SelfPath = "/bin/echo"
 
 	bash.CopyEnv()

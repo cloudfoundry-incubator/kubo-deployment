@@ -1,9 +1,9 @@
 package kubo_deployment_tests_test
 
 import (
-	"fmt"
 	"path"
 
+	. "github.com/jhvhs/gob-mock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
@@ -12,11 +12,15 @@ import (
 
 var _ = Describe("Destroy KuBOSH", func() {
 	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp_with_creds")
+	validvSphereEnvironment := path.Join(testEnvironmentPath, "test_vsphere")
 	validOpenstackEnvironment := path.Join(testEnvironmentPath, "test_openstack")
 
 	Context("fails", func() {
-		BeforeEach(func() {
-			bash.ExportFunc("bosh-cli", emptyCallback)
+		JustBeforeEach(func() {
+			ApplyMocks(bash, []Gob{Stub("bosh-cli")})
+			bash.Source("", func(string) ([]byte, error) {
+				return repoDirectoryFunction, nil
+			})
 		})
 
 		DescribeTable("when wrong number of arguments is used", func(params []string) {
@@ -45,23 +49,9 @@ var _ = Describe("Destroy KuBOSH", func() {
 
 	Context("succeeds", func() {
 		BeforeEach(func() {
-			bash.SelfPath = "invocationRecorder"
 			bash.Source(pathToScript("destroy_bosh"), nil)
-			bash.Source("_", func(string) ([]byte, error) {
-				repoDirectory := fmt.Sprintf(`
-				repo_directory() { echo "%s"; }
-				bosh-cli() {
-					if [ $1 == 'int' ]; then
-					  $(which bosh-cli) "$@"
-					else
-						echo "bosh-cli $@" >&2
-				  fi
-					return 0
-				}
-				export -f bosh-cli
-				`, pathFromRoot(""))
-				return []byte(repoDirectory), nil
-			})
+			bashMock := MockOrCallThrough("bosh-cli", `echo "bosh-cli $@" >&2`, `[[ "$1" == "int" ]]`)
+			ApplyMocks(bash, []Gob{bashMock})
 		})
 
 		It("runs with a valid environment and an extra file", func() {
@@ -86,6 +76,14 @@ var _ = Describe("Destroy KuBOSH", func() {
 			code, err := bash.Run("main", []string{validGcpEnvironment, pathFromRoot("README.md")})
 			Expect(stderr).To(gbytes.Say("bosh-cli delete-env"))
 			Expect(stderr).To(gbytes.Say("/bosh-deployment/gcp/cpi.yml"))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+		})
+
+		It("destroys a vSphere environment", func() {
+			code, err := bash.Run("main", []string{validvSphereEnvironment, pathFromRoot("README.md")})
+			Expect(stderr).To(gbytes.Say("bosh-cli delete-env"))
+			Expect(stderr).To(gbytes.Say("/bosh-deployment/vsphere/cpi.yml"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 		})
