@@ -2,9 +2,9 @@ name: ((deployment_name))
 
 releases:
 - name: etcd
-  version: 105
-  url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=105
-  sha1: 444bde1b6d7ae10ea18008f7da45152da1c2b90e
+  version: 108+dev.2
+  url: https://storage.googleapis.com/kubo-etcd/kubo-etcd-release.108%2Bdev.2.tgz
+  sha1: 6f452dae3d6399b38cbdee983847b81f88fc8163
 - name: kubo
   version: latest
 - name: docker
