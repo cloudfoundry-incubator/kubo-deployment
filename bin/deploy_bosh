@@ -33,7 +33,7 @@ main() {
 
   iaas=$(bosh-cli int ${bosh_env}/director.yml --path /iaas)
 
-  if [ "$iaas" != 'gcp' ] && [ "$iaas" != 'openstack' ] && [ "$iaas" != 'vsphere' ]; then
+  if ! [[ "$iaas" =~ ^(gcp|openstack|vsphere)$ ]]; then
     echo "Supported platforms are: 'gcp', 'openstack', 'vsphere'"
     echo ""
     print_usage

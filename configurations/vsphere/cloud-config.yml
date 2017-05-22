@@ -6,7 +6,7 @@ azs:
     - clusters: [((vcenter_cluster)): {}]
 
 networks:
-- name: &network_name ((deployments_network))
+- name: &cloud_network ((deployments_network))
   type: manual
   subnets:
   - range: ((internal_cidr))
@@ -38,7 +38,7 @@ disk_types:
 
 compilation:
   workers: 4
-  network: *network_name
+  network: *cloud_network
   az: z1
   reuse_compilation_vms: true
   vm_type: worker
