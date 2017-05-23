@@ -69,6 +69,25 @@ var _ = Describe("Generate manifest", func() {
 			Entry("Auto-generated admin password", "\n      admin-password: [a-z0-9]+\n"),
 		)
 
+
+		DescribeTable("populated properties for IaaS-based deployment", func(line string) {
+			status, err := bash.Run("main", []string{kuboEnv, "grinder"})
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+
+			Expect(stdout).To(gbytes.Say(line))
+		},
+			Entry("deployment name", "\nname: grinder\n"),
+			Entry("stemcell version", "\n  version: stemcell\\.version\\.gcp\n"),
+			Entry("network name", "\n  networks:\n  - name: network-name\n"),
+			Entry("kubernetes API URL", "\n      kubernetes-api-url: https://12\\.23\\.34\\.45:8443\n"),
+			Entry("Auto-generated kubelet password", "\n      kubelet-password: [a-z0-9]+\n"),
+			Entry("Auto-generated admin password", "\n      admin-password: [a-z0-9]+\n"),
+		)
+
+
+
 		It("should not include the variable setion", func() {
 			status, err := bash.Run("main", []string{kuboEnv, "cucumber"})
 			Expect(err).NotTo(HaveOccurred())
