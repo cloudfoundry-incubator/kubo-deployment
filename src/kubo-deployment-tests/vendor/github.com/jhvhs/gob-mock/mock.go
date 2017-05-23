@@ -1,6 +1,9 @@
 package gobmock
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/tonnerre/golang-text"
+)
 
 // Produces a bash function with a given name.
 // The function will report it's arguments
@@ -33,9 +36,14 @@ func (m *mock) mockFunction() string {
 	script := scriptStart + spyDefinition + m.mockBody() + scriptEnd
 	return fmt.Sprintf(script, m.name, m.script)
 }
+
 func (m *mock) mockBody() string {
 	if m.condition != "" {
-		return "if " + m.condition + "; then\n" + callThroughDefinition + "else\n" + mockDefinition + "fi\n"
+		return m.callThrough()
 	}
 	return mockDefinition
+}
+
+func (m *mock)callThrough() string {
+	return text.Indent("\nif " + m.condition + "; then\n" + callThroughDefinition + "else\n" + mockDefinition + "fi\n", "  ")
 }

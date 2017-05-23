@@ -13,8 +13,8 @@ var _ = Describe("Stub", func() {
 
 	It("includes a basic shell stub", func() {
 		stub := Stub("devatio-crederes").MockContents()
-		Expect(stub).To(MatchRegexp("^devatio-crederes\\(\\)\\s*{"))
-		Expect(stub).To(MatchRegexp("while read -t0.05; do\\s+:\\s+done"))
+		Expect(stub).To(MatchRegexp("^\n# Gob\ndevatio-crederes\\(\\)\\s*{"))
+		Expect(stub).To(MatchRegexp("while read -r -t0.1; do\\s+:\\s+done"))
 	})
 
 })

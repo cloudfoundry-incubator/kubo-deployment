@@ -1,8 +1,8 @@
 hash: 322b732fb2a9f02a3b10cf1bb0f95652b6a9a136a1c8b9e33edc9b6646d9df25
-updated: 2017-05-16T21:08:21.579281138+01:00
+updated: 2017-05-23T11:48:19.612949687+01:00
 imports:
 - name: github.com/jhvhs/gob-mock
-  version: 5c76cc2e2b62fb3df0379905cd01b93eb0a38d22
+  version: 4c8dc9acd659b42f88b1aef44762d7f65e809458
 - name: github.com/onsi/ginkgo
   version: 43e2af1f01ace55adbb6d7d0f30416476db1baae
   subpackages:
@@ -43,6 +43,8 @@ testImports:
   version: ae77be60afb1dcacde03767a8c37337fad28ac14
 - name: github.com/mitchellh/go-homedir
   version: b8bc1bf767474819792c23f32d8286a45736f1c6
+- name: github.com/tonnerre/golang-text
+  version: 048ed3d792f7104850acbc8cfc01e5a6070f4c04
 - name: golang.org/x/sys
   version: a408501be4d17ee978c04a618e7a1b22af058c0e
   subpackages:
