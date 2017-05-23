@@ -83,7 +83,7 @@ generate_manifest() {
     manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/add-no-proxy.yml")
   fi
 
-  if [ "$(bosh-cli int "~/kubo-env/kube/director.yml" --path='/routing_mode')" = "cf" ]; then
+  if [ "$(bosh-cli int "${bosh_environment}/director.yml" --path='/routing_mode')" = "cf" ]; then
     manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/cf-routing.yml")
   fi
 
