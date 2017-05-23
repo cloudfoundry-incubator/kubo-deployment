@@ -39,14 +39,25 @@ var _ = Describe("Integration", func() {
 		bash.CopyEnv()
 	})
 
-	subShellTest := `main_test() {
+	exportedSubShellTest := `main_test() {
 			  local sub_shell
 			  sub_shell="$(mktemp)"
 			  trap "rm '${sub_shell}'" EXIT
 			  echo "#!${BASH}" > "${sub_shell}"
-			  echo 'echo "My child should bring home $(curl some://nonsense > /dev/null 2>&1; echo $?) bad grades"' > "${sub_shell}"
+			  echo 'echo "My child should bring home $(curl some://nonsense > /dev/null 2>&1; echo $?) bad grades"' >> "${sub_shell}"
 			  chmod +x "${sub_shell}"
 			  "${sub_shell}"
+			}`
+
+	shallowSubShellTest := `main_test() {
+			  local sub_shell
+			  sub_shell="$(mktemp)"
+			  trap "rm '${sub_shell}'" EXIT
+			  echo "#!${BASH}" > "${sub_shell}"
+			  echo 'echo "Look mom, we are bashing with $(file ${BASH})"' >> "${sub_shell}"
+			  chmod +x "${sub_shell}"
+			  "${sub_shell}"
+			  file $(which echo)
 			}`
 	Context("Stub", func() {
 		It("stubs executables", func() {
@@ -71,7 +82,7 @@ var _ = Describe("Integration", func() {
 		})
 
 		It("can be used in a child process", func() {
-			sourceString(subShellTest)
+			sourceString(exportedSubShellTest)
 
 			gobs := []Gob{Stub("curl")}
 			ApplyMocks(bash, gobs)
@@ -137,6 +148,23 @@ var _ = Describe("Integration", func() {
 			Expect(stderr).To(gbytes.Say("<1> printf One for all"))
 		})
 
+		It("is able to call through on a condition", func() {
+			sourceString(`
+			test_main() {
+			  printf Cats
+			  printf Dogz
+			}
+			`)
+			gobs := []Gob{SpyAndConditionallyCallThrough("printf", "[[ $1 =~ at ]]")}
+			ApplyMocks(bash, gobs)
+			bash.Run("test_main", []string{})
+
+			Expect(stdout).To(gbytes.Say("Cats"))
+			Expect(stdout).NotTo(gbytes.Say("Dogz"))
+			Expect(stderr).To(gbytes.Say("<1> printf Cats"))
+			Expect(stderr).To(gbytes.Say("<2> printf Dogz"))
+		})
+
 		It("pipes the input when calling through", func() {
 			sourceString(`
 			test_main() {
@@ -155,6 +183,43 @@ var _ = Describe("Integration", func() {
 			Expect(stderr).To(gbytes.Say("<1 received"))
 			Expect(stdout).To(gbytes.Say("lemons"))
 		})
+
+		Context("shallow mocking", func() {
+			BeforeEach(func() {
+				sourceString(shallowSubShellTest)
+			})
+
+			It("is available for spies", func() {
+				ApplyMocks(bash, []Gob{ShallowSpy("file")})
+				status, _ := bash.Run("main_test", []string{})
+
+				Expect(status).To(Equal(0))
+				Expect(stderr).NotTo(gbytes.Say("file .*/bash"))
+				Expect(stderr).To(gbytes.Say("<1> file .*/echo"))
+				Expect(stdout).To(gbytes.Say("we are bashing with /\\w+"))
+			})
+
+			It("is available for call through spies", func() {
+				ApplyMocks(bash, []Gob{ShallowSpyAndCallThrough("file")})
+				status, _ := bash.Run("main_test", []string{})
+
+				Expect(status).To(Equal(0))
+				Expect(stderr).NotTo(gbytes.Say("file .*/bash"))
+				Expect(stderr).To(gbytes.Say("<1> file .*/echo"))
+				Expect(stdout).To(gbytes.Say("we are bashing with /\\w+"))
+			})
+
+			It("is available for conditionally call through spies", func() {
+				ApplyMocks(bash, []Gob{ShallowSpyAndConditionallyCallThrough("file", "[[ 1 -eq 1 ]]")})
+				status, _ := bash.Run("main_test", []string{})
+
+				Expect(status).To(Equal(0))
+				Expect(stderr).NotTo(gbytes.Say("file .*/bash"))
+				Expect(stderr).To(gbytes.Say("<1> file .*/echo"))
+				Expect(stdout).To(gbytes.Say("we are bashing with /\\w+"))
+			})
+		})
+
 	})
 
 	Context("Mock", func() {
@@ -184,7 +249,7 @@ var _ = Describe("Integration", func() {
 		})
 
 		It("can be exported to child processes", func() {
-			sourceString(subShellTest)
+			sourceString(exportedSubShellTest)
 
 			gobs := []Gob{Mock("curl", "")}
 			ApplyMocks(bash, gobs)
