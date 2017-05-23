@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os/exec"
 	"path/filepath"
-	"strings"
 
 	. "github.com/jhvhs/gob-mock"
 	. "github.com/onsi/ginkgo"
@@ -17,20 +16,22 @@ var _ = Describe("Generate cloud config", func() {
 	var kuboEnv = filepath.Join(testEnvironmentPath, "test_gcp")
 
 	BeforeEach(func() {
-		bash.Source(pathToScript("lib/deploy_utils"), nil)
 		bash.Source(pathToScript("generate_cloud_config"), nil)
-		mocks := []Gob{Spy("pushd"), Spy("popd"), Spy("bosh-cli")}
-		ApplyMocks(bash, mocks)
+		bash.Source("", func(string) ([]byte, error) {
+			return repoDirectoryFunction, nil
+		})
 	})
 
 	It("calls bosh-cli with appropriate arguments", func() {
-		boshMock := Mock("bosh-cli", `[ "$4" == "/iaas" ] && echo "gcp"`)
+		boshMock := SpyAndCallThrough("bosh-cli")
 		ApplyMocks(bash, []Gob{boshMock})
 		status, err := bash.Run("main", []string{kuboEnv})
 
 		Expect(err).NotTo(HaveOccurred())
 		Expect(status).To(Equal(0))
-		Expect(stderr).To(gbytes.Say("bosh-cli int configurations/gcp/cloud-config.yml --vars-file " + kuboEnv + "/director.yml"))
+		cloudConfig := pathFromRoot("configurations/gcp/cloud-config.yml")
+		boshCmd := fmt.Sprintf("bosh-cli int %s --vars-file %s/director.yml", cloudConfig, kuboEnv)
+		Expect(stderr).To(gbytes.Say(boshCmd))
 	})
 
 	It("fails with no arguments", func() {
@@ -46,19 +47,5 @@ var _ = Describe("Generate cloud config", func() {
 		command.Stderr = bash.Stderr
 		command.Dir = pathToScript("")
 		Expect(command.Run()).To(Succeed())
-	})
-
-	It("should temporarily step into an upper level directory", func() {
-
-		status, err := bash.Run("main", []string{kuboEnv})
-		Expect(err).NotTo(HaveOccurred())
-		Expect(status).To(Equal(0))
-
-
-		// Our test executable is ~/.basher/bash, so the path should be one level up
-		targetPath := strings.Replace(bashPath, "/bash", "/../", 1)
-		Expect(stderr).To(gbytes.Say(fmt.Sprintf("<1> pushd %s", targetPath)))
-		Expect(stderr).To(gbytes.Say("<2> bosh-cli"))
-		Expect(stderr).To(gbytes.Say("<3> popd"))
 	})
 })

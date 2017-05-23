@@ -11,6 +11,10 @@ cat << EOF
 EOF
 }
 
+repo_directory() {
+  echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)"
+}
+
 main() {
   if [ $# -ne 1 ] ; then
     print_usage
@@ -18,16 +22,14 @@ main() {
   fi
 
   local bosh_env=$(cd "$1"; pwd)
-  pushd "$(cd "$(dirname "$0")"; pwd)/../" > /dev/null
-    local bosh_iaas="$(bosh-cli int ${bosh_env}/director.yml --path '/iaas')"
-    local cloud_config=""
-    if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" = "cf" ]; then
-      cloud_config=$(bosh-cli int "configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
-    else
-      cloud_config=$(bosh-cli int "configurations/${bosh_iaas}/cloud-config.yml" --ops-file="manifests/ops-files/load_balancer_target_pools.yml" --vars-file ${bosh_env}/director.yml)
-    fi
-    printf "%s" "${cloud_config}"
-  popd > /dev/null
+  local bosh_iaas="$(bosh-cli int ${bosh_env}/director.yml --path '/iaas')"
+  local cloud_config=""
+  if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" = "cf" ]; then
+    cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
+  else
+    cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/load_balancer_target_pools.yml")
+  fi
+  echo -n "${cloud_config}"
 }
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"

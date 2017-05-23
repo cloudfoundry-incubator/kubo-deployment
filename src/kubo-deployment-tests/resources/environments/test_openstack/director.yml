@@ -31,3 +31,5 @@ stemcell_url: # path to a stemcell used in all Kubo deployments
 credhub_release_url: https://s3.amazonaws.com/kubo-public/credhub-0.4.0.tgz
 kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release-latest.tgz
 
+routing_mode: iaas
+kubernetes_api_ip: 12.23.34.45
