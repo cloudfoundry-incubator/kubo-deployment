@@ -1,0 +1,262 @@
+---
+resources:
+  - name: bosh-deployment
+    type: git
+    source:
+      uri: https://github.com/cloudfoundry/bosh-deployment.git
+      branch: {{branch}}
+
+  # releases
+
+  - name: bosh-release
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/bosh
+
+  - name: uaa-release
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/uaa-release
+
+  - name: credhub-release
+    type: bosh-io-release
+    source:
+      repository: pivotal-cf/credhub-release
+
+  - name: warden-cpi
+    type: bosh-io-release
+    source:
+      repository: cppforlife/bosh-warden-cpi-release
+
+  - name: garden-linux
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/garden-linux-release
+
+  - name: garden-runc
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/garden-runc-release
+
+  # stemcells
+
+  - name: ubuntu-trusty-3363-stemcell
+    type: bosh-io-stemcell
+    source:
+      name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+
+  - name: ubuntu-trusty-3421-stemcell
+    type: bosh-io-stemcell
+    source:
+      name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+
+  # outputs
+
+  - name: compiled-releases
+    type: s3
+    source:
+      bucket: "bosh-compiled-release-tarballs"
+      access_key_id: {{aws_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      regexp: ".*-(\\d+).tgz"
+
+jobs:
+  - name: compile-bosh-release-261-ubuntu-trusty-3363
+    plan:
+      - aggregate:
+        - get: bosh-deployment
+        - get: bosh-release
+          version:
+            version: "261.4"
+        - get: ubuntu-trusty-3363-stemcell
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3363-stemcell
+          release: bosh-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-bosh-release-260-ubuntu-trusty-3363
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: bosh-release
+            version:
+              version: "260.6"
+          - get: ubuntu-trusty-3363-stemcell
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3363-stemcell
+          release: bosh-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-bosh-release-257-ubuntu-trusty-3363
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: bosh-release
+            version:
+              version: "257.24"
+          - get: ubuntu-trusty-3363-stemcell
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3363-stemcell
+          release: bosh-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-uaa-release-30-ubuntu-trusty-3363
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: uaa-release
+            version:
+              version: "30.3"
+          - get: ubuntu-trusty-3363-stemcell
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3363-stemcell
+          release: uaa-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-uaa-release-24-ubuntu-trusty-3363
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: uaa-release
+            version:
+              version: "24.10"
+          - get: ubuntu-trusty-3363-stemcell
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3363-stemcell
+          release: uaa-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-uaa-release-13-ubuntu-trusty-3363
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: uaa-release
+            version:
+              version: "13.15"
+          - get: ubuntu-trusty-3363-stemcell
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3363-stemcell
+          release: uaa-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-uaa-release-38-ubuntu-trusty-3421
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: uaa-release
+            version:
+              version: "38"
+          - get: ubuntu-trusty-3421-stemcell
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3421-stemcell
+          release: uaa-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-credhub-release-8-ubuntu-trusty-3421
+    plan:
+      - aggregate:
+        - get: bosh-deployment
+        - get: credhub-release
+          version:
+            version: "0.8.0"
+        - get: ubuntu-trusty-3421-stemcell
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3421-stemcell
+          release: credhub-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  # bosh-lite related
+
+  - name: compile-warden-cpi-ubuntu-trusty-3421
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: warden-cpi
+            version:
+              version: "34"
+          - get: ubuntu-trusty-3421-stemcell
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3421-stemcell
+          release: warden-cpi
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-garden-linux-ubuntu-trusty-3421
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: garden-linux
+            version:
+              version: "0.342.0"
+          - get: ubuntu-trusty-3421-stemcell
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3421-stemcell
+          release: garden-linux
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-garden-runc-ubuntu-trusty-3421
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: garden-runc
+            version:
+              version: "1.1.1"
+          - get: ubuntu-trusty-3421-stemcell
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3421-stemcell
+          release: garden-runc
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
