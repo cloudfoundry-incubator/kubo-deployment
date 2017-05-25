@@ -76,8 +76,8 @@ set_kubernetes_certificate_in_credhub() {
   local secret_path=$1
   local credhub_user_password="$(get_setting "creds.yml" "/credhub_user_password")"
   local credhub_api_url="https://$(get_setting "director.yml" "/internal_ip"):8844"
-  local tcp_router_ip=""
-  if [ "$(get_setting "director.yml" "/routing_mode")" = "cf" ]; then
+  local tcp_router_ip
+  if [ "$(get_setting "director.yml" "/routing_mode")" == "cf" ]; then
     tcp_router_ip="$(get_setting "director.yml" "/cf-tcp-router-name")"
   else
     tcp_router_ip="$(get_setting "director.yml" "/kubernetes_api_ip")"
