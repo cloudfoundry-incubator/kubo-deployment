@@ -18,47 +18,54 @@ ensure_config_file() {
   local generic_src=$2
   local dest=$3
 
-  if [ -f "$dest" ]; then
+  if [[ -f "$dest" ]]; then
     echo "Skipping config generation because ${dest} already exists"
   else
-    cat "$src" > "$dest"
+    cat "$generic_src" > "$dest"
     echo "" >> "$dest"
-    cat "$generic_src" >> "$dest"
+    if [[ -f "$src" ]]; then
+      cat "$src" >> "$dest"
+    fi
     echo "Generated: $( pwd )/${dest}"
   fi
 }
 
 main() {
-  local source_dir
+  echo "====================================="
+  echo "|  BOSH Kubo Environment Generator  |"
+  echo "====================================="
+  echo ""
+
+  if [ $# != 3 ]; then
+    print_usage
+    exit 1
+  fi
+
+  if ! [ -d "$1" ]; then
+    echo "'$1' should be an existing directory"
+    print_usage
+    exit 1
+  fi
+
+  local source_dir bosh_path bosh_name iaas
+
+  bosh_path="$(cd "$1"; pwd)"
+  bosh_name="$2"
+  iaas="$3"
+
+  if ! [[ "$iaas" =~ ^(gcp|vsphere|openstack)$ ]]; then
+    print_usage
+    exit 1
+  fi
+
   source_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 
   bosh_env_dir="${bosh_path}/${bosh_name}"
   mkdir -p "$bosh_env_dir"
-  pushd "$bosh_env_dir" > /dev/null
-    ensure_config_file "${source_dir}/configurations/$iaas/project-config.yml" "${source_dir}/configurations/generic/project-config.yml" "director.yml"
-    ensure_config_file "${source_dir}/configurations/$iaas/project-secrets.yml" "${source_dir}/configurations/generic/project-secrets.yml" "director-secrets.yml"
-    echo "iaas: $iaas" >> "director.yml"
-    echo "Update any generated files for your environment before deployment"
-  popd > /dev/null
+  ensure_config_file "${source_dir}/configurations/$iaas/project-config.yml" "${source_dir}/configurations/generic/project-config.yml" "${bosh_env_dir}/director.yml"
+  ensure_config_file "${source_dir}/configurations/$iaas/project-secrets.yml" "${source_dir}/configurations/generic/project-secrets.yml" "${bosh_env_dir}/director-secrets.yml"
+  echo "iaas: $iaas" >> "${bosh_env_dir}/director.yml"
+  echo "Update any generated files for your environment before deployment"
 }
 
-echo "====================================="
-echo "|  BOSH Kubo Environment Generator  |"
-echo "====================================="
-echo ""
-
-if [ $# != 3 ]; then
-  print_usage
-  exit 1
-fi
-
-bosh_path=$1
-bosh_name=$2
-iaas=$3
-
-if [ "$iaas" != 'gcp' ] && [ "$iaas" != 'openstack' ]; then
-  print_usage
-  exit 1
-fi
-
-main
+[[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"
