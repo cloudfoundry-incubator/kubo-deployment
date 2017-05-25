@@ -11,13 +11,13 @@
 
 Kubo can be deployed with an IaaS load balancer that has a static external IP address and a forwarding rule to route traffic to the master nodes. If possible create a new subnet for Kubo to give it space and IP isolatuon. The following table specifies the needed routes and firewall rules
 
-| Description                | Source                     | Destination              | Ports                                  |
-|----------------------------|----------------------------|--------------------------|----------------------------------------|
-| Access to KuBosh           | Your machine               | KuBosh                   | 2555/tcp, 6868/tcp, 8443/tcp, 8844/tcp |
-| BOSH Management            | worker, master nodes       | KuBosh                   | 0-65535/tcp, 0-65535/udp               |
-| Kubernetes API Endpoint    | Your machine, worker nodes | IaaS load balancer       | 8443/tcp                               |
-| PowerDNS                   | worker, master nodes       | KuBosh                   | 53/tcp                                 |
-| Kubernetes API routing     | IaaS load balancer         | master nodes             | 8443/tcp                               |
+| Description                | Source                     | Destination              | Ports                                   |
+|----------------------------|----------------------------|--------------------------|-----------------------------------------|
+| Access to KuBosh           | Your machine               | KuBosh                   | 25555/tcp, 6868/tcp, 8443/tcp, 8844/tcp |
+| BOSH Management            | worker, master nodes       | KuBosh                   | 0-65535/tcp, 0-65535/udp                |
+| Kubernetes API Endpoint    | Your machine, worker nodes | IaaS load balancer       | 8443/tcp                                |
+| PowerDNS                   | worker, master nodes       | KuBosh                   | 53/tcp                                  |
+| Kubernetes API routing     | IaaS load balancer         | master nodes             | 8443/tcp                                |
 
 ## Accessing the Kubo network
 
@@ -33,8 +33,7 @@ bin/generate_env_config <path/to/generation/target/folder> <BOSH_NAME> <IAAS>
 
 > Run `bin/generate_env_config --help` for more detailed information.
 
-This will create a directory with the same name as the environment at the specified path, containing three files:
-- `iaas` which contains IaaS name
+This will create a directory with the same name as the environment at the specified path, containing the following files:
 - `director.yml` which contains public BOSH director, IaaS and network configurations. ([example](https://github.com/pivotal-cf-experimental/kubo-deployment/blob/master/ci/environments/gcp/director.yml))
 - `director-secrets.yml` which contains sensitive configuration values, such as passwords and OAuth secrets
 
@@ -48,7 +47,7 @@ Credentials and SSL certificates for the environment will be generated and saved
 
 Subsequent runs of `bin/bosh_deploy` will apply changes made to the configuration to an already existing KuBOSH installation, reusing the credentials stored in the `creds.yml`.
 
-Another file that gets created during initial deployment is called `state.json`.
+Another file that gets created during initial deployment is called `state.json` which stores the BOSH state and is needed to destroy BOSH.
 
 ## Setup Cloud Config
 
@@ -56,7 +55,7 @@ Generate the Cloud Config and set it on your bosh director
 
 ```bash
 bin/generate_cloud_config <BOSH_ENV> > <BOSH_ENV>/cloud-config.yml
-# modify it as necessary
+# modify cloud-config.yml as necessary
 bosh-cli -e <BOSH_NAME> update-cloud-config <BOSH_ENV>/cloud-config.yml
 ```
 
@@ -76,7 +75,7 @@ The generation of the manifest can be customized in the following ways:
   super-secret-secret: SuperSecretPa$$phrase
   ```
 
-1. Parts of the service manifest can be manipulated using 
+2. Parts of the service manifest can be manipulated using 
   [go-patch](https://github.com/cppforlife/go-patch/blob/master/docs/examples.md) ops-files.
   To use this method, place a file named `<DEPLOYMENT_NAME>.yml` into the environment folder
   and fill it with go-patch instructions, e.g.:
@@ -101,7 +100,7 @@ Configure kubectl for your Kubo instance with the following command:
 bin/set_kubeconfig <BOSH_ENV> <DEPLOYMENT_NAME>
 ```
 
-You can now issue kubectl commands such as:
+You can now issue `kubectl` commands such as:
 ```bash
 kubectl get pods --namespace=kube-system
 kubectl get nodes

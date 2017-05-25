@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-1. Configure a GCP project and deploy a BOSH bastion by following the "Configure your Google Cloud Platform environmen" and "Deploy supporting infrastructure" steps in
+Configure a GCP project and deploy a BOSH bastion by following the "Configure your Google Cloud Platform environment" and "Deploy supporting infrastructure" steps in
   [these instructions](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/blob/c2cdba4f2ac8944ce7eb9749f053d45588932e3b/docs/bosh/README.md).
 
 ## Prepare GCP Infrastructure
@@ -21,7 +21,7 @@ The remaining steps should all be done in succession from a single session to re
 
 1. Install deployment dependencies:
    ```bash
-   sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.1-linux-amd64 -o /usr/bin/bosh-cli
+   sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.18-linux-amd64 -o /usr/bin/bosh-cli
    sudo chmod a+x /usr/bin/bosh-cli
    curl -L https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/0.4.0/credhub-linux-0.4.0.tgz | tar zxv
    chmod a+x credhub
@@ -106,7 +106,7 @@ The remaining steps should all be done in succession from a single session to re
 1. Return to the root of the kubo-deployment repo
 
    ```bash
-   cd ../../..
+   cd ~/kubo-deployment
    ```
 
 1. Deploy a BOSH director for Kubo
@@ -125,4 +125,27 @@ The remaining steps should all be done in succession from a single session to re
    kubectl get pods --namespace=kube-system
    ```
 
-1. See additional [guide](../accessing-kubernetes.md) on accessing Kubernetes
+## Accessing Kubernetes services
+
+To expose services running in your Kubernetes cluster, use the service type `NodePort` when deploying your service to Kubernetes. We do not currently support the type `LoadBalancer`, but we plan to soon with Github issue [#47](https://github.com/pivotal-cf-experimental/kubo-release/issues/47) in the [kubo-release](https://github.com/pivotal-cf-experimental/kubo-release) repository. Until this issue is resolved, an additional load balancer is provisioned using Terraform during the setup in our guide. If your service is exposed with a NodePort, you can access the service using the external IP address of the kubo-workers load balancer and the node port of your service.
+
+### Example: Accessing the Kubernetes dashboard on GCP
+   
+1. Find the IP address of your worker load balancer
+
+   ```
+   gcloud compute addresses list | grep kubo-workers
+
+     kubo-workers    us-west1  XX.XXX.X.XXX     IN_USE
+   ```
+
+1. Find the Node Port of the kubernetes-dashboard service
+
+   ```
+   kubectl describe service kubernetes-dashboard --namespace kube-system  | grep NodePort
+
+     Type:                   NodePort
+     NodePort:               <unset> 31000/TCP
+   ```
+
+1. Access your service from your browser at `<IP address of load balancer>:<NodePort>`

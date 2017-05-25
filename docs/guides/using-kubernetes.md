@@ -2,9 +2,9 @@
 
 ## Accessing the Kubernetes cluster
 
-1. Setup kubectl
+1. To set up `kubectl`, run the following command from the root of the `kubo-deployment` repo:
    ```
-   bin/set_kubeconfig ${state_dir} kube
+   ./bin/set_kubeconfig <BOSH_ENV> <DEPLOYMENT_NAME>
    ```
 
 1. Access your Kubernetes cluster
@@ -14,13 +14,13 @@
 
 ## Deploy a Kubernetes workload
 
-1. Once you can access your cluster, you should be able to deploy a simple workload. We'll try nginx as an example:
+1. After `kubectl` has been configured with the appropriate credentials, it can be used
+  to deploy a workload. The example below demonstrates an `nginx` deployment:
    ```
-   kubectl create -f ci/specs/nginx.yml
+   kubectl create -f nginx.yml
    ```
 
-1. This should create 3 nginx pods:
-
+1. This should create 3 `nginx` pods:
    ```
    kubectl get pods -o wide
    
@@ -47,7 +47,7 @@
      worker/ae232a39-0930-4482-9213-c6ea5e1ddab1  running        z1  10.0.1.7   vm-04bcebfa-b2a8-4f40-6363-3762030ea52c  worker
    ```
 
-1. Test that nginx is really running by obtaining the service's NodePort, and curling that port on any of your worker nodes:
+1. Test that `nginx` is really running by obtaining the service's NodePort, and curling that port on any of your worker nodes:
 
    ```
    kubectl describe svc nginx
@@ -68,29 +68,4 @@
    curl <worker node IP>:<NodePort>
    ```
    
-   This should display the standard nginx welcome page.
-
-## Accessing Kubernetes services
-
-To expose services running in your Kubernetes cluster, use the service type `NodePort` when deploying your service to Kubernetes. We do not currently support the type `LoadBalancer`, but we plan to soon with Github issue [#47](https://github.com/pivotal-cf-experimental/kubo-release/issues/47) in the [kubo-release](https://github.com/pivotal-cf-experimental/kubo-release) repository. Until this issue is resolved, an additional load balancer is provisioned using Terraform during the setup in our guide. If your service is exposed with a NodePort, you can access the service using the external IP address of the kubo-workers load balancer and the node port of your service.
-
-### Example: Accessing the Kubernetes dashboard on GCP
-   
-1. Find the IP address of your worker load balancer
-
-   ```
-   gcloud compute addresses list | grep kubo-workers
-
-     kubo-workers    us-west1  XX.XXX.X.XXX     IN_USE
-   ```
-
-1. Find the Node Port of the kubernetes-dashboard service
-
-   ```
-   kubectl describe service kubernetes-dashboard --namespace kube-system  | grep NodePort
-
-     Type:                   NodePort
-     NodePort:               <unset> 31000/TCP
-   ```
-
-1. Access your service from your browser at `<IP address of load balancer>:<NodePort>`
+   This should display the standard `nginx` welcome page.
