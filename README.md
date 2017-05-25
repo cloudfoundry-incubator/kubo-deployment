@@ -7,12 +7,12 @@ This repository contains the documentation, automation, and manifests for deploy
 ## CI Status
 | Job | Status |
 |---------|--------|
-| Install KuBOSH | [![KuBOSH Badge](https://p-concourse.kubo.cf-app.com/api/v1/teams/main/pipelines/kubo-deployment/jobs/install-bosh/badge)](https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment/jobs/install-bosh) |
-| Build Kubo Release | [![Build Kubo Release Badge](https://p-concourse.kubo.cf-app.com/api/v1/teams/main/pipelines/kubo-deployment/jobs/build-kubo-release/badge)](https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment/jobs/build-kubo-release) |
-| Deploy K8s | [![Deploy K8s Badge](https://p-concourse.kubo.cf-app.com/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s/badge)](https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s) |
-| Run smoke tests | [![Run smoke tests Badge](https://p-concourse.kubo.cf-app.com/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-workload/badge)](https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment/jobs/deploy-workload) |
+| Install KuBOSH | [![KuBOSH Badge](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment/jobs/install-bosh) |
+| Build Kubo Release | [![Build Kubo Release Badge](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment/jobs/build-kubo-release) |
+| Deploy K8s | [![Deploy K8s Badge](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s) |
+| Run smoke tests | [![Run smoke tests Badge](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment/jobs/deploy-workload) |
 
-See the [complete pipeline](https://p-concourse.kubo.cf-app.com/teams/main/pipelines/kubo-deployment) for more details
+See the [complete pipeline](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) for more details
 
 ## Table of Contents
 
