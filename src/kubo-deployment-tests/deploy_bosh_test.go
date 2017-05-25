@@ -10,7 +10,6 @@ import (
 	"github.com/onsi/gomega/gbytes"
 )
 
-
 var _ = Describe("Deploy KuBOSH", func() {
 	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp")
 	validGcpCredsEnvironment := path.Join(testEnvironmentPath, "test_gcp_with_creds")
@@ -26,14 +25,17 @@ var _ = Describe("Deploy KuBOSH", func() {
 
 	Context("fails", func() {
 		BeforeEach(func() {
-			ApplyMocks(bash, []Gob{Stub("bosh-cli")})
+			boshCli := SpyAndConditionallyCallThrough("bosh-cli", "[[ \"$1\" =~ ^int ]]")
+			ApplyMocks(bash, []Gob{boshCli})
 		})
 
 		DescribeTable("when wrong number of arguments is used", func(params []string) {
-			code, err := bash.Run(pathToScript("deploy_bosh"), params)
+			script := pathToScript("deploy_bosh")
+			bash.Source(script, nil)
+			code, err := bash.Run("main", params)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).NotTo(Equal(0))
-
+			Expect(stdout).To(gbytes.Say("Usage: "))
 		},
 			Entry("has no arguments", []string{}),
 			Entry("has one argument", []string{"gcp"}),
