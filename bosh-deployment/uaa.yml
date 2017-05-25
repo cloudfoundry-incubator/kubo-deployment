@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: uaa
-    version: "30.1"
-    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/uaa-30.1-ubuntu-trusty-3363.20-20170426-001350-390262806-20170426001357.tgz?versionId=gYg57rT8Ic0S1VzfevbAMiykEAghYHkL
-    sha1: 7ca975dccc67cc9e88fd504bd1751a1ba06609be
+    version: 24
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/uaa-24-ubuntu-trusty-3312.15-20170120-023622-425305721-20170120023628.tgz?versionId=YLs5vQ9b71TS3Qj7fvOv0Ak.g_H9ZsDd
+    sha1: 7586b83aef6b099cb94458fef8200c70cd868184
 
 # Switch Director to use UAA
 - type: replace

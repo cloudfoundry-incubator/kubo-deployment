@@ -10,8 +10,8 @@
 - type: replace
   path: /resource_pools/name=vms/stemcell?
   value:
-    url: https://bosh.io/d/stemcells/bosh-openstack-kvm-ubuntu-trusty-go_agent?v=3363.20
-    sha1: bc8096c0d817b407aed15af487bd6d5f4ad069f7
+    url: https://bosh.io/d/stemcells/bosh-openstack-kvm-ubuntu-trusty-go_agent?v=3312.15
+    sha1: 2d62de3fedfa256fd562b1981db2f730b74e1253
 
 # Configure sizes
 - type: replace
@@ -42,6 +42,7 @@
       password: ((postgres_password))
       database: bosh
       adapter: postgres
+    http: {user: registry, password: ((registry_password)), port: 25777}
     username: registry
     password: ((registry_password))
     port: 25777

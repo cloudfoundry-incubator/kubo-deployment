@@ -44,7 +44,7 @@
 1. Alias and log into the Director
 
     ```
-    $ bosh -e 192.168.50.6 --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca) alias-env vbox
+    $ bosh -e 192.168.50.6 --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca) alias-env vbox 
     $ export BOSH_CLIENT=admin
     $ export BOSH_CLIENT_SECRET=`bosh int ./creds.yml --path /admin_password`
     ```
@@ -74,9 +74,3 @@
     $ sudo route add -net 10.244.0.0/16 gw 192.168.50.6 # Linux
     $ route add           10.244.0.0/16    192.168.50.6 # Windows
     ```
-
-1. In case you need to SSH into the Director VM, see [Jumpbox user](jumpbox-user.md).
-
-1. In case VirtualBox VM shuts down or reboots
-
-    To bring back the Director on the VM you will have to re-run `create-env` command from above. (You will have to remove `current_manifest_sha` line from `state.json` to force a redeploy.) The containers will be lost after a VM restart, but you can restore your deployment with `bosh cck` command. Alternatively *Pause* the VM from the VirtualBox UI before shutting down VirtualBox host, or making your computer sleep.
