@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-[ -z "$DEBUG" ] || set -x
+[[ -n "$DEBUG" ]] && set -x
 
 echo "====================================="
 echo "|         KuBOSH Deployer           |"
@@ -24,12 +24,13 @@ repo_directory() {
 
 main() {
   local bosh_env extra_filename iaas
-  bosh_env=$(cd ${1}; pwd)
 
-  if [ ! -d "${bosh_env}" ]; then
+  if [ ! -d "${1}" ]; then
     print_usage
     exit 1
   fi
+
+  bosh_env=$(cd "${1}"; pwd)
 
   iaas=$(bosh-cli int ${bosh_env}/director.yml --path /iaas)
 
@@ -41,7 +42,7 @@ main() {
   fi
 
   extra_filename="$2"
-  if [ -z "${extra_filename}" ] && [ "$iaas" != 'vsphere' ]; then
+  if [ "$iaas" != 'vsphere' ] && [ ! -f "${extra_filename}" ] ; then
     print_usage
     exit 1
   fi
