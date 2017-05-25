@@ -1,6 +1,6 @@
 # kubo-deployment
 
-Kubo is a [BOSH](https://bosh.io/) release for Kubernetes. It provides a solution for deploying and managing Kubernetes with BOSH alongside [Cloud Foundry](https://cloudfoundry.org). 
+Kubo is a [BOSH](https://bosh.io/) release for Kubernetes. It provides a solution for deploying and managing Kubernetes with BOSH alongside [Cloud Foundry](https://cloudfoundry.org).
 
 This repository contains the documentation, automation, and manifests for deploying [kubo-release](https://github.com/pivotal-cf-experimental/kubo-release) with BOSH.
 
@@ -36,7 +36,7 @@ Kubernetes applications deployed to a Kubo instance are not currently exposed to
 
 ![Diagram describing how traffic is routed to Kubo](docs/images/kubo-network.png)
 
-The nodes that run the Kubernetes API (master) register themselves with the Cloud Foundry TCP router. The TCP Router acts as both public and internal endpoint for the Kubernetes API to route traffic to the master nodes of a Kubo instance. All traffic to the API goes through the Cloud Foundry TCP router and then to a healthy node. 
+The nodes that run the Kubernetes API (master) register themselves with the Cloud Foundry TCP router. The TCP Router acts as both public and internal endpoint for the Kubernetes API to route traffic to the master nodes of a Kubo instance. All traffic to the API goes through the Cloud Foundry TCP router and then to a healthy node.
 
 The Cloud Foundry subnet must be able to route traffic directly to the Kubo subnet. It is recommended to keep them in separate subnets when possible to avoid the BOSH directors from trying to provision the same addresses. This diagram specifies CIDR ranges for demonstration purposes as well as a public router in front of the Cloud Foundry gorouter and tcp-router which is typical.
 
@@ -45,10 +45,10 @@ The Cloud Foundry subnet must be able to route traffic directly to the Kubo subn
 - Kubo - Kubernetes on BOSH
 - KuBOSH - BOSH with UAA, Credhub and PowerDNS
 - [Bastion](https://en.wikipedia.org/wiki/Jump_server) - A server within the kubo network that provides secure access to kubo.
-- BOSH environment Configuration - Folder that contains all configuration files needed to deploy KuBOSH and Kubo, as well as all 
+- BOSH environment Configuration - Folder that contains all configuration files needed to deploy KuBOSH and Kubo, as well as all
   configuration files that are generated during deployment. Also called `<BOSH_ENV>`
 - Creds - Credentials that are generated during KuBOSH deployment process and stored in `<BOSH_ENV>/creds.yml`
-- Service - stands for [K8s service](https://kubernetes.io/docs/user-guide/services), which represents a logical collection 
+- Service - stands for [K8s service](https://kubernetes.io/docs/user-guide/services), which represents a logical collection
   of Kubernetes pods and a way to access them without needing information about the specific pods
 
 ## Installation
@@ -79,8 +79,12 @@ bin/destroy_bosh ~/kubo-env/kube ~/kubo-env/kube/service_account.json
 
 ## Troubleshooting
 
-Please refer to the [troubleshooting guide](docs/troubleshooting.md) to look for solutions to the most common issues. 
+Please refer to the [troubleshooting guide](docs/troubleshooting.md) to look for solutions to the most common issues.
 
 ## Contributing
 
 For instructions on contributing to this project, please see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+#
+#
+#
