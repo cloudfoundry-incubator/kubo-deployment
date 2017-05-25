@@ -8,6 +8,12 @@ vm_types:
   cloud_properties:
     instance_type: m1.small
     root_disk_size_gb: 20
+
+- name: master
+  cloud_properties:
+    instance_type: m1.small
+    root_disk_size_gb: 20
+
 - name: worker
   cloud_properties:
     instance_type: m1.xlarge
