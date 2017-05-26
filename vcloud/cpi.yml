@@ -10,8 +10,8 @@
 - type: replace
   path: /resource_pools/name=vms/stemcell?
   value:
-    url: https://bosh.io/d/stemcells/bosh-vcloud-esxi-ubuntu-trusty-go_agent?v=3363.20
-    sha1: b523ac020f210fab25e4b215e1d5c50d619b541b
+    url: https://bosh.io/d/stemcells/bosh-vcloud-esxi-ubuntu-trusty-go_agent?v=3421.4
+    sha1: 55b664cc928cb8d61d1b5252b474bfe601718d45
 
 # Configure sizes
 - type: replace
