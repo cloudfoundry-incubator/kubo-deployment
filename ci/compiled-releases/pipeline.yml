@@ -121,7 +121,7 @@ jobs:
           - get: bosh-deployment
           - get: uaa-release
             version:
-              version: "30.3"
+              version: "30.4"
           - get: ubuntu-trusty-3363-stemcell
       - task: export-release
         file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
@@ -139,7 +139,7 @@ jobs:
           - get: bosh-deployment
           - get: uaa-release
             version:
-              version: "24.10"
+              version: "24.11"
           - get: ubuntu-trusty-3363-stemcell
       - task: export-release
         file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
@@ -157,7 +157,7 @@ jobs:
           - get: bosh-deployment
           - get: uaa-release
             version:
-              version: "13.15"
+              version: "13.16"
           - get: ubuntu-trusty-3363-stemcell
       - task: export-release
         file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
@@ -169,13 +169,13 @@ jobs:
         params:
           file: "compiled-release/*.tgz"
 
-  - name: compile-uaa-release-38-ubuntu-trusty-3421
+  - name: compile-uaa-release-40-ubuntu-trusty-3421
     plan:
       - aggregate:
           - get: bosh-deployment
           - get: uaa-release
             version:
-              version: "38"
+              version: "40"
           - get: ubuntu-trusty-3421-stemcell
       - task: export-release
         file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
