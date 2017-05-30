@@ -92,6 +92,16 @@ If needed, the generated manifest can be modified manually before being fed into
 bosh-cli -e <BOSH_NAME> -d <DEPLOYMENT_NAME> deploy <BOSH_ENV>/kubo-manifest.yml
 ```
 
+### Configuring proxy for Kubo
+
+The following variables can be configured in the director.yml to allow Docker have proxy access:
+
+```yaml
+http_proxy: # e.g. http://my.proxy.local:73636
+https_proxy: # e.g. https://secure.proxy.local:5566
+no_proxy: # e.g. '1.2.3.4,2.3.4.5'
+```
+
 ## Accessing Kubo
 
 Configure kubectl for your Kubo instance with the following command:
