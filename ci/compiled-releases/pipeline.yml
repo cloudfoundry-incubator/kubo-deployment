@@ -61,6 +61,26 @@ resources:
       regexp: ".*-(\\d+).tgz"
 
 jobs:
+  - name: compile-bosh-release-262-ubuntu-trusty-3421
+    plan:
+      - aggregate:
+        - get: bosh-deployment
+        - get: bosh-release
+          version:
+            version: "262"
+        - get: ubuntu-trusty-3421-stemcell
+          version:
+            version: "3421.3"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3421-stemcell
+          release: bosh-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
   - name: compile-bosh-release-261-ubuntu-trusty-3363
     plan:
       - aggregate:
