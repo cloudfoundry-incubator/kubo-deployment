@@ -5,12 +5,16 @@ Kubo is a [BOSH](https://bosh.io/) release for Kubernetes. It provides a solutio
 This repository contains the documentation and manifests for deploying [kubo-release](https://github.com/pivotal-cf-experimental/kubo-release) with BOSH.
 
 ## CI Status
-| Job | Status |
-|---------|--------|
-| Install KuBOSH | [![KuBOSH Badge](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment/jobs/install-bosh) |
-| Build Kubo Release | [![Build Kubo Release Badge](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment/jobs/build-kubo-release) |
-| Deploy K8s | [![Deploy K8s Badge](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s) |
-| Run smoke tests | [![Run smoke tests Badge](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment/jobs/deploy-workload) |
+
+Build Kubo Release status [![Build Kubo Release Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/build-kubo-release/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment)
+
+### IaaS specific jobs
+
+| Job | GCP with CF routing pipeline Status |GCP with load balancer status|vSphere status|
+|---------|--------|--------|--------|
+| Install KuBOSH | [![KuBOSH GCP Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/install-bosh-gcp/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![KuBOSH GCP LB Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/install-bosh-gcp-lb/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![KuBOSH vSphere Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/install-bosh-vsphere/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) |
+| Deploy K8s | [![Deploy K8s GCP Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s-gcp/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![Deploy K8s GCP LB Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s-gcp-lb/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![Deploy K8s vSphere Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s-vsphere/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) |
+| Run smoke tests | [![Run smoke tests GCP Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-workload-gcp/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![Run smoke tests GCP LB Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-workload-gcp-lb/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![Run smoke tests vSphere Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-workload-vsphere/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) |
 
 See the [complete pipeline](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) for more details
 
