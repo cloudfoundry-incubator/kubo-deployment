@@ -34,7 +34,7 @@ bin/generate_env_config <path/to/generation/target/folder> <BOSH_NAME> <IAAS>
 > Run `bin/generate_env_config --help` for more detailed information.
 
 This will create a directory with the same name as the environment at the specified path, containing the following files:
-- `director.yml` which contains public BOSH director, IaaS and network configurations. ([example](https://github.com/pivotal-cf-experimental/kubo-deployment/blob/master/ci/environments/gcp/director.yml))
+- `director.yml` which contains public BOSH director, IaaS and network configurations.
 - `director-secrets.yml` which contains sensitive configuration values, such as passwords and OAuth secrets
 
 Edit these files to match your environment and generate a private key/service account with access to create/destroy VMs/disks then run the following command:
