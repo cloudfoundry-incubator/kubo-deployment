@@ -27,7 +27,9 @@
   value: https://mbus:((mbus_bootstrap_password))@((external_ip)):6868
 
 - type: replace
-  path: /variables/name=director_ssl/options/alternative_names/-
+  path: /variables/name=mbus_bootstrap_ssl/options/alternative_names/-
   value: ((external_ip))
 
-# switch uaa to external_ip
+- type: replace
+  path: /variables/name=director_ssl/options/alternative_names/-
+  value: ((external_ip))

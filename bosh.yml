@@ -13,6 +13,8 @@ resource_pools:
   env:
     bosh:
       password: '*'
+      mbus:
+        cert: ((mbus_bootstrap_ssl))
 
 disk_pools:
 - name: disks
@@ -101,6 +103,7 @@ instance_groups:
 
 cloud_provider:
   mbus: https://mbus:((mbus_bootstrap_password))@((internal_ip)):6868
+  cert: ((mbus_bootstrap_ssl))
   properties:
     agent: {mbus: "https://mbus:((mbus_bootstrap_password))@0.0.0.0:6868"}
     blobstore: {provider: local, path: /var/vcap/micro_bosh/data/cache}
@@ -125,7 +128,13 @@ variables:
   type: certificate
   options:
     is_ca: true
-    common_name: ca # todo fix
+    common_name: ca
+- name: mbus_bootstrap_ssl
+  type: certificate
+  options:
+    ca: default_ca
+    common_name: ((internal_ip))
+    alternative_names: [((internal_ip))]
 - name: director_ssl
   type: certificate
   options:
