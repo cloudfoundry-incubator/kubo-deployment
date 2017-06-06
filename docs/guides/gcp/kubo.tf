@@ -34,6 +34,7 @@ resource "google_compute_address" "kubo-tcp" {
 
 // TCP Load Balancer
 resource "google_compute_target_pool" "kubo-tcp-public" {
+    region = "${var.kubo_region}"
     name = "${var.prefix}kubo-tcp-public"
 }
 
@@ -58,7 +59,7 @@ resource "google_compute_firewall" "kubo-tcp-public" {
 }
 
 
-// Subnet for Kubo 
+// Subnet for Kubo
 resource "google_compute_subnetwork" "kubo-subnet" {
   name          = "${var.prefix}kubo-${var.kubo_region}"
   region        = "${var.kubo_region}"
@@ -73,6 +74,7 @@ resource "google_compute_address" "kubo-workers-tcp" {
 
 // TCP Load Balancer
 resource "google_compute_target_pool" "kubo-workers-tcp-public" {
+    region = "${var.kubo_region}"
     name = "${var.prefix}kubo-workers-tcp-public"
 }
 
