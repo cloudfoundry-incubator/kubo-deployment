@@ -7,6 +7,11 @@ variable "kubo_region" {
 	default = "us-west1"
 }
 
+variable "ip_cidr_range" {
+    type = "string"
+    default = "10.0.1.0/24"
+}
+
 variable "network" {
     type = "string"
 }
@@ -15,6 +20,7 @@ variable "prefix" {
     type = "string"
     default = ""
 }
+
 provider "google" {
     credentials = ""
     project = "${var.projectid}"
@@ -56,7 +62,7 @@ resource "google_compute_firewall" "kubo-tcp-public" {
 resource "google_compute_subnetwork" "kubo-subnet" {
   name          = "${var.prefix}kubo-${var.kubo_region}"
   region        = "${var.kubo_region}"
-  ip_cidr_range = "10.0.1.0/24"
+  ip_cidr_range = "${var.ip_cidr_range}"
   network       = "https://www.googleapis.com/compute/v1/projects/${var.projectid}/global/networks/${var.network}"
 }
 

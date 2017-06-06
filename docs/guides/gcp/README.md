@@ -1,4 +1,4 @@
-# Example: Open Source Cloud Foundry and Kubo on GCP
+# Example: Kubo on GCP
 
 ## Prerequisites
 
@@ -66,7 +66,7 @@ The remaining steps should all be done in succession from a single session to re
       -var projectid=${project_id} \
       -var kubo_region=${kubo_region} \
       -state=${kubo_terraform_state}
-   ```
+   ```  
 
 1. Create the resources
    ```bash
@@ -77,6 +77,11 @@ The remaining steps should all be done in succession from a single session to re
       -state=${kubo_terraform_state}
    ```
 
+Additionally, the terraform script accepts the following variables:
+  
+  - `ip_cidr_range`: the CIDR range for the kubo subnetwork. The default value is `10.0.1.0/24`
+  - `prefix`: A prefix to use for all the GCP resource names. Defaults to an empty string.
+  
 ## Configure Kubo
 
 1. Retrieve the outputs of your Terraform run to be used in your Kubo deployment
