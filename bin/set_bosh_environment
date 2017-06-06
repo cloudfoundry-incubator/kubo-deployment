@@ -1,0 +1,7 @@
+#!/bin/bash -eu
+
+export BOSH_CLIENT=bosh_admin
+
+export BOSH_CLIENT_SECRET=$(bosh-cli int "$BOSH_ENV"/creds.yml --path=/bosh_admin_client_secret)
+export BOSH_CA_CERT=$(bosh-cli int "$BOSH_ENV"/creds.yml --path=/default_ca/ca)
+export BOSH_ENVIRONMENT=$(bosh-cli int "$BOSH_ENV"/director.yml --path=/internal_ip)
