@@ -353,6 +353,7 @@ bosh create-env bosh.yml \
 
 echo "- Azure (custom-environment)"
 bosh create-env bosh.yml \
+  -o azure/cpi.yml \
   -o azure/custom-environment.yml \
   --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
