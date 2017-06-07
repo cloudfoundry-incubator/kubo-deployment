@@ -31,6 +31,7 @@
     properties:
       uaa:
         url: "https://((internal_ip)):8443"
+        port: -1
         sslPrivateKey: ((uaa_ssl.private_key))
         sslCertificate: ((uaa_ssl.certificate))
         jwt:
