@@ -73,6 +73,7 @@ instance_groups:
       enable_post_deploy: true
       generate_vm_passwords: true
       enable_dedicated_status_worker: true
+      enable_nats_delivered_templates: true
       workers: 4
       events:
         record_events: true
