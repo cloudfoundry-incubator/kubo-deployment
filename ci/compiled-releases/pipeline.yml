@@ -23,6 +23,11 @@ resources:
     source:
       repository: pivotal-cf/credhub-release
 
+  - name: config-server-release
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/config-server-release
+
   - name: warden-cpi
     type: bosh-io-release
     source:
@@ -237,6 +242,26 @@ jobs:
         input_mapping:
           stemcell: ubuntu-trusty-3421-stemcell
           release: credhub-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-config-server-release-0-ubuntu-trusty-3421
+    plan:
+      - aggregate:
+        - get: bosh-deployment
+        - get: config-server-release
+          version:
+            version: "0.0.1"
+        - get: ubuntu-trusty-3421-stemcell
+          version:
+            version: "3421.3"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3421-stemcell
+          release: config-server-release
       - put: compiled-releases
         params:
           file: "compiled-release/*.tgz"
