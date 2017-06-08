@@ -16,7 +16,7 @@ Build Kubo Release status [![Build Kubo Release Badge](https://ci.kubo.sh/api/v1
 | Deploy K8s | [![Deploy K8s GCP Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s-gcp/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![Deploy K8s GCP LB Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s-gcp-lb/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![Deploy K8s vSphere Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s-vsphere/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) |
 | Run smoke tests | [![Run smoke tests GCP Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-workload-gcp/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![Run smoke tests GCP LB Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-workload-gcp-lb/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![Run smoke tests vSphere Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-workload-vsphere/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) |
 
-See the [complete pipeline](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) for more details
+See the [complete pipeline](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) for more details. The CI pipeline definitions are stored in the [kubo-ci](https://github.com/pivotal-cf-experimental/kubo-ci) repository.
 
 ## Table of Contents
 
