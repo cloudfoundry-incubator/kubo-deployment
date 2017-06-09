@@ -2,7 +2,9 @@
   path: /releases/-
   value:
     name: config-server
-    url: file:///tmp/config-server-release
+    version: 0.0.1
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/config-server-0.0.1-ubuntu-trusty-3421.3-20170608-000454-157276468-20170608000457.tgz?versionId=HwF8cmit07OsD4uhc3lK2GvrsNxUyql.
+    sha1: 674dbf587cddfa9a179917ac9af770d864f40440
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
