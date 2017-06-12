@@ -1,0 +1,16 @@
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/mounts?/-
+  value:
+    type: bind
+    source: ((docker_host))
+    target: /var/run/docker.sock # Place into location that's not bosh managed
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/docker_cpi/docker/host
+  value: unix:///var/run/docker.sock
+
+- type: remove
+  path: /instance_groups/name=bosh/properties/docker_cpi/docker/tls
+
+- type: remove
+  path: /cloud_provider/properties/docker_cpi/docker/tls
