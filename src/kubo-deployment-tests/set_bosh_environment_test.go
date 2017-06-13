@@ -9,7 +9,9 @@ import (
 )
 
 var _ = Describe("Setup BOSH environment", func() {
+
 	var kuboEnv = filepath.Join(testEnvironmentPath, "test_gcp_with_creds")
+
 	It("Sets the BOSH environment", func() {
 		bash.Export("BOSH_ENV", kuboEnv)
 		Expect(bash.Source(pathToScript("set_bosh_environment"), nil)).To(Succeed())

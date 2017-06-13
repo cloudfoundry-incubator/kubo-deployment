@@ -65,8 +65,8 @@ var _ = Describe("Generate manifest", func() {
 			Entry("CF UAA URL", "\n        uaa_url: cf.uaa.url\n"),
 			Entry("CF Client ID", "\n        uaa_client_id: cf.client.id\n"),
 			Entry("CF Client Secret", "\n        uaa_client_secret: cf.client.secret\n"),
-			Entry("Auto-generated kubelet password", "\n      kubelet-password: [a-z0-9]+\n"),
-			Entry("Auto-generated admin password", "\n      admin-password: [a-z0-9]+\n"),
+			Entry("Auto-generated kubelet password", "\n      kubelet-password: \\(\\(kubelet-password\\)\\)\n"),
+			Entry("Auto-generated admin password", "\n      admin-password: \\(\\(kubo-admin-password\\)\\)\n"),
 		)
 
 
@@ -82,24 +82,16 @@ var _ = Describe("Generate manifest", func() {
 			Entry("stemcell version", "\n  version: stemcell\\.version\\.gcp\n"),
 			Entry("network name", "\n  networks:\n  - name: network-name\n"),
 			Entry("kubernetes API URL", "\n      kubernetes-api-url: https://12\\.23\\.34\\.45:8443\n"),
-			Entry("Auto-generated kubelet password", "\n      kubelet-password: [a-z0-9]+\n"),
-			Entry("Auto-generated admin password", "\n      admin-password: [a-z0-9]+\n"),
+			Entry("Auto-generated kubelet password", "\n      kubelet-password: \\(\\(kubelet-password\\)\\)\n"),
+			Entry("Auto-generated admin password", "\n      admin-password: \\(\\(kubo-admin-password\\)\\)\n"),
 		)
 
-
-
-		It("should not include the variable setion", func() {
+		It("should include a variable section with tls-kubelet, tls-kubernetes", func() {
 			status, err := bash.Run("main", []string{kuboEnv, "cucumber"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
-			Expect(stdout).NotTo(gbytes.Say("variables:"))
-		})
-
-		It("should genrate K8s creds for reuse", func() {
-			bash.Run("main", []string{kuboEnv, "generis"})
-			_, err := os.Stat(filepath.Join(kuboEnv, "generis-creds.yml"))
-			Expect(err).NotTo(HaveOccurred())
+			Expect(stdout).To(gbytes.Say("variables:"))
 		})
 
 		It("should reproduce the same manifest on the second run", func() {
