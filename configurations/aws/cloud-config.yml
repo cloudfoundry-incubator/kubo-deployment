@@ -1,0 +1,49 @@
+azs:
+- name: z1
+  cloud_properties:
+    availability_zone: ((az))
+- name: z2
+  cloud_properties:
+    availability_zone: ((az))
+- name: z3
+  cloud_properties:
+    availability_zone: ((az))
+
+vm_types:
+- name: common
+  cloud_properties:
+    instance_type: t2.small
+    ephemeral_disk: {size: 25_000}
+- name: master
+  cloud_properties:
+    instance_type: t2.small
+    ephemeral_disk: {size: 25_000}
+- name: worker
+  cloud_properties:
+    instance_type: m4.xlarge
+    ephemeral_disk: {size: 100_000}
+
+disk_types:
+- name: 10240
+  disk_size: 10240
+- name: 5120
+  disk_size: 5120
+
+networks:
+- name: ((deployments_network))
+  type: manual
+  subnets:
+  - range: ((internal_cidr))
+    gateway: ((internal_gw))
+    azs: [z1, z2, z3]
+    dns: [8.8.8.8]
+    reserved: [((internal_gw))/30]
+    cloud_properties:
+      subnet: ((subnet_id))
+
+compilation:
+  workers: 5
+  reuse_compilation_vms: true
+  az: z1
+  vm_type: worker
+  network: ((deployments_network))
