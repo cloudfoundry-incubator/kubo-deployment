@@ -126,11 +126,11 @@ variables:
   type: certificate
   options:
     ca: kubo_ca
-    common_name: ((cf-tcp-router-name))
-    alternative_names: [((cf-tcp-router-name))]
+    common_name: ((kubernetes_api_ip))
+    alternative_names: [((kubernetes_api_ip))]
 - name: tls-kubernetes
   type: certificate
   options:
     ca: kubo_ca
-    common_name: ((cf-tcp-router-name))
-    alternative_names: [((cf-tcp-router-name))]
+    common_name: ((kubernetes_api_ip))
+    alternative_names: [((kubernetes_api_ip))]
