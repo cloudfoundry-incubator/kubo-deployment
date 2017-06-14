@@ -100,7 +100,7 @@ echo "- AWS with UAA for BOSH development"
 bosh deploy bosh.yml \
   -o aws/cpi.yml \
   -o uaa.yml \
-  -o bosh-dev.yml \
+  -o misc/bosh-dev.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_ip=test \
