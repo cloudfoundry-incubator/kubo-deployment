@@ -14,7 +14,7 @@ dns_recursor_ip: # DNS IP address for resolving non-BOSH hostnames
 stemcell_version: # version of the stemcell used in all Kubo deployments. Quote the version to satisfy YAML parsers
 stemcell_url: # path to a stemcell used in all Kubo deployments
 
-credhub_release_url: https://s3.amazonaws.com/kubo-public/credhub-0.4.0.tgz
+credhub_release_url: https://bosh.io/d/github.com/pivotal-cf/credhub-release?v=1.0.0
 kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest.tgz
 
 # IaaS routing mode settings

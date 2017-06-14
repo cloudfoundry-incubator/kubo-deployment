@@ -117,3 +117,20 @@ variables:
   type: password
 - name: kubelet-password
   type: password
+- name: kubo_ca
+  type: certificate
+  options:
+    is_ca: true
+    common_name: ca
+- name: tls-kubelet
+  type: certificate
+  options:
+    ca: kubo_ca
+    common_name: ((kubernetes_api_ip))
+    alternative_names: [((kubernetes_api_ip))]
+- name: tls-kubernetes
+  type: certificate
+  options:
+    ca: kubo_ca
+    common_name: ((kubernetes_api_ip))
+    alternative_names: [((kubernetes_api_ip))]
