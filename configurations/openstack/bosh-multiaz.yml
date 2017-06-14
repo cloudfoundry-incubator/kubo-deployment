@@ -1,0 +1,4 @@
+---
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties/availability_zone?
+  value: ((az1))

@@ -1,5 +1,9 @@
 auth_url: # OpenStack authentication URL
-az: # Availability zone
+az1: # Availability zone #1
+az2: # Availability zone #2
+az3: # Availability zone #3
+az4: # Availability zone #4
+az5: # Availability zone #5
 default_key_name: # Name of the SSH key pair
 default_security_groups: # List of security groups for the instances
 net_id: # OpenStack network identifier

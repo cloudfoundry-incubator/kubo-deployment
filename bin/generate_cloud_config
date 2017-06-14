@@ -35,6 +35,11 @@ main() {
     cloud_config=$(echo "$cloud_config" | bosh-cli int - --ops-file ${dynamic_ops_file})
   fi
 
+  local multiazs_ops_file="$(repo_directory)/configurations/${bosh_iaas}/cloud-config-multiaz.yml"
+  if [ -f ${multiazs_ops_file} ]; then
+    cloud_config=$(echo "$cloud_config" | bosh-cli int - --ops-file ${multiazs_ops_file})
+  fi
+
   cloud_config=$(echo "$cloud_config" | bosh-cli int - --vars-file ${bosh_env}/director.yml)
 
   echo -n "${cloud_config}"
