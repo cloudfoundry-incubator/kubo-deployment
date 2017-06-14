@@ -1,4 +1,7 @@
----
+# Override the list of DNS servers for the default network.
+#
+# Example: ... -o internal_dns.yml -v internal_dns=[10.0.0.10,10.1.0.10]
+
 - type: replace
   path: /networks/name=default/subnets/0/dns
-  value: [((internal_dns)),8.8.8.8]
+  value: ((internal_dns))
