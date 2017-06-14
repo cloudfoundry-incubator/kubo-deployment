@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: credhub
-    version: 0.4.0
+    version: 1.0.0
     url: ((credhub_release_url))
-    sha1: cb4a522298db9de2e0c8392f6c4057198f3ba3b0
+    sha1: 90e933f1f1e2d52b2677493eba7ce9c8e8bde409
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
@@ -14,7 +14,7 @@
     properties:
       credhub:
         port: 8844
-        user_management:
+        authentication:
           uaa:
             url: "https://((internal_ip)):8443"
             verification_key: ((uaa_jwt_signing_key.public_key))
@@ -25,17 +25,15 @@
           database: credhub
           username: postgres
           password: ((postgres_password))
-        tls:
-          certificate: ((director_ssl.certificate))
-          private_key: ((director_ssl.private_key))
+        tls: ((director_ssl))
         encryption:
           keys:
-            - provider_name: dev_internal
+            - provider_name: internal
+              encryption_password: ((credhub_encryption_key))
               active: true
-              dev_key: ((credhub_encryption_key))
           providers:
-            - name: dev_internal
-              type: dev_internal
+            - name: internal
+              type: internal
 
 
 - type: replace

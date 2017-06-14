@@ -91,7 +91,6 @@ generate_manifest() {
     manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/${deployment_name}-vars.yml")
   fi
 
-
   manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/director.yml" --var=deployment_name="${deployment_name}")
 
   if [ -e "${bosh_environment}/creds.yml" ]; then
@@ -99,14 +98,8 @@ generate_manifest() {
   fi
 
   if [ -e "${bosh_environment}/director-secrets.yml" ]; then
-    # local deployment, fill in credentials if a secrets file exists.
-    # otherwise they will be filled in by CredHub
     manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/director-secrets.yml")
   fi
-
-  manifest=$(echo "${manifest}" | bosh-cli int - --vars-store="${bosh_environment}/${deployment_name}-creds.yml")
-
-  manifest=$(echo "${manifest}" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-variables.yml")
 
   printf "%s" "${manifest}"
 }

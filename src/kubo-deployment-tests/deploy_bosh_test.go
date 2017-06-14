@@ -12,12 +12,10 @@ import (
 
 var _ = Describe("Deploy KuBOSH", func() {
 	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp")
-	validGcpCredsEnvironment := path.Join(testEnvironmentPath, "test_gcp_with_creds")
 	validvSphereEnvironment := path.Join(testEnvironmentPath, "test_vsphere")
 	validOpenstackEnvironment := path.Join(testEnvironmentPath, "test_openstack")
 
 	JustBeforeEach(func() {
-		ApplyMocks(bash, []Gob{Spy("credhub")})
 		bash.Source("", func(string) ([]byte, error) {
 			return repoDirectoryFunction, nil
 		})
@@ -89,54 +87,12 @@ var _ = Describe("Deploy KuBOSH", func() {
 			Expect(code).To(Equal(0))
 		})
 
-		It("interacts with credhub", func() {
-			code, err := bash.Run("main", []string{validGcpEnvironment, pathFromRoot("README.md")})
-			Expect(stderr).To(gbytes.Say("credhub api --skip-tls-validation -s .+:8844"))
-			Expect(stderr).To(gbytes.Say("credhub login -u credhub-user -p "))
-			Expect(stderr).To(gbytes.Say("credhub ca-get -n default"))
-			Expect(err).NotTo(HaveOccurred())
-			Expect(code).To(Equal(0))
-		})
-
 		It("expands the environment path", func() {
 			relativePath := testEnvironmentPath + "/../environments/test_gcp"
 			code, err := bash.Run("main", []string{relativePath, pathFromRoot("README.md")})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 			Expect(stderr).NotTo(gbytes.Say("\\.\\./environments/test_gcp"))
-		})
-	})
-
-	Context("CA generation", func() {
-		BeforeEach(func() {
-			bash.Source(pathToScript("deploy_bosh"), nil)
-		})
-
-		It("runs with an environment", func() {
-			code, err := bash.Run("generate_default_ca", []string{validGcpCredsEnvironment})
-			Expect(err).NotTo(HaveOccurred())
-			Expect(code).To(Equal(0))
-		})
-
-		It("logins to credhub", func() {
-			bash.Run("generate_default_ca", []string{validGcpCredsEnvironment})
-			Expect(stderr).To(gbytes.Say("credhub api --skip-tls-validation -s internal.ip:8844"))
-			Expect(stderr).To(gbytes.Say("credhub login -u credhub-user -p password"))
-		})
-
-		It("gets the default CA", func() {
-			bash.Run("generate_default_ca", []string{validGcpCredsEnvironment})
-			Expect(stderr).To(gbytes.Say("credhub login"))
-			Expect(stderr).To(gbytes.Say("credhub ca-get -n default"))
-			Expect(stderr).NotTo(gbytes.Say("credhub ca-generate"))
-		})
-
-		It("Generates a CA if is isn't found", func() {
-			credhubMock := `if [[ "$1" == "ca-get" ]]; then return 1; fi`
-			ApplyMocks(bash, []Gob{Mock("credhub", credhubMock)})
-			bash.Run("generate_default_ca", []string{validGcpCredsEnvironment})
-			Expect(stderr).To(gbytes.Say("credhub ca-get -n default"))
-			Expect(stderr).To(gbytes.Say("credhub ca-generate -n default -c internal.ip"))
 		})
 	})
 })

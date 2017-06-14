@@ -48,20 +48,7 @@ main() {
   fi
 
   "deploy_$iaas" "${bosh_env}" "${extra_filename}"
-  generate_default_ca "${bosh_env}"
   "$(repo_directory)/bin/set_bosh_alias" "${bosh_env}"
-}
-
-generate_default_ca() {
-  local bosh_env=$1
-
-  local credhub_password bosh_hostname
-  credhub_password="$(bosh-cli int "${bosh_env}/creds.yml" --path '/credhub_user_password')"
-  bosh_hostname="$(bosh-cli int "${bosh_env}/director.yml" --path '/internal_ip')"
-
-  credhub api --skip-tls-validation -s "${bosh_hostname}:8844"
-  credhub login -u credhub-user -p "${credhub_password}"
-  credhub ca-get -n default || credhub ca-generate -n default -c "${bosh_hostname}"
 }
 
 deploy_gcp() {
