@@ -25,10 +25,18 @@ main() {
   local bosh_iaas="$(bosh-cli int ${bosh_env}/director.yml --path '/iaas')"
   local cloud_config
   if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "cf" ]; then
-    cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
+    cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml")
   else
-    cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/load_balancer_target_pools.yml")
+    cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --ops-file="$(repo_directory)/manifests/ops-files/load_balancer_target_pools.yml")
   fi
+
+  local dynamic_ops_file="$(repo_directory)/configurations/${bosh_iaas}/cloud-config-dynamic.yml"
+  if [ -f ${dynamic_ops_file} ]; then
+    cloud_config=$(echo "$cloud_config" | bosh-cli int - --ops-file ${dynamic_ops_file})
+  fi
+
+  cloud_config=$(echo "$cloud_config" | bosh-cli int - --vars-file ${bosh_env}/director.yml)
+
   echo -n "${cloud_config}"
 }
 
