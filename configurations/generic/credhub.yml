@@ -77,8 +77,8 @@
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users/-
   value:
-    name: credhub-user
-    password: ((credhub_user_password))
+    name: credhub-cli
+    password: ((credhub_cli_password))
     groups:
     # Users must have both credhub.read and credhub.write access
     - credhub.read
@@ -93,7 +93,7 @@
 - type: replace
   path: /variables/-
   value:
-    name: credhub_user_password
+    name: credhub_cli_password
     type: password
 
 - type: replace
