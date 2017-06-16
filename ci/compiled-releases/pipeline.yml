@@ -226,6 +226,26 @@ jobs:
         params:
           file: "compiled-release/*.tgz"
 
+  - name: compile-uaa-release-41-ubuntu-trusty-3421
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: uaa-release
+            version:
+              version: "41"
+          - get: ubuntu-trusty-3421-stemcell
+            version:
+              version: "3421.6"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3421-stemcell
+          release: uaa-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
   - name: compile-credhub-release-8-ubuntu-trusty-3421
     plan:
       - aggregate:
