@@ -235,7 +235,7 @@ jobs:
               version: "41"
           - get: ubuntu-trusty-3421-stemcell
             version:
-              version: "3421.6"
+              version: "3421.3"
       - task: export-release
         file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
         privileged: true
