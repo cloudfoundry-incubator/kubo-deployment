@@ -72,7 +72,7 @@ jobs:
         - get: bosh-deployment
         - get: bosh-release
           version:
-            version: "262"
+            version: "262.1"
         - get: ubuntu-trusty-3421-stemcell
           version:
             version: "3421.3"
@@ -133,6 +133,26 @@ jobs:
           - get: bosh-release
             version:
               version: "257.24"
+          - get: ubuntu-trusty-3363-stemcell
+            version:
+              version: "3363.25"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3363-stemcell
+          release: bosh-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-bosh-release-255-ubuntu-trusty-3363
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: bosh-release
+            version:
+              version: "255.14"
           - get: ubuntu-trusty-3363-stemcell
             version:
               version: "3363.25"
@@ -246,13 +266,13 @@ jobs:
         params:
           file: "compiled-release/*.tgz"
 
-  - name: compile-credhub-release-8-ubuntu-trusty-3421
+  - name: compile-credhub-release-1-ubuntu-trusty-3421
     plan:
       - aggregate:
         - get: bosh-deployment
         - get: credhub-release
           version:
-            version: "0.8.0"
+            version: "1.0.0"
         - get: ubuntu-trusty-3421-stemcell
           version:
             version: "3421.3"
