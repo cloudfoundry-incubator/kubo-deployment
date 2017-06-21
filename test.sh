@@ -17,6 +17,14 @@ function bosh() {
   command bosh int --var-errs --var-errs-unused ${@//--state=*/} > /dev/null
 }
 
+echo -e "\nUsed compiled releases\n"
+grep -r -i s3.amazonaws.com/bosh-compiled-release-tarballs . | grep -v grep
+
+echo -e "\nUsed stemcells\n"
+grep -r -i d/stemcells . | grep -v grep
+
+echo -e "\nExamples\n"
+
 echo "- AWS"
 bosh create-env bosh.yml \
   -o aws/cpi.yml \

@@ -52,7 +52,8 @@
 1. Upload BOSH Lite stemcell
 
     ```
-    $ bosh -e vbox upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
+    $ bosh -e vbox upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=3421.9 \
+      --sha1 1396d7877204e630b9e77ae680f492d26607461d
     ```
 
 1. Update cloud config
