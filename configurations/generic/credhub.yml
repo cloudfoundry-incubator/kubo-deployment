@@ -63,7 +63,7 @@
   value:
     enabled: true
     url: "https://((internal_ip)):8844/api/" # URL must contain /api/ path with trailing slash
-    ca_cert: ((config_server_ssl.ca))
+    ca_cert: ((credhub_tls.ca))
     uaa:
       url: "https://((internal_ip)):8443"
       ca_cert: ((uaa_ssl.ca))
@@ -77,8 +77,8 @@
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users/-
   value:
-    name: credhub-user
-    password: ((credhub_user_password))
+    name: credhub-cli
+    password: ((credhub_cli_password))
     groups:
     # Users must have both credhub.read and credhub.write access
     - credhub.read
@@ -93,13 +93,13 @@
 - type: replace
   path: /variables/-
   value:
-    name: credhub_user_password
+    name: credhub_cli_password
     type: password
 
 - type: replace
   path: /variables/-
   value:
-    name: config_server_ssl
+    name: credhub_tls
     type: certificate
     options:
       ca: default_ca
