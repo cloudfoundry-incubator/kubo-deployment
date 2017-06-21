@@ -7,6 +7,10 @@
     sha1: 651f10a765a2900a7f69ea07705f3367bd8041eb
 
 - type: replace
+  path: /instance_groups/name=bosh/properties/director/default_ssh_options?/gateway_user
+  value: jumpbox
+
+- type: replace
   path: /instance_groups/name=bosh/jobs/-
   value:
     name: user_add
