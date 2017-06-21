@@ -2,7 +2,7 @@
 
 ## Dependencies
 - [bosh-cli](https://bosh.io/docs/cli-v2.html) for interacting with BOSH. Version 2.0.1 and above. Please ensure the binary is installed as `bosh-cli` and not `bosh`.
-- [credhub cli](https://github.com/pivotal-cf/credhub-cli/releases/tag/0.4.0) for interacting with CredHub. Version 0.4 only.
+- [credhub cli](https://github.com/pivotal-cf/credhub-cli/releases/tag/1.0.0) for interacting with CredHub. It used to generate `kubeconfig`
 - [Ruby 2.3+](https://www.ruby-lang.org/en/downloads) required by the bosh-cli to deploy KuBOSH
 - [make](https://www.gnu.org/software/make) required by the bosh-cli to deploy KuBOSH
 - IaaS specific tools to create load balancers and firewall rules
@@ -40,7 +40,7 @@ This will create a directory with the same name as the environment at the specif
 Edit these files to match your environment and generate a private key/service account with access to create/destroy VMs/disks then run the following command:
 
 ```bash
-bin/deploy_bosh <BOSH_ENV> <private or service account key filename for BOSH to use for deployments> 
+bin/deploy_bosh <BOSH_ENV> <private or service account key filename for BOSH to use for deployments>
 ```
 
 Credentials and SSL certificates for the environment will be generated and saved into the configuration path in a file called `creds.yml`. This file contains sensitive information and should not be stored in VCS. The file `state.json` contains state for the BOSH environment in the format of [bosh-init](https://bosh.io/docs/using-bosh-init.html). The `default` CA is generated and stored in CredHub.
@@ -68,21 +68,21 @@ bin/generate_kubo_manifest <BOSH_ENV> <DEPLOYMENT_NAME> > <BOSH_ENV>/kubo-manife
 ```
 The generation of the manifest can be customized in the following ways:
 
-1. Variables in the manifest template can be substituted using an external file. Place a file named 
+1. Variables in the manifest template can be substituted using an external file. Place a file named
   `<DEPLOYMENT_NAME>-vars.yml` into the environment folder, and specify the variables as key-value
   pairs, e.g.:
   ```yaml
   super-secret-secret: SuperSecretPa$$phrase
   ```
 
-2. Parts of the service manifest can be manipulated using 
+2. Parts of the service manifest can be manipulated using
   [go-patch](https://github.com/cppforlife/go-patch/blob/master/docs/examples.md) ops-files.
   To use this method, place a file named `<DEPLOYMENT_NAME>.yml` into the environment folder
   and fill it with go-patch instructions, e.g.:
   ```yaml
   - type: replace
     path: /releases/name=etcd
-    value: 
+    value:
       name: etcd
       version: 0.99.0
   ```
@@ -115,4 +115,3 @@ You can now issue `kubectl` commands such as:
 kubectl get pods --namespace=kube-system
 kubectl get nodes
 ```
-

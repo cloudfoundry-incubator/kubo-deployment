@@ -3,7 +3,7 @@ azs:
 - name: z1
   cloud_properties:
     datacenters:
-    - clusters: [((vcenter_cluster)): ((vcenter_rp))]
+    - clusters: [((vcenter_cluster)): { resource_pool: ((vcenter_rp))}]
 
 networks:
 - name: &cloud_network ((deployments_network))
