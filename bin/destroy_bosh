@@ -84,7 +84,8 @@ destroy_vsphere() {
       --ops-file "$(repo_directory)/bosh-deployment/vsphere/cpi.yml" \
       --state "${bosh_env}/state.json" \
       --vars-store "${bosh_env}/creds.yml" \
-      --vars-file "${bosh_env}/director.yml"
+      --vars-file "${bosh_env}/director.yml" \
+      --vars-file "${bosh_env}/director-secrets.yml" 
 }
 
 destroy_openstack() {
