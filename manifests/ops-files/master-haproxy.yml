@@ -1,7 +1,7 @@
 - type: replace
   path: /instance_groups/-
   value:
-      name: haproxy
+      name: master-haproxy
       instances: 1
       networks:
       - name: ((deployments_network))
@@ -12,13 +12,16 @@
       - name: haproxy
         release: haproxy
 
+        consumes:
+          tcp_backend: { from: master_haproxy }
+
         properties:
           ha_proxy:
-            backend_port: ((haproxy_tcp_backend_port))
-            tcp_link_port: ((haproxy_tcp_frontend_port))
+            backend_port: ((master_haproxy_tcp_backend_port))
+            tcp_link_port: ((master_haproxy_tcp_frontend_port))
 
 - type: replace
-  path: /releases/-
+  path: /releases/name=haproxy?
   value:
     name: haproxy
     version: latest

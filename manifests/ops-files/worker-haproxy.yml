@@ -1,0 +1,27 @@
+- type: replace
+  path: /instance_groups/-
+  value:
+      name: worker-haproxy
+      instances: 1
+      networks:
+      - name: ((deployments_network))
+      azs: [z1]
+      stemcell: trusty
+      vm_type: common
+      jobs:
+      - name: haproxy
+        release: haproxy
+
+        consumes:
+          tcp_backend: { from: worker_haproxy }
+
+        properties:
+          ha_proxy:
+            backend_port: ((worker_haproxy_tcp_backend_port))
+            tcp_link_port: ((worker_haproxy_tcp_frontend_port))
+
+- type: replace
+  path: /releases/name=haproxy?
+  value:
+    name: haproxy
+    version: latest
