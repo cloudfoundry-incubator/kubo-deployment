@@ -40,6 +40,8 @@ instance_groups:
   - name: *network-name
   azs: [z1]
   jobs:
+  - name: flanneld
+    release: kubo
   - name: kubernetes-api
     release: kubo
     properties:
