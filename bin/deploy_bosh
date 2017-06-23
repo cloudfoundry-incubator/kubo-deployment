@@ -81,7 +81,8 @@ deploy_vsphere() {
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --state "${bosh_env}/state.json" \
     --vars-store "${bosh_env}/creds.yml" \
-    --vars-file "${bosh_env}/director.yml"
+    --vars-file "${bosh_env}/director.yml" \
+    --vars-file "${bosh_env}/director-secrets.yml"
 }
 
 deploy_openstack() {
