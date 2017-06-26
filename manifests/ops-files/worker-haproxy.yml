@@ -30,4 +30,6 @@
   path: /releases/name=haproxy?
   value:
     name: haproxy
+    url: https://storage.googleapis.com/kubo-releases/haproxy_tmp_v8.2.x.tgz
+    sha1: 90c314cee3551d32860ed6faf405648abae888b8
     version: latest
