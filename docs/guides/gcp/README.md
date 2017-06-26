@@ -31,9 +31,9 @@ The remaining steps should all be done in succession from a single session to re
    ```
 
 
-1. Clone the [kubo-deployment](https://github.com/pivotal-cf-experimental/kubo-deployment) repo
+1. Clone the [kubo-deployment](https://github.com/cloudfoundry-incubator/kubo-deployment) repo
    ```bash
-   git clone https://github.com/pivotal-cf-experimental/kubo-deployment.git
+   git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git
    ```
 
 1. `cd` into the guide directory
@@ -132,7 +132,7 @@ Additionally, the terraform script accepts the following variables:
 
 ## Accessing Kubernetes services
 
-To expose services running in your Kubernetes cluster, use the service type `NodePort` when deploying your service to Kubernetes. We do not currently support the type `LoadBalancer`, but we plan to soon with Github issue [#47](https://github.com/pivotal-cf-experimental/kubo-release/issues/47) in the [kubo-release](https://github.com/pivotal-cf-experimental/kubo-release) repository. Until this issue is resolved, an additional load balancer is provisioned using Terraform during the setup in our guide. If your service is exposed with a NodePort, you can access the service using the external IP address of the kubo-workers load balancer and the node port of your service.
+To expose services running in your Kubernetes cluster, use the service type `NodePort` when deploying your service to Kubernetes. We do not currently support the type `LoadBalancer`, but we plan to soon with Github issue [#47](https://github.com/cloudfoundry-incubator/kubo-release/issues/47) in the [kubo-release](https://github.com/cloudfoundry-incubator/kubo-release) repository. Until this issue is resolved, an additional load balancer is provisioned using Terraform during the setup in our guide. If your service is exposed with a NodePort, you can access the service using the external IP address of the kubo-workers load balancer and the node port of your service.
 
 ### Example: Accessing the Kubernetes dashboard on GCP
    
