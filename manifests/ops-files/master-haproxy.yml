@@ -17,8 +17,15 @@
 
         properties:
           ha_proxy:
-            backend_port: ((master_haproxy_tcp_backend_port))
-            tcp_link_port: ((master_haproxy_tcp_frontend_port))
+            tcp_link_port: 9999 # required, but not used
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kubernetes-api/properties/backend_port?
+  value: ((master_haproxy_tcp_backend_port))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kubernetes-api/properties/port?
+  value: ((master_haproxy_tcp_frontend_port))
 
 - type: replace
   path: /releases/name=haproxy?
