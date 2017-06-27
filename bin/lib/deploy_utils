@@ -87,11 +87,8 @@ generate_manifest() {
     manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/cf-routing.yml")
   fi
 
-  if bosh-cli int "${bosh_environment}/director.yml" --path='/worker_haproxy_tcp_frontend_port' &>/dev/null && bosh-cli int "${bosh_environment}/director.yml" --path='/worker_haproxy_tcp_backend_port' &>/dev/null; then
+  if [ "$(bosh-cli int "${bosh_environment}/director.yml" --path='/routing_mode')" == "proxy" ]; then
     manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/worker-haproxy.yml")
-  fi
-
-  if bosh-cli int "${bosh_environment}/director.yml" --path='/master_haproxy_tcp_frontend_port' &>/dev/null && bosh-cli int "${bosh_environment}/director.yml" --path='/master_haproxy_tcp_backend_port' &>/dev/null; then
     manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/master-haproxy.yml")
   fi
 
