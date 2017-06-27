@@ -25,7 +25,7 @@ credhub_encryption_key: <%= SecureRandom.hex(16) %> # 16 byte number in HEX form
 
 internal_cidr: <%= ip_prefix %>.0/24 # CIDR range that BOSH will deploy to
 internal_gw: <%= ip_prefix %>.1 # internal gateway
-external-kubo-port: 1025 # Port to use for Kubernetes API
+kubernetes-master-port: 1025 # Port to use for Kubernetes API
 
 director_name: kube # user friendly Director name
 dns_recursor_ip: <%= ip_prefix %>.1 # DNS IP address for resolving non-BOSH hostnames
@@ -39,7 +39,7 @@ kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest
 
 # CF routing mode settings
 routing_mode: cf
-cf-tcp-router-name: <%= ENV['tcp_router_domain'] %> # Hostname of TCP router. Use `cf domains` to find existing TCP domain. If none exists, see https://docs.cloudfoundry.org/devguide/deploy-apps/routes-domains.html#shared-domains for instructions to create one.
+kubernetes-master-host: <%= ENV['tcp_router_domain'] %> # Hostname of TCP router. Use `cf domains` to find existing TCP domain. If none exists, see https://docs.cloudfoundry.org/devguide/deploy-apps/routes-domains.html#shared-domains for instructions to create one.
 routing-cf-api-url: https://api.<%= ENV['cf_system_domain'] %> # TCP routing API URL. In PCF: https://api.<system domain>
 routing-cf-client-id: <%= ENV['routing_cf_client_id'] %> # Routing UAA client name that will be used to register tcp routes
 routing-cf-uaa-url: https://uaa.<%= ENV['cf_system_domain'] %> # Routing UAA URL In PCF: https://uaa.<system domain>

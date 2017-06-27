@@ -159,7 +159,7 @@ L Error: Action Failed get_task: Task 75bce522-4fba-4295-7b8c-d63d86f7dcc6 resul
 
 ### Solution
 
-Make sure that port specified as `external-kubo-port` is not already in use by another kubo cluster. The value in `director.yml` can be overridden using [var-files](./docs/guides/customized-installation.md#generate-manifest-and-deploy) for different clusters.   
+Make sure that port specified as `kubernetes-master-port` is not already in use by another kubo cluster. The value in `director.yml` can be overridden using [var-files](./docs/guides/customized-installation.md#generate-manifest-and-deploy) for different clusters.   
 
 ## Other connectivity issues
 
