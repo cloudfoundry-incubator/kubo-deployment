@@ -11,7 +11,7 @@ internal_ip: # Internal ip address of the BOSH director. Please select an availa
 
 deployments_network: network-name # Network name to deploy service in your cloud config
 
-cf-tcp-router-name: a.router.name # Hostname of TCP router. Use `cf domains` to find existing TCP domain. If none exists, see https://docs.cloudfoundry.org/devguide/deploy-apps/routes-domains.html#shared-domains for instructions to create one.
+kubernetes-master-host: a.router.name # Hostname of TCP router. Use `cf domains` to find existing TCP domain. If none exists, see https://docs.cloudfoundry.org/devguide/deploy-apps/routes-domains.html#shared-domains for instructions to create one.
 routing-cf-api-url: cf.api.url # TCP routing API URL. In PCF: https://api.<system domain>
 routing-cf-client-id: cf.client.id # Routing UAA client name that will be used to register tcp routes
 routing-cf-uaa-url: cf.uaa.url # Routing UAA URL In PCF: https://uaa.<system domain>
@@ -20,7 +20,7 @@ credhub_encryption_key: # 16 byte number in HEX format: i.e. ABCDEF0123456789ABC
 
 internal_cidr: # CIDR range that BOSH will deploy to
 internal_gw: # internal gateway
-external-kubo-port: 101928 # Port to use for Kubernetes API
+kubernetes-master-port: 101928 # Port to use for Kubernetes API
 
 director_name: # user friendly Director name
 dns_recursor_ip: # DNS IP address for resolving non-BOSH hostnames
