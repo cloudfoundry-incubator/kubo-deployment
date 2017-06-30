@@ -4,20 +4,25 @@
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
-  value:
-    name: gonats
-    release: bosh
-    properties:
-      gonats:
-        listen_address: ((internal_ip))
-        user: nats
-        password: ((nats_password))
-        certificate: ((nats_ssl.certificate))
-        private_key: ((nats_ssl.private_key))
+  value: {name: gonats, release: bosh}
 
 - type: replace
-  path: /instance_groups/name=bosh/properties/nats?/cert/ca
-  value: ((nats_ssl.ca))
+  path: /instance_groups/name=bosh/properties/nats?
+  value:
+    address: ((internal_ip))
+    user: nats
+    password: ((nats_password))
+    cert:
+      ca: ((nats_ssl.ca))
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/gonats?
+  value:
+    address: ((internal_ip))
+    user: nats
+    password: ((nats_password))
+    certificate: ((nats_ssl.certificate))
+    private_key: ((nats_ssl.private_key))    
 
 - type: replace
   path: /variables/-
@@ -28,4 +33,3 @@
       ca: default_ca
       common_name: ((internal_ip))
       alternative_names: [((internal_ip))]
-
