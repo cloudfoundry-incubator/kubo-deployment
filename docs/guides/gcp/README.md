@@ -98,13 +98,35 @@ Additionally, the terraform script accepts the following variables:
    erb director.yml.erb > ${state_dir}/director.yml
    ```
 
-1. Generate a service account key for the bosh-user
+1. Generate a service account and key for the bosh-user
    ```bash
    export service_account=bosh-user
    export service_account_creds=${state_dir}/service_account.json
    export service_account_email=${service_account}@${project_id}.iam.gserviceaccount.com
+   gcloud iam service-accounts create ${service_account}
    gcloud iam service-accounts keys create ${service_account_creds} --iam-account ${service_account_email}
    ```
+
+1. Grant the new service account editor access to your project:
+   ```bash
+   gcloud projects add-iam-policy-binding ${project_id} \
+      --member serviceAccount:${service_account_email} \
+      --role roles/compute.instanceAdmin
+   gcloud projects add-iam-policy-binding ${project_id} \
+      --member serviceAccount:${service_account_email} \
+      --role roles/compute.storageAdmin
+   gcloud projects add-iam-policy-binding ${project_id} \
+      --member serviceAccount:${service_account_email} \
+      --role roles/storage.admin
+   gcloud projects add-iam-policy-binding ${project_id} \
+      --member serviceAccount:${service_account_email} \
+      --role  roles/compute.networkAdmin
+   gcloud projects add-iam-policy-binding ${project_id} \
+      --member serviceAccount:${service_account_email} \
+      --role roles/iam.serviceAccountActor
+   ```
+
+
 
 ## Deploy Kubo
 
