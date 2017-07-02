@@ -107,6 +107,27 @@ Additionally, the terraform script accepts the following variables:
    gcloud iam service-accounts keys create ${service_account_creds} --iam-account ${service_account_email}
    ```
 
+1. Grant the new service account editor access to your project:
+   ```bash
+   gcloud projects add-iam-policy-binding ${project_id} \
+      --member serviceAccount:${service_account_email} \
+      --role roles/compute.instanceAdmin
+   gcloud projects add-iam-policy-binding ${project_id} \
+      --member serviceAccount:${service_account_email} \
+      --role roles/compute.storageAdmin
+   gcloud projects add-iam-policy-binding ${project_id} \
+      --member serviceAccount:${service_account_email} \
+      --role roles/storage.admin
+   gcloud projects add-iam-policy-binding ${project_id} \
+      --member serviceAccount:${service_account_email} \
+      --role  roles/compute.networkAdmin
+   gcloud projects add-iam-policy-binding ${project_id} \
+      --member serviceAccount:${service_account_email} \
+      --role roles/iam.serviceAccountActor
+   ```
+
+
+
 ## Deploy Kubo
 
 1. Return to the root of the kubo-deployment repo
