@@ -81,7 +81,7 @@ resource "google_compute_target_pool" "kubo-workers-tcp-public" {
 resource "google_compute_forwarding_rule" "kubo-workers-tcp" {
   name        = "${var.prefix}kubo-workers-tcp"
   target      = "${google_compute_target_pool.kubo-workers-tcp-public.self_link}"
-  port_range  = "30000-40000"
+  port_range  = "30000-32767"
   ip_protocol = "TCP"
   ip_address  = "${google_compute_address.kubo-workers-tcp.address}"
 }
@@ -92,7 +92,7 @@ resource "google_compute_firewall" "kubo-workers-tcp-public" {
 
   allow {
     protocol = "tcp"
-    ports    = ["30000-40000"]
+    ports    = ["30000-32767"]
   }
 
   target_tags = ["worker"]
