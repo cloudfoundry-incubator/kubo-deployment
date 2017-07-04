@@ -17,6 +17,8 @@ stemcell_url: # path to a stemcell used in all Kubo deployments
 credhub_release_url: https://bosh.io/d/github.com/pivotal-cf/credhub-release?v=1.0.0
 kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest.tgz
 
+# routing_mode: haproxy
+
 # IaaS routing mode settings
 # Comment this section when using CF routing mode
 routing_mode: iaas
