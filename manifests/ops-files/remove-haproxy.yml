@@ -1,0 +1,4 @@
+- type: remove
+  path: /instance_groups/name=master-haproxy?
+- type: remove
+  path: /releases/name=haproxy?

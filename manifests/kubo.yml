@@ -11,6 +11,10 @@ releases:
   version: 28.0.1
   url: https://bosh.io/d/github.com/cf-platform-eng/docker-boshrelease?v=28.0.1
   sha1: 448eaa2f478dc8794933781b478fae02aa44ed6b
+- name: haproxy
+  url: https://storage.googleapis.com/kubo-releases/haproxy_tmp_v8.2.x.tgz
+  sha1: 90c314cee3551d32860ed6faf405648abae888b8
+  version: latest
 
 stemcells:
 - alias: trusty
@@ -65,6 +69,24 @@ instance_groups:
       kubernetes-api-url: *kubo_url
   stemcell: trusty
   vm_type: master
+
+- name: master-haproxy
+  instances: 1
+  networks:
+  - name: ((deployments_network))
+  azs: [z1]
+  stemcell: trusty
+  vm_type: common
+  jobs:
+  - name: haproxy
+    release: haproxy
+
+    consumes:
+      tcp_backend: { from: master_haproxy }
+
+    properties:
+      ha_proxy:
+        tcp_link_port: 9999 # required, but not used
 
 - name: worker
   instances: 3
