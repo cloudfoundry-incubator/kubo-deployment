@@ -1,0 +1,36 @@
+<%
+require 'securerandom'
+
+%w(project_id network kubo_subnet kubo_zone ip_cidr_range).each do |var|
+   raise "Expected environment variable '#{var}' to be set" if ENV[var] == nil || ENV[var] == ""
+end
+
+ip_prefix = ENV['ip_cidr_range'].sub(/\.\d+\/\d+$/, '')
+%>
+
+iaas: gcp
+project_id: <%= ENV['project_id'] %> # GCP project ID
+network: <%= ENV['network'] %> # GCP network
+subnetwork: <%= ENV['kubo_subnet'] %> # GCP subnetwork
+tags:
+  - "no-ip" # allow access to the Internet from BOSH director using NAT
+  - internal # allow access to the instances in same network from BOSH
+zone: <%= ENV['kubo_zone'] %> # name of GCP zone
+
+internal_ip: <%= ip_prefix %>.6 # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into.
+
+deployments_network: <%= ENV['network'] %> # Network name to deploy service in your cloud config
+
+credhub_encryption_key: <%=SecureRandom.hex(16) %> # 16 byte number in HEX format: i.e. ABCDEF0123456789ABCDEF0123456789
+
+internal_cidr: <%=ip_prefix %>.0/24 # CIDR range that BOSH will deploy to
+
+director_name: kube # user friendly Director name
+internal_gw: <%=ip_prefix %>.1 # internal gateway
+dns_recursor_ip: <%=ip_prefix %>.1 # DNS IP address for resolving non-BOSH hostnames
+
+stemcell_version: "3312.17" # version of the stemcell used in all Kubo deployments. Quote the version to satisfy YAML parsers
+stemcell_url: "https://s3.amazonaws.com/bosh-core-stemcells/google/bosh-stemcell-3312.17-google-kvm-ubuntu-trusty-go_agent.tgz" # path to a stemcell used in all Kubo deployments
+
+credhub_release_url: https://bosh.io/d/github.com/pivotal-cf/credhub-release?v=1.0.0
+kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest.tgz

@@ -10,6 +10,8 @@ Please follow the link for infrastructure paving on your platform:
 
 ### Deploy BOSH using kubo-deployment
 
+- [Google Cloud Platform](./install-bosh-gcp.md)
+
 ### Custom BOSH deployment
 
 In order to deploy Kubo you need a BOSH Director with the following 

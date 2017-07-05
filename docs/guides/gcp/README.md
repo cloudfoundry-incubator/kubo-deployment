@@ -1,9 +1,5 @@
 # Example: Kubo on GCP
 
-## Prerequisites
-
-Configure a GCP project and deploy a BOSH bastion by following the "Configure your Google Cloud Platform environment" and "Deploy supporting infrastructure" steps in
-  [these instructions](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/blob/c2cdba4f2ac8944ce7eb9749f053d45588932e3b/docs/bosh/README.md).
 
 ## Prepare GCP Infrastructure
 
@@ -121,12 +117,12 @@ Additionally, the terraform script accepts the following variables:
 
 1. Deploy Kubo
    ```bash
-   bin/deploy_k8s ${state_dir} kube public
+   bin/deploy_k8s ${state_dir} ${kubo_env} public
    ```
 
 1. Setup kubectl and access your new Kubernetes cluster
    ```bash
-   bin/set_kubeconfig ${state_dir} kube
+   bin/set_kubeconfig ${state_dir} ${kubo_env}
    kubectl get pods --namespace=kube-system
    ```
 
