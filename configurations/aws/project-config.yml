@@ -1,0 +1,5 @@
+az: # Availability zone
+subnet_id: # AWS Subnet ID
+default_key_name: # AWS Key Name
+default_security_groups: # Array of AWS Security Groups
+region: # AWS Region ID
