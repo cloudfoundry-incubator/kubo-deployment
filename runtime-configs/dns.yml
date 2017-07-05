@@ -9,3 +9,4 @@ addons:
   jobs:
   - name: dns
     release: dns
+    properties: {}
