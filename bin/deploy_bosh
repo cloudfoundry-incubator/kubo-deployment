@@ -60,7 +60,7 @@ deploy_gcp() {
     --ops-file "$(repo_directory)/bosh-deployment/gcp/cpi.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
-    --ops-file "$(repo_directory)/configurations/generic/credhub.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --ops-file "$(repo_directory)/configurations/gcp/user-agent-config.yml" \
     --state "${bosh_env}/state.json" \
@@ -77,11 +77,12 @@ deploy_vsphere() {
     --ops-file "$(repo_directory)/bosh-deployment/vsphere/cpi.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
-    --ops-file "$(repo_directory)/configurations/generic/credhub.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --state "${bosh_env}/state.json" \
     --vars-store "${bosh_env}/creds.yml" \
-    --vars-file "${bosh_env}/director.yml"
+    --vars-file "${bosh_env}/director.yml" \
+    --vars-file "${bosh_env}/director-secrets.yml"
 }
 
 deploy_openstack() {
@@ -93,7 +94,7 @@ deploy_openstack() {
     --ops-file "$(repo_directory)/bosh-deployment/openstack/cpi.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
-    --ops-file "$(repo_directory)/configurations/generic/credhub.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/openstack/multi-tenant.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --state "${bosh_env}/state.json" \
