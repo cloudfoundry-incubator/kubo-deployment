@@ -90,7 +90,7 @@ Additionally, the terraform script accepts the following variables:
    export kubo_subnet=$(terraform output -state=${kubo_terraform_state} kubo_subnet)
    export kubo_master_target_pool=$(terraform output -state=${kubo_terraform_state} kubo_master_target_pool)
    export kubo_worker_target_pool=$(terraform output -state=${kubo_terraform_state} kubo_worker_target_pool)
-   export kubernetes_api_ip="$(terraform output -state=${kubo_terraform_state} master_lb_ip_address)"
+   export kubernetes_api_host="$(terraform output -state=${kubo_terraform_state} master_lb_ip_address)"
    ```
 
 1. Populate the director configurations
