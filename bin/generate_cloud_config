@@ -24,13 +24,28 @@ main() {
   local bosh_env=$(cd "$1"; pwd)
   local bosh_iaas="$(bosh-cli int ${bosh_env}/director.yml --path '/iaas')"
   local cloud_config
+
   if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "cf" ]; then
-     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
-  elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/iaas')" == "gcp" ]; then
-     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/load_balancer_target_pools.yml")
+    cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml
+
+  elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "iaas" ]; then
+
+    if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/iaas')" == "gcp" ]; then
+       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/load_balancer_target_pools.yml")
+    elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/iaas')" == "aws" ]; then
+       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/aws_load_balancers.yml")
+    else
+       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml
+    fi
+
+  elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "proxy" ]; then
+    cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/k8s_master_static_ip.yml")
+
   else
-     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/aws_load_balancers.yml")
+    cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
+
   fi
+
   echo -n "${cloud_config}"
 }
 
