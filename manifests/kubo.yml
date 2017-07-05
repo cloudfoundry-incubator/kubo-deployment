@@ -74,6 +74,7 @@ instance_groups:
   instances: 1
   networks:
   - name: ((deployments_network))
+    static_ips: []
   azs: [z1]
   stemcell: trusty
   vm_type: common
