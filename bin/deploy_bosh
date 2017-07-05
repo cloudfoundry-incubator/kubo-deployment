@@ -113,7 +113,7 @@ deploy_aws() {
     --ops-file "$(repo_directory)/bosh-deployment/aws/cpi.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
-    --ops-file "$(repo_directory)/configurations/generic/credhub.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --state "${bosh_env}/state.json" \
     --vars-store "${bosh_env}/creds.yml" \
