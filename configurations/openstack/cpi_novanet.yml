@@ -1,0 +1,7 @@
+---
+- type: replace
+  path: /cloud_provider/properties/openstack/use_nova_networking?
+  value: true
+- type: replace
+  path: /instance_groups/name=bosh/properties/openstack/use_nova_networking?
+  value: true

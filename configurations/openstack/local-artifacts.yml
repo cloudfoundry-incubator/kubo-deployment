@@ -1,0 +1,31 @@
+---
+- type: replace
+  path: /releases/name=bosh
+  value:
+    version: ((bosh_release_version))
+    url: ((bosh_release_url))
+    sha1: ((bosh_release_sha1))
+    name: bosh
+
+- type: replace
+  path: /releases/name=uaa
+  value:
+    version: ((uaa_release_version))
+    url: ((uaa_release_url))
+    sha1: ((uaa_release_sha1))
+    name: uaa
+
+- type: replace
+  path: /releases/name=bosh-openstack-cpi
+  value:
+    version: ((openstack_cpi_release_version))
+    url: ((openstack_cpi_release_url))
+    sha1: ((openstack_cpi_release_sha1))
+    name: bosh-openstack-cpi
+
+- type: replace
+  path: /resource_pools/name=vms/stemcell?
+  value:
+    version: ((stemcell_version))
+    url: ((stemcell_url))
+    sha1:  ((stemcell_sha1))

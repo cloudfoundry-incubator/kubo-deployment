@@ -1,0 +1,11 @@
+---
+- type: replace
+  path: /networks/name=((deployments_network))?
+  value:
+    name: ((deployments_network))
+    type: dynamic
+    default: [dns, gateway]
+    subnets:
+    - azs: [z1]
+      cloud_properties:
+        security_groups: ((default_security_groups))
