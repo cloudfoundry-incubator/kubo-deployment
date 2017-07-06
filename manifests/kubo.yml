@@ -51,7 +51,7 @@ instance_groups:
   - name: kubeconfig
     release: kubo
     properties:
-      kubernetes-api-url: &kubo_url "https://((kubernetes_api_host)):8443"
+      kubernetes-api-url: &kubo_url "https://((kubernetes_master_host)):8443"
       kubelet-password: ((kubelet-password))
       tls:
         kubernetes: ((tls-kubernetes))
@@ -126,11 +126,11 @@ variables:
   type: certificate
   options:
     ca: kubo_ca
-    common_name: ((kubernetes_api_host))
-    alternative_names: [((kubernetes_api_host))]
+    common_name: ((kubernetes_master_host))
+    alternative_names: [((kubernetes_master_host))]
 - name: tls-kubernetes
   type: certificate
   options:
     ca: kubo_ca
-    common_name: ((kubernetes_api_host))
-    alternative_names: [((kubernetes_api_host))]
+    common_name: ((kubernetes_master_host))
+    alternative_names: [((kubernetes_master_host))]

@@ -1,7 +1,7 @@
 <%
 require 'securerandom'
 
-%w(project_id network kubo_subnet kubo_master_target_pool kubo_worker_target_pool kubernetes_api_host kubo_zone network).each do |var|
+%w(project_id network kubo_subnet kubo_master_target_pool kubo_worker_target_pool kubernetes_master_host kubo_zone network).each do |var|
    raise "Expected environment variable '#{var}' to be set" if ENV[var] == nil || ENV[var] == ""
 end
 
@@ -38,7 +38,7 @@ kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest
 # IaaS routing mode settings
 # Comment this section when using CF routing mode
 routing_mode: iaas
-kubernetes_api_host: <%= ENV['kubernetes_api_host'] %> # IP address that can be used to reach the Kubernetes API, usually the address of a load balancer
+kubernetes_master_host: <%= ENV['kubernetes_master_host'] %> # IP address that can be used to reach the Kubernetes API, usually the address of a load balancer
 master_target_pool: <%= ENV['kubo_master_target_pool'] %> # target pool that master nodes will be a part of
 worker_target_pool: <%= ENV['kubo_worker_target_pool'] %> # target pool that worker nodes will be a part of
 

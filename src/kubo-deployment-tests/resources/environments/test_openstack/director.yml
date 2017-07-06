@@ -32,4 +32,4 @@ credhub_release_url: https://bosh.io/d/github.com/pivotal-cf/credhub-release?v=1
 kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release-latest.tgz
 
 routing_mode: iaas
-kubernetes_api_host: 12.23.34.45
+kubernetes_master_host: 12.23.34.45
