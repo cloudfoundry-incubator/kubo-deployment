@@ -35,3 +35,4 @@ https_proxy: my.sslproxy.com
 
 routing_mode: iaas
 kubernetes_master_host: 12.23.34.45
+kubernetes_master_port: 8443
