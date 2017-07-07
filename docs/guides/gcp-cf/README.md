@@ -69,7 +69,7 @@ This step sets up a subnetwork with a bastion VM and a set of firewall rules to 
 1. Clone this repository and go into the installation docs directory:
 
   ```
-  git clone https://github.com/pivotal-cf-experimental/kubo-deployment.git
+  git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git
   cd kubo-deployment/docs/guides/gcp-cf
   ```
 
@@ -124,10 +124,10 @@ Now you have the infrastructure ready to deploy a BOSH director.
 
 > **Note:** If you see a warning indicating the VM isn't ready, log out, wait a few moments, and log in again.
 
-1. Clone the [kubo-deployment](https://github.com/pivotal-cf-experimental/kubo-deployment) repo
+1. Clone the [kubo-deployment](https://github.com/cloudfoundry-incubator/kubo-deployment) repo
 
   ```
-  git clone https://github.com/pivotal-cf-experimental/kubo-deployment.git
+  git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git
   ```
 
 1.  Configure a few environment variables:

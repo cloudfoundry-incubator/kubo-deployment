@@ -34,4 +34,5 @@ kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release-latest.tgz
 no_proxy: dont.proxy.me
 
 routing_mode: iaas
-kubernetes_api_ip: 12.23.34.45
+kubernetes_master_host: 12.23.34.45
+kubernetes_master_port: 8443
