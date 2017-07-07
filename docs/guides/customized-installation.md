@@ -9,7 +9,7 @@
 
 ## Infrastructure Setup
 
-Kubo can be deployed with an IaaS load balancer that has a static external IP address and a forwarding rule to route traffic to the master nodes. If possible create a new subnet for Kubo to give it space and IP isolatuon. The following table specifies the needed routes and firewall rules
+Kubo can be deployed with an IaaS load balancer that has a static external IP address and a forwarding rule to route traffic to the master nodes. If possible create a new subnet for Kubo to give it space and IP isolation. The following table specifies the needed routes and firewall rules
 
 | Description                | Source                     | Destination              | Ports                                   |
 |----------------------------|----------------------------|--------------------------|-----------------------------------------|
