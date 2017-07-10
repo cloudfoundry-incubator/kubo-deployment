@@ -1,10 +1,4 @@
 ---
-- type: remove
-  path: /instance_groups/name=bosh/jobs/name=nats
-
-- type: replace
-  path: /instance_groups/name=bosh/jobs/-
-  value: {name: gonats, release: bosh}
 
 - type: replace
   path: /instance_groups/name=bosh/properties/nats?
@@ -12,17 +6,10 @@
     address: ((internal_ip))
     user: nats
     password: ((nats_password))
-    cert:
-      ca: ((nats_ssl.ca))
-
-- type: replace
-  path: /instance_groups/name=bosh/properties/gonats?
-  value:
-    address: ((internal_ip))
-    user: nats
-    password: ((nats_password))
     certificate: ((nats_ssl.certificate))
     private_key: ((nats_ssl.private_key))    
+    cert:
+      ca: ((nats_ssl.ca))
 
 - type: replace
   path: /variables/-
