@@ -3,7 +3,8 @@
 ## Deploy a BOSH bastion
 
 Configure a GCP project and deploy a BOSH bastion by following the "Configure your Google Cloud Platform environment" and "Deploy supporting infrastructure" steps in
-  [these instructions](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/blob/c2cdba4f2ac8944ce7eb9749f053d45588932e3b/docs/bosh/README.md).
+  [these instructions](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/blob/c2cdba4f2ac8944ce7eb9749f053d45588932e3b/docs/bosh/README.md). Please
+  make sure that you __do not install__ the BOSH director using these instructions.
   
 ## Set up infrastructure for Kubo
 

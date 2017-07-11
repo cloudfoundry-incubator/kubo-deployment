@@ -5,17 +5,8 @@
     ```bash
     cd ~/kubo-deployment
     ```
-1. Create environment config:
-
-    ```bash
-    ./bin/generate_env_config <ENV_PATH> <ENV_NAME> gcp
-    ```
-    > Run `bin/generate_env_config --help` for more detailed information.
-
-    This will generate couple of `yml` files in `<ENV_PATH>/<ENV_NAME>` (it is
-    called `<KUBO_ENV>` in this guide). Follow the comments in
-    `<KUBO_ENV>/director.yml` to fill in the values. You might need to fill in
-    the values in `<KUBO_ENV>/director-secrets.yml` as well.
+1. [Create a kubo environment](./02a-create-kubo-environment.md). Please make sure
+to fill in all the networking and IaaS-specific options.
 
 1. Deploy a BOSH director for Kubo
     ```bash
