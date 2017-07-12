@@ -1,17 +1,18 @@
 - type: replace
   path: /variables/name=tls-kubelet/options/common_name
-  value: ((kubernetes-master-host))
+  value: ((kubernetes_master_host))
 
 - type: replace
   path: /variables/name=tls-kubelet/options/alternative_names
-  value: [((kubernetes-master-host))]
+  value: [((kubernetes_master_host))]
 
 - type: replace
   path: /variables/name=tls-kubernetes/options/common_name
-  value: ((kubernetes-master-host))
+  value: ((kubernetes_master_host))
 
 - type: replace
   path: /variables/name=tls-kubernetes/options/alternative_names
+<<<<<<< HEAD
 <<<<<<< HEAD
   value:
   - ((cf-tcp-router-name))
@@ -19,6 +20,9 @@
 =======
   value: [((kubernetes-master-host))]
 >>>>>>> Rename cf-tcp-router-name and kubernetes_api_ip to kubernetes-master-host
+=======
+  value: [((kubernetes_master_host))]
+>>>>>>> Rename kubernetes-master-port and host to underscored name
 
 - type: replace
   path: /instance_groups/name=master/jobs/-
@@ -26,7 +30,7 @@
     name: kubernetes-api-route-registrar
     release: kubo
     properties:
-      external_kubo_port: ((kubernetes-master-port))
+      external_kubo_port: ((kubernetes_master_port))
       cloud_foundry:
         api_url: ((routing-cf-api-url))
         uaa_url: ((routing-cf-uaa-url))
@@ -49,14 +53,14 @@
     - name: kubeconfig
       release: kubo
       properties:
-        kubernetes-api-url: "https://((kubernetes-master-host)):((kubernetes-master-port))"
+        kubernetes-api-url: "https://((kubernetes_master_host)):((kubernetes_master_port))"
         kubelet-password: ((kubelet-password))
         tls:
           kubernetes: ((tls-kubernetes))
     - name: kubernetes-proxy
       release: kubo
       properties:
-        kubernetes-api-url: "https://((kubernetes-master-host)):((kubernetes-master-port))"
+        kubernetes-api-url: "https://((kubernetes_master_host)):((kubernetes_master_port))"
     - name: route-sync
       release: kubo
       properties:

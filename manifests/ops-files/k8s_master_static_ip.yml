@@ -1,4 +1,4 @@
 - type: replace
   path: /networks/type=manual/subnets/0/static
   value:
-  - ((kubernetes-master-host))
+  - ((kubernetes_master_host))

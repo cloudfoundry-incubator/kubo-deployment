@@ -57,7 +57,7 @@ instance_groups:
   - name: kubeconfig
     release: kubo
     properties:
-      kubernetes-api-url: &kubo_url "https://((kubernetes_master_host)):((kubernetes-master-port))"
+      kubernetes-api-url: &kubo_url "https://((kubernetes_master_host)):((kubernetes_master_port))"
       kubelet-password: ((kubelet-password))
       tls:
         kubernetes: ((tls-kubernetes))
