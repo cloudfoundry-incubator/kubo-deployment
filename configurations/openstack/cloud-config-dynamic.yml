@@ -9,3 +9,9 @@
     - azs: [z1]
       cloud_properties:
         security_groups: ((default_security_groups))
+
+- type: replace
+  path: /networks/-
+  value:
+    name: public
+    type: vip
