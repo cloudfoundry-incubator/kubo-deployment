@@ -67,10 +67,6 @@ generate_manifest() {
   manifest_dir=$(cd "$(dirname "${manifest_path}")"; pwd)
   manifest="$(cat "${manifest_path}")"
 
-  if [ -e "${bosh_environment}/${deployment_name}.yml" ]; then
-    manifest=$(echo "${manifest}" | bosh-cli int - --ops-file="${bosh_environment}/${deployment_name}.yml")
-  fi
-
   if bosh-cli int "${bosh_environment}/director.yml" --path='/http_proxy' &>/dev/null; then
     manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/add-http-proxy.yml")
   fi
@@ -97,6 +93,10 @@ generate_manifest() {
         manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
     ;;
   esac
+
+  if [ -e "${bosh_environment}/${deployment_name}.yml" ]; then
+    manifest=$(echo "${manifest}" | bosh-cli int - --ops-file="${bosh_environment}/${deployment_name}.yml")
+  fi
 
   if [ -e "${bosh_environment}/${deployment_name}-vars.yml" ]; then
     manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/${deployment_name}-vars.yml")

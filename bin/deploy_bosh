@@ -96,6 +96,10 @@ deploy_openstack() {
     --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/openstack/multi-tenant.yml" \
+    --ops-file "$(repo_directory)/configurations/openstack/bosh-dynamic.yml" \
+    --ops-file "$(repo_directory)/configurations/openstack/bosh-multiaz.yml" \
+    --ops-file "$(repo_directory)/configurations/openstack/cpi_novanet.yml" \
+    --ops-file "$(repo_directory)/configurations/openstack/local-artifacts.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --state "${bosh_env}/state.json" \
     --vars-store "${bosh_env}/creds.yml" \

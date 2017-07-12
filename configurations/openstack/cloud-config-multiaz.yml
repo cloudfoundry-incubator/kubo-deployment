@@ -1,0 +1,37 @@
+---
+- type: remove
+  path: /azs/name=z1
+- type: replace
+  path: /azs/-
+  value:
+    name: z1
+    cloud_properties:
+      availability_zone: ((az1))
+- type: replace
+  path: /azs/-
+  value:
+    name: z2
+    cloud_properties:
+      availability_zone: ((az2))
+- type: replace
+  path: /azs/-
+  value:
+    name: z3
+    cloud_properties:
+      availability_zone: ((az3))
+- type: replace
+  path: /azs/-
+  value:
+    name: z4
+    cloud_properties:
+      availability_zone: ((az4))
+- type: replace
+  path: /azs/-
+  value:
+    name: z5
+    cloud_properties:
+      availability_zone: ((az5))
+
+- type: replace
+  path: /networks/name=((deployments_network))/subnets/0/azs?
+  value: [z1,z2,z3,z4,z5]
