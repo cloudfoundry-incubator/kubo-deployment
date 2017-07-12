@@ -12,3 +12,14 @@ openstack_project: # Openstack project ID
 openstack_tenant: # OpenStack tenant (required for multi-tenant environments)
 region: # OpenStack region (optional)
 openstack_username: # OpenStack admin username
+
+openstack_cpi_release_version: # Openstack CPI Release version
+openstack_cpi_release_url: # Openstack CPI Release path
+openstack_cpi_release_sha1: # Openstack CPI Release sha1
+stemcell_sha1: # Stemcell sha1
+uaa_release_version: # UAA Release version
+uaa_release_url: # UAA Release path
+uaa_release_sha1: # UAA Release sha1
+bosh_release_version: # Bosh Release version
+bosh_release_url: # Bosh Release path
+bosh_release_sha1: # Bosh Release sha1
