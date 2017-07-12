@@ -24,6 +24,7 @@ main() {
   local bosh_env=$(cd "$1"; pwd)
   local bosh_iaas="$(bosh-cli int ${bosh_env}/director.yml --path '/iaas')"
   local dynamic_ops_file="$(repo_directory)/configurations/${bosh_iaas}/cloud-config-dynamic.yml"
+  local multiazs_ops_file="$(repo_directory)/configurations/${bosh_iaas}/cloud-config-multiaz.yml"
   local cloud_config
 
   if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "cf" ]; then
@@ -31,6 +32,9 @@ main() {
        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml")
        if [ -f ${dynamic_ops_file} ]; then
          cloud_config=$(echo "$cloud_config" | bosh-cli int - --ops-file ${dynamic_ops_file})
+       fi
+       if [ -f ${multiazs_ops_file} ]; then
+         cloud_config=$(echo "$cloud_config" | bosh-cli int - --ops-file ${multiazs_ops_file})
        fi
        cloud_config=$(echo "$cloud_config" | bosh-cli int - --vars-file ${bosh_env}/director.yml)
     else   
@@ -52,6 +56,9 @@ main() {
       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml")
       if [ -f ${dynamic_ops_file} ]; then
         cloud_config=$(echo "$cloud_config" | bosh-cli int - --ops-file ${dynamic_ops_file})
+      fi
+      if [ -f ${multiazs_ops_file} ]; then
+        cloud_config=$(echo "$cloud_config" | bosh-cli int - --ops-file ${multiazs_ops_file})
       fi
       cloud_config=$(echo "$cloud_config" | bosh-cli int - --vars-file ${bosh_env}/director.yml)
     else
