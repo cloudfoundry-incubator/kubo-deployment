@@ -20,7 +20,7 @@
 1.  Configure a few environment variables:
 
   ```
-  export project_id=$(gcloud config list 2>/dev/null | grep project | sed -e 's/project = //g')
+  export project_id=$(gcloud config get-value project)
   export subnet_ip_prefix="10.0.1" # Create new subnet for deployment in $subnet_ip_prefix.0/24
   export region=us-east1 # region that you will deploy BOSH in
   export zone=us-east1-d # zone that you will deploy BOSH in
@@ -133,7 +133,7 @@ Now you have the infrastructure ready to deploy a BOSH director.
 1.  Configure a few environment variables:
 
   ```
-  export project_id=$(gcloud config list 2>/dev/null | grep project | sed -e 's/project = //g')
+  export project_id=$(gcloud config get-value project)
   export kubo_region=us-east1 # region to deploy the kubernetes cluster in
   export kubo_zone=us-east1-d # zone to deploy the kubernetes cluster in
   export kubo_env=kube
