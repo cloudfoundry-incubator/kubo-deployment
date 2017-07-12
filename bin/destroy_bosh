@@ -111,7 +111,14 @@ destroy_openstack() {
   bosh-cli clean-up --all -n
   bosh-cli delete-env "$(repo_directory)/bosh-deployment/bosh.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/openstack/cpi.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/openstack/multi-tenant.yml" \
+    --ops-file "$(repo_directory)/configurations/openstack/bosh-dynamic.yml" \
+    --ops-file "$(repo_directory)/configurations/openstack/bosh-multiaz.yml" \
+    --ops-file "$(repo_directory)/configurations/openstack/local-artifacts.yml" \
+    --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --state "${bosh_env}/state.json" \
     --vars-store "${bosh_env}/creds.yml" \
     --vars-file "${bosh_env}/director.yml"  \
