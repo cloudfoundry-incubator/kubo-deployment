@@ -143,8 +143,6 @@ apt-get install -y build-essential zlibc zlib1g-dev ruby ruby-dev openssl libxsl
 gem install bosh_cli
 curl -o /tmp/cf.tgz https://s3.amazonaws.com/go-cli/releases/v6.20.0/cf-cli_6.20.0_linux_x86-64.tgz
 tar -zxvf /tmp/cf.tgz && mv cf /usr/bin/cf && chmod +x /usr/bin/cf
-curl -o /usr/bin/bosh-init https://s3.amazonaws.com/bosh-init-artifacts/bosh-init-0.0.96-linux-amd64
-chmod +x /usr/bin/bosh-init
 
 cat > /etc/profile.d/bosh.sh <<'EOF'
 #!/bin/bash
@@ -155,7 +153,8 @@ export ssh_key_path=$HOME/.ssh/bosh
 # Vars from Terraform
 export subnetwork=${google_compute_subnetwork.kubo-subnet.name}
 export network=${var.network}
-
+export subnet_ip_prefix=${var.subnet_ip_prefix}
+export service_account_email=${var.service_account_email}
 
 # Vars from metadata service
 export project_id=$$(curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/project/project-id)
@@ -170,7 +169,7 @@ EOF
 
 # Clone repo
 mkdir /share
-git clone https://github.com/cloudfoundry-incubator/bosh-google-cpi-release.git /share
+git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share
 chmod -R 777 /share
 
 # Install Terraform
@@ -179,7 +178,7 @@ unzip terraform*.zip -d /usr/local/bin
 rm /etc/motd
 
 cd
-sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.1-linux-amd64 -o /usr/bin/bosh-cli
+sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.27-linux-amd64 -o /usr/bin/bosh-cli
 sudo chmod a+x /usr/bin/bosh-cli
 sudo curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/bin/kubectl
 sudo chmod a+x /usr/bin/kubectl
