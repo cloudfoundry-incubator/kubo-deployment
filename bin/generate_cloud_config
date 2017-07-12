@@ -23,10 +23,19 @@ main() {
 
   local bosh_env=$(cd "$1"; pwd)
   local bosh_iaas="$(bosh-cli int ${bosh_env}/director.yml --path '/iaas')"
+  local dynamic_ops_file="$(repo_directory)/configurations/${bosh_iaas}/cloud-config-dynamic.yml"
   local cloud_config
 
   if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "cf" ]; then
-    cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
+    if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/iaas')" == "openstack" ]; then
+       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml")
+       if [ -f ${dynamic_ops_file} ]; then
+         cloud_config=$(echo "$cloud_config" | bosh-cli int - --ops-file ${dynamic_ops_file})
+       fi
+       cloud_config=$(echo "$cloud_config" | bosh-cli int - --vars-file ${bosh_env}/director.yml)
+    else   
+      cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
+    fi
 
   elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "iaas" ]; then
 
@@ -39,7 +48,15 @@ main() {
     fi
 
   elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "proxy" ]; then
-    cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/k8s_master_static_ip.yml")
+    if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/iaas')" == "openstack" ]; then
+      cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml")
+      if [ -f ${dynamic_ops_file} ]; then
+        cloud_config=$(echo "$cloud_config" | bosh-cli int - --ops-file ${dynamic_ops_file})
+      fi
+      cloud_config=$(echo "$cloud_config" | bosh-cli int - --vars-file ${bosh_env}/director.yml)
+    else
+      cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/k8s_master_static_ip.yml")
+    fi
 
   else
     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
