@@ -133,4 +133,4 @@ variables:
   options:
     ca: kubo_ca
     common_name: ((kubernetes_master_host))
-    alternative_names: [((kubernetes_master_host))]
+    alternative_names: [((kubernetes_master_host)), '10.100.200.1']
