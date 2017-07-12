@@ -155,17 +155,42 @@ export subnetwork=${google_compute_subnetwork.kubo-subnet.name}
 export network=${var.network}
 export subnet_ip_prefix=${var.subnet_ip_prefix}
 export service_account_email=${var.service_account_email}
-
-# Vars from metadata service
-export project_id=$$(curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/project/project-id)
-export zone=$$(curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/zone)
-export zone=$${zone##*/}
-export region=$${zone%-*}
+export project_id=${var.projectid}
+export zone=${var.zone}
+export region=${var.region}
 
 # Configure gcloud
 gcloud config set compute/zone $${zone}
 gcloud config set compute/region $${region}
 EOF
+
+cat > /usr/bin/update_gcp_env <<'EOF'
+#!/bin/bash
+
+if [[ ! -f "$1" ]]; then
+  print 'Please specify the path to director.yml'
+  exit 1
+fi
+
+# GCP specific updates
+sed -i -e 's/^\(project_id:\)/\1 ${var.projectid}/' "$1"
+sed -i -e 's/^\(network:\)/\1 ${var.network}/' "$1"
+sed -i -e 's/^\(subnetwork:\)/\1 ${google_compute_subnetwork.kubo-subnet.name}/' "$1"
+sed -i -e 's/^\(zone:\)/\1 ${var.zone}/' "$1"
+
+# Generic updates
+random_key=$$(hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom)
+
+sed -i -e 's/^\(internal_ip:\)/\1 ${var.subnet_ip_prefix}.252/' "$1"
+sed -i -e 's/^\(deployments_network:\)/\1 ${var.prefix}kubo-network/' "$1"
+sed -i -e 's/^\(credhub_encryption_key:\)/\1 $${random_key}/' "$1"
+sed -i -e 's#^\(internal_cidr:\)#\1 ${var.subnet_ip_prefix}.0/24#' "$1"
+sed -i -e 's/^\(internal_gw:\)/\1 ${var.subnet_ip_prefix}.1/' "$1"
+sed -i -e 's/^\(director_name:\)/\1 ${var.prefix}bosh/' "$1"
+sed -i -e 's/^\(dns_recursor_ip:\)/\1 ${var.subnet_ip_prefix}.1/' "$1"
+
+EOF
+chmod a+x /usr/bin/update_gcp_env
 
 # Clone repo
 mkdir /share
