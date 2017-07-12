@@ -87,8 +87,8 @@ rules to secure access to the kubo deployment.
   ```bash
   docker run -i -t \
     -e "GOOGLE_CREDENTIALS=${GOOGLE_CREDENTIALS}" \
-    -v `pwd`:/$(basename `pwd`) \
-    -w /$(basename `pwd`) \
+    -v $(pwd):/$(basename $(pwd)) \
+    -w /$(basename $(pwd)) \
     hashicorp/terraform:light apply \
       -var service_account_email=${service_account_email} \
       -var projectid=${project_id} \

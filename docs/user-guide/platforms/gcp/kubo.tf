@@ -194,7 +194,7 @@ chmod a+x /usr/bin/update_gcp_env
 
 # Clone repo
 mkdir /share
-git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share
+git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share/kubo-deployment
 chmod -R 777 /share
 
 # Install Terraform

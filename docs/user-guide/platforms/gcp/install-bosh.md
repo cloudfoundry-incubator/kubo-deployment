@@ -3,7 +3,7 @@
 1. From the GCP Cloud shell, SSH onto the bastion created during the [paving step](paving.md)
 
     ```bash
-    gcloud ssh "${prefix}bosh-bastion" --zone ${zone}
+    gcloud compute ssh "${prefix}bosh-bastion" --zone ${zone}
     ```
     
 1. Change directory to the root of the kubo-deployment repo
