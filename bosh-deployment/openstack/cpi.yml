@@ -70,6 +70,7 @@
     api_key: ((openstack_password))
     domain: ((openstack_domain))
     project: ((openstack_project))
+    tenant: ((openstack_project))
     region: ((region))
     default_key_name: ((default_key_name))
     default_security_groups: ((default_security_groups))
