@@ -78,8 +78,7 @@ instance_groups:
   instances: 1
   networks:
   - name: ((deployments_network))
-    static_ips:
-    - ((kubernetes_master_host))
+    default: [dns, gateway]
   azs: [z1]
   stemcell: trusty
   vm_type: common

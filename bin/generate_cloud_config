@@ -39,7 +39,15 @@ main() {
     fi
 
   elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "proxy" ]; then
-    cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/k8s_master_static_ip.yml")
+
+    if [ "vsphere" == "${bosh_iaas}" ]; then
+        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/k8s_master_static_ip_vsphere.yml")
+    elif [ "openstack" == "${bosh_iaas}" ]; then
+        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
+    else
+      echo "ERROR: Proxy routing mode not supported on [${bosh_iaas}]"
+      exit 1
+    fi
 
   else
     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)

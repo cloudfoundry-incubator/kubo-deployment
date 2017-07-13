@@ -34,9 +34,11 @@ networks:
     azs: [z1]
     dns: [((internal_ip))]
     reserved:
-    - ((reserved_cidr))
+    - ((reserved_ips))
     cloud_properties:
       net_id: ((net_id))
+- name: vip
+  type: vip
 
 compilation:
   workers: 5

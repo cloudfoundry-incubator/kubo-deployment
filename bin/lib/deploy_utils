@@ -84,13 +84,29 @@ generate_manifest() {
     manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/add-no-proxy.yml")
   fi
 
-  if [[ "$routing_mode" == "cf" ]]; then
-        manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/cf-routing.yml")
-  fi
 
-  if [[ "$routing_mode" != "proxy" ]]; then
-        manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
-  fi
+  case "$routing_mode" in
+    cf)
+      manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/cf-routing.yml")
+      manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
+    ;;
+    proxy)
+      iaas=$(bosh-cli int "${bosh_environment}/director.yml" --path='/iaas')
+
+      if [ "openstack" == "$iaas" ] || [ "vsphere" == "$iaas" ]; then
+        manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/master-haproxy-"$iaas".yml")
+      fi
+      manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/master-haproxy.yml")
+
+      manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/worker-haproxy.yml")
+      if [ "openstack" == "$iaas" ]; then
+        manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/worker-haproxy-openstack.yml")
+      fi
+    ;;
+    *)
+      manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
+    ;;
+  esac
 
   if [ -e "${bosh_environment}/${deployment_name}-vars.yml" ]; then
     manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/${deployment_name}-vars.yml")
