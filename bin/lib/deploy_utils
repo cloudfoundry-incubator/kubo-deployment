@@ -90,7 +90,6 @@ generate_manifest() {
         manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
     ;;
     proxy)
-        manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/worker-haproxy.yml")
         manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/master-haproxy.yml")
     ;;
     *)
