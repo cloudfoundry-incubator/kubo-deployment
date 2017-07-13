@@ -66,6 +66,7 @@ generate_manifest() {
 
   manifest_dir=$(cd "$(dirname "${manifest_path}")"; pwd)
   manifest="$(cat "${manifest_path}")"
+  local routing_mode="$(bosh-cli int "${bosh_environment}/director.yml" --path='/routing_mode')"
 
   if [ -e "${bosh_environment}/${deployment_name}.yml" ]; then
     manifest=$(echo "${manifest}" | bosh-cli int - --ops-file="${bosh_environment}/${deployment_name}.yml")
@@ -83,19 +84,13 @@ generate_manifest() {
     manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/add-no-proxy.yml")
   fi
 
-
-  case "$(bosh-cli int "${bosh_environment}/director.yml" --path='/routing_mode')" in
-    cf)
+  if [[ "$routing_mode" == "cf" ]]; then
         manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/cf-routing.yml")
+  fi
+
+  if [[ "$routing_mode" != "proxy" ]]; then
         manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
-    ;;
-    proxy)
-        manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/master-haproxy.yml")
-    ;;
-    *)
-        manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
-    ;;
-  esac
+  fi
 
   if [ -e "${bosh_environment}/${deployment_name}-vars.yml" ]; then
     manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/${deployment_name}-vars.yml")

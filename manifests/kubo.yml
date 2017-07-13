@@ -52,6 +52,8 @@ instance_groups:
       admin-username: admin
       admin-password: ((kubo-admin-password))
       kubelet-password: ((kubelet-password))
+      backend_port: ((master_haproxy_tcp_backend_port))
+      port: ((master_haproxy_tcp_frontend_port))
       tls:
         kubernetes: ((tls-kubernetes))
   - name: kubeconfig
@@ -76,7 +78,8 @@ instance_groups:
   instances: 1
   networks:
   - name: ((deployments_network))
-    static_ips: []
+    static_ips:
+    - ((kubernetes_master_host))
   azs: [z1]
   stemcell: trusty
   vm_type: common
