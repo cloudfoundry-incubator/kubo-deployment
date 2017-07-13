@@ -167,27 +167,27 @@ EOF
 cat > /usr/bin/update_gcp_env <<'EOF'
 #!/bin/bash
 
-if [[ ! -f "$1" ]]; then
-  print 'Please specify the path to director.yml'
+if [[ ! -f "$1" ]] || [[ ! "$1" =~ director.yml$ ]]; then
+  echo 'Please specify the path to director.yml'
   exit 1
 fi
 
 # GCP specific updates
-sed -i -e 's/^\(project_id:\)/\1 ${var.projectid}/' "$1"
-sed -i -e 's/^\(network:\)/\1 ${var.network}/' "$1"
-sed -i -e 's/^\(subnetwork:\)/\1 ${google_compute_subnetwork.kubo-subnet.name}/' "$1"
-sed -i -e 's/^\(zone:\)/\1 ${var.zone}/' "$1"
+sed -i -e 's/^\(project_id:\).*\(#.*\)/\1 ${var.projectid} \2/' "$1"
+sed -i -e 's/^\(network:\).*\(#.*\)/\1 ${var.network} \2/' "$1"
+sed -i -e 's/^\(subnetwork:\).*\(#.*\)/\1 ${google_compute_subnetwork.kubo-subnet.name} \2/' "$1"
+sed -i -e 's/^\(zone:\).*\(#.*\)/\1 ${var.zone} \2/' "$1"
 
 # Generic updates
 random_key=$$(hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom)
 
-sed -i -e 's/^\(internal_ip:\)/\1 ${var.subnet_ip_prefix}.252/' "$1"
-sed -i -e 's/^\(deployments_network:\)/\1 ${var.prefix}kubo-network/' "$1"
-sed -i -e 's/^\(credhub_encryption_key:\)/\1 $${random_key}/' "$1"
-sed -i -e 's#^\(internal_cidr:\)#\1 ${var.subnet_ip_prefix}.0/24#' "$1"
-sed -i -e 's/^\(internal_gw:\)/\1 ${var.subnet_ip_prefix}.1/' "$1"
-sed -i -e 's/^\(director_name:\)/\1 ${var.prefix}bosh/' "$1"
-sed -i -e 's/^\(dns_recursor_ip:\)/\1 ${var.subnet_ip_prefix}.1/' "$1"
+sed -i -e 's/^\(internal_ip:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.252 \2/' "$1"
+sed -i -e 's/^\(deployments_network:\).*\(#.*\)/\1 ${var.prefix}kubo-network \2/' "$1"
+sed -i -e 's/^\(credhub_encryption_key:\).*\(#.*\)/\1 $${random_key} \2/' "$1"
+sed -i -e 's=^\(internal_cidr:\).*\(#.*\)=\1 ${var.subnet_ip_prefix}.0/24 \2=' "$1"
+sed -i -e 's/^\(internal_gw:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.1 \2/' "$1"
+sed -i -e 's/^\(director_name:\).*\(#.*\)/\1 ${var.prefix}bosh \2/' "$1"
+sed -i -e 's/^\(dns_recursor_ip:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.1 \2/' "$1"
 
 EOF
 chmod a+x /usr/bin/update_gcp_env
