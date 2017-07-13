@@ -183,7 +183,7 @@ random_key=$$(hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom)
 
 sed -i -e 's/^\(internal_ip:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.252 \2/' "$1"
 sed -i -e 's/^\(deployments_network:\).*\(#.*\)/\1 ${var.prefix}kubo-network \2/' "$1"
-sed -i -e 's/^\(credhub_encryption_key:\).*\(#.*\)/\1 $${random_key} \2/' "$1"
+sed -i -e "s/^\(credhub_encryption_key:\).*\(#.*\)/\1 $${random_key} \2/" "$1"
 sed -i -e 's=^\(internal_cidr:\).*\(#.*\)=\1 ${var.subnet_ip_prefix}.0/24 \2=' "$1"
 sed -i -e 's/^\(internal_gw:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.1 \2/' "$1"
 sed -i -e 's/^\(director_name:\).*\(#.*\)/\1 ${var.prefix}bosh \2/' "$1"
