@@ -12,17 +12,10 @@
 
 - type: replace
   path: /variables/name=tls-kubernetes/options/alternative_names
-<<<<<<< HEAD
-<<<<<<< HEAD
   value:
   - ((cf-tcp-router-name))
+  - ((kubernetes_master_host))
   - 10.100.200.1
-=======
-  value: [((kubernetes-master-host))]
->>>>>>> Rename cf-tcp-router-name and kubernetes_api_ip to kubernetes-master-host
-=======
-  value: [((kubernetes_master_host))]
->>>>>>> Rename kubernetes-master-port and host to underscored name
 
 - type: replace
   path: /instance_groups/name=master/jobs/-
