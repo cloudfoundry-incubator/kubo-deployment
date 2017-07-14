@@ -39,6 +39,7 @@ kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest
 # Comment this section when using CF routing mode
 routing_mode: iaas
 kubernetes_master_host: <%= ENV['kubernetes_master_host'] %> # IP address that can be used to reach the Kubernetes API, usually the address of a load balancer
+kubernetes_master_port: 8443
 master_target_pool: <%= ENV['kubo_master_target_pool'] %> # target pool that master nodes will be a part of
 worker_target_pool: <%= ENV['kubo_worker_target_pool'] %> # target pool that worker nodes will be a part of
 
