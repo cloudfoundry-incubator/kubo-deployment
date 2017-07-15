@@ -43,6 +43,11 @@ resources:
     source:
       repository: cloudfoundry/garden-runc-release
 
+  - name: grootfs
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/grootfs-release
+
   # stemcells
 
   - name: ubuntu-trusty-3363-stemcell
@@ -172,7 +177,7 @@ jobs:
           - get: bosh-deployment
           - get: uaa-release
             version:
-              version: "30.4"
+              version: "30.5"
           - get: ubuntu-trusty-3363-stemcell
             version:
               version: "3363.26"
@@ -192,7 +197,7 @@ jobs:
           - get: bosh-deployment
           - get: uaa-release
             version:
-              version: "24.11"
+              version: "24.12"
           - get: ubuntu-trusty-3363-stemcell
             version:
               version: "3363.26"
@@ -212,7 +217,7 @@ jobs:
           - get: bosh-deployment
           - get: uaa-release
             version:
-              version: "13.16"
+              version: "13.17"
           - get: ubuntu-trusty-3363-stemcell
             version:
               version: "3363.26"
@@ -364,6 +369,46 @@ jobs:
         input_mapping:
           stemcell: ubuntu-trusty-3421-stemcell
           release: garden-runc
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-garden-runc-1-9-ubuntu-trusty-3421
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: garden-runc
+            version:
+              version: "1.9.0"
+          - get: ubuntu-trusty-3421-stemcell
+            version:
+              version: "3421.9"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3421-stemcell
+          release: garden-runc
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-grootfs-ubuntu-trusty-3421
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: grootfs
+            version:
+              version: "0.21.0"
+          - get: ubuntu-trusty-3421-stemcell
+            version:
+              version: "3421.9"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3421-stemcell
+          release: grootfs
       - put: compiled-releases
         params:
           file: "compiled-release/*.tgz"
