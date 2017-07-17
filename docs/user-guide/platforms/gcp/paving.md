@@ -77,12 +77,6 @@ rules to secure access to the kubo deployment.
   cd kubo-deployment/docs/user-guide/platforms/gcp
   ```
 
-1. Create the folder to store the terraform output
-   
-  ```bash
-  mkdir -p ${state_dir}
-  ```
-
 1. Create the resources (should take between 60-90 seconds):
 
   ```bash
