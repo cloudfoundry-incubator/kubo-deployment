@@ -7,7 +7,7 @@ Cloud Foundry routing, the following CF settings should be available:
   - Cloud Foundry TCP Router hostname
   - Cloud Foundry apps domain
   - Cloud Foundry API URL
-  - Cloud Foundry UAA URL and credentials for a client that can access the TCP router
+  - Cloud Foundry UAA URL and credentials for a client with [appropriate authorities](https://github.com/cloudfoundry-incubator/routing-api#configure-oauth-clients-manually-using-uaac-cli-for-uaa)
   - Cloud Foundry NATS bus information - ip addresses, username, port and access credentials
 
 Follow the steps below in order to configure Kubo to use CF routing from the bastion box:

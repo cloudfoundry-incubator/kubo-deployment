@@ -52,12 +52,4 @@ setup the Load balancers:
    /usr/bin/set_iaas_routing "${state_dir}/director.yml"
    ```
    
-   > It is also possible to set the configuration manually by editing the <KUBO_ENV>/director.yml 
-
-In order to configure kubo to use IaaS routing, modify the `<KUBO_ENV>/director.yml`:
-
-  - Comment out all the lines grouped underneath the **CF routing mode settings** comment
-  
-  - Uncomment all the lines grouped underneath the **IaaS routing mode settings** comment 
-    and fill in all the values, as outlined in the snippet above.
-  
+   > It is also possible to set the configuration manually by editing the <KUBO_ENV>/director.yml  
