@@ -2,20 +2,22 @@
 
 ## Table of contents
 
- - [Unable to create Google Storage Bucket when deploying KuBOSH](#unable-to-create-google-storage-bucket-when-deploying-kubosh)
- - [Service account permission errors during KuBOSH deployment](#service-account-permission-errors-during-kubosh-deployment)
- - [I/O timeout when deploying KuBOSH](#i-o-timeout-when-deploying-kubosh)
+ - [Unable to create Google Storage Bucket when deploying BOSH](#unable-to-create-google-storage-bucket-when-deploying-bosh)
+ - [Service account permission errors during BOSH deployment](#service-account-permission-errors-during-bosh-deployment)
+ - [I/O timeout when deploying BOSH](#i-o-timeout-when-deploying-bosh)
  - [Unable to login to CredHub](#unable-to-login-to-credhub)
  - [bosh-cli 401 error for UAA](#bosh-cli-401-error-for-uaa)
  - [Master is not running after the update](#master-is-not-running-after-the-update)
  - [Timeout failures during OSS deployment](#timeout-failures-during-oss-deployment)
- - [K8s deployment fails after KuBOSH is redeployed](#k8s-deployment-fails-after-kubosh-is-redeployed)
+ - [K8s deployment fails after BOSH is redeployed](#k8s-deployment-fails-after-bosh-is-redeployed)
  - [Worker failure during deployment of second cluster](#worker-failure-during-deployment-of-second-cluster)
  - [Other connectivity issues](#other-connectivity-issues)
 
-## Unable to create Google Storage Bucket when deploying KuBOSH
 
-The error below occurs when deploying KuBOSH on GCP
+
+## Unable to create Google Storage Bucket when deploying BOSH
+
+The error below occurs when deploying BOSH on GCP
 
 `CmdError{"type":"Bosh::Clouds::CloudError","message":"Creating stemcell: Creating Google Storage Bucket: Post https://www.googleapis.com/storage/v1/b?alt=json\u0026project=cf-pcf-kubo: Get http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token: dial tcp 169.254.169.254:80: i/o timeout","ok_to_retry":false}`
 
@@ -24,17 +26,17 @@ The error below occurs when deploying KuBOSH on GCP
 Make sure that you have logged in with the newly created service account as described in
 [GCP Setup](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/bosh#setup).
 
-## Service account permission errors during KuBOSH deployment
+## Service account permission errors during BOSH deployment
 
-Various service account permission issues may prevent KuBOSH deployment
+Various service account permission issues may prevent BOSH deployment
 
 ### Solution
 
 Verify that the correct permissions are applied in the [Google Cloud Console](https://console.cloud.google.com/iam-admin/iam). If the permissions are set correctly, but you are still experiencing permission issues, try creating a new account with a different name.
 
-## I/O timeout when deploying KuBOSH
+## I/O timeout when deploying BOSH
 
-When deploying KuBOSH via an `sshuttle` connection, the following error might occur:
+When deploying BOSH via an `sshuttle` connection, the following error might occur:
 
 ```
 Command 'deploy' failed:
@@ -47,7 +49,7 @@ Command 'deploy' failed:
               Post https://mbus:294a691d057ede1af4f696aab36c4bc5@10.0.0.4:6868/agent: dial tcp 10.0.0.4:6868: i/o timeout
 ```
 
-where `10.0.0.4` is the KuBOSH IP address.
+where `10.0.0.4` is the BOSH IP address.
 
 ### Solution
 
@@ -55,7 +57,7 @@ Restart the `sshuttle` connection.
 
 ## Unable to login to CredHub
 
-A KuBOSH or kubo deployment may fail with the following error:
+A BOSH or kubo deployment may fail with the following error:
 
 ```
 The provided username and password combination are incorrect. Please validate your input and retry your request.
@@ -124,9 +126,9 @@ Retry the deployment commands. This can be caused by the default preemptable com
 
 If you have access to a domain then you can increase reliability by using it for your Cloud Foundry deployment. If you do not mind the increased cost you can remove the [preemptable](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/src/bosh-google-cpi#bosh-resource-pool-options) property from the compilation workers in the Cloud Foundry manifest.
 
-## K8s deployment fails after KuBOSH is redeployed
+## K8s deployment fails after BOSH is redeployed
 
-When deploying K8S following a redeployment of KuBOSH, the following error message may be displayed:
+When deploying K8S following a redeployment of BOSH, the following error message may be displayed:
 
 ```
 $ bin/deploy_k8s <BOSH_ENV> <NAME> public

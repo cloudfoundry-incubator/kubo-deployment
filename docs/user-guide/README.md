@@ -38,6 +38,16 @@ to one of the options below:
 To view an adjust the available configuration options, please edit the `<KUBO_ENV>/director.yml` file that
 was created as part of the [routing options setup](#create-a-kubo-environment).
 
+### Proxy settings
+
+The following variables can be configured in the director.yml to allow Docker have proxy access:
+
+```yaml
+http_proxy: # e.g. http://my.proxy.local:73636
+https_proxy: # e.g. https://secure.proxy.local:5566
+no_proxy: # e.g. '1.2.3.4,2.3.4.5'
+```
+
 ## Deploying Kubo
 
 Once the infrastructure has been set up, a kubernetes cluster can be deployed by running a single line of code:
@@ -47,6 +57,11 @@ Once the infrastructure has been set up, a kubernetes cluster can be deployed by
    ```
     
 where `CLUSTER_NAME` is a unique name for the cluster. Run `bin/deploy_k8s --help` for more options.
+
+### Customized deployment
+
+The `kubo-deployment` provides a number of ways to customize the kubo settings. Please follow the 
+[custom install guide](customized-kubo-installation.md) if you need to change the default behaviour.
 
 ## Accessing Kubernetes
 
@@ -70,3 +85,7 @@ Different routing modes provide different ways of exposing applications run by t
 
 - [IaaS routing](./routing/exposing-apps.md)
 - [CF routing](./routing/cf-apps.md)
+
+## Troubleshooting
+
+See [troubleshooting section](troubleshooting.md) for solutions to most commonly encountered problems.
