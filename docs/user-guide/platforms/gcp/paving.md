@@ -8,6 +8,13 @@
 
 1. In your existing Google Cloud Platform project, open Cloud Shell (the small `>_` prompt icon in the web console menu bar).
 
+1. When deploying kubo more than once, it is required to set a unique prefix
+  for every installation. Please use letters and dashes only.
+  
+  ```bash
+  export prefix=my-kubo # This prefix should be unique for every install
+  ```
+
 1.  Configure the following environment variables:
 
   ```bash
@@ -15,20 +22,14 @@
   export subnet_ip_prefix="10.0.1" # Create new subnet for deployment in $subnet_ip_prefix.0/24
   export region=us-east1 # region that you will deploy Kubo in
   export zone=us-east1-d # zone that you will deploy Kubo in
-  export terraform_state_dir=~/kubo-env # Location for storing the terraform state
-  export service_account_email=terraform@${project_id}.iam.gserviceaccount.com
+  export state_dir=~/kubo-env # Location for storing the terraform state
+  export kubo_terraform_state=${state_dir}/terraform.tfstate
+  export service_account_email=${prefix}terraform@${project_id}.iam.gserviceaccount.com
   export network=<An existing GCP network for deploying kubo>
   ```
   
   > When using the [CloudFoundry routing mode](../../routing/cf.md) the GCP network above 
   > needs to be the same network that CloudFoundry is using 
-
-1. When deploying kubo more than once, it is required to set a unique prefix
-  for every installation
-  
-  ```bash
-  export prefix=my-kubo # This prefix should be unique for every install
-  ```
 
 1. Configure `gcloud` to use the region and zone specified above:
 
@@ -42,7 +43,7 @@
 1. Create a service account and key:
   
   ```bash
-  gcloud iam service-accounts create terraform
+  gcloud iam service-accounts create ${prefix}terraform
   gcloud iam service-accounts keys create ~/terraform.key.json \
       --iam-account ${service_account_email}
   ```
@@ -79,13 +80,14 @@ rules to secure access to the kubo deployment.
 1. Create the folder to store the terraform output
    
   ```bash
-  mkdir -p ${terraform_state_dir}
+  mkdir -p ${state_dir}
   ```
 
 1. Create the resources (should take between 60-90 seconds):
 
   ```bash
   docker run -i -t \
+    -e CHECKPOINT_DISABLE=1 \
     -e "GOOGLE_CREDENTIALS=${GOOGLE_CREDENTIALS}" \
     -v $(pwd):/$(basename $(pwd)) \
     -w /$(basename $(pwd)) \
@@ -96,8 +98,7 @@ rules to secure access to the kubo deployment.
       -var region=${region} \
       -var prefix=${prefix} \
       -var zone=${zone} \
-      -var subnet_ip_prefix=${subnet_ip_prefix} \
-      -state=${terraform_state_dir}
+      -var subnet_ip_prefix=${subnet_ip_prefix}
   ```
 
 > _Note_: It's possible to preview the terraform execution plan by running the 

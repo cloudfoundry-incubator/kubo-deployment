@@ -18,6 +18,8 @@
     export kubo_env=~/kubo-env
     export kubo_env_name=kubo
     export kubo_env_path="${kubo_env}/${kubo_env_name}"
+ 
+    mkdir -p "${kubo_env}"
     ./bin/generate_env_config "${kubo_env}" ${kubo_env_name} gcp
     ```
 

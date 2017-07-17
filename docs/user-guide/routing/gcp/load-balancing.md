@@ -6,49 +6,53 @@ IaaS load balancers. Currently, only the GCP platform is supported.
 ## Prerequisites
 
 Before deploying and configuring Kubo, you need to carry out the following steps to 
-setup the Load balancers:   
+setup the Load balancers:
+   
+1. This guide expects to be run in the same bash session as the [BOSH install](../../platforms/gcp/install-bosh.md).
+   If, for some reason, that is not the case, please set the `kubo_env_name` variable to the name
+   of the Kubo environment before running the rest of the scripts.
+   
 
-1. `cd` into the guide directory
+1. On the BOSH bastion `cd` into the guide directory
 
    ```bash
-   cd ~/kubo-deployment/docs/templates/gcp-lb
+   cd /share/kubo-deployment/docs/user-guide/routing/gcp
    ```
 
 1. Export these values. If you haven't tweaked any settings then use these defaults:
 
    ```bash
-   export project_id=$(gcloud config get-value project)
-   export kubo_region=us-west1
-   export kubo_zone=us-west1-a
-   export network=bosh # GCP network that BOSH resides in
-   
-   export kubo_env=kube
-   export state_dir=~/kubo-env/${kubo_env}
+   export state_dir=~/kubo-env/${kubo_env_name}
    export kubo_terraform_state=${state_dir}/terraform.tfstate
    ``` 
 
 1. Create the resources
+   
    ```bash
    terraform apply \
       -var network=${network} \
       -var projectid=${project_id} \
-      -var kubo_region=${kubo_region} \
+      -var region=${region} \
+      -var prefix=${prefix} \
+      -var ip_cidr_range="${subnet_ip_prefix}.0/24" \
       -state=${kubo_terraform_state}
    ```
 
-Additionally, the terraform script accepts the following variables:
-  
-  - `ip_cidr_range`: the CIDR range for the kubo subnetwork. The default value is `10.0.1.0/24`
-  - `prefix`: A prefix to use for all the GCP resource names. Defaults to an empty string.
-
-To get the outputs for the configuration files, run the following snippet:
+1. To get the outputs for the configuration files, run the following snippet:
    
    ```bash
-   terraform output -state=${kubo_terraform_state} kubo_subnet # subnetwork 
-   terraform output -state=${kubo_terraform_state} kubo_master_target_pool # master_target_pool                                                                             
-   terraform output -state=${kubo_terraform_state} kubo_worker_target_pool # worker_target_pool
-   terraform output -state=${kubo_terraform_state} master_lb_ip_address # kubernetes_master_host
+   export master_target_pool=$(terraform output -state=${kubo_terraform_state} kubo_master_target_pool) # master_target_pool                                                                             
+   export worker_target_pool=$(terraform output -state=${kubo_terraform_state} kubo_worker_target_pool) # worker_target_pool
+   export kubernetes_master_host=$(terraform output -state=${kubo_terraform_state} master_lb_ip_address) # kubernetes_master_host
    ```
+
+1. Update the Kubo environment using the following snippet:
+
+   ```bash
+   /usr/bin/set_iaas_routing "${state_dir}/director.yml"
+   ```
+   
+   > It is also possible to set the configuration manually by editing the <KUBO_ENV>/director.yml 
 
 In order to configure kubo to use IaaS routing, modify the `<KUBO_ENV>/director.yml`:
 

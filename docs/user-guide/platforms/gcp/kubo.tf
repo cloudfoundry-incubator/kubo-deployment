@@ -192,6 +192,24 @@ sed -i -e 's/^\(dns_recursor_ip:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.1 \2/' "$
 EOF
 chmod a+x /usr/bin/update_gcp_env
 
+cat > /usr/bin/set_iaas_routing <<'EOF'
+#!/bin/bash
+
+if [[ ! -f "$1" ]] || [[ ! "$1" =~ director.yml$ ]]; then
+  echo 'Please specify the path to director.yml'
+  exit 1
+fi
+
+sed -i -e 's/^#* *\(routing_mode:.*\)$/# \1/' "$1"
+sed -i -e 's/^#* *\(routing_mode:\) *\(iaas\).*$/\1 \2/' "$1"
+
+sed -i -e "s/^\(kubernetes_master_host:\).*\(#.*\)/\1 $${kubernetes_master_host} \2/" "$1"
+sed -i -e "s/^\(master_target_pool:\).*\(#.*\).*$/\1 $${master_target_pool} \2/" "$1"
+sed -i -e "s/^\(worker_target_pool:\).*\(#.*\).*$/\1 $${worker_target_pool} \2/" "$1"
+
+EOF
+chmod a+x /usr/bin/set_iaas_routing
+
 # Clone repo
 mkdir /share
 git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share/kubo-deployment
