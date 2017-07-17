@@ -30,7 +30,7 @@ deploy_to_bosh() {
     exit 1
   fi
 
-  echo "${bosh_manifest}" | BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli -e "$BOSH_NAME" -d ${deployment_name} -n deploy --no-redact -
+  echo "${bosh_manifest}" | BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli -d ${deployment_name} -n deploy --no-redact -
 }
 
 create_and_upload_release() {
@@ -39,7 +39,7 @@ create_and_upload_release() {
 
   if [ -d "$release_dirname" ]; then
     pushd "$release_dirname"
-      BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli -e "${BOSH_NAME}" create-release --force --name "${release_name}"
+      BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli create-release --force --name "${release_name}"
       upload_release "--name=${release_name}"
     popd
   else
@@ -51,7 +51,7 @@ create_and_upload_release() {
 upload_release() {
   local release_name=$1
 
-  BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli -e "$BOSH_NAME" upload-release "$release_name"
+  BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli upload-release "$release_name"
 }
 
 generate_manifest() {
