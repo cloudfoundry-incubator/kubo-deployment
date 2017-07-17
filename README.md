@@ -63,14 +63,7 @@ The Cloud Foundry subnet must be able to route traffic directly to the Kubo subn
 
 ## Installation
 
-Please choose the guide below that matches your requirements
-
-1. Deploy Kubo from scratch on Google Cloud Platform - [guide](docs/guides/gcp)
-1. Deploy Kubo using an existing Cloud Foundry installation for routing on Google Cloud Platform - [guide](docs/guides/gcp-cf)
-1. Deploy Kubo step by step, allowing for customization - [guide](docs/guides/customized-installation.md)
-
-Once the kubernetes is installed, read the [guide](../using-kubernetes.md) on setting up
-`kubectl` and deploying services to the new cluster.
+Please follow the [install guide](docs/user-guide/README.md) for installation instructions.
 
 ## Delete resources
 
@@ -92,7 +85,7 @@ bin/destroy_bosh ~/kubo-env/kube ~/kubo-env/kube/service_account.json
 
 ## Troubleshooting
 
-Please refer to the [troubleshooting guide](docs/troubleshooting.md) to look for solutions to the most common issues. 
+Please refer to the [troubleshooting guide](docs/user-guide/troubleshooting.md) to look for solutions to the most common issues. 
 
 ## Contributing
 
