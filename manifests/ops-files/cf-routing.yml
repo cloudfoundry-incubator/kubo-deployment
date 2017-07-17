@@ -31,7 +31,9 @@
 
 - type: replace
   path: /variables/name=tls-kubernetes/options/alternative_names
-  value: [((cf-tcp-router-name))]
+  value:
+  - ((cf-tcp-router-name))
+  - 10.100.200.1
 
 - type: replace
   path: /instance_groups/name=master/jobs/-

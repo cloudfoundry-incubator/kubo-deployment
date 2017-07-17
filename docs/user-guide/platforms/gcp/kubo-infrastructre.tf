@@ -143,8 +143,6 @@ apt-get install -y build-essential zlibc zlib1g-dev ruby ruby-dev openssl libxsl
 gem install bosh_cli
 curl -o /tmp/cf.tgz https://s3.amazonaws.com/go-cli/releases/v6.20.0/cf-cli_6.20.0_linux_x86-64.tgz
 tar -zxvf /tmp/cf.tgz && mv cf /usr/bin/cf && chmod +x /usr/bin/cf
-curl -o /usr/bin/bosh-init https://s3.amazonaws.com/bosh-init-artifacts/bosh-init-0.0.96-linux-amd64
-chmod +x /usr/bin/bosh-init
 
 cat > /etc/profile.d/bosh.sh <<'EOF'
 #!/bin/bash
@@ -155,22 +153,66 @@ export ssh_key_path=$HOME/.ssh/bosh
 # Vars from Terraform
 export subnetwork=${google_compute_subnetwork.kubo-subnet.name}
 export network=${var.network}
-
-
-# Vars from metadata service
-export project_id=$$(curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/project/project-id)
-export zone=$$(curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/zone)
-export zone=$${zone##*/}
-export region=$${zone%-*}
+export subnet_ip_prefix=${var.subnet_ip_prefix}
+export service_account_email=${var.service_account_email}
+export project_id=${var.projectid}
+export zone=${var.zone}
+export region=${var.region}
 
 # Configure gcloud
 gcloud config set compute/zone $${zone}
 gcloud config set compute/region $${region}
 EOF
 
+cat > /usr/bin/update_gcp_env <<'EOF'
+#!/bin/bash
+
+if [[ ! -f "$1" ]] || [[ ! "$1" =~ director.yml$ ]]; then
+  echo 'Please specify the path to director.yml'
+  exit 1
+fi
+
+# GCP specific updates
+sed -i -e 's/^\(project_id:\).*\(#.*\)/\1 ${var.projectid} \2/' "$1"
+sed -i -e 's/^\(network:\).*\(#.*\)/\1 ${var.network} \2/' "$1"
+sed -i -e 's/^\(subnetwork:\).*\(#.*\)/\1 ${google_compute_subnetwork.kubo-subnet.name} \2/' "$1"
+sed -i -e 's/^\(zone:\).*\(#.*\)/\1 ${var.zone} \2/' "$1"
+
+# Generic updates
+random_key=$$(hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom)
+
+sed -i -e 's/^\(internal_ip:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.252 \2/' "$1"
+sed -i -e 's/^\(deployments_network:\).*\(#.*\)/\1 ${var.prefix}kubo-network \2/' "$1"
+sed -i -e "s/^\(credhub_encryption_key:\).*\(#.*\)/\1 $${random_key} \2/" "$1"
+sed -i -e 's=^\(internal_cidr:\).*\(#.*\)=\1 ${var.subnet_ip_prefix}.0/24 \2=' "$1"
+sed -i -e 's/^\(internal_gw:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.1 \2/' "$1"
+sed -i -e 's/^\(director_name:\).*\(#.*\)/\1 ${var.prefix}bosh \2/' "$1"
+sed -i -e 's/^\(dns_recursor_ip:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.1 \2/' "$1"
+
+EOF
+chmod a+x /usr/bin/update_gcp_env
+
+cat > /usr/bin/set_iaas_routing <<'EOF'
+#!/bin/bash
+
+if [[ ! -f "$1" ]] || [[ ! "$1" =~ director.yml$ ]]; then
+  echo 'Please specify the path to director.yml'
+  exit 1
+fi
+
+sed -i -e 's/^#* *\(routing_mode:.*\)$/# \1/' "$1"
+sed -i -e 's/^#* *\(routing_mode:\) *\(iaas\).*$/\1 \2/' "$1"
+
+sed -i -e "s/^\(kubernetes_master_host:\).*\(#.*\)/\1 $${kubernetes_master_host} \2/" "$1"
+sed -i -e "s/^\(master_target_pool:\).*\(#.*\).*$/\1 $${master_target_pool} \2/" "$1"
+sed -i -e "s/^\(worker_target_pool:\).*\(#.*\).*$/\1 $${worker_target_pool} \2/" "$1"
+
+EOF
+chmod a+x /usr/bin/set_iaas_routing
+
 # Clone repo
 mkdir /share
-git clone https://github.com/cloudfoundry-incubator/bosh-google-cpi-release.git /share
+git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share/kubo-deployment
 chmod -R 777 /share
 
 # Install Terraform
@@ -179,7 +221,7 @@ unzip terraform*.zip -d /usr/local/bin
 rm /etc/motd
 
 cd
-sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.1-linux-amd64 -o /usr/bin/bosh-cli
+sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.27-linux-amd64 -o /usr/bin/bosh-cli
 sudo chmod a+x /usr/bin/bosh-cli
 sudo curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/bin/kubectl
 sudo chmod a+x /usr/bin/kubectl

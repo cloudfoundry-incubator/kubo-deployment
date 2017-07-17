@@ -1,10 +1,10 @@
 name: ((deployment_name))
 
 releases:
-- name: etcd
-  version: 108+dev.2
-  url: https://storage.googleapis.com/kubo-etcd/kubo-etcd-release.108%2Bdev.2.tgz
-  sha1: 6f452dae3d6399b38cbdee983847b81f88fc8163
+- name: kubo-etcd
+  version: 2
+  url: https://github.com/pivotal-cf-experimental/kubo-etcd/releases/download/v2/kubo-etcd.2.tgz
+  sha1: ae95e661cd9df3bdc59ee38bf94dd98e2f280d4f
 - name: kubo
   version: latest
 - name: docker
@@ -25,7 +25,7 @@ instance_groups:
   azs: [z1]
   jobs:
   - name: etcd
-    release: etcd
+    release: kubo-etcd
     properties:
       etcd:
         require_ssl: false
@@ -135,4 +135,6 @@ variables:
   options:
     ca: kubo_ca
     common_name: ((kubernetes_master_host))
-    alternative_names: [((kubernetes_master_host))]
+    alternative_names:
+    - ((kubernetes_master_host))
+    - 10.100.200.1

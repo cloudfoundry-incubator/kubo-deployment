@@ -15,7 +15,7 @@ Build Kubo Release status [![Build Kubo Release Badge](https://ci.kubo.sh/api/v1
 
 | Job | GCP with CF routing pipeline Status |GCP with load balancer status|vSphere status|
 |---------|--------|--------|--------|
-| Install KuBOSH | [![KuBOSH GCP Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/install-bosh-gcp/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![KuBOSH GCP LB Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/install-bosh-gcp-lb/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![KuBOSH vSphere Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/install-bosh-vsphere/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) |
+| Install BOSH | [![BOSH GCP Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/install-bosh-gcp/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![BOSH GCP LB Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/install-bosh-gcp-lb/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![BOSH vSphere Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/install-bosh-vsphere/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) |
 | Deploy K8s | [![Deploy K8s GCP Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s-gcp/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![Deploy K8s GCP LB Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s-gcp-lb/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![Deploy K8s vSphere Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-k8s-vsphere/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) |
 | Run smoke tests | [![Run smoke tests GCP Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-workload-gcp/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![Run smoke tests GCP LB Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-workload-gcp-lb/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) | [![Run smoke tests vSphere Badge](https://ci.kubo.sh/api/v1/teams/main/pipelines/kubo-deployment/jobs/deploy-workload-vsphere/badge)](https://ci.kubo.sh/teams/main/pipelines/kubo-deployment) |
 
@@ -54,24 +54,16 @@ The Cloud Foundry subnet must be able to route traffic directly to the Kubo subn
 ## Glossary
 
 - Kubo - Kubernetes on BOSH
-- KuBOSH - BOSH with UAA, Credhub and PowerDNS
 - [Bastion](https://en.wikipedia.org/wiki/Jump_server) - A server within the kubo network that provides secure access to kubo.
-- BOSH environment Configuration - Folder that contains all configuration files needed to deploy KuBOSH and Kubo, as well as all 
-  configuration files that are generated during deployment. Also called `<BOSH_ENV>`
-- Creds - Credentials that are generated during KuBOSH deployment process and stored in `<BOSH_ENV>/creds.yml`
+- Kubo environment Configuration - Folder that contains all configuration files needed to deploy BOSH and Kubo, as well as all 
+  configuration files that are generated during deployment. Also called `<KUBO_ENV>`
+- Creds - Credentials that are generated during BOSH deployment process and stored in `<KUBO_ENV>/creds.yml`
 - Service - stands for [K8s service](https://kubernetes.io/docs/user-guide/services), which represents a logical collection 
   of Kubernetes pods and a way to access them without needing information about the specific pods
 
 ## Installation
 
-Please choose the guide below that matches your requirements
-
-1. Deploy Kubo from scratch on Google Cloud Platform - [guide](docs/guides/gcp)
-1. Deploy Kubo using an existing Cloud Foundry installation for routing on Google Cloud Platform - [guide](docs/guides/gcp-cf)
-1. Deploy Kubo step by step, allowing for customization - [guide](docs/guides/customized-installation.md)
-
-Once the kubernetes is installed, read the [guide](../using-kubernetes.md) on setting up
-`kubectl` and deploying services to the new cluster.
+Please follow the [install guide](docs/user-guide/README.md) for installation instructions.
 
 ## Delete resources
 
@@ -83,9 +75,9 @@ You can use the BOSH cli to delete your kubernetes deployment
 bosh-cli -e kube -d kube delete-deployment
 ```
 
-### Delete KuBOSH Director
+### Delete BOSH Director
 
-Use the following script to delete your KuBOSH director
+Use the following script to delete your BOSH director
 
 ```
 bin/destroy_bosh ~/kubo-env/kube ~/kubo-env/kube/service_account.json
@@ -93,7 +85,7 @@ bin/destroy_bosh ~/kubo-env/kube ~/kubo-env/kube/service_account.json
 
 ## Troubleshooting
 
-Please refer to the [troubleshooting guide](docs/troubleshooting.md) to look for solutions to the most common issues. 
+Please refer to the [troubleshooting guide](docs/user-guide/troubleshooting.md) to look for solutions to the most common issues. 
 
 ## Contributing
 
