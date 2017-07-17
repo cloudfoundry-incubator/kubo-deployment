@@ -22,8 +22,6 @@
   export subnet_ip_prefix="10.0.1" # Create new subnet for deployment in $subnet_ip_prefix.0/24
   export region=us-east1 # region that you will deploy Kubo in
   export zone=us-east1-d # zone that you will deploy Kubo in
-  export state_dir=~/kubo-env # Location for storing the terraform state
-  export kubo_terraform_state=${state_dir}/terraform.tfstate
   export service_account_email=${prefix}terraform@${project_id}.iam.gserviceaccount.com
   export network=<An existing GCP network for deploying kubo>
   ```
