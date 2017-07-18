@@ -65,6 +65,7 @@ instance_groups:
         kubernetes: ((tls-kubernetes))
   - name: kubernetes-controller-manager
     release: kubo
+    properties: {}
   - name: kubernetes-scheduler
     release: kubo
   - name: kubernetes-system-specs
