@@ -99,11 +99,6 @@ generate_manifest() {
         manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/master-haproxy-"$iaas".yml")
       fi
       manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/master-haproxy.yml")
-
-      manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/worker-haproxy.yml")
-      if [ "openstack" == "$iaas" ]; then
-        manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/worker-haproxy-openstack.yml")
-      fi
     ;;
     *)
       manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
