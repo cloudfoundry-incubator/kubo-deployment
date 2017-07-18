@@ -30,9 +30,9 @@ main() {
 
   elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "iaas" ]; then
 
-    if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/iaas')" == "gcp" ]; then
+    if [ "${bosh_iaas}" == "gcp" ]; then
        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/load_balancer_target_pools.yml")
-    elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/iaas')" == "aws" ]; then
+    elif [ "${bosh_iaas}" == "aws" ]; then
        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/aws_load_balancers.yml")
     else
        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
@@ -40,9 +40,9 @@ main() {
 
   elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "proxy" ]; then
 
-    if [ "vsphere" == "${bosh_iaas}" ]; then
+    if [ "${bosh_iaas}" == "vsphere" ]; then
         cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/k8s_master_static_ip_vsphere.yml")
-    elif [ "openstack" == "${bosh_iaas}" ]; then
+    elif [ "${bosh_iaas}" == "openstack" ]; then
         cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
     else
       echo "ERROR: Proxy routing mode not supported on [${bosh_iaas}]" >&2
