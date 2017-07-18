@@ -45,13 +45,12 @@ main() {
     elif [ "openstack" == "${bosh_iaas}" ]; then
         cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
     else
-      echo "ERROR: Proxy routing mode not supported on [${bosh_iaas}]"
+      echo "ERROR: Proxy routing mode not supported on [${bosh_iaas}]" >&2
       exit 1
     fi
 
   else
     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
-
   fi
 
   echo -n "${cloud_config}"
