@@ -3,7 +3,7 @@
   path: /releases/-
   value:
     name: bosh-openstack-cpi
-    version: 27
+    version: 32
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-openstack-cpi-release?v=32
     sha1: ed97641c755f455f2494fe1d7016b9fd1c3ec1e8
 
