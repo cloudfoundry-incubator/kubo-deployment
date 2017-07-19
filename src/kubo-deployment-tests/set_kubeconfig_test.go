@@ -47,7 +47,7 @@ var _ = Describe("set_kubeconfig", func() {
 		})
 
 		It("should set cluster config on kubectl", func() {
-			Expect(stderr).To(gbytes.Say("kubectl config set-cluster deployment-name --server=https://12.23.34.45:8443"))
+			Expect(stderr).To(gbytes.Say("kubectl config set-cluster deployment-name --server=https://12.23.34.45:101928"))
 		})
 
 		It("should set credentials on kubectl", func() {

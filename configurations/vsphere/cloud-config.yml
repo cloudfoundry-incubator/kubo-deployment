@@ -16,6 +16,7 @@ networks:
     cloud_properties:
       name: ((network_name))
     reserved: ((reserved_ips))
+    static: []
 
 vm_types:
 - name: common

@@ -11,6 +11,10 @@ releases:
   version: 28.0.1
   url: https://bosh.io/d/github.com/cf-platform-eng/docker-boshrelease?v=28.0.1
   sha1: 448eaa2f478dc8794933781b478fae02aa44ed6b
+- name: haproxy
+  url: https://bosh.io/d/github.com/cloudfoundry-community/haproxy-boshrelease?v=8.3.0
+  sha1: 068dbaa06a3098ec040bd6e5719e6225c4137a69
+  version: latest
 
 stemcells:
 - alias: trusty
@@ -48,12 +52,14 @@ instance_groups:
       admin-username: admin
       admin-password: ((kubo-admin-password))
       kubelet-password: ((kubelet-password))
+      backend_port: ((master_haproxy_tcp_backend_port))
+      port: ((master_haproxy_tcp_frontend_port))
       tls:
         kubernetes: ((tls-kubernetes))
   - name: kubeconfig
     release: kubo
     properties:
-      kubernetes-api-url: &kubo_url "https://((kubernetes_master_host)):8443"
+      kubernetes-api-url: &kubo_url "https://((kubernetes_master_host)):((kubernetes_master_port))"
       kubelet-password: ((kubelet-password))
       tls:
         kubernetes: ((tls-kubernetes))
@@ -67,6 +73,25 @@ instance_groups:
       kubernetes-api-url: *kubo_url
   stemcell: trusty
   vm_type: master
+
+- name: master-haproxy
+  instances: 1
+  networks:
+  - name: ((deployments_network))
+    default: [dns, gateway]
+  azs: [z1]
+  stemcell: trusty
+  vm_type: common
+  jobs:
+  - name: haproxy
+    release: haproxy
+
+    consumes:
+      tcp_backend: { from: master_haproxy }
+
+    properties:
+      ha_proxy:
+        tcp_link_port: 9999 # required, but not used
 
 - name: worker
   instances: 3
