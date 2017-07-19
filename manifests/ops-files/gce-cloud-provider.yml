@@ -1,39 +1,12 @@
 - type: replace
-  path: /instance_groups/name=worker/jobs/name=kubelet/properties/cloud-provider?
+  path: /instance_groups/name=worker/jobs/name=cloud-config/properties/cloud-provider?
   value:
     type: gce
     gce:
       project-id: ((project_id))
       network-name: ((network))
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kubernetes-api/properties/cloud-provider?
-  value:
-    type: gce
-    gce:
-      project-id: ((project_id))
-      network-name: ((network))
-- type: replace
-  path: /instance_groups/name=master/jobs/name=kubernetes-controller-manager/properties/cloud-provider?
-  value:
-    type: gce
-    gce:
-      project-id: ((project_id))
-      network-name: ((network))
-- type: replace
-  path: /instance_groups/name=worker/jobs/name=kubernetes-proxy/properties/cloud-provider?
-  value:
-    type: gce
-    gce:
-      project-id: ((project_id))
-- type: replace
-  path: /instance_groups/name=worker/jobs/name=kubeconfig/properties/cloud-provider?
-  value:
-    type: gce
-    gce:
-      project-id: ((project_id))
-      network-name: ((network))
-- type: replace
-  path: /instance_groups/name=master/jobs/name=kubeconfig/properties/cloud-provider?
+  path: /instance_groups/name=master/jobs/name=cloud-config/properties/cloud-provider?
   value:
     type: gce
     gce:
