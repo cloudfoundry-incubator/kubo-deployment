@@ -90,6 +90,15 @@ Different routing modes provide different ways of exposing applications run by t
 - [IaaS routing](./routing/exposing-apps.md)
 - [CF routing](./routing/cf-apps.md)
 
+### Persistence
+
+Kubo clusters support the following Kubernetes Volume types:
+- emptyDir
+- hostPath
+- gcePersistentDisk
+
+> **Note:** Any resources that are provisioned by Kubernetes will not be deleted by BOSH when you delete your Kubo deployment. You will need to manage these resources if they are not deleted by Kubernetes before the deployment is deleted.
+
 ## Troubleshooting
 
 See [troubleshooting section](troubleshooting.md) for solutions to most commonly encountered problems.

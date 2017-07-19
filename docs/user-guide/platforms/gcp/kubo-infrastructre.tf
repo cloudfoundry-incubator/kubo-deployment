@@ -48,17 +48,12 @@ resource "google_service_account" "kubo" {
   display_name = "${var.prefix} kubo"
 }
 
-resource "google_project_iam_policy" "storageProject" {
+resource "google_project_iam_policy" "policy" {
   project     = "${var.projectid}"
-  policy_data = "${data.google_iam_policy.storageAdmin.policy_data}"
+  policy_data = "${data.google_iam_policy.admin.policy_data}"
 }
 
-resource "google_project_iam_policy" "networkProject" {
-  project     = "${var.projectid}"
-  policy_data = "${data.google_iam_policy.networkAdmin.policy_data}"
-}
-
-data "google_iam_policy" "storageAdmin" {
+data "google_iam_policy" "admin" {
   binding {
     role = "roles/compute.storageAdmin"
 
@@ -66,9 +61,7 @@ data "google_iam_policy" "storageAdmin" {
       "serviceAccount:${google_service_account.kubo.email}",
     ]
   }
-}
 
-data "google_iam_policy" "networkAdmin" {
   binding {
     role = "roles/compute.networkAdmin"
 
