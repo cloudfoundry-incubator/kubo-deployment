@@ -52,8 +52,8 @@ instance_groups:
       admin-username: admin
       admin-password: ((kubo-admin-password))
       kubelet-password: ((kubelet-password))
-      backend_port: ((master_haproxy_tcp_backend_port))
-      port: ((master_haproxy_tcp_frontend_port))
+      backend_port: 8443 # Bosh links hack
+      port: ((kubernetes_master_port))
       tls:
         kubernetes: ((tls-kubernetes))
   - name: kubeconfig
