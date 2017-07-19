@@ -44,7 +44,7 @@ instance_groups:
   - name: *network-name
   azs: [z1]
   jobs:
-  - name: cloud-config
+  - name: cloud-provider
     release: kubo
     properties: {}
   - name: flanneld
@@ -122,7 +122,7 @@ instance_groups:
       kubelet-password: ((kubelet-password))
       tls:
         kubernetes: ((tls-kubernetes))
-  - name: cloud-config
+  - name: cloud-provider
     release: kubo
     properties: {}
   - name: kubelet
