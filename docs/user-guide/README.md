@@ -10,6 +10,8 @@ Please follow the link for infrastructure paving on your platform:
 ## Deploying BOSH
 
 - [Google Cloud Platform](platforms/gcp/install-bosh.md)
+- [vSphere](platforms/vsphere/install-bosh.md)
+- [OpenStack](platforms/openstack/install-bosh.md)
 
 ## Configure Kubo
 
