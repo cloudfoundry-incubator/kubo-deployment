@@ -1,6 +1,6 @@
-# Configuring HAProxy routing for OpenStack
+# Load-balancing for OpenStack using HAProxy
 
-When deploying Kubo on OpenStack, HAProxy can be used for external access to the Kubernetes Master node (for administration traffic), and the Kubernetes Workers (for application traffic). In order to enable this, configure `director.yml` as follows:
+When deploying Kubo on OpenStack, HAProxy can be used for external access to the Kubernetes Master node (for administration traffic), and the Kubernetes Workers (for application traffic). This is due to the fact that OpenStack does not have first-party load-balancing support. In order to enable this, configure `director.yml` as follows:
 
 
 Enable HAProxy routing:
