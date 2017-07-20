@@ -109,11 +109,9 @@ generate_manifest() {
     ;;
   esac
 
-  case "$iaas" in 
-    gcp)
-        manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/gce-cloud-provider.yml")
-    ;;
-  esac
+  if [ -e "${manifest_dir}/ops-files/${iaas}-cloud-provider.yml" ]; then
+    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/${iaas}-cloud-provider.yml")
+  fi
 
   if [ -e "${bosh_environment}/${deployment_name}-vars.yml" ]; then
     manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/${deployment_name}-vars.yml")
