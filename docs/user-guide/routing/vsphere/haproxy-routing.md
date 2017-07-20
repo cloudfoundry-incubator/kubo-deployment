@@ -1,6 +1,6 @@
-# Configuring HAProxy routing for vSphere
+# Load-balancing for vSphere using HAProxy
 
-When deploying Kubo on vSphere, HAProxy can be used for external access to the Kubernetes Master node (for administration traffic), and the Kubernetes Workers (for application traffic). In order to enable this, configure `director.yml` as follows:
+When deploying Kubo on vSphere, HAProxy can be used for external access to the Kubernetes Master node (for administration traffic), and the Kubernetes Workers (for application traffic). This is due to the fact that vSphere does not have first-party load-balancing support. In order to enable this, configure `director.yml` as follows:
 
 
 Enable HAProxy routing:
