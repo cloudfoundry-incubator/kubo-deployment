@@ -69,6 +69,22 @@ data "google_iam_policy" "admin" {
       "serviceAccount:${google_service_account.kubo.email}",
     ]
   }
+
+  binding {
+    role = "roles/compute.instanceAdmin"
+
+    members = [
+      "serviceAccount:${google_service_account.kubo.email}",
+    ]
+  }
+
+  binding {
+    role = "roles/iam.serviceAccountActor"
+
+    members = [
+      "serviceAccount:${google_service_account.kubo.email}",
+    ]
+  }
 }
 
 resource "google_compute_route" "nat-primary" {
