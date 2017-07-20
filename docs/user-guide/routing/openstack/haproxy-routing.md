@@ -19,4 +19,4 @@ Configure front-end and back-end ports for HAProxy TCP pass-through.
 worker_haproxy_tcp_frontend_port: 1234
 worker_haproxy_tcp_backend_port: 4321
 ```
-*Note*: the current implementation of HAProxy routing is a single-port TCP pass-through. In order to route traffic to multiple Kubernetes services, consider using an Ingress Controller.
+*Note*: the current implementation of HAProxy routing is a single-port TCP pass-through. In order to route traffic to multiple Kubernetes services, consider using an Ingress Controller (https://github.com/kubernetes/ingress/tree/master/examples).
