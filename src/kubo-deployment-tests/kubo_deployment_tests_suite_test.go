@@ -25,7 +25,7 @@ var (
 	testEnvironmentPath   = filepath.Join(resourcesPath, "environments")
 	repoDirectoryFunction = []byte(fmt.Sprintf(`repo_directory() { echo "%s"; }`, pathFromRoot("")))
 
-	bashPath      string
+	bashPath string
 )
 
 func pathToScript(name string) string {
@@ -52,7 +52,7 @@ var _ = AfterSuite(func() {
 })
 
 var _ = BeforeEach(func() {
-	bash, _ = basher.NewContext(bashPath, false)
+	bash, _ = basher.NewContext(bashPath, true)
 
 	stdout = gbytes.NewBuffer()
 	stderr = gbytes.NewBuffer()

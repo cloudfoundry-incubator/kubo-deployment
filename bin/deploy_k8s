@@ -30,7 +30,7 @@ print_usage() {
 }
 
 repo_directory() {
-  echo -n $(cd "$(dirname ${BASH_SOURCE[0]})/.."; pwd)
+  echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)"
 }
 
 main() {
@@ -42,8 +42,9 @@ main() {
   local bosh_env="$(cd "${1}"; pwd -P)"
   local deployment_name="${2}"
   local release_source="${3}"
+  local platform=$(bosh-cli int ${bosh_env}/director.yml --path /iaas)
 
-  if [ -z "$(bosh-cli int ${bosh_env}/director.yml --path /iaas)" ]; then
+  if [ -z "$platform" ]; then
    echo "${bosh_env} is not a valid BOSH environment."
    echo "Please use 'generate_env_config' to create one."
    print_usage
@@ -60,11 +61,13 @@ main() {
 
   export_bosh_environment "${bosh_env}"
 
-  upload_stemcell "${release_source}"
   upload_releases "${release_source}"
   set_cloud_config
+  manifest=$("$(repo_directory)/bin/generate_kubo_manifest" "${bosh_env}" "${deployment_name}")
+  stemcell_version=$(bosh-cli int --path '/stemcells/0/version')
+  upload_stemcell "${release_source}" "${platform}" "${stemcell_version}"
 
-  deploy_to_bosh "$("$(repo_directory)/bin/generate_kubo_manifest" "${bosh_env}" "${deployment_name}")" "${deployment_name}"
+  deploy_to_bosh "${manifest}" "${deployment_name}"
 }
 
 upload_releases() {
@@ -94,6 +97,23 @@ upload_releases() {
 }
 
 upload_stemcell() {
-}
+  local stemcell_version=$3
+  if [ "$1" != "skip" ]; then
+    case $2 in
+    "gcp")
+      bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/google/bosh-stemcell-${stemcell_version}-google-kvm-ubuntu-trusty-go_agent.tgz"
+      ;;
+    "vsphere")
+      bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/vsphere/bosh-stemcell-${stemcell_version}-vsphere-esxi-ubuntu-trusty-go_agent.tgz"
+      ;;
+    "openstack")
+      bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/openstack/bosh-stemcell-${stemcell_version}-openstack-kvm-ubuntu-trusty-go_agent.tgz"
+      ;;
+     "aws")
+      bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-${stemcell_version}-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"
+      ;;
+    esac
+  fi
+ }
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"
