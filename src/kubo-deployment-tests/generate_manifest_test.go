@@ -202,7 +202,7 @@ var _ = Describe("Generate manifest", func() {
 			command.Stdout = GinkgoWriter
 			command.Stderr = errBuffer
 			command.Dir = pathFromRoot("")
-			Expect(command.Run()).To(Succeed())
+			Expect(command.Run()).To(Succeed(), fmt.Sprintf("Failed with environmenrt %s", env))
 			Expect(string(errBuffer.Contents())).To(HaveLen(0))
 		}
 	})
