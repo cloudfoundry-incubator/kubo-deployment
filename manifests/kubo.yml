@@ -19,7 +19,7 @@ releases:
 stemcells:
 - alias: trusty
   os: ubuntu-trusty
-  version: ((stemcell_version))
+  version: "3421.11"
 
 instance_groups:
 - name: etcd

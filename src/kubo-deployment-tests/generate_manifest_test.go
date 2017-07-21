@@ -57,7 +57,6 @@ var _ = Describe("Generate manifest", func() {
 			Expect(stdout).To(gbytes.Say(line))
 		},
 			Entry("deployment name", "\nname: klingon\n"),
-			Entry("stemcell version", "\n  version: stemcell.version\n"),
 			Entry("network name", "\n  networks:\n  - name: network-name\n"),
 			Entry("kubernetes API URL", "\n      kubernetes-api-url: https://a.router.name:101928\n"),
 			Entry("kubernetes external port", "\n      external_kubo_port: 101928\n"),
@@ -69,7 +68,6 @@ var _ = Describe("Generate manifest", func() {
 			Entry("Auto-generated admin password", "\n      admin-password: \\(\\(kubo-admin-password\\)\\)\n"),
 		)
 
-
 		DescribeTable("populated properties for IaaS-based deployment", func(line string) {
 			status, err := bash.Run("main", []string{kuboEnv, "grinder"})
 
@@ -79,7 +77,6 @@ var _ = Describe("Generate manifest", func() {
 			Expect(stdout).To(gbytes.Say(line))
 		},
 			Entry("deployment name", "\nname: grinder\n"),
-			Entry("stemcell version", "\n  version: stemcell\\.version\\.gcp\n"),
 			Entry("network name", "\n  networks:\n  - name: network-name\n"),
 			Entry("kubernetes API URL", "\n      kubernetes-api-url: https://12\\.23\\.34\\.45:101928\n"),
 			Entry("Auto-generated kubelet password", "\n      kubelet-password: \\(\\(kubelet-password\\)\\)\n"),
