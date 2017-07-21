@@ -48,6 +48,11 @@ resources:
     source:
       repository: cloudfoundry/grootfs-release
 
+  - name: dns
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/dns-release
+
   # stemcells
 
   - name: ubuntu-trusty-3363-stemcell
@@ -307,6 +312,26 @@ jobs:
         input_mapping:
           stemcell: ubuntu-trusty-3421-stemcell
           release: config-server-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-dns-release-0-ubuntu-trusty-3421
+    plan:
+      - aggregate:
+        - get: bosh-deployment
+        - get: dns
+          version:
+            version: "0.0.3"
+        - get: ubuntu-trusty-3421-stemcell
+          version:
+            version: "3421.9"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-3421-stemcell
+          release: dns
       - put: compiled-releases
         params:
           file: "compiled-release/*.tgz"
