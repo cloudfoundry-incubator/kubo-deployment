@@ -2,10 +2,11 @@
 
 **Prerequisite:** The machine executing the commands below must be able to access VMs on the vSphere network. Depending on your network topology, a bastion host (jumpbox) may be needed.
 
-1. Change directory to the root of the kubo-deployment repo
+1. Clone the kubo-deployment repo and change directory into it.
 
     ```bash
-    cd /share/kubo-deployment
+    git clone https://github.com/cloudfoundry-incubator/kubo-deployment
+    cd kubo-deployment
     ```
 
 1. Create a kubo environment to set the configuration for BOSH and Kubo.
