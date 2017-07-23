@@ -7,6 +7,7 @@ can be used to expose both TCP and HTTP level routes to the applications deploye
    ```
    kubectl label services <your service name> tcp-route-sync=<frontend port>
    ```
+   > **Note:** The frontend port must be a port within the range you configured when enabling TCP Routing in CF
 
 1. Access your service from your browser at `<Cloud Foundry tcp url>:<frontend port>`
 
