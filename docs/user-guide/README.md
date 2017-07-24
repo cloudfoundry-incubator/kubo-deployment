@@ -58,7 +58,7 @@ no_proxy: # e.g. '1.2.3.4,2.3.4.5'
 Once the infrastructure has been set up, a kubernetes cluster can be deployed by running a single line of code:
 
    ```bash
-   bin/deploy_k8s <KUBO_ENV> <CLUSTER_NAME>
+   bin/deploy_k8s <KUBO_ENV> <MY_CUSTOM_CLUSTER_NAME>
    ```
 
 where `CLUSTER_NAME` is a unique name for the cluster. Run `bin/deploy_k8s --help` for more options.
