@@ -1,6 +1,8 @@
-#!/usr/bin/env bash -e
+#!/usr/bin/env bash
 
 [ -z "$DEBUG" ] || set -x
+
+set -o pipefail -eu
 
 echo "====================================="
 echo "|         KuBOSH Destroyer          |"
