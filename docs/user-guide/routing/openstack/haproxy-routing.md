@@ -14,6 +14,11 @@ kubernetes_master_host: 12.34.56.78
 kubernetes_master_port: 443
 ```
 
+Configure worker IP address  (the IP address must be a Floating IP, allocated to the project, and not associated with any other instances):
+```
+worker_haproxy_ip_addresses: 12.34.56.79
+```
+
 Configure front-end and back-end ports for HAProxy TCP pass-through.
 ```
 worker_haproxy_tcp_frontend_port: 1234
