@@ -17,7 +17,7 @@ var _ = Describe("Deploy K8s", func() {
 
 	BeforeEach(func() {
 		bash.Source(pathToScript("deploy_k8s"), nil)
-		boshMock := MockOrCallThrough("bosh-cli", ` echo -n "3124.12"`, "[ $1 == 'int' ] && [ ! $3 == '/stemcells/0/version' ] ")
+		boshMock := MockOrCallThrough("bosh-cli", ` echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
 		ApplyMocks(bash, []Gob{boshMock})
 	})
 
