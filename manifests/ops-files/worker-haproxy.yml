@@ -17,6 +17,7 @@
             from: worker_haproxy
         properties:
           ha_proxy:
+            disable_http: true
             tcp_link_port: 9999 # required, but not used
 
 - type: replace
