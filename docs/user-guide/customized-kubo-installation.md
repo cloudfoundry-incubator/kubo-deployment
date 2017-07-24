@@ -4,9 +4,9 @@
 Generate the Cloud Config and set it on your bosh director
 
 ```bash
-bin/generate_cloud_config <BOSH_ENV> > <BOSH_ENV>/cloud-config.yml
+bin/generate_cloud_config <KUBO_ENV> > <KUBO_ENV>/cloud-config.yml
 # modify cloud-config.yml as necessary
-bosh-cli -e <BOSH_NAME> update-cloud-config <BOSH_ENV>/cloud-config.yml
+bosh-cli -e <BOSH_NAME> update-cloud-config <KUBO_ENV>/cloud-config.yml
 ```
 
 ## Generate manifest and deploy
@@ -14,7 +14,7 @@ bosh-cli -e <BOSH_NAME> update-cloud-config <BOSH_ENV>/cloud-config.yml
 Pick a deployment name and generate a manifest.
 
 ```bash
-bin/generate_kubo_manifest <BOSH_ENV> <DEPLOYMENT_NAME> > <BOSH_ENV>/kubo-manifest.yml
+bin/generate_kubo_manifest <KUBO_ENV> <DEPLOYMENT_NAME> > <KUBO_ENV>/kubo-manifest.yml
 ```
 The generation of the manifest can be customized in the following ways:
 
@@ -39,5 +39,5 @@ The generation of the manifest can be customized in the following ways:
 
 If needed, the generated manifest can be modified manually before being fed into `bosh-cli`:
 ```bash
-bosh-cli -e <BOSH_NAME> -d <DEPLOYMENT_NAME> deploy <BOSH_ENV>/kubo-manifest.yml
+bosh-cli -e <BOSH_NAME> -d <DEPLOYMENT_NAME> deploy <KUBO_ENV>/kubo-manifest.yml
 ```

@@ -15,12 +15,12 @@
 1. Create a kubo environment to set the configuration for BOSH and Kubo.
 
     ```bash
-    export kubo_env=~/kubo-env
+    export kubo_envs=~/kubo-env
     export kubo_env_name=kubo
-    export kubo_env_path="${kubo_env}/${kubo_env_name}"
+    export kubo_env_path="${kubo_envs}/${kubo_env_name}"
  
-    mkdir -p "${kubo_env}"
-    ./bin/generate_env_config "${kubo_env}" ${kubo_env_name} gcp
+    mkdir -p "${kubo_envs}"
+    ./bin/generate_env_config "${kubo_envs}" ${kubo_env_name} gcp
     ```
 
 1.  Apply the default networking settings by running the following line:
@@ -40,7 +40,7 @@
     ./bin/deploy_bosh "${kubo_env_path}" ~/terraform.key.json
     ```
     Credentials and SSL certificates for the environment will be generated and
-    saved into the configuration path in a file called `creds.yml`. This file
+    saved in a file called `creds.yml` located in `KUBO_ENV`. This file
     contains sensitive information and should not be stored in VCS. The file
     `state.json` contains 
     [environment state for the BOSH environment](https://bosh.io/docs/cli-envs.html#deployment-state).

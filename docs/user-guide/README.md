@@ -18,11 +18,12 @@ Please follow the link for infrastructure paving on your platform:
 ### Create a Kubo environment
 
 A Kubo environment is a set of configuration files used to deploy and update
-both BOSH and Kubo.
+both BOSH and Kubo. If you followed the [Deploying BOSH](#deploying-bosh)
+guide, you should already have one.
 
-Run `./bin/generate_env_config <ENV_PATH> <ENV_NAME> gcp` to generate a Kubo
-environment. The environment will be referred to as `KUBO_ENV` in this guide,
-and will be located at `<ENV_PATH>/<ENV_NAME>`.
+Otherwise, run `./bin/generate_env_config <ENV_PATH> <ENV_NAME> <PLATFORM_NAME>`
+to generate a Kubo environment. The environment will be referred to as `KUBO_ENV` 
+in this guide, and will be located at `<ENV_PATH>/<ENV_NAME>`.
 
 > Run `bin/generate_env_config --help` for more detailed information.
 
