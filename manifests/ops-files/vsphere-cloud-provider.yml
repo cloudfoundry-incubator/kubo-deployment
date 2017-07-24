@@ -1,0 +1,23 @@
+- type: replace
+  path: /instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider?
+  value:
+    type: vsphere
+    vsphere:
+      user: ((vcenter_user))
+      password: ((vcenter_password))
+      server: ((vcenter_ip))
+      insecure-flag: 1
+      datacenter: ((vcenter_dc))
+      datastore: ((vcenter_ds))
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider?
+  value:
+    type: vsphere
+    vsphere:
+      user: ((vcenter_user))
+      password: ((vcenter_password))
+      server: ((vcenter_ip))
+      insecure-flag: 1
+      datacenter: ((vcenter_dc))
+      datastore: ((vcenter_ds))
+
