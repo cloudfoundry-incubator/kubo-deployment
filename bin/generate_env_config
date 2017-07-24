@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -e
+
+set -o pipefail
 
 [ -z "$DEBUG" ] || set -x
-
-set -o pipefail -eu
 
 print_usage() {
   echo ""

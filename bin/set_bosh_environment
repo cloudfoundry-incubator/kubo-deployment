@@ -1,3 +1,5 @@
+#!/usr/bin/env bash -eu
+
 export BOSH_CLIENT=bosh_admin
 
 export BOSH_CLIENT_SECRET=$(bosh-cli int "$BOSH_ENV"/creds.yml --path=/bosh_admin_client_secret)
