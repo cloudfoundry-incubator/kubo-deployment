@@ -17,14 +17,12 @@ Please follow the link for infrastructure paving on your platform:
 
 ### Create a Kubo environment
 
-A Kubo environment is a set of configuration files used to deploy and update
-both BOSH and Kubo.
-You already have generated a KuBo environment if you completed the `Deploying BOSH` step above for 
+A Kubo environment is a set of configuration files used to deploy and update both BOSH and Kubo. If you followed the [Deploying BOSH](#deploying-bosh) step above for 
 your specific Iaas. In that case ignore this step and go to the next.
 
-Run `./bin/generate_env_config <ENV_PATH> <ENV_NAME> gcp` to generate a Kubo
-environment. The environment will be referred to as `KUBO_ENV` in this guide,
-and will be located at `<ENV_PATH>/<ENV_NAME>`.
+Otherwise, run `./bin/generate_env_config <ENV_PATH> <ENV_NAME> <PLATFORM_NAME>`
+to generate a Kubo environment. The environment will be referred to as `KUBO_ENV` 
+in this guide, and will be located at `<ENV_PATH>/<ENV_NAME>`.
 
 > Run `bin/generate_env_config --help` for more detailed information.
 
@@ -59,7 +57,7 @@ no_proxy: # e.g. '1.2.3.4,2.3.4.5'
 Once the infrastructure has been set up, a kubernetes cluster can be deployed by running a single line of code:
 
    ```bash
-   bin/deploy_k8s <KUBO_ENV> <CLUSTER_NAME>
+   bin/deploy_k8s <KUBO_ENV> <MY_CUSTOM_CLUSTER_NAME>
    ```
 
 where `CLUSTER_NAME` is a unique name for the cluster. Run `bin/deploy_k8s --help` for more options on how to tell 
@@ -92,6 +90,15 @@ Different routing modes provide different ways of exposing applications run by t
 
 - [IaaS routing](./routing/exposing-apps.md)
 - [CF routing](./routing/cf-apps.md)
+
+### Persistence
+
+Kubo clusters support the following Kubernetes Volume types:
+- emptyDir
+- hostPath
+- gcePersistentDisk
+
+> **Note:** Any resources that are provisioned by Kubernetes will not be deleted by BOSH when you delete your Kubo deployment. You will need to manage these resources if they are not deleted by Kubernetes before the deployment is deleted.
 
 ## Troubleshooting
 

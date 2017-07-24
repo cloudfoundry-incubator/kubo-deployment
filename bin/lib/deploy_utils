@@ -69,6 +69,7 @@ generate_manifest() {
   manifest_dir=$(cd "$(dirname "${manifest_path}")"; pwd)
   manifest="$(cat "${manifest_path}")"
   local routing_mode="$(bosh-cli int "${bosh_environment}/director.yml" --path='/routing_mode')"
+  local iaas="$(bosh-cli int "${bosh_environment}/director.yml" --path='/iaas')"
 
   if [ -e "${bosh_environment}/${deployment_name}.yml" ]; then
     manifest=$(echo "${manifest}" | bosh-cli int - --ops-file="${bosh_environment}/${deployment_name}.yml")
@@ -93,7 +94,6 @@ generate_manifest() {
       manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
     ;;
     proxy)
-      iaas=$(bosh-cli int "${bosh_environment}/director.yml" --path='/iaas')
 
       if [ "openstack" == "$iaas" ] || [ "vsphere" == "$iaas" ]; then
         manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/master-haproxy-"$iaas".yml")
@@ -108,6 +108,10 @@ generate_manifest() {
       manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
     ;;
   esac
+
+  if [ -e "${manifest_dir}/ops-files/${iaas}-cloud-provider.yml" ]; then
+    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/${iaas}-cloud-provider.yml")
+  fi
 
   if [ -e "${bosh_environment}/${deployment_name}-vars.yml" ]; then
     manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/${deployment_name}-vars.yml")

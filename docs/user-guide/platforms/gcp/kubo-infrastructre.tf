@@ -43,6 +43,50 @@ provider "google" {
     region = "${var.region}"
 }
 
+resource "google_service_account" "kubo" {
+  account_id   = "${var.prefix}kubo"
+  display_name = "${var.prefix} kubo"
+}
+
+resource "google_project_iam_policy" "policy" {
+  project     = "${var.projectid}"
+  policy_data = "${data.google_iam_policy.admin.policy_data}"
+}
+
+data "google_iam_policy" "admin" {
+  binding {
+    role = "roles/compute.storageAdmin"
+
+    members = [
+      "serviceAccount:${google_service_account.kubo.email}",
+    ]
+  }
+
+  binding {
+    role = "roles/compute.networkAdmin"
+
+    members = [
+      "serviceAccount:${google_service_account.kubo.email}",
+    ]
+  }
+
+  binding {
+    role = "roles/compute.instanceAdmin"
+
+    members = [
+      "serviceAccount:${google_service_account.kubo.email}",
+    ]
+  }
+
+  binding {
+    role = "roles/iam.serviceAccountActor"
+
+    members = [
+      "serviceAccount:${google_service_account.kubo.email}",
+    ]
+  }
+}
+
 resource "google_compute_route" "nat-primary" {
   name        = "${var.prefix}nat-primary"
   dest_range  = "0.0.0.0/0"
@@ -177,6 +221,7 @@ sed -i -e 's/^\(project_id:\).*\(#.*\)/\1 ${var.projectid} \2/' "$1"
 sed -i -e 's/^\(network:\).*\(#.*\)/\1 ${var.network} \2/' "$1"
 sed -i -e 's/^\(subnetwork:\).*\(#.*\)/\1 ${google_compute_subnetwork.kubo-subnet.name} \2/' "$1"
 sed -i -e 's/^\(zone:\).*\(#.*\)/\1 ${var.zone} \2/' "$1"
+sed -i -e 's/^\(service_account:\).*\(#.*\)/\1 ${google_service_account.kubo.email} \2/' "$1"
 
 # Generic updates
 random_key=$$(hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom)

@@ -1,8 +1,8 @@
-#!/bin/bash -e
-
-set -o pipefail
+#!/usr/bin/env bash
 
 [ -z "$DEBUG" ] || set -x
+
+set -o pipefail -e
 
 echo "====================================="
 echo "|     BOSH K8S Cluster Deployer     |"

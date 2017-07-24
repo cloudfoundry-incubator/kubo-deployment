@@ -5,3 +5,4 @@ tags: # tags below are used if jumpbox and NAT were deployed using https://githu
   - "no-ip" # allow access to the Internet from BOSH director using NAT
   - internal # allow access to the instances in same network from BOSH
 zone: # name of GCP zone
+service_account: # service account to set as default on Kubo VMs
