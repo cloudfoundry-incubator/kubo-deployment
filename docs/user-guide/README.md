@@ -17,9 +17,8 @@ Please follow the link for infrastructure paving on your platform:
 
 ### Create a Kubo environment
 
-A Kubo environment is a set of configuration files used to deploy and update
-both BOSH and Kubo. If you followed the [Deploying BOSH](#deploying-bosh)
-guide, you should already have one.
+A Kubo environment is a set of configuration files used to deploy and update both BOSH and Kubo. If you followed the [Deploying BOSH](#deploying-bosh) step above for 
+your specific Iaas. In that case ignore this step and go to the next.
 
 Otherwise, run `./bin/generate_env_config <ENV_PATH> <ENV_NAME> <PLATFORM_NAME>`
 to generate a Kubo environment. The environment will be referred to as `KUBO_ENV` 
@@ -41,7 +40,7 @@ to one of the options below:
 ### Basic configuration
 
 To view an adjust the available configuration options, please edit the `<KUBO_ENV>/director.yml` file that
-was created as part of the [routing options setup](#create-a-kubo-environment).
+was created as part of the [Kubo environment creation step](#create-a-kubo-environment).
 
 ### Proxy settings
 
@@ -61,7 +60,8 @@ Once the infrastructure has been set up, a kubernetes cluster can be deployed by
    bin/deploy_k8s <KUBO_ENV> <MY_CUSTOM_CLUSTER_NAME>
    ```
 
-where `CLUSTER_NAME` is a unique name for the cluster. Run `bin/deploy_k8s --help` for more options.
+where `CLUSTER_NAME` is a unique name for the cluster. Run `bin/deploy_k8s --help` for more options on how to tell 
+Bosh which release tarballs to use for the KuBo deployment (dev repo, internet, local, pre-uploaded to Bosh)
 
 ### Customized deployment
 
