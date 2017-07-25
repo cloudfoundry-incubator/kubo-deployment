@@ -2,13 +2,10 @@ package kubo_deployment_tests_test
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"path/filepath"
 
 	yaml "gopkg.in/yaml.v2"
-
-	"strings"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
@@ -38,14 +35,6 @@ var _ = Describe("Generate manifest", func() {
 
 	Context("successful manifest generation", func() {
 		kuboEnv := filepath.Join(testEnvironmentPath, "test_gcp")
-		AfterEach(func() {
-			files, _ := filepath.Glob(testEnvironmentPath + "/**/*creds.yml")
-			for _, f := range files {
-				if !strings.Contains(f, "with_creds/creds.yml") {
-					os.Remove(f)
-				}
-			}
-		})
 
 		DescribeTable("populated properties for CF-based deployment", func(line string) {
 			cfEnv := filepath.Join(testEnvironmentPath, "test_vsphere_with_creds")
@@ -57,7 +46,6 @@ var _ = Describe("Generate manifest", func() {
 			Expect(stdout).To(gbytes.Say(line))
 		},
 			Entry("deployment name", "\nname: klingon\n"),
-			Entry("stemcell version", "\n  version: stemcell.version\n"),
 			Entry("network name", "\n  networks:\n  - name: network-name\n"),
 			Entry("kubernetes API URL", "\n      kubernetes-api-url: https://a.router.name:101928\n"),
 			Entry("kubernetes external port", "\n      external_kubo_port: 101928\n"),
@@ -69,7 +57,6 @@ var _ = Describe("Generate manifest", func() {
 			Entry("Auto-generated admin password", "\n      admin-password: \\(\\(kubo-admin-password\\)\\)\n"),
 		)
 
-
 		DescribeTable("populated properties for IaaS-based deployment", func(line string) {
 			status, err := bash.Run("main", []string{kuboEnv, "grinder"})
 
@@ -79,7 +66,6 @@ var _ = Describe("Generate manifest", func() {
 			Expect(stdout).To(gbytes.Say(line))
 		},
 			Entry("deployment name", "\nname: grinder\n"),
-			Entry("stemcell version", "\n  version: stemcell\\.version\\.gcp\n"),
 			Entry("network name", "\n  networks:\n  - name: network-name\n"),
 			Entry("kubernetes API URL", "\n      kubernetes-api-url: https://12\\.23\\.34\\.45:101928\n"),
 			Entry("Auto-generated kubelet password", "\n      kubelet-password: \\(\\(kubelet-password\\)\\)\n"),
@@ -205,7 +191,7 @@ var _ = Describe("Generate manifest", func() {
 			command.Stdout = GinkgoWriter
 			command.Stderr = errBuffer
 			command.Dir = pathFromRoot("")
-			Expect(command.Run()).To(Succeed())
+			Expect(command.Run()).To(Succeed(), fmt.Sprintf("Failed with environmenrt %s", env))
 			Expect(string(errBuffer.Contents())).To(HaveLen(0))
 		}
 	})
