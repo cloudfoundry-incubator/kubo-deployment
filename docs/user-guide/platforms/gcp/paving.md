@@ -28,8 +28,8 @@
     export subnet_ip_prefix="10.0.1" # Create new subnet for deployment in $subnet_ip_prefix.0/24
     ```
   
-   > When using the [CloudFoundry routing mode](../../routing/cf.md) the GCP network above 
-   > needs to be the same network that CloudFoundry is using 
+    > When using the [CloudFoundry routing mode](../../routing/cf.md) the GCP network above 
+    > needs to be the same network that CloudFoundry is using 
 
 1. Configure `gcloud` to use the region and zone specified above:
 
