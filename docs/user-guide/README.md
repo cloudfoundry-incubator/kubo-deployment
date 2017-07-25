@@ -1,10 +1,19 @@
 # Kubo user guide
 
-## Infrastructure paving
 Kubo can be deployed on various infrastructure providers. The currently supported ones
-are GCP and vSphere. vSphere installation is not yet covered in this guide.
+are GCP, vSphere and OpenStack.
 
-Please follow the link for infrastructure paving on your platform:
+## Prerequisites
+
+- [GCP](platforms/gcp/prerequisites.md)
+- [vSphere](platforms/vsphere/prerequisites.md)
+
+## Infrastructure paving
+
+Some platforms allow automatic infrastructure paving in order to prepare
+an environment for a Kubo deployment. Please follow the link for infrastructure 
+paving on your platform:
+
 - [Google Cloud Platform](platforms/gcp/paving.md)
 
 ## Deploying BOSH

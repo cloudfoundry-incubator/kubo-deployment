@@ -2,10 +2,6 @@
 
 ## Setup the shell environment
 
-1. Make sure that you have the [owner role](https://cloud.google.com/iam/docs/understanding-roles) in your existing Google Cloud Platform project
-
-1. In your existing Google Cloud Platform project, enable the [IAM API](https://console.cloud.google.com/apis/api/iam.googleapis.com/overview).
-
 1. In your existing Google Cloud Platform project, open Cloud Shell (the small `>_` prompt icon in the web console menu bar).
 
 1. When deploying kubo more than once, it is required to set a unique prefix
