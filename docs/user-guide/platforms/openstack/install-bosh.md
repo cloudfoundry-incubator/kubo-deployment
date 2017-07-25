@@ -20,7 +20,7 @@
     ./bin/generate_env_config "${kubo_env}" ${kubo_env_name} openstack
     ```
 
-1.  Populate the environment config skeleton create at `${kubo_env_path}/director.yml`
+1.  Populate the environment config skeleton created at `${kubo_env_path}/director.yml`
 
     The `kubo_env_path` will point to the folder containing the kubo settings,
     and will be referred to throughout this guide as `KUBO_ENV`.
