@@ -2,13 +2,10 @@ package kubo_deployment_tests_test
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"path/filepath"
 
 	yaml "gopkg.in/yaml.v2"
-
-	"strings"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
@@ -38,14 +35,6 @@ var _ = Describe("Generate manifest", func() {
 
 	Context("successful manifest generation", func() {
 		kuboEnv := filepath.Join(testEnvironmentPath, "test_gcp")
-		AfterEach(func() {
-			files, _ := filepath.Glob(testEnvironmentPath + "/**/*creds.yml")
-			for _, f := range files {
-				if !strings.Contains(f, "with_creds/creds.yml") {
-					os.Remove(f)
-				}
-			}
-		})
 
 		DescribeTable("populated properties for CF-based deployment", func(line string) {
 			cfEnv := filepath.Join(testEnvironmentPath, "test_vsphere_with_creds")
