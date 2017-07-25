@@ -57,14 +57,14 @@ main() {
     *) print_usage; exit 1;;
   esac
 
-  . "$(repo_directory)/bin/lib/deploy_utils"
+  source "$(repo_directory)/bin/lib/deploy_utils"
 
   export_bosh_environment "${bosh_env}"
 
   upload_releases "${release_source}"
   set_cloud_config
   manifest=$("$(repo_directory)/bin/generate_kubo_manifest" "${bosh_env}" "${deployment_name}")
-  stemcell_version=$(bosh-cli int - --path '/stemcells/0/version')
+  stemcell_version=$(echo -n "${manifest}" | bosh-cli int - --path '/stemcells/0/version')
   upload_stemcell "${release_source}" "${platform}" "${stemcell_version}"
 
   deploy_to_bosh "${manifest}" "${deployment_name}"

@@ -17,7 +17,7 @@ var _ = Describe("Deploy K8s", func() {
 
 	BeforeEach(func() {
 		bash.Source(pathToScript("deploy_k8s"), nil)
-		boshMock := MockOrCallThrough("bosh-cli", ` echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
+		boshMock := MockOrCallThrough("bosh-cli", `echo -n "3124.12"`, `[ "$1" == 'int' ]`)
 		ApplyMocks(bash, []Gob{boshMock})
 	})
 
@@ -51,6 +51,8 @@ var _ = Describe("Deploy K8s", func() {
 		})
 
 		It("uploads the stemcell successfully for GCP", func() {
+			boshMock := MockOrCallThrough("bosh-cli", `echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
+			ApplyMocks(bash, []Gob{boshMock})
 
 			code, err := bash.Run("main", []string{validGcpEnvironment, "deployment", "local"})
 			Expect(err).NotTo(HaveOccurred())
@@ -60,6 +62,8 @@ var _ = Describe("Deploy K8s", func() {
 		})
 
 		It("uploads the stemcell successfully for vSphere", func() {
+			boshMock := MockOrCallThrough("bosh-cli", `echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
+			ApplyMocks(bash, []Gob{boshMock})
 			code, err := bash.Run("main", []string{validvSphereEnvironment, "deployment", "local"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
@@ -68,6 +72,8 @@ var _ = Describe("Deploy K8s", func() {
 		})
 
 		It("uploads the stemcell successfully for OpenStack", func() {
+			boshMock := MockOrCallThrough("bosh-cli", `echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
+			ApplyMocks(bash, []Gob{boshMock})
 			code, err := bash.Run("main", []string{validOpenstackEnvironment, "deployment", "local"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
@@ -76,6 +82,8 @@ var _ = Describe("Deploy K8s", func() {
 		})
 
 		It("uploads the stemcell successfully for AWS", func() {
+			boshMock := MockOrCallThrough("bosh-cli", `echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
+			ApplyMocks(bash, []Gob{boshMock})
 			code, err := bash.Run("main", []string{validAWSEnvironment, "deployment", "local"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
