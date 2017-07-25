@@ -110,10 +110,15 @@ Different routing modes provide different ways of exposing applications run by t
 
 ### Persistence
 
-Kubo clusters support the following Kubernetes Volume types:
+Kubo clusters currently support the following Kubernetes Volume types:
 - emptyDir
 - hostPath
 - gcePersistentDisk
+- VsphereVolume
+
+To use storage in the Kubo clusters the `cloud-provider` job must be configured on the master and worker instances. See the [cloud-provider spec](https://github.com/cloudfoundry-incubator/kubo-release/blob/master/jobs/cloud-provider/spec) for details on the properties that are needed for each cloud-provider type. 
+
+For documentation on configuring Kubernetes to access storage for your cloud-provider type see - https://kubernetes.io/docs/concepts/storage/persistent-volumes/
 
 > **Note:** Any resources that are provisioned by Kubernetes will not be deleted by BOSH when you delete your Kubo deployment. You will need to manage these resources if they are not deleted by Kubernetes before the deployment is deleted.
 
