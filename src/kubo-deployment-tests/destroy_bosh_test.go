@@ -12,8 +12,8 @@ import (
 
 var _ = Describe("Destroy KuBOSH", func() {
 	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp_with_creds")
-	validvSphereEnvironment := path.Join(testEnvironmentPath, "test_vsphere")
-	validOpenstackEnvironment := path.Join(testEnvironmentPath, "test_openstack")
+	validvSphereEnvironment := path.Join(testEnvironmentPath, "test_vsphere_with_creds")
+	validOpenstackEnvironment := path.Join(testEnvironmentPath, "test_openstack_with_creds")
 
 	Context("fails", func() {
 		JustBeforeEach(func() {

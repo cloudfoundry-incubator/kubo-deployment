@@ -11,9 +11,9 @@ import (
 )
 
 var _ = Describe("Deploy KuBOSH", func() {
-	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp")
-	validvSphereEnvironment := path.Join(testEnvironmentPath, "test_vsphere")
-	validOpenstackEnvironment := path.Join(testEnvironmentPath, "test_openstack")
+	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp_with_creds")
+	validvSphereEnvironment := path.Join(testEnvironmentPath, "test_vsphere_with_creds")
+	validOpenstackEnvironment := path.Join(testEnvironmentPath, "test_openstack_with_creds")
 
 	JustBeforeEach(func() {
 		bash.Source("", func(string) ([]byte, error) {
@@ -88,7 +88,7 @@ var _ = Describe("Deploy KuBOSH", func() {
 		})
 
 		It("expands the environment path", func() {
-			relativePath := testEnvironmentPath + "/../environments/test_gcp"
+			relativePath := testEnvironmentPath + "/../environments/test_gcp_with_creds"
 			code, err := bash.Run("main", []string{relativePath, pathFromRoot("README.md")})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
