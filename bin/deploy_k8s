@@ -59,8 +59,10 @@ main() {
 
   source "$(repo_directory)/bin/lib/deploy_utils"
 
-  export_bosh_environment "${bosh_env}"
+  BOSH_ENV="$bosh_env" source "$(repo_directory)/bin/set_bosh_environment"
 
+  export_bosh_environment "${bosh_env}"
+  
   upload_releases "${release_source}"
   set_cloud_config
   manifest=$("$(repo_directory)/bin/generate_kubo_manifest" "${bosh_env}" "${deployment_name}")
