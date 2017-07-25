@@ -26,7 +26,7 @@ in this guide, and will be located at `<ENV_PATH>/<ENV_NAME>`.
 
 > Run `bin/generate_env_config --help` for more detailed information.
 
-<a name="routing_options">### Routing options</a>
+### <a name="routing_options">Routing options</a>
 
 Kubo can leverage different routing options to improve security and high
 availability of the cluster. Please configure the kubo environment according
