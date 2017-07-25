@@ -18,7 +18,7 @@ Please follow the link for infrastructure paving on your platform:
 ### Create a Kubo environment
 
 A Kubo environment is a set of configuration files used to deploy and update both BOSH and Kubo. If you followed the [Deploying BOSH](#deploying-bosh) step above for 
-your specific Iaas. In that case ignore this step and go to the next.
+your specific Iaas, ignore this step and go to [Routing options](#routing_options).
 
 Otherwise, run `./bin/generate_env_config <ENV_PATH> <ENV_NAME> <PLATFORM_NAME>`
 to generate a Kubo environment. The environment will be referred to as `KUBO_ENV` 
@@ -26,7 +26,7 @@ in this guide, and will be located at `<ENV_PATH>/<ENV_NAME>`.
 
 > Run `bin/generate_env_config --help` for more detailed information.
 
-### Routing options
+<a name="routing_options">### Routing options</a>
 
 Kubo can leverage different routing options to improve security and high
 availability of the cluster. Please configure the kubo environment according
