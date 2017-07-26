@@ -14,7 +14,7 @@ dns_recursor_ip: # DNS IP address for resolving non-BOSH hostnames
 credhub_release_url: https://bosh.io/d/github.com/pivotal-cf/credhub-release?v=1.0.0
 kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest.tgz
 
-# routing_mode: haproxy
+# routing_mode: proxy
 
 # IaaS routing mode settings
 # Comment this section when using CF routing mode
