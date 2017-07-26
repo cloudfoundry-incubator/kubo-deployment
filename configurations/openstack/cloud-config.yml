@@ -28,15 +28,11 @@ disk_types:
 networks:
 - name: ((deployments_network))
   type: dynamic
+  default: [dns, gateway]
   subnets:
-  - range: ((internal_cidr))
-    gateway: ((internal_gw))
-    azs: [z1]
-    dns: [((internal_ip))]
-    reserved:
-    - ((reserved_ips))
-    cloud_properties:
+  - cloud_properties:
       net_id: ((net_id))
+    azs: [z1]
 - name: vip
   type: vip
 
