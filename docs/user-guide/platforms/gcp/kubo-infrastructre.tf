@@ -270,7 +270,7 @@ sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.27-linux-amd6
 sudo chmod a+x /usr/bin/bosh-cli
 sudo curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/bin/kubectl
 sudo chmod a+x /usr/bin/kubectl
-curl -L https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.0.0/credhub-linux-1.0.0.tgz | tar zxv
+curl -L https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.4.0/credhub-linux-1.4.0.tgz | tar zxv
 chmod a+x credhub
 sudo mv credhub /usr/bin
 EOT
