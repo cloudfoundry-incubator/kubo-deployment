@@ -1,0 +1,26 @@
+#!/bin/bash
+
+update_aws_env() {
+  if [[ ! -f "$1" ]] || [[ ! "$1" =~ director.yml$ ]]; then
+    echo 'Please specify the path to director.yml'
+    exit 1
+  fi
+
+  # AWS specific updates
+  sed -i -e "s/^\(region:\).*\(#.*\)/\1 ${region} \2/" "$1"
+  sed -i -e "s/^\(az:\).*\(#.*\)/\1 ${zone} \2/" "$1"
+  sed -i -e "s/^\(subnet_id:\).*\(#.*\)/\1 ${subnet_id} \2/" "$1"
+  sed -i -e "s/^\(default_key_name:\).*\(#.*\)/\1 ${default_key_name} \2/" "$1"
+  sed -i -e "s/^\(default_security_groups:\).*\(#.*\)/\1 \n- ${default_security_groups} \2/" "$1"
+  sed -i -e "s/^\(az:\).*\(#.*\)/\1 ${zone} \2/" "$1"
+  sed -i -e "s/^\(default_key_name:\).*\(#.*\)/\1 ${default_key_name} \2/" "$1"
+  # Generic updates
+  random_key=$(hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom)
+  sed -i -e "s/^\(internal_ip:\).*\(#.*\)/\1 ${subnet_ip_prefix}.252 \2/" "$1"
+  sed -i -e "s/^\(deployments_network:\).*\(#.*\)/\1 ${prefix}kubo-network \2/" "$1"
+  sed -i -e "s/^\(credhub_encryption_key:\).*\(#.*\)/\1 ${random_key} \2/" "$1"
+  sed -i -e "s=^\(internal_cidr:\).*\(#.*\)=\1 ${subnet_ip_prefix}.0/24 \2=" "$1"
+  sed -i -e "s/^\(internal_gw:\).*\(#.*\)/\1 ${subnet_ip_prefix}.1 \2/" "$1"
+  sed -i -e "s/^\(director_name:\).*\(#.*\)/\1 ${prefix}bosh \2/" "$1"
+  sed -i -e "s/^\(dns_recursor_ip:\).*\(#.*\)/\1 ${subnet_ip_prefix}.1 \2/" "$1"
+}
