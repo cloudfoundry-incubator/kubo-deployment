@@ -15,12 +15,14 @@ an environment for a Kubo deployment. Please follow the link for infrastructure
 paving on your platform:
 
 - [Google Cloud Platform](platforms/gcp/paving.md)
+- [Manual setup](manual-paving.md)
 
 ## Deploying BOSH
 
 - [Google Cloud Platform](platforms/gcp/install-bosh.md)
 - [vSphere](platforms/vsphere/install-bosh.md)
 - [OpenStack](platforms/openstack/install-bosh.md)
+- [Manual deployment](bosh-customized-installation.md)
 
 ## Configure Kubo
 
@@ -63,14 +65,20 @@ no_proxy: # e.g. '1.2.3.4,2.3.4.5'
 
 ## Deploying Kubo
 
-Once the infrastructure has been set up, a kubernetes cluster can be deployed by running a single line of code:
+> Get latest version of kubo-deployment before deployment. Deploying K8s using public tarballs using old version of kubo-deployment
+> might result in an error.
+
+Once the infrastructure has been set up, a Kubernetes cluster can be deployed by running a single line of code:
 
    ```bash
    cd /share/kubo-deployment
    bin/deploy_k8s <KUBO_ENV> <MY_CUSTOM_CLUSTER_NAME>
    ```
 
-where `<KUBO_ENV>` is located at `<ENV_PATH>/<ENV_NAME>` and where `CLUSTER_NAME` is a unique name for the cluster. Run `bin/deploy_k8s --help` for more options on how to tell Bosh which release tarballs to use for the KuBo deployment (dev repo, internet, local, pre-uploaded to Bosh)
+where `<KUBO_ENV>` is located at `<ENV_PATH>/<ENV_NAME>` and where `CLUSTER_NAME` is a unique name for the cluster. 
+Run `bin/deploy_k8s --help` for more options on how to tell Bosh which release tarballs to use for the KuBo deployment:
+manually built from repo(`dev`), precompiled from internet(`public`),
+manually downloaded to specific location(`local`), pre-uploaded to Bosh(`skip`).
 
 ### Customized deployment
 
