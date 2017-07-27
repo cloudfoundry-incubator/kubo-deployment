@@ -5,7 +5,7 @@ set -e -o pipefail
 [ -z "$DEBUG" ] || set -x
 
 print_help() {
-  echo "Usage: ${BASH_SOURCE[0]} [BOSH_ENV] [DEPLOYMENT_NAME]"
+  echo "Usage: ${BASH_SOURCE[0]} [BOSH_ENV] [DEPLOYMENT_NAME] [DIRECTOR_UUID]"
   echo ""
   echo "BOSH_ENV is the path to the KuBOSH environment folder."
   echo "    If there is a creds.yml file in BOSH_ENV directory,"
@@ -24,6 +24,8 @@ print_help() {
   echo "    it will be used to override the variables in the"
   echo "    generated manifest. See $(repo_directory)/manifests/kubo.yml"
   echo "    to discover which variables are available in the Kubo manifest."
+  echo ""
+  echo "DIRECTOR_UUID - The uuid of the director being used for this deployment"
 }
 
 repo_directory() {
@@ -31,17 +33,18 @@ repo_directory() {
 }
 
 main() {
-  if [ $# -ne 2 ]; then
+  if [ $# -ne 3 ]; then
     print_help
     exit 1
   fi
 
   local bosh_env="${1}"
   local deployment_name="${2}"
+  local director_uuid="${3}"
 
   # shellcheck disable=SC1090
   . "$(repo_directory)/bin/lib/deploy_utils" > /dev/null
-  generate_manifest "${bosh_env}" "${deployment_name}" "$(repo_directory)/manifests/kubo.yml"
+  generate_manifest "${bosh_env}" "${deployment_name}" "$(repo_directory)/manifests/kubo.yml" "${director_uuid}"
 }
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"

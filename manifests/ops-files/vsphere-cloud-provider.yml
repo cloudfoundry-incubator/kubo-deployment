@@ -9,7 +9,7 @@
       insecure-flag: 1
       datacenter: ((vcenter_dc))
       datastore: ((vcenter_ds))
-      working-dir: /((vcenter_dc))/vm/((vcenter_vms))
+      working-dir: /((vcenter_dc))/vm/((vcenter_vms))/((director_uuid))
 - type: replace
   path: /instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider?
   value: *vsphere_cloud_provider

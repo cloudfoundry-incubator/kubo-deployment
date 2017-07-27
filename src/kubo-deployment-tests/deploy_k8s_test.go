@@ -18,7 +18,8 @@ var _ = Describe("Deploy K8s", func() {
 	BeforeEach(func() {
 		bash.Source(pathToScript("deploy_k8s"), nil)
 		boshMock := MockOrCallThrough("bosh-cli", `echo -n "3124.12"`, `[ "$1" == 'int' ]`)
-		ApplyMocks(bash, []Gob{boshMock})
+		getDirectorUUIDMock := Mock("jq", `echo -n "directory-uuid"`)
+		ApplyMocks(bash, []Gob{boshMock, getDirectorUUIDMock})
 	})
 
 	JustBeforeEach(func() {

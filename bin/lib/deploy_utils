@@ -62,15 +62,20 @@ upload_release() {
   BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli upload-release "$release_name"
 }
 
+get_director_uuid() {
+  BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli environment --json | jq -r .Tables[0].Rows[0].uuid 
+}
+
 generate_manifest() {
-  if [ $# -ne 3 ]; then
-    echo "Required arguments are <path to kubo bosh environment>, <deployment name> and <base manifest path> in ${BASH_SOURCE[0]}:generate_manifest()"
+  if [ $# -ne 4 ]; then
+    echo "Required arguments are <path to kubo bosh environment>, <deployment name>, <base manifest path> and <director uuid> in ${BASH_SOURCE[0]}:generate_manifest()"
     exit 1
   fi
 
   local bosh_environment=$1
   local deployment_name=$2
   local manifest_path=$3
+  local director_uuid=$4
 
   manifest_dir=$(cd "$(dirname "${manifest_path}")"; pwd)
   manifest="$(cat "${manifest_path}")"
@@ -120,7 +125,7 @@ generate_manifest() {
   esac
 
   if [ -f "${manifest_dir}/ops-files/${iaas}-cloud-provider.yml" ]; then
-    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/${iaas}-cloud-provider.yml")
+    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/${iaas}-cloud-provider.yml" -v director_uuid="${director_uuid}")
   fi
 
   if [ -f "${bosh_environment}/${deployment_name}-vars.yml" ]; then

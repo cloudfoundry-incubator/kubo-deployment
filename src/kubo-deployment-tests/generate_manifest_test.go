@@ -38,7 +38,7 @@ var _ = Describe("Generate manifest", func() {
 
 		DescribeTable("populated properties for CF-based deployment", func(line string) {
 			cfEnv := filepath.Join(testEnvironmentPath, "test_vsphere_with_creds")
-			status, err := bash.Run("main", []string{cfEnv, "klingon"})
+			status, err := bash.Run("main", []string{cfEnv, "klingon", "director_uuid"})
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
@@ -58,7 +58,7 @@ var _ = Describe("Generate manifest", func() {
 		)
 
 		DescribeTable("populated properties for IaaS-based deployment", func(line string) {
-			status, err := bash.Run("main", []string{kuboEnv, "grinder"})
+			status, err := bash.Run("main", []string{kuboEnv, "grinder", "director_uuid"})
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
@@ -73,7 +73,7 @@ var _ = Describe("Generate manifest", func() {
 		)
 
 		It("should include a variable section with tls-kubelet, tls-kubernetes", func() {
-			status, err := bash.Run("main", []string{kuboEnv, "cucumber"})
+			status, err := bash.Run("main", []string{kuboEnv, "cucumber", "director_uuid"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
@@ -81,7 +81,7 @@ var _ = Describe("Generate manifest", func() {
 		})
 
 		It("should reproduce the same manifest on the second run", func() {
-			bash.Run("main", []string{kuboEnv, "fort"})
+			bash.Run("main", []string{kuboEnv, "fort", "director_uuid"})
 
 			firstRun := make([]byte, len(stdout.Contents()))
 			secondRun := make([]byte, len(stdout.Contents()))
@@ -89,7 +89,7 @@ var _ = Describe("Generate manifest", func() {
 			_, err := stdout.Read(firstRun)
 			Expect(err).NotTo(HaveOccurred())
 
-			bash.Run("main", []string{kuboEnv, "fort"})
+			bash.Run("main", []string{kuboEnv, "fort", "director_uuid"})
 
 			_, err = stdout.Read(secondRun)
 			Expect(err).NotTo(HaveOccurred())
@@ -99,7 +99,7 @@ var _ = Describe("Generate manifest", func() {
 
 		It("generates a manifest without the secrets", func() {
 			secretlessEnv := filepath.Join(testEnvironmentPath, "secretless")
-			status, err := bash.Run("main", []string{secretlessEnv, "sensors"})
+			status, err := bash.Run("main", []string{secretlessEnv, "sensors", "director_uuid"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
@@ -108,7 +108,7 @@ var _ = Describe("Generate manifest", func() {
 
 		It("uses ops-files to modify the manifest", func() {
 			opsfileEnv := filepath.Join(testEnvironmentPath, "with_ops")
-			status, err := bash.Run("main", []string{opsfileEnv, "name"})
+			status, err := bash.Run("main", []string{opsfileEnv, "name", "director_uuid"})
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
@@ -117,7 +117,7 @@ var _ = Describe("Generate manifest", func() {
 
 		It("applies http proxy settings if they exist", func() {
 			opsfileEnv := filepath.Join(testEnvironmentPath, "with_http_proxy")
-			status, err := bash.Run("main", []string{opsfileEnv, "name"})
+			status, err := bash.Run("main", []string{opsfileEnv, "name", "director_uuid"})
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
@@ -126,7 +126,7 @@ var _ = Describe("Generate manifest", func() {
 
 		It("applies https proxy settings if they exist", func() {
 			opsfileEnv := filepath.Join(testEnvironmentPath, "with_https_proxy")
-			status, err := bash.Run("main", []string{opsfileEnv, "name"})
+			status, err := bash.Run("main", []string{opsfileEnv, "name", "director_uuid"})
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
@@ -135,7 +135,7 @@ var _ = Describe("Generate manifest", func() {
 
 		It("applies http no_proxy settings if they exist", func() {
 			opsfileEnv := filepath.Join(testEnvironmentPath, "with_no_proxy")
-			status, err := bash.Run("main", []string{opsfileEnv, "name"})
+			status, err := bash.Run("main", []string{opsfileEnv, "name", "director_uuid"})
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
@@ -144,7 +144,7 @@ var _ = Describe("Generate manifest", func() {
 
 		It("uses vars-files to modify the manifest", func() {
 			opsfileEnv := filepath.Join(testEnvironmentPath, "with_vars")
-			status, err := bash.Run("main", []string{opsfileEnv, "name"})
+			status, err := bash.Run("main", []string{opsfileEnv, "name", "director_uuid"})
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
@@ -153,7 +153,7 @@ var _ = Describe("Generate manifest", func() {
 	})
 
 	It("expands the bosh environment path to absolute value", func() {
-		command := exec.Command("./generate_kubo_manifest", "../src/kubo-deployment-tests/resources/environments/test_gcp", "name")
+		command := exec.Command("./generate_kubo_manifest", "../src/kubo-deployment-tests/resources/environments/test_gcp", "name", "director_uuid")
 		command.Stdout = bash.Stdout
 		command.Stderr = bash.Stderr
 		command.Dir = pathToScript("")
@@ -161,7 +161,7 @@ var _ = Describe("Generate manifest", func() {
 	})
 
 	It("runs from any location", func() {
-		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_gcp", "name")
+		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_gcp", "name", "director_uuid")
 		command.Stdout = bash.Stdout
 		command.Stderr = bash.Stderr
 		command.Dir = pathFromRoot("")
@@ -171,7 +171,7 @@ var _ = Describe("Generate manifest", func() {
 	It("should generate a valid manifest", func() {
 		files, _ := filepath.Glob(testEnvironmentPath + "/*")
 		for _, env := range files {
-			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name")
+			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name", "director_uuid")
 			out := gbytes.NewBuffer()
 			command.Stdout = out
 			command.Dir = pathFromRoot("")
@@ -186,7 +186,7 @@ var _ = Describe("Generate manifest", func() {
 	It("should not write anything to stderr", func() {
 		files, _ := filepath.Glob(testEnvironmentPath + "/*")
 		for _, env := range files {
-			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name")
+			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name", "director_uuid")
 			errBuffer := gbytes.NewBuffer()
 			command.Stdout = GinkgoWriter
 			command.Stderr = errBuffer
