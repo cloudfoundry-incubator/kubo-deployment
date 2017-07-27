@@ -171,3 +171,7 @@ variables:
     alternative_names:
     - ((kubernetes_master_host))
     - 10.100.200.1
+    - kubernetes
+    - kubernetes.default
+    - kubernetes.default.svc
+    - kubernetes.default.svc.cluster.local
