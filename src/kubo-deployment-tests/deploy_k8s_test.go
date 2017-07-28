@@ -128,7 +128,8 @@ var _ = Describe("get_director_uuid", func() {
 			"Using environment '10.0.250.252' as user 'admin' (openid, bosh.admin)",
 			"Succeeded"
 	]
-}'`, `[ "$1" != 'environment' ]`)
+}
+'`, `[ "$1" != 'environment' ]`)
 		ApplyMocks(bash, []Gob{boshMock})
 
 		code, err := bash.Run("get_director_uuid", []string{})
