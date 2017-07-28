@@ -9,10 +9,6 @@
     release: bosh
 
 - type: replace
-  path: /instance_groups/name=bosh/properties/postgres/additional_databases?/-
-  value: powerdns
-
-- type: replace
   path: /instance_groups/name=bosh/properties/dns?
   value:
     address: ((internal_ip))
