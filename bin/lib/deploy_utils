@@ -62,9 +62,6 @@ upload_release() {
   BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli upload-release "$release_name"
 }
 
-get_director_uuid() {
-  BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli environment --json | jq -r .Tables[0].Rows[0].uuid 
-}
 
 generate_manifest() {
   if [ $# -ne 4 ]; then

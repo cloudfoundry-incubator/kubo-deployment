@@ -18,7 +18,7 @@ var _ = Describe("Deploy K8s", func() {
 	BeforeEach(func() {
 		bash.Source(pathToScript("deploy_k8s"), nil)
 		boshMock := MockOrCallThrough("bosh-cli", `echo -n "3124.12"`, `[ "$1" == 'int' ]`)
-		getDirectorUUIDMock := Mock("jq", `echo -n "directory-uuid"`)
+		getDirectorUUIDMock := Mock("get_director_uuid", `echo -n "director-uuid"`)
 		ApplyMocks(bash, []Gob{boshMock, getDirectorUUIDMock})
 	})
 
@@ -91,5 +91,50 @@ var _ = Describe("Deploy K8s", func() {
 
 			Expect(stderr).To(gbytes.Say("bosh-cli upload-stemcell https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-3124.12-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"))
 		})
+	})
+})
+
+var _ = Describe("get_director_uuid", func() {
+	It("should return UUID from bosh env command", func() {
+		bash.Source(pathToScript("deploy_k8s"), nil)
+		boshMock := MockOrCallThrough("bosh-cli", `echo -n \
+'{
+  "Tables": [
+			{
+					"Content": "",
+					"Header": {
+							"cpi": "CPI",
+							"features": "Features",
+							"name": "Name",
+							"user": "User",
+							"uuid": "UUID",
+							"version": "Version"
+					},
+					"Rows": [
+							{
+									"cpi": "google_cpi",
+									"features": "compiled_package_cache: disabled\nconfig_server: enabled\ndns: enabled\nsnapshots: disabled",
+									"name": "I AM CI",
+									"user": "admin",
+									"uuid": "director-uuid",
+									"version": "262.0.0 (00000000)"
+							}
+					],
+					"Notes": null
+			}
+	],
+	"Blocks": null,
+	"Lines": [
+			"Using environment '10.0.250.252' as user 'admin' (openid, bosh.admin)",
+			"Succeeded"
+	]
+}'`, `[ "$1" != 'environment' ]`)
+		ApplyMocks(bash, []Gob{boshMock})
+
+		code, err := bash.Run("get_director_uuid", []string{})
+
+		Expect(err).NotTo(HaveOccurred())
+		Expect(code).To(Equal(0))
+		Expect(stdout).To(gbytes.Say("director-uuid"))
 	})
 })
