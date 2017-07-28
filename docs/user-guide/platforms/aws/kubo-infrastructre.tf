@@ -80,6 +80,7 @@ resource "aws_nat_gateway" "gateway" {
 resource "aws_subnet" "private" {
     vpc_id     = "${aws_vpc.main.id}"
     cidr_block = "${var.private_subnet_ip_prefix}.0/24"
+    availability_zone = "${var.zone}"
 
     tags {
       Name = "Kubo Private"
@@ -168,20 +169,27 @@ resource "aws_instance" "bastion" {
             "sudo apt-get update",
             "sudo apt-get install -y build-essential zlibc zlib1g-dev ruby ruby-dev openssl libxslt-dev libxml2-dev libssl-dev libreadline6 libreadline6-dev libyaml-dev libsqlite3-dev sqlite3",
             "sudo apt-get install -y git",
+            "sudo apt-get install -y unzip",
             "curl -L https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.0.0/credhub-linux-1.0.0.tgz | tar zxv && chmod a+x credhub && sudo mv credhub /usr/bin",
             "sudo curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/bin/kubectl && sudo chmod a+x /usr/bin/kubectl",
             "sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.27-linux-amd64 -o /usr/bin/bosh-cli && sudo chmod a+x /usr/bin/bosh-cli",
+            "sudo wget https://releases.hashicorp.com/terraform/0.7.7/terraform_0.7.7_linux_amd64.zip",
+            "sudo unzip terraform*.zip -d /usr/local/bin",
             "sudo sh -c 'sudo cat > /etc/profile.d/bosh.sh <<'EOF'",
             "#!/bin/bash",
-            "export subnet_id=${aws_subnet.private.id}",
+            "export private_subnet_id=${aws_subnet.private.id}",
+            "export public_subnet_id=${aws_subnet.public.id}",
+            "export vpc_id=${aws_vpc.main.id}",
             "export default_security_groups=${aws_security_group.nodes.id}",
-            "export subnet_ip_prefix=${var.private_subnet_ip_prefix}",
+            "export private_subnet_ip_prefix=${var.private_subnet_ip_prefix}",
             "export prefix=${var.prefix}",
+            "export default_key_name=${var.key_name}",
 	    "export region=${var.region}",
             "export zone=${var.zone}",
             "EOF'",
             "git clone https://www.github.com/cloudfoundry-incubator/kubo-deployment.git /home/ubuntu/kubo-deployment",
             "echo \"${var.private_key}\" > /home/ubuntu/deployer.pem",
+            "chmod 600 /home/ubuntu/deployer.pem"
 	]
 
         connection {

@@ -19,7 +19,7 @@
   export AWS_ACCESS_KEY_ID=<Your AWS access key ID>
   export AWS_SECRET_ACCESS_KEY=<Your AWS secret access key>
   export key_name=deployer
-  export private_key="$(cat ~/deployer.pem)"
+  export private_key="$(cat ~/${key_name}.pem)"
   export region=us-west-2 # region that you will deploy Kubo in
   export zone=us-west-2a # zone that you will deploy Kubo in
   export public_subnet_ip_prefix="10.0.1"
