@@ -168,6 +168,24 @@ var _ = Describe("Generate manifest", func() {
 		Expect(command.Run()).To(Succeed())
 	})
 
+	It("cloud provider properties are populated for GCP", func() {
+		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_gcp", "name", "director_uuid")
+		command.Stdout = bash.Stdout
+		command.Stderr = bash.Stderr
+		command.Dir = pathFromRoot("")
+		Expect(command.Run()).To(Succeed())
+		Expect(stdout).To(gbytes.Say("project-id: GCP_Project_ID"))
+	})
+
+	It("cloud provider properties are populated for vSphere", func() {
+		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_vsphere", "name", "director_uuid")
+		command.Stdout = bash.Stdout
+		command.Stderr = bash.Stderr
+		command.Dir = pathFromRoot("")
+		Expect(command.Run()).To(Succeed())
+		Expect(stdout).To(gbytes.Say("working-dir: /big_data_center/vm/big_vms/director_uuid"))
+	})
+
 	It("should generate a valid manifest", func() {
 		files, _ := filepath.Glob(testEnvironmentPath + "/*")
 		for _, env := range files {

@@ -29,3 +29,5 @@ credhub_release_url: https://bosh.io/d/github.com/pivotal-cf/credhub-release?v=1
 kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release-latest.tgz
 
 routing_mode: cf
+vcenter_dc: big_data_center
+vcenter_vms: big_vms

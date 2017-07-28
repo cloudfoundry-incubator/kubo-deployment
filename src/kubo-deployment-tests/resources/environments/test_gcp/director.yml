@@ -1,5 +1,5 @@
 iaas: gcp
-project_id: # GCP project ID
+project_id: GCP_Project_ID # GCP project ID
 network: # GCP network
 subnetwork: # GCP subnetwork
 tags: # tags below are used if jumpbox and NAT were deployed using https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/blob/master/docs/bosh/main.tf
