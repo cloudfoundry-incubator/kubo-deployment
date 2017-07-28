@@ -18,20 +18,22 @@
   ```bash
   export AWS_ACCESS_KEY_ID=<Your AWS access key ID>
   export AWS_SECRET_ACCESS_KEY=<Your AWS secret access key>
+  export vpc_id=<An existing VPC for deploying kubo>
   export key_name=deployer
   export private_key="$(cat ~/${key_name}.pem)"
   export region=us-west-2 # region that you will deploy Kubo in
   export zone=us-west-2a # zone that you will deploy Kubo in
   export public_subnet_ip_prefix="10.0.1"
   export private_subnet_ip_prefix="10.0.2"
+  export kubo_terraform_state=~/terraform.tfstate
   ```
   
-  > When using the [CloudFoundry routing mode](../../routing/cf.md) the GCP network above 
+  > When using the [CloudFoundry routing mode](../../routing/cf.md) the VPC above 
   > needs to be the same network that CloudFoundry is using 
 
 ## Deploy supporting infrastructure
 
-This step sets up a subnetwork with a bastion VM and a set of firewall 
+This step sets up a subnetwork with a bastion VM and security group
 rules to secure access to the kubo deployment.
 
 ### Steps
@@ -49,11 +51,13 @@ rules to secure access to the kubo deployment.
   terraform apply \
     -var region="${region}" \
     -var zone="${zone}" \
+    -var vpc_id="${vpc_id}"
     -var prefix="${prefix}" \
     -var public_subnet_ip_prefix="${public_subnet_ip_prefix}" \
     -var private_subnet_ip_prefix="${private_subnet_ip_prefix}" \
     -var private_key="${private_key}" \
     -var key_name="${key_name}"
+    -state=${kubo_terraform_state}
   ```
 
 > _Note_: It's possible to preview the terraform execution plan by running the 

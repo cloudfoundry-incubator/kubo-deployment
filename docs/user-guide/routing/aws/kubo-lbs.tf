@@ -1,17 +1,20 @@
 variable "region" {
     type = "string"
-    default = "ca-central-1"
 }
 
 variable "vpc_id" {
     type = "string"
 }
 
-variable node_security_group_id {
+variable "node_security_group_id" {
     type = "string"
 }
 
-variable public_subnet_id {
+variable "public_subnet_id" {
+    type = "string"
+}
+
+variable "prefix" {
     type = "string"
 }
 
@@ -20,7 +23,7 @@ provider "aws" {
 }
 
 resource "aws_security_group" "api" {
-    name        = "api access"
+    name        = "${var.prefix}api-access"
     vpc_id = "${var.vpc_id}"
 
     ingress {
@@ -49,7 +52,7 @@ resource "aws_security_group_rule" "api" {
 }
 
 resource "aws_elb" "api" {
-    name               = "kubo-api"
+    name               = "${var.prefix}kubo-api"
     subnets = ["${var.public_subnet_id}"]
     security_groups = ["${aws_security_group.api.id}"]
 
@@ -70,7 +73,7 @@ resource "aws_elb" "api" {
 }
 
 resource "aws_security_group" "apps" {
-    name        = "apps access"
+    name        = "${var.prefix}apps-access"
     vpc_id = "${var.vpc_id}"
 
     ingress {
@@ -99,7 +102,7 @@ resource "aws_security_group_rule" "apps" {
 }
 
 resource "aws_elb" "apps" {
-    name               = "kubo-apps"
+    name               = "${var.prefix}kubo-apps"
     subnets = ["${var.public_subnet_id}"]
     security_groups = ["${aws_security_group.apps.id}"]
 

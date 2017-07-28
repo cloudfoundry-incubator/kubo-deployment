@@ -34,6 +34,7 @@ setup the Load balancers:
       -var vpc_id=${vpc_id} \
       -var node_security_group_id=${default_security_groups} \
       -var public_subnet_id=${public_subnet_id} \
+      -var prefix=${prefix} \
       -state=${kubo_terraform_state}
    ```
 
@@ -48,7 +49,7 @@ setup the Load balancers:
 1. Update the Kubo environment using the following snippet:
 
    ```bash
-   . ~/kubo-deployment/docs/user-guide/platforms/aws/setup_helpers
+   . /share/kubo-deployment/docs/user-guide/platforms/aws/setup_helpers
    set_iaas_routing "${state_dir}/director.yml"
    ```
    

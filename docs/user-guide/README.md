@@ -7,6 +7,7 @@ are GCP, vSphere and OpenStack.
 
 - [GCP](platforms/gcp/prerequisites.md)
 - [vSphere](platforms/vsphere/prerequisites.md)
+- [AWS](platforms/aws/prerequisites.md)
 
 ## Infrastructure paving
 
@@ -15,11 +16,13 @@ an environment for a Kubo deployment. Please follow the link for infrastructure
 paving on your platform:
 
 - [Google Cloud Platform](platforms/gcp/paving.md)
+- [AWS](platforms/aws/paving.md)
 
 ## Deploying BOSH
 
 - [Google Cloud Platform](platforms/gcp/install-bosh.md)
 - [vSphere](platforms/vsphere/install-bosh.md)
+- [AWS](platforms/aws/install-bosh.md)
 - [OpenStack](platforms/openstack/install-bosh.md)
 
 ## Configure Kubo
@@ -41,7 +44,8 @@ Kubo can leverage different routing options to improve security and high
 availability of the cluster. Please configure the kubo environment according
 to one of the options below:
 
-- [IaaS Load-Balancing](routing/gcp/load-balancing.md)
+- [IaaS Load-Balancing on GCP](routing/gcp/load-balancing.md)
+- [IaaS Load-Balancing on AWS](routing/aws/load-balancing.md)
 - [CF Routing](routing/cf.md)
 - [HAProxy Routing for OpenStack](routing/openstack/haproxy-routing.md)
 - [HAProxy Routing for vSphere](routing/vsphere/haproxy-routing.md)

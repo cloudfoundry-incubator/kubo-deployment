@@ -1,11 +1,13 @@
 variable "region" {
     type = "string"
-    default = "ca-central-1"
 }
 
 variable "zone" {
     type = "string"
-    default = "ca-central-1b"
+}
+
+variable "vpc_id" {
+    type = "string"
 }
 
 variable "public_subnet_ip_prefix" {
@@ -35,27 +37,22 @@ provider "aws" {
     region = "${var.region}"
 }
 
-resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
-  enable_dns_hostnames = true
-}
-
 resource "aws_internet_gateway" "gateway" {
-    vpc_id = "${aws_vpc.main.id}"
+    vpc_id = "${var.vpc_id}"
 }
 
 resource "aws_subnet" "public" {
-    vpc_id     = "${aws_vpc.main.id}"
+    vpc_id     = "${var.vpc_id}"
     cidr_block = "${var.public_subnet_ip_prefix}.0/24"
     availability_zone = "${var.zone}"
 
     tags {
-      Name = "Kubo Public"
+      Name = "${var.prefix}kubo-public"
     }
 }
 
 resource "aws_route_table" "public" {
-    vpc_id = "${aws_vpc.main.id}"
+    vpc_id = "${var.vpc_id}"
 
     route {
       cidr_block = "0.0.0.0/0"
@@ -71,28 +68,28 @@ resource "aws_route_table_association" "public" {
 resource "aws_eip" "nat" {
 }
 
-resource "aws_nat_gateway" "gateway" {
+resource "aws_nat_gateway" "nat" {
     allocation_id = "${aws_eip.nat.id}"
     subnet_id     = "${aws_subnet.public.id}"
 }
 
 
 resource "aws_subnet" "private" {
-    vpc_id     = "${aws_vpc.main.id}"
+    vpc_id     = "${var.vpc_id}"
     cidr_block = "${var.private_subnet_ip_prefix}.0/24"
     availability_zone = "${var.zone}"
 
     tags {
-      Name = "Kubo Private"
+      Name = "${var.prefix}kubo-private"
     }
 }
 
 resource "aws_route_table" "private" {
-    vpc_id = "${aws_vpc.main.id}"
+    vpc_id = "${var.vpc_id}"
 
     route {
       cidr_block = "0.0.0.0/0"
-      gateway_id = "${aws_nat_gateway.gateway.id}"
+      gateway_id = "${aws_nat_gateway.nat.id}"
     }
 }
 
@@ -102,8 +99,8 @@ resource "aws_route_table_association" "private" {
 }
 
 resource "aws_security_group" "nodes" {
-    name        = "node access"
-    vpc_id = "${aws_vpc.main.id}"
+    name        = "${var.prefix}node-access"
+    vpc_id = "${var.vpc_id}"
 
     ingress {
       from_port   = 8443
@@ -130,7 +127,7 @@ resource "aws_security_group_rule" "ssh" {
     security_group_id = "${aws_security_group.nodes.id}"
 }
 
-resource "aws_security_group_rule" "nodes" {
+resource "aws_security_group_rule" "node-to-node" {
     type            = "ingress"
     from_port       = 0
     to_port         = 0
@@ -179,7 +176,7 @@ resource "aws_instance" "bastion" {
             "#!/bin/bash",
             "export private_subnet_id=${aws_subnet.private.id}",
             "export public_subnet_id=${aws_subnet.public.id}",
-            "export vpc_id=${aws_vpc.main.id}",
+            "export vpc_id=${var.vpc_id}",
             "export default_security_groups=${aws_security_group.nodes.id}",
             "export private_subnet_ip_prefix=${var.private_subnet_ip_prefix}",
             "export prefix=${var.prefix}",
@@ -187,7 +184,9 @@ resource "aws_instance" "bastion" {
 	    "export region=${var.region}",
             "export zone=${var.zone}",
             "EOF'",
-            "git clone https://www.github.com/cloudfoundry-incubator/kubo-deployment.git /home/ubuntu/kubo-deployment",
+            "mkdir /share",
+            "git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share/kubo-deployment",
+            "chmod -R 777 /share",
             "echo \"${var.private_key}\" > /home/ubuntu/deployer.pem",
             "chmod 600 /home/ubuntu/deployer.pem"
 	]

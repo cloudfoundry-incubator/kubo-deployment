@@ -11,7 +11,7 @@
 1. Change directory to the root of the kubo-deployment repo
 
     ```bash
-    cd ~/kubo-deployment
+    cd /share/kubo-deployment
     ```
     
 1. Create a kubo environment to set the configuration for BOSH and Kubo.
