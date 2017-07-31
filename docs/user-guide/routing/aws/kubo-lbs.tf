@@ -67,7 +67,7 @@ resource "aws_elb" "api" {
       healthy_threshold   = 2
       unhealthy_threshold = 2
       timeout             = 2
-      target              = "TCP:8443/"
+      target              = "TCP:8443"
       interval            = 5
     }
 }
@@ -78,7 +78,7 @@ resource "aws_security_group" "apps" {
 
     ingress {
       from_port   = 30000
-      to_port     = 32000
+      to_port     = 32767
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     }
@@ -117,7 +117,7 @@ resource "aws_elb" "apps" {
       healthy_threshold   = 2
       unhealthy_threshold = 2
       timeout             = 2
-      target              = "TCP:22/"
+      target              = "TCP:22"
       interval            = 5
     }
 }
