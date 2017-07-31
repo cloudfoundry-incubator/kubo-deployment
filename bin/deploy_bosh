@@ -76,7 +76,8 @@ deploy_gcp() {
     --state "${bosh_env}/state.json" \
     --var-file gcp_credentials_json="${service_account_filename}" \
     --vars-store "${bosh_env}/creds.yml" \
-    --vars-file "${bosh_env}/director.yml" $(eval echo "$CREATE_ENV_SUFFIX")
+    --vars-file "${bosh_env}/director.yml" \
+    "$CREATE_ENV_SUFFIX"
 }
 
 deploy_vsphere() {
@@ -93,7 +94,8 @@ deploy_vsphere() {
     --state "${bosh_env}/state.json" \
     --vars-store "${bosh_env}/creds.yml" \
     --vars-file "${bosh_env}/director.yml" \
-    --vars-file "${bosh_env}/director-secrets.yml" $(eval echo "$CREATE_ENV_SUFFIX")
+    --vars-file "${bosh_env}/director-secrets.yml" \
+    "$CREATE_ENV_SUFFIX"
 }
 
 deploy_openstack() {
@@ -112,7 +114,8 @@ deploy_openstack() {
     --vars-store "${bosh_env}/creds.yml" \
     --vars-file "${bosh_env}/director.yml"  \
     --vars-file "${bosh_env}/director-secrets.yml"  \
-    --var-file private_key="${key_filename}" $(eval echo "$CREATE_ENV_SUFFIX")
+    --var-file private_key="${key_filename}" \
+    "$CREATE_ENV_SUFFIX"
 }
 
 deploy_aws() {
@@ -130,7 +133,8 @@ deploy_aws() {
     --vars-store "${bosh_env}/creds.yml" \
     --vars-file "${bosh_env}/director.yml"  \
     --vars-file "${bosh_env}/director-secrets.yml"  \
-    --var-file private_key="${key_filename}" $(eval echo "$CREATE_ENV_SUFFIX")
+    --var-file private_key="${key_filename}" \
+    "$CREATE_ENV_SUFFIX"
 }
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"
