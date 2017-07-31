@@ -3,6 +3,12 @@
 ## Contributor License Agreement
 If you have not previously done so, please fill out and submit the [Contributor License Agreement](https://cla.pivotal.io/sign/pivotal). 
 
+## Prerequisites
+Review the following to understand Kubernetes
+ 1. https://docs.cloudfoundry.org/concepts/architecture/
+ 1. https://thenewstack.io/kubernetes-an-overview/
+ 1. https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture.md
+
 ## Developer Workflow
 1. Fork the project on [GitHub](https://github.com/cloudfoundry-incubator/kubo-deployment)
 1. Create a feature branch.
