@@ -26,6 +26,13 @@ setup the Load balancers:
    export kubo_terraform_state=${state_dir}/terraform.tfstate
    ``` 
 
+1. Export your AWS credentials so that Terraform can use them:
+
+   ```bash
+   export AWS_ACCESS_KEY_ID=<Your AWS access key ID>
+   export AWS_SECRET_ACCESS_KEY=<Your AWS secret access key>
+   ``` 
+
 1. Create the resources
    
    ```bash
