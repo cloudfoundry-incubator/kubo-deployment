@@ -40,7 +40,7 @@ main() {
 
   CREATE_ENV_SUFFIX=""
   if [ "true" == "$deploy_diagnostics" ]; then
-    CREATE_ENV_SUFFIX="--ops-file \"$(repo_directory)/manifests/turbulence/manifest.yml\""
+    CREATE_ENV_SUFFIX="--ops-file \"$(repo_directory)/bosh-deployment/turbulence.yml\""
   fi
   export CREATE_ENV_SUFFIX
 
