@@ -22,10 +22,10 @@
     export kubo_env_path="${kubo_envs}/${kubo_env_name}"
  
     mkdir -p "${kubo_envs}"
-    ./bin/generate_env_config "${kubo_envs}" ${kubo_env_name} aws
+    ./bin/generate_env_config "${kubo_envs}" "${kubo_env_name}" aws
     ```
 
-1. Apply the default networking settings by running the following line:
+1. Apply the default networking settings by running the following commands:
 
     ```bash
     . docs/user-guide/platforms/aws/setup_helpers

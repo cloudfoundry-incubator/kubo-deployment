@@ -54,6 +54,10 @@ resource "aws_subnet" "public" {
 resource "aws_route_table" "public" {
     vpc_id = "${var.vpc_id}"
 
+    tags {
+      Name = "${var.prefix}public-route-table"
+    }
+
     route {
       cidr_block = "0.0.0.0/0"
       gateway_id = "${aws_internet_gateway.gateway.id}"
@@ -86,6 +90,10 @@ resource "aws_subnet" "private" {
 
 resource "aws_route_table" "private" {
     vpc_id = "${var.vpc_id}"
+
+    tags {
+      Name = "${var.prefix}private-route-table"
+    }
 
     route {
       cidr_block = "0.0.0.0/0"
@@ -161,6 +169,9 @@ resource "aws_instance" "bastion" {
     key_name      = "${var.key_name}"
     vpc_security_group_ids = ["${aws_security_group.nodes.id}"]
     associate_public_ip_address = true
+    tags {
+      Name = "${var.prefix}bosh-bastion"
+    }
     provisioner "remote-exec" {
         inline = [
             "sudo apt-get update",
@@ -184,9 +195,9 @@ resource "aws_instance" "bastion" {
 	    "export region=${var.region}",
             "export zone=${var.zone}",
             "EOF'",
-            "mkdir /share",
+            "sudo mkdir /share",
             "git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share/kubo-deployment",
-            "chmod -R 777 /share",
+            "sudo chmod -R 777 /share",
             "echo \"${var.private_key}\" > /home/ubuntu/deployer.pem",
             "chmod 600 /home/ubuntu/deployer.pem"
 	]
