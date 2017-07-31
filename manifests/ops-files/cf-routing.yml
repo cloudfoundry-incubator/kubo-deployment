@@ -13,7 +13,6 @@
 - type: replace
   path: /variables/name=tls-kubernetes/options/alternative_names
   value:
-  - ((cf-tcp-router-name))
   - ((kubernetes_master_host))
   - 10.100.200.1
 
