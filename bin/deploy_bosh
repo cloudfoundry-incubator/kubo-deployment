@@ -33,6 +33,13 @@ main() {
   bosh_env=$(cd "${1}"; pwd)
 
   iaas=$(bosh-cli int "${bosh_env}/director.yml" --path /iaas)
+  deploy_diagnostics=$(bosh-cli int ${bosh_env}/director.yml --path /deploy_diagnostics)
+
+  CREATE_ENV_SUFFIX=""
+  if [ "true" == "$deploy_diagnostics" ]; then
+    CREATE_ENV_SUFFIX="--ops-file \"$(repo_directory)/manifests/turbulence/manifest.yml\""
+  fi
+  export CREATE_ENV_SUFFIX
 
   if ! [[ "$iaas" =~ ^(gcp|openstack|vsphere|aws)$ ]]; then
     echo "Supported platforms are: 'gcp', 'openstack', 'vsphere', 'aws'"
@@ -66,7 +73,7 @@ deploy_gcp() {
     --state "${bosh_env}/state.json" \
     --var-file gcp_credentials_json="${service_account_filename}" \
     --vars-store "${bosh_env}/creds.yml" \
-    --vars-file "${bosh_env}/director.yml"
+    --vars-file "${bosh_env}/director.yml" $(eval echo "$CREATE_ENV_SUFFIX")
 }
 
 deploy_vsphere() {
@@ -83,7 +90,7 @@ deploy_vsphere() {
     --state "${bosh_env}/state.json" \
     --vars-store "${bosh_env}/creds.yml" \
     --vars-file "${bosh_env}/director.yml" \
-    --vars-file "${bosh_env}/director-secrets.yml"
+    --vars-file "${bosh_env}/director-secrets.yml" $(eval echo "$CREATE_ENV_SUFFIX")
 }
 
 deploy_openstack() {
@@ -102,7 +109,7 @@ deploy_openstack() {
     --vars-store "${bosh_env}/creds.yml" \
     --vars-file "${bosh_env}/director.yml"  \
     --vars-file "${bosh_env}/director-secrets.yml"  \
-    --var-file private_key="${key_filename}"
+    --var-file private_key="${key_filename}" $(eval echo "$CREATE_ENV_SUFFIX")
 }
 
 deploy_aws() {
@@ -120,7 +127,7 @@ deploy_aws() {
     --vars-store "${bosh_env}/creds.yml" \
     --vars-file "${bosh_env}/director.yml"  \
     --vars-file "${bosh_env}/director-secrets.yml"  \
-    --var-file private_key="${key_filename}"
+    --var-file private_key="${key_filename}" $(eval echo "$CREATE_ENV_SUFFIX")
 }
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"
