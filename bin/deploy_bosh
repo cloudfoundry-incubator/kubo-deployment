@@ -33,7 +33,10 @@ main() {
   bosh_env=$(cd "${1}"; pwd)
 
   iaas=$(bosh-cli int "${bosh_env}/director.yml" --path /iaas)
+
+  set +e  # 'deploy_diagnostics' key is is optional
   deploy_diagnostics=$(bosh-cli int ${bosh_env}/director.yml --path /deploy_diagnostics)
+  set -e
 
   CREATE_ENV_SUFFIX=""
   if [ "true" == "$deploy_diagnostics" ]; then
