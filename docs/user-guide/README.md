@@ -15,14 +15,12 @@ an environment for a Kubo deployment. Please follow the link for infrastructure
 paving on your platform:
 
 - [Google Cloud Platform](platforms/gcp/paving.md)
-- [Manual setup](manual-paving.md)
 
 ## Deploying BOSH
 
 - [Google Cloud Platform](platforms/gcp/install-bosh.md)
 - [vSphere](platforms/vsphere/install-bosh.md)
 - [OpenStack](platforms/openstack/install-bosh.md)
-- [Manual deployment](bosh-customized-installation.md)
 
 ## Configure Kubo
 
