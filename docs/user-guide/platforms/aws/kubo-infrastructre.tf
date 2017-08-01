@@ -174,6 +174,7 @@ resource "aws_instance" "bastion" {
     }
     provisioner "remote-exec" {
         inline = [
+            "set -eu",
             "sudo apt-get update",
             "sudo apt-get install -y build-essential zlibc zlib1g-dev ruby ruby-dev openssl libxslt-dev libxml2-dev libssl-dev libreadline6 libreadline6-dev libyaml-dev libsqlite3-dev sqlite3",
             "sudo apt-get install -y git",
@@ -192,12 +193,12 @@ resource "aws_instance" "bastion" {
             "export private_subnet_ip_prefix=${var.private_subnet_ip_prefix}",
             "export prefix=${var.prefix}",
             "export default_key_name=${var.key_name}",
-	    "export region=${var.region}",
+            "export region=${var.region}",
             "export zone=${var.zone}",
             "EOF'",
             "sudo mkdir /share",
-            "sudo git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share/kubo-deployment",
-            "sudo chmod -R 777 /share",
+            "sudo chown ubuntu:ubuntu /share",
+            "git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share/kubo-deployment",
             "echo \"${var.private_key}\" > /home/ubuntu/deployer.pem",
             "chmod 600 /home/ubuntu/deployer.pem"
 	]
