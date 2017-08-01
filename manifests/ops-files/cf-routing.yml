@@ -11,12 +11,6 @@
   value: ((kubernetes_master_host))
 
 - type: replace
-  path: /variables/name=tls-kubernetes/options/alternative_names
-  value:
-  - ((kubernetes_master_host))
-  - 10.100.200.1
-
-- type: replace
   path: /instance_groups/name=master/jobs/-
   value:
     name: kubernetes-api-route-registrar
