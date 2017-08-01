@@ -15,3 +15,15 @@ You can access the service using the external IP address of the  `kubo-workers` 
 balancer and the `NodePort` of your service.
 
 1. Access your service from your browser at `<IP address of the load balancer>:<NodePort>`
+
+## Accessing an application on AWS with IaaS Load-Balancing
+
+An additional load balancer is provisioned using Terraform during the setup in our guide.
+You can access the service using the external IP address of the  `kubo-apps` load
+balancer and the `NodePort` of your service.
+
+1. Add a listener on the `kubo-workers` load balancer for the `NodePort` of your service
+
+1. Find the DNS name of your load balancer in the Description section
+
+1. Access your service at `<DNS name of load balancer>:<NodePort>`
