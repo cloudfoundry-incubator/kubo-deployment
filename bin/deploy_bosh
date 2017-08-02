@@ -57,7 +57,7 @@ main() {
     exit 1
   fi
 
-  BOSH_LOG_LEVEL=debug "deploy_$iaas" "${bosh_env}" "${extra_filename}"
+  "deploy_$iaas" "${bosh_env}" "${extra_filename}"
   "$(repo_directory)/bin/set_bosh_alias" "${bosh_env}"
 }
 
@@ -106,7 +106,6 @@ deploy_openstack() {
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
-    --ops-file "$(repo_directory)/configurations/openstack/bosh-dynamic-net.yml" \
     --ops-file "$(repo_directory)/configurations/openstack/multi-tenant.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --state "${bosh_env}/state.json" \
