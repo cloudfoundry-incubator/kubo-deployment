@@ -17,6 +17,14 @@ function bosh() {
   command bosh int --var-errs --var-errs-unused ${@//--state=*/} > /dev/null
 }
 
+echo -e "\nUsed compiled releases\n"
+grep -r -i s3.amazonaws.com/bosh-compiled-release-tarballs . | grep -v grep
+
+echo -e "\nUsed stemcells\n"
+grep -r -i d/stemcells . | grep -v grep
+
+echo -e "\nExamples\n"
+
 echo "- AWS"
 bosh create-env bosh.yml \
   -o aws/cpi.yml \
@@ -100,7 +108,7 @@ echo "- AWS with UAA for BOSH development"
 bosh deploy bosh.yml \
   -o aws/cpi.yml \
   -o uaa.yml \
-  -o bosh-dev.yml \
+  -o misc/bosh-dev.yml \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_ip=test \
@@ -110,16 +118,18 @@ bosh deploy bosh.yml \
   -v default_key_name=test \
   -v default_security_groups=[test]
 
-echo "- AWS with external db"
+echo "- AWS with external db and dns"
 bosh create-env bosh.yml \
   -o aws/cpi.yml \
-  -o external-db.yml \
+  -o misc/external-db.yml \
+  -o misc/dns.yml \
   --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \
   -v internal_cidr=test \
   -v internal_gw=test \
   -v internal_ip=test \
+  -v internal_dns=[8.8.8.8] \
   -v access_key_id=test \
   -v secret_access_key=test \
   -v az=test \
@@ -232,7 +242,7 @@ bosh create-env bosh.yml \
 echo "- GCP with external db"
 bosh create-env bosh.yml \
   -o gcp/cpi.yml \
-  -o external-db.yml \
+  -o misc/external-db.yml \
   --state=$vars_store_prefix \
   --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
   -v director_name=test \

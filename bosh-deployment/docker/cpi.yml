@@ -10,8 +10,8 @@
 - type: replace
   path: /resource_pools/name=vms/stemcell?
   value:
-    url: https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=3421.4
-    sha1: e7c440fc20bb4bea302d4bfdc2369367d1a3666e
+    url: https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=3421.9
+    sha1: 1396d7877204e630b9e77ae680f492d26607461d
 
 - type: replace
   path: /networks/name=default/subnets/0/cloud_properties?

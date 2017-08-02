@@ -1,0 +1,7 @@
+# Use local bosh release tarball -- useful for testing
+
+- type: replace
+  path: /releases/name=bosh?
+  value:
+    name: bosh 
+    url: file://((local_bosh_release_tarball))

@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: credhub
-    version: 0.8.0
-    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/credhub-0.8.0-ubuntu-trusty-3421.3-20170605-211939-572118256-20170605211942.tgz?versionId=CBGcYsRPmtdzhSDhZSPrBPvIdyR.j4ah
-    sha1: 22c06a991a31e753e1d8537e3169e322f2a7092f
+    version: 1.2.0
+    url: https://bosh.io/d/github.com/pivotal-cf/credhub-release?v=1.2.0
+    sha1: b28b53dc55c1f1c8ef37edddc9ecad76e16f7d77
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
@@ -16,6 +16,8 @@
         authentication:
           uaa:
             url: "https://((internal_ip)):8443"
+            ca_certs:
+            - ((uaa_ssl.ca)) 
             verification_key: ((uaa_jwt_signing_key.public_key))
         data_storage:
           type: postgres
@@ -24,6 +26,7 @@
           username: postgres
           password: ((postgres_password))
           database: credhub
+          require_tls: false
         tls: ((credhub_tls))
         encryption:
           providers:
