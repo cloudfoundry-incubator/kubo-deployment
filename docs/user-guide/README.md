@@ -8,6 +8,7 @@ are GCP, vSphere and OpenStack.
 - [GCP](platforms/gcp/prerequisites.md)
 - [vSphere](platforms/vsphere/prerequisites.md)
 - [AWS](platforms/aws/prerequisites.md)
+- [OpenStack](platforms/openstack/prerequisites.md)
 
 ## Infrastructure paving
 
