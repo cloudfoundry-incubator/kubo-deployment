@@ -1,0 +1,9 @@
+---
+- type: replace
+  path: /networks/name=default?
+  value:
+    name: default
+    type: dynamic
+    subnets:
+    - cloud_properties:
+        net_id: ((net_id))
