@@ -57,7 +57,7 @@ main() {
     exit 1
   fi
 
-  "deploy_$iaas" "${bosh_env}" "${extra_filename}"
+  BOSH_LOG_LEVEL=debug "deploy_$iaas" "${bosh_env}" "${extra_filename}"
   "$(repo_directory)/bin/set_bosh_alias" "${bosh_env}"
 }
 
