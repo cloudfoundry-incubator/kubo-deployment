@@ -3,9 +3,9 @@
   path: /releases/-
   value:
     name: bosh-vsphere-cpi
-    version: 41
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release?v=41
-    sha1: 648ba9921739d30763063c80ad7a280e6410a1b6
+    version: 42
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release?v=42
+    sha1: 924e13a70f6ee26b388ced696080e4f020fdf84f
 
 - type: replace
   path: /resource_pools/name=vms/stemcell?
