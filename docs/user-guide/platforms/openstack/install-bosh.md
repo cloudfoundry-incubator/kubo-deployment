@@ -20,7 +20,12 @@
     ./bin/generate_env_config "${kubo_env}" ${kubo_env_name} openstack
     ```
 
-1.  Populate the environment config skeleton created at `${kubo_env_path}/director.yml`
+1.  Populate the environment config skeleton created at
+    `${kubo_env_path}/director.yml`.
+    
+    > Inside `director.yml`, `default_key_name` should be set to the name of
+      an OpenStack key pair. The private key from that pair will be required
+      when we deploy BOSH. We'll refer to this private key later as `private_key.pem`.
 
     The `kubo_env_path` will point to the folder containing the kubo settings,
     and will be referred to throughout this guide as `KUBO_ENV`.
@@ -28,7 +33,7 @@
 1. Deploy a BOSH director for Kubo
 
     ```bash
-    ./bin/deploy_bosh "${kubo_env_path}"  <openstack_private_key.pem>
+    ./bin/deploy_bosh "${kubo_env_path}" <private_key.pem>
     ```
     Credentials and SSL certificates for the environment will be generated and
     saved into the configuration path in a file called `creds.yml`. This file

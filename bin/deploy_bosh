@@ -12,7 +12,7 @@ print_usage() {
 cat << EOF
   Usage: $0 <BOSH environment path> <private or service account key filename for BOSH to use for deployments>
 
-  * Note: Private key is required for AWS, Azure and Openstack
+  * Note: Private key is required for AWS, Azure and OpenStack
   * Service account key is required for GCP
 EOF
 }
