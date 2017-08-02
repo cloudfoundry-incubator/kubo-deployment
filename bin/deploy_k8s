@@ -72,7 +72,6 @@ main() {
   manifest=$("$(repo_directory)/bin/generate_kubo_manifest" "${bosh_env}" "${deployment_name}" "$(get_director_uuid)")
   stemcell_version=$(echo -n "${manifest}" | bosh-cli int - --path '/stemcells/0/version')
   upload_stemcell "${release_source}" "${platform}" "${stemcell_version}"
-  set_runtime_config
 
   deploy_to_bosh "${manifest}" "${deployment_name}"
 }
