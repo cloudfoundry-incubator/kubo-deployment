@@ -69,7 +69,9 @@ deploy_bosh() {
   bosh_env=$1
   bosh_manifest=$2
 
-  echo -n "$bosh_manifest" | bosh-cli create-env - \
+  bosh_manifest_file="$(mktemp)"
+  echo "${bosh_manifest}" > "${bosh_manifest_file}"
+  bosh-cli create-env "${bosh_manifest_file}" \
     --vars-store "${bosh_env}/creds.yml" \
     --state "${bosh_env}/state.json"
 }
