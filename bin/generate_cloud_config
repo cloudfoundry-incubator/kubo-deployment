@@ -53,6 +53,10 @@ main() {
     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
   fi
 
+  if [[ -f "${CLOUD_CONFIG_OPS_FILE}" ]]; then
+    cloud_config=$(echo "${cloud_config}" | bosh-cli int - --ops-file="${CLOUD_CONFIG_OPS_FILE}")
+  fi
+
   echo -n "${cloud_config}"
 }
 
