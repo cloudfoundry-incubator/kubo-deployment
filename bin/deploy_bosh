@@ -36,16 +36,6 @@ main() {
 
   iaas=$(bosh-cli int "${bosh_env}/director.yml" --path /iaas)
 
-  set +e  # 'deploy_diagnostics' key is is optional
-  deploy_diagnostics=$(bosh-cli int ${bosh_env}/director.yml --path /deploy_diagnostics)
-  set -e
-
-  CREATE_ENV_SUFFIX=""
-  if [ "true" == "$deploy_diagnostics" ]; then
-    CREATE_ENV_SUFFIX="--ops-file \"$(repo_directory)/bosh-deployment/turbulence.yml\""
-  fi
-  export CREATE_ENV_SUFFIX
-
   if ! [[ "$iaas" =~ ^(gcp|openstack|vsphere|aws)$ ]]; then
     echo "Supported platforms are: 'gcp', 'openstack', 'vsphere', 'aws'"
     echo ""
@@ -88,7 +78,7 @@ generate_manifest_gcp() {
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --ops-file "$(repo_directory)/configurations/gcp/user-agent-config.yml" \
     --var-file gcp_credentials_json="${service_account_filename}" \
-    --vars-file "${bosh_env}/director.yml" ${CREATE_ENV_SUFFIX}
+    --vars-file "${bosh_env}/director.yml" ${BOSH_EXTRA_OPS}
 }
 
 generate_manifest_vsphere() {
@@ -103,8 +93,8 @@ generate_manifest_vsphere() {
     --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --vars-file "${bosh_env}/director.yml" \
-    --vars-file "${bosh_env}/director-secrets.yml" ${CREATE_ENV_SUFFIX}
-  }
+    --vars-file "${bosh_env}/director-secrets.yml" ${BOSH_EXTRA_OPS}
+}
 
 generate_manifest_openstack() {
   local bosh_env key_filename
@@ -116,12 +106,12 @@ generate_manifest_openstack() {
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/misc/powerdns.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
-    --ops-file "$(repo_directory)/configurations/openstack/bosh-dynamic-net.yml" \
     --ops-file "$(repo_directory)/configurations/openstack/multi-tenant.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --vars-file "${bosh_env}/director.yml"  \
     --vars-file "${bosh_env}/director-secrets.yml"  \
-    --var-file private_key="${key_filename}" ${CREATE_ENV_SUFFIX}
+    --var-file private_key="${key_filename}" ${BOSH_EXTRA_OPS}
+
 }
 
 generate_manifest_aws() {
@@ -137,7 +127,7 @@ generate_manifest_aws() {
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --vars-file "${bosh_env}/director.yml"  \
     --vars-file "${bosh_env}/director-secrets.yml"  \
-    --var-file private_key="${key_filename}" ${CREATE_ENV_SUFFIX}
+    --var-file private_key="${key_filename}" ${BOSH_EXTRA_OPS}
 }
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"
