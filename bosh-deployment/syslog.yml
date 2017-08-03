@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: syslog
-    version: 7
-    url: https://bosh.io/d/github.com/cloudfoundry/syslog-release?v=7
-    sha1: 7aca1a3633f12cc5ce760812959e62b6e51b8641
+    version: 11
+    url: https://bosh.io/d/github.com/cloudfoundry/syslog-release?v=11
+    sha1: 332ac15609b220a3fdf5efad0e0aa069d8235788
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-

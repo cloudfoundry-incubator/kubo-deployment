@@ -1,0 +1,12 @@
+releases:
+- name: dns
+  version: 0.0.2
+  url: https://bosh.io/d/github.com/cloudfoundry/dns-release?v=0.0.2
+  sha1: b075b0872363a9c6711b3832404edbae28ced05e
+
+addons:
+- name: dns
+  jobs:
+  - name: dns
+    release: dns
+    properties: {}

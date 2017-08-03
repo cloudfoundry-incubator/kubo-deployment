@@ -1,4 +1,4 @@
-internal_ip: ip # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into.
+internal_ip: internal_ip# Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into.
 
 deployments_network: # Network name to deploy service in your cloud config
 
@@ -19,7 +19,7 @@ kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest
 # IaaS routing mode settings
 # Comment this section when using CF routing mode
 routing_mode: iaas
-kubernetes_master_host: master# IP address that can be used to reach the Kubernetes API, usually the address of a load balancer
+kubernetes_master_host: host # IP address that can be used to reach the Kubernetes API, usually the address of a load balancer
 kubernetes_master_port: 8443 # Kubernetes API server port
 master_target_pool: # target pool that master nodes will be a part of
 worker_target_pool: # target pool that worker nodes will be a part of
@@ -41,14 +41,9 @@ worker_target_pool: # target pool that worker nodes will be a part of
 # https_proxy: # e.g. https://secure.proxy.local:5566
 # no_proxy: # e.g. '1.2.3.4,2.3.4.5'
 
-auth_url: # OpenStack authentication URL
 az: # Availability zone
-default_key_name: # Name of the SSH key pair
-default_security_groups: # List of security groups for the instances
-net_id: # OpenStack network identifier
-openstack_domain: # OpenStack domain (optional)
-openstack_project: # Openstack project ID
-openstack_tenant: # OpenStack tenant (required for multi-tenant environments)
-region: # OpenStack region (optional)
-openstack_username: # OpenStack admin username
-iaas: openstack
+subnet_id: # AWS Subnet ID
+default_key_name: # AWS Key Name
+default_security_groups: # Array of AWS Security Groups
+region: # AWS Region ID
+iaas: aws

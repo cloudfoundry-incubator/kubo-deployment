@@ -9,7 +9,7 @@ echo "====================================="
 echo ""
 
 print_usage() {
-cat << EOF
+cat >&2 << EOF
   Usage: $0 <BOSH environment path> <private or service account key filename for BOSH to use for deployments>
 
   * Note: Private key is required for AWS, Azure and OpenStack
@@ -23,9 +23,11 @@ repo_directory() {
 
 
 main() {
-  local bosh_env extra_filename iaas
+  local bosh_env extra_filename iaas bosh_manifest
 
   if [ ! -d "${1}" ]; then
+    echo "'$1' is not a directory" >&2
+    echo >&2
     print_usage
     exit 1
   fi
@@ -47,78 +49,82 @@ main() {
     exit 1
   fi
 
-  "deploy_$iaas" "${bosh_env}" "${extra_filename}"
+  bosh_manifest=$("generate_manifest_$iaas" "${bosh_env}" "${extra_filename}")
+  deploy_bosh "${bosh_env}" "${bosh_manifest}"
   "$(repo_directory)/bin/set_bosh_alias" "${bosh_env}"
 }
 
-deploy_gcp() {
-  local bosh_env service_account_filename
+deploy_bosh() {
+  local bosh_manifest bosh_env
+  bosh_env=$1
+  bosh_manifest=$2
+
+  bosh_manifest_file="$(mktemp)"
+  echo "${bosh_manifest}" > "${bosh_manifest_file}"
+  bosh-cli create-env "${bosh_manifest_file}" \
+    --vars-store "${bosh_env}/creds.yml" \
+    --state "${bosh_env}/state.json"
+}
+
+generate_manifest_gcp() {
+  local bosh_env service_account_filename bosh_manifest
   bosh_env="$1"
   service_account_filename="$2"
-
-  bosh-cli create-env "$(repo_directory)/bosh-deployment/bosh.yml"  \
+  bosh-cli int "$(repo_directory)/bosh-deployment/bosh.yml"  \
     --ops-file "$(repo_directory)/bosh-deployment/gcp/cpi.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/misc/powerdns.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --ops-file "$(repo_directory)/configurations/gcp/user-agent-config.yml" \
-    --state "${bosh_env}/state.json" \
     --var-file gcp_credentials_json="${service_account_filename}" \
-    --vars-store "${bosh_env}/creds.yml" \
     --vars-file "${bosh_env}/director.yml" ${BOSH_EXTRA_OPS}
 }
 
-deploy_vsphere() {
+generate_manifest_vsphere() {
   local bosh_env
   bosh_env="$1"
 
-  bosh-cli create-env "$(repo_directory)/bosh-deployment/bosh.yml"  \
+  bosh-cli int "$(repo_directory)/bosh-deployment/bosh.yml"  \
     --ops-file "$(repo_directory)/bosh-deployment/vsphere/cpi.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/vsphere/resource-pool.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/misc/powerdns.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
-    --state "${bosh_env}/state.json" \
-    --vars-store "${bosh_env}/creds.yml" \
     --vars-file "${bosh_env}/director.yml" \
     --vars-file "${bosh_env}/director-secrets.yml" ${BOSH_EXTRA_OPS}
 }
 
-deploy_openstack() {
+generate_manifest_openstack() {
   local bosh_env key_filename
   bosh_env="$1"
   key_filename="$2"
 
-  bosh-cli create-env  "$(repo_directory)/bosh-deployment/bosh.yml"  \
+  bosh-cli int  "$(repo_directory)/bosh-deployment/bosh.yml"  \
     --ops-file "$(repo_directory)/bosh-deployment/openstack/cpi.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/misc/powerdns.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/openstack/multi-tenant.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
-    --state "${bosh_env}/state.json" \
-    --vars-store "${bosh_env}/creds.yml" \
     --vars-file "${bosh_env}/director.yml"  \
     --vars-file "${bosh_env}/director-secrets.yml"  \
     --var-file private_key="${key_filename}" ${BOSH_EXTRA_OPS}
 
 }
 
-deploy_aws() {
+generate_manifest_aws() {
   local bosh_env key_filename
   bosh_env="$1"
   key_filename="$2"
 
-  bosh-cli create-env  "$(repo_directory)/bosh-deployment/bosh.yml"  \
+  bosh-cli int "$(repo_directory)/bosh-deployment/bosh.yml"  \
     --ops-file "$(repo_directory)/bosh-deployment/aws/cpi.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/powerdns.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/misc/powerdns.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
-    --state "${bosh_env}/state.json" \
-    --vars-store "${bosh_env}/creds.yml" \
     --vars-file "${bosh_env}/director.yml"  \
     --vars-file "${bosh_env}/director-secrets.yml"  \
     --var-file private_key="${key_filename}" ${BOSH_EXTRA_OPS}
