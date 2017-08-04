@@ -72,6 +72,14 @@ rules to secure access to the kubo deployment.
     git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git
     cd kubo-deployment/docs/user-guide/platforms/gcp
     ```
+1. Initialize the terraform cloud provider
+
+    ```bash
+    docker run -i -t \
+      -v $(pwd):/$(basename $(pwd)) \
+      -w /$(basename $(pwd)) \
+      hashicorp/terraform:light init
+    ```
 
 1. Create the resources (should take between 60-90 seconds):
 
