@@ -137,13 +137,9 @@ bosh-cli -e <KUBO_ENV_NAME> -d <MY_CLUSTER_NAME> delete-deployment
 
 ## Destroying the BOSH environment
 
-Execute `destroy_bosh` to destroy all the VMs that make up the BOSH environment.
+To destroy your BOSH environment, follow the guide for your specific platform:
 
-```bash
-bin/destroy_bosh <KUBO_ENV> ~/terraform.key.json
-```
-
-`terraform.key.json` is the GCP used in the Install BOSH step.
+* [GCP](platforms/gcp/destroy-bosh.md)
 
 ## Troubleshooting
 
