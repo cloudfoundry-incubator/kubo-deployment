@@ -1,6 +1,6 @@
-# Paving the infrastructure for Kubo on GCP
+# Paving the Infrastructure for Kubo on GCP
 
-## Setup the shell environment
+## Setup the Shell Environment
 
 1. In your existing Google Cloud Platform project, open Cloud Shell (the small `>_` prompt icon in the web console menu bar).
 
@@ -11,7 +11,7 @@
     export prefix=my-kubo # This prefix should be unique for every install
     ```
 
-1.  Configure the following environment variables:
+1.  Configure the environment variables that will be used in this guide:
 
     ```bash
     export project_id=$(gcloud config get-value project)
@@ -34,7 +34,7 @@
     gcloud config set compute/region ${region}
     ```
   
-## Setup a GCP account for terraform
+## Setup a GCP Account for Terraform
 
 1. Create a service account and key:
   
@@ -59,7 +59,7 @@
     export GOOGLE_CREDENTIALS=$(cat ~/terraform.key.json)
     ```
 
-## Deploy supporting infrastructure
+## Deploy Supporting Infrastructure
 
 This step sets up a subnetwork with a bastion VM and a set of firewall 
 rules to secure access to the kubo deployment.
@@ -72,7 +72,7 @@ rules to secure access to the kubo deployment.
     git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git
     cd kubo-deployment/docs/user-guide/platforms/gcp
     ```
-1. Initialize the terraform cloud provider
+1. Initialize the terraform cloud provider:
 
     ```bash
     docker run -i -t \
@@ -81,10 +81,10 @@ rules to secure access to the kubo deployment.
       hashicorp/terraform:light init
     ```
 
-1. Create the resources (should take between 60-90 seconds):
+1. Create the bastion and other resources (should take between 60-90 seconds):
 
     > _Note_: It's possible to preview the terraform execution plan before 
-    > applying it by running command below using `plan` in place of `apply`
+    > applying it by running `plan` instead of `apply`.
 
     ```bash
     docker run -i -t \
@@ -102,8 +102,10 @@ rules to secure access to the kubo deployment.
         -var subnet_ip_prefix=${subnet_ip_prefix}
     ```
 
-1. Copy the service account key to the newly created bastion box
+1. Copy the service account key to the newly created bastion box:
     
     ```bash
     gcloud compute scp ~/terraform.key.json "${prefix}bosh-bastion":./ --zone ${zone}
     ```
+    
+    This will be used later when we SSH into the bastion to deploy BOSH for Kubo.
