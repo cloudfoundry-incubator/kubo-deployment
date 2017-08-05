@@ -2,7 +2,7 @@
 
 ## Setup the shell environment
 
-1. Create an EC2 [key pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) 
+1. Create an EC2 [key pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html)
 named `deployer` and save the key file on your machine at ~/deployer.pem.
 
     Make sure that the key has the proper permissions by running the following command:
@@ -11,7 +11,7 @@ named `deployer` and save the key file on your machine at ~/deployer.pem.
     ```
 1. When deploying kubo more than once, it is required to set a unique prefix
   for every installation. Please use letters and dashes only.
-  
+
     ```bash
     export prefix=my-kubo # This prefix should be unique for every install
     ```
@@ -27,11 +27,11 @@ named `deployer` and save the key file on your machine at ~/deployer.pem.
     export zone=us-west-2a # zone that you will deploy Kubo in
     export public_subnet_ip_prefix="10.0.1" # subnet that will be used for bastion VM, NAT Gateway and load balancers
     export private_subnet_ip_prefix="10.0.2" # subnet that will be used for Kubo VMs and BOSH director
-    export kubo_terraform_state=~/terraform.tfstate 
+    export kubo_terraform_state=~/terraform.tfstate
     ```
-  
-    > When using the [CloudFoundry routing mode](../../routing/cf.md) the VPC above 
-    > needs to be the same network that CloudFoundry is using 
+
+    > When using the [CloudFoundry routing mode](../../routing/cf.md) the VPC above
+    > needs to be the same network that CloudFoundry is using
 
 ## Deploy supporting infrastructure
 
@@ -49,8 +49,7 @@ rules to secure access to the kubo deployment.
 
 1. Create the resources (should take between 60-90 seconds):
 
-    > _Note_: It's possible to preview the terraform execution plan by running the 
-    > same command, using `plan` in place of `apply`
+    > **Note:** It's possible to preview the terraform execution plan by running the same command, using `plan` in place of `apply`
 
     ```bash
     terraform apply \

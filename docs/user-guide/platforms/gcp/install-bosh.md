@@ -31,7 +31,7 @@
     /usr/bin/update_gcp_env "${kubo_env_path}/director.yml"
     ```
 
-    > _Note_: you can directly edit the configuration file located at `${kubo_env_path}/director.yml`
+    > **Note:** you can directly edit the configuration file located at `${kubo_env_path}/director.yml`
 
 1. Deploy the BOSH director for Kubo:
     

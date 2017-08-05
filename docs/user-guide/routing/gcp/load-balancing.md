@@ -48,4 +48,4 @@ Before deploying and configuring Kubo, you need to carry out the following steps
     /usr/bin/set_iaas_routing "${state_dir}/director.yml"
     ```
 
-    > _Note_: You can also set the configuration manually by editing <KUBO_ENV>/director.yml  
+    > **Note:** You can also set the configuration manually by editing <KUBO_ENV>/director.yml  
