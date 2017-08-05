@@ -135,6 +135,16 @@ bosh-cli -e <KUBO_ENV_NAME> -d <MY_CLUSTER_NAME> delete-deployment
 
 `KUBO_ENV_NAME` was set up in the Install BOSH step.
 
+## Destroying the BOSH environment
+
+Execute `destroy_bosh` to destroy all the VMs that make up the BOSH environment.
+
+```bash
+bin/destroy_bosh <KUBO_ENV> ~/terraform.key.json
+```
+
+`terraform.key.json` is the GCP used in the Install BOSH step.
+
 ## Troubleshooting
 
 See [troubleshooting section](troubleshooting.md) for solutions to most commonly encountered problems.
