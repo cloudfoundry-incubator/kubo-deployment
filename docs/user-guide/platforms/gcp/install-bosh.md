@@ -6,7 +6,7 @@
     gcloud compute ssh "${prefix}bosh-bastion" --zone ${zone}
     ```
     
-1. Change directory to the root of the `kubo-deployment` repo:
+1. Change directory to the root of the `kubo-deployment` repo, which was copied into the bastion during the paving step:
 
     ```bash
     cd /share/kubo-deployment
@@ -23,17 +23,17 @@
     ./bin/generate_env_config "${kubo_envs}" ${kubo_env_name} gcp
     ```
 
-   `kubo_env_path` will point to the directory containing the Kubo configuration, and will be referred to throughout this guide as `KUBO_ENV`.
+    `kubo_env_path` points to the directory containing the Kubo configuration, and will be referred to throughout this guide as `KUBO_ENV`.
 
-1. Apply the default networking settings onto the template by running `update_gcp_env`:
+1. The `update_gcp_env` command knows about the default network settings configured during the paving step. Execute it to apply those settings onto the template:
 
     ```bash
     /usr/bin/update_gcp_env "${kubo_env_path}/director.yml" 
     ```
 
-   > Alternatively, you can directly edit the configuration file located at `${kubo_env_path}/director.yml`
+    > _Note_: you can directly edit the configuration file located at `${kubo_env_path}/director.yml`
 
-1. Deploy a BOSH director for Kubo:
+1. Deploy the BOSH director for Kubo:
     
     ```bash
     ./bin/deploy_bosh "${kubo_env_path}" ~/terraform.key.json
