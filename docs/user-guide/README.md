@@ -135,7 +135,7 @@ bosh-cli -e <KUBO_ENV_NAME> -d <MY_CLUSTER_NAME> delete-deployment
 
 `KUBO_ENV_NAME` was set up in the Install BOSH step.
 
-## Destroying the BOSH environment
+## Destroying the BOSH Environment
 
 To destroy your BOSH environment, follow the guide for your specific platform:
 

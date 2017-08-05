@@ -1,4 +1,4 @@
-# Destroy the BOSH environment on GCP
+# Destroy the BOSH Environment on GCP
 
 Execute `destroy_bosh` to destroy all the VMs that make up the BOSH environment.
 
@@ -8,7 +8,7 @@ bin/destroy_bosh <KUBO_ENV> ~/terraform.key.json
 
 `terraform.key.json` is the GCP used in the [Install BOSH](install-bosh.md) step.
 
-## Destroy the infrastructure paved by terraform
+## Destroy the Infrastructure Paved by Terraform
 
 Use Terraform to destroy the resources created in the [Paving](paving.md) step. You'll need the same environmnent variables as in that step. Also, you'll need to change to the directory where your `terraform.tfstate` was created (most likely the same directory you executed `apply` in the Paving step).
 
