@@ -28,7 +28,7 @@
 1. The `update_gcp_env` command knows about the default network settings configured during the paving step. Execute it to apply those settings onto the template:
 
     ```bash
-    /usr/bin/update_gcp_env "${kubo_env_path}/director.yml" 
+    /usr/bin/update_gcp_env "${kubo_env_path}/director.yml"
     ```
 
     > _Note_: you can directly edit the configuration file located at `${kubo_env_path}/director.yml`
@@ -38,12 +38,5 @@
     ```bash
     ./bin/deploy_bosh "${kubo_env_path}" ~/terraform.key.json
     ```
-    Credentials and SSL certificates for the environment will be generated and
-    saved in a file called `creds.yml` located in `KUBO_ENV`. This file
-    contains sensitive information and should not be stored in VCS. The file
-    `state.json` contains 
-    [environment state for the BOSH environment](https://bosh.io/docs/cli-envs.html#deployment-state).
 
-    Subsequent runs of `bin/bosh_deploy` will apply changes made to
-    the configuration to an already existing BOSH installation, reusing
-    the credentials stored in the `creds.yml`.
+    `deploy_bosh` uses the Kubo configuration we generated and our GCP key from the paving step to deploy BOSH. After it's done, you will have a BOSH director with all the necessary components to deploy Kubo. During its execution, `deploy_bosh` generates credentials and SSL certificates for that BOSH driector and saves it in `creds.yml` located in `KUBO_ENV`. This file contains sensitive information and should not be stored in VCS. Also, the [state for the BOSH environment](https://bosh.io/docs/cli-envs.html#deployment-state) is stored in `state.json`. Subsequent runs of `deploy_bosh` will use `creds.yml` and `state.json` to intelligently apply changes to the BOSH environment.
