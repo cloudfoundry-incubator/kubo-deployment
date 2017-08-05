@@ -74,10 +74,10 @@ Once the infrastructure has been set up, a Kubernetes cluster can be deployed by
 
 ```bash
 cd /share/kubo-deployment
-bin/deploy_k8s <KUBO_ENV> <MY_CUSTOM_CLUSTER_NAME>
+bin/deploy_k8s <KUBO_ENV> <MY_CLUSTER_NAME>
 ```
 
-`KUBO_ENV` is located at `<ENV_PATH>/<ENV_NAME>` and `MY_CUSTOM_CLUSTER_NAME` is a unique name for the cluster. Run `bin/deploy_k8s --help` for more options on how to tell BOSH which release tarballs to use for the Kubo deployment:
+`KUBO_ENV` is located at `<ENV_PATH>/<ENV_NAME>` and `MY_CLUSTER_NAME` is a unique name for the cluster. Run `bin/deploy_k8s --help` for more options on how to tell BOSH which release tarballs to use for the Kubo deployment:
 
 * manually built from the local repo (`dev`)
 * precompiled from internet (`public`)
@@ -95,7 +95,7 @@ The `kubo-deployment` provides a number of ways to customize Kubo settings. Plea
 Once the cluster is deployed, setup `kubectl` and access your new Kubernetes cluster
 
 ```bash
-bin/set_kubeconfig <KUBO_ENV> <CLUSTER_NAME>
+bin/set_kubeconfig <KUBO_ENV> <MY_CLUSTER_NAME>
 ```
 
 To verify that the settings have been applied correctly, run the following command:
@@ -124,6 +124,16 @@ To use storage in the Kubo clusters the `cloud-provider` job must be configured 
 For documentation on configuring Kubernetes to access storage for your cloud-provider type see - https://kubernetes.io/docs/concepts/storage/persistent-volumes/
 
 > **Note:** Any resources that are provisioned by Kubernetes will not be deleted by BOSH when you delete your Kubo deployment. You will need to manage these resources if they are not deleted by Kubernetes before the deployment is deleted.
+
+## Destroying the Cluster
+
+Use the BOSH CLI if you want to destroy the cluster:
+
+```bash
+bosh-cli -e <KUBO_ENV_NAME> -d <MY_CLUSTER_NAME> delete-deployment
+```
+
+`KUBO_ENV_NAME` was set up in the Install BOSH step.
 
 ## Troubleshooting
 
