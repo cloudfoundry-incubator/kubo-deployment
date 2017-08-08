@@ -1,4 +1,14 @@
-# Kubo user guide
+# Kubo User guide
+
+1. [Prerequisites](#prerequisites)
+1. [Infrastructure Paving](#infrastructure-paving)
+1. [Deploying BOSH](#deploying-bosh)
+1. [Configure Kubo](#configure-kubo)
+1. [Deploying Kubo](#deploying-kubo)
+1. [Accessing Kubernetes](#accessing-kubernetes)
+1. [Destroying the Cluster](#destroying-the-cluster)
+1. [Destroying the BOSH Environment](#destroying-the-bosh-environment)
+1. [Troubleshooting](#troubleshooting)
 
 Kubo can be deployed on various infrastructure providers. The currently supported ones
 are GCP, vSphere and OpenStack.
@@ -10,7 +20,7 @@ are GCP, vSphere and OpenStack.
 - [AWS](platforms/aws/prerequisites.md)
 - [OpenStack](platforms/openstack/prerequisites.md)
 
-## Infrastructure paving
+## Infrastructure Paving
 
 Some platforms allow automatic infrastructure paving in order to prepare
 an environment for a Kubo deployment. Please follow the link for infrastructure
