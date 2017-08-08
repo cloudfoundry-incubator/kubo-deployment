@@ -65,24 +65,6 @@ The Cloud Foundry subnet must be able to route traffic directly to the Kubo subn
 
 Please follow the [install guide](docs/user-guide/README.md) for installation instructions.
 
-## Delete resources
-
-### Delete Kubernetes Cluster
-
-You can use the BOSH cli to delete your kubernetes deployment
-
-```
-bosh-cli -e kube -d kube delete-deployment
-```
-
-### Delete BOSH Director
-
-Use the following script to delete your BOSH director
-
-```
-bin/destroy_bosh ~/kubo-env/kube ~/kubo-env/kube/service_account.json
-```
-
 ## Troubleshooting
 
 Please refer to the [troubleshooting guide](docs/user-guide/troubleshooting.md) to look for solutions to the most common issues. 
