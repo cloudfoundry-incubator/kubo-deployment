@@ -54,7 +54,7 @@ main() {
   fi
 
   if [[ -f "${CLOUD_CONFIG_OPS_FILE}" ]]; then
-    cloud_config=$(bosh int <(echo "${cloud_config}") --ops-file="${CLOUD_CONFIG_OPS_FILE}")
+    cloud_config=$(bosh-cli int <(echo "${cloud_config}") --ops-file="${CLOUD_CONFIG_OPS_FILE}")
   fi
 
   echo -n "${cloud_config}"
