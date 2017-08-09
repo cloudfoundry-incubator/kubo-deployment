@@ -4,9 +4,13 @@ On platforms that support native load-balancers kubo can be configured to levera
 
 ## Prerequisites
 
-Before deploying and configuring Kubo, you need to carry out the following steps to setup the Load balancers:
-
-1. This guide expects the same environment variables to be available as the [BOSH install guide](../../platforms/gcp/install-bosh.md). If you're not continuing from that guide, be careful in the steps below not to use an unset environment variable.
+Before deploying and configuring Kubo, you need to carry out the following steps to 
+setup the Load balancer:
+   
+1. This guide expects to be run in the same bash session as the [BOSH install](../../platforms/gcp/install-bosh.md).
+   If, for some reason, that is not the case, please set the `kubo_env_name` variable to the name
+   of the Kubo environment before running the rest of the scripts.
+   
 
 1. On the BOSH bastion, change directory into the guide:
 
@@ -33,14 +37,12 @@ Before deploying and configuring Kubo, you need to carry out the following steps
         -state=${kubo_terraform_state}
     ```
 
-1. Export the outputs from the Terraform configuration:
-
-    ```bash
-    export master_target_pool=$(terraform output -state=${kubo_terraform_state} kubo_master_target_pool) # master_target_pool
-
-    export worker_target_pool=$(terraform output -state=${kubo_terraform_state} kubo_worker_target_pool) # worker_target_pool
-    export kubernetes_master_host=$(terraform output -state=${kubo_terraform_state} master_lb_ip_address) # kubernetes_master_host
-    ```
+1. To get the outputs for the configuration files, run the following snippet:
+   
+   ```bash
+   export master_target_pool=$(terraform output -state=${kubo_terraform_state} kubo_master_target_pool) # master_target_pool                                                                             
+   export kubernetes_master_host=$(terraform output -state=${kubo_terraform_state} master_lb_ip_address) # kubernetes_master_host
+   ```
 
 1. Update the Kubo environment:
 
@@ -48,4 +50,4 @@ Before deploying and configuring Kubo, you need to carry out the following steps
     /usr/bin/set_iaas_routing "${state_dir}/director.yml"
     ```
 
-    > **Note:** You can also set the configuration manually by editing <KUBO_ENV>/director.yml  
+    > **Note:** You can also set the configuration manually by editing <KUBO_ENV>/director.yml
