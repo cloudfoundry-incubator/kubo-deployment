@@ -5,6 +5,7 @@
     gce:
       project-id: ((project_id))
       network-name: ((network))
+      worker-node-tag: ((worker_node_tag))
 - type: replace
   path: /instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider?
   value:
@@ -12,3 +13,4 @@
     gce:
       project-id: ((project_id))
       network-name: ((network))
+      worker-node-tag: ((worker_node_tag))
