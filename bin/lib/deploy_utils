@@ -56,7 +56,6 @@ upload_release() {
   BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli upload-release "$release_name"
 }
 
-
 generate_manifest() {
   if [ $# -ne 4 ]; then
     echo "Required arguments are <path to kubo bosh environment>, <deployment name>, <base manifest path> and <director uuid> in ${BASH_SOURCE[0]}:generate_manifest()"
@@ -88,7 +87,6 @@ generate_manifest() {
   if bosh-cli int "${bosh_environment}/director.yml" --path='/no_proxy' &>/dev/null; then
     manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/add-no-proxy.yml")
   fi
-
 
   case "$routing_mode" in
     cf)
