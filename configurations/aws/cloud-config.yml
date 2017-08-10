@@ -18,10 +18,12 @@ vm_types:
   cloud_properties:
     instance_type: t2.small
     ephemeral_disk: {size: 25_000}
+    iam_instance_profile: alpaca-pv
 - name: worker
   cloud_properties:
     instance_type: m4.xlarge
     ephemeral_disk: {size: 100_000}
+    iam_instance_profile: alpaca-pv
 
 disk_types:
 - name: 10240
