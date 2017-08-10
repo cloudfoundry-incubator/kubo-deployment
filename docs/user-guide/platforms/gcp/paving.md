@@ -11,21 +11,25 @@
     export prefix=my-kubo # This prefix should be unique for every install
     ```
 
-1. Configure the environment variables that will be used in this guide:
+1. Create a GCP network using the [GCP dashboard](https://console.cloud.google.com). Then create a new subnet with a CIDR range with a mask exactly 24-bits large. In the example below, we're using a subnet with CIDR range `10.0.1.0/24`.
+
+    Export environment variables for these resources:
+
+    ```bash
+    export network=<your GCP network name>
+    export subnet_ip_prefix="10.0.1" # Your subnet prefix
+    ```
+
+    > **Note:** When using the [Cloud Foundry routing mode](../../routing/cf.md) the GCP network above needs to be the same network that CloudFoundry is using.
+
+1. Configure other environment variables that will be used in this guide:
 
     ```bash
     export project_id=$(gcloud config get-value project)
     export region=us-east1 # region that you will deploy Kubo in
     export zone=us-east1-d # zone that you will deploy Kubo in
     export service_account_email=${prefix}terraform@${project_id}.iam.gserviceaccount.com
-    export network=<An existing GCP network for deploying kubo>
-
-    # Make sure that the IP prefix below denotes a free CIDR range
-    export subnet_ip_prefix="10.0.1" # Create new subnet for deployment in $subnet_ip_prefix.0/24
     ```
-
-    > When using the [CloudFoundry routing mode](../../routing/cf.md) the GCP network above
-    > needs to be the same network that CloudFoundry is using
 
 1. Configure `gcloud` to use the region and zone specified above:
 
