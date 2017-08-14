@@ -3,15 +3,15 @@
   path: /releases/-
   value:
     name: bosh-vsphere-cpi
-    version: 41
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release?v=41
-    sha1: 648ba9921739d30763063c80ad7a280e6410a1b6
+    version: 42
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release?v=42
+    sha1: 924e13a70f6ee26b388ced696080e4f020fdf84f
 
 - type: replace
   path: /resource_pools/name=vms/stemcell?
   value:
-    url: https://bosh.io/d/stemcells/bosh-vsphere-esxi-ubuntu-trusty-go_agent?v=3421.4
-    sha1: f503cae5189d7561fb1081c78157759e0e077f7f
+    url: https://bosh.io/d/stemcells/bosh-vsphere-esxi-ubuntu-trusty-go_agent?v=3421.9
+    sha1: f5de77161ee2cc4014cde055c845f7b1cfc9f005
 
 # Configure sizes
 - type: replace

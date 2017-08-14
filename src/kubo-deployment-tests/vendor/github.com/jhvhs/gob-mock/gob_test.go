@@ -148,6 +148,15 @@ var _ = Describe("Integration", func() {
 			Expect(stderr).To(gbytes.Say("<1> printf One for all"))
 		})
 
+		It("propagates error when calling through", func() {
+			gobs := []Gob{SpyAndCallThrough("false")}
+			ApplyMocks(bash, gobs)
+			exitCode, err := bash.Run("false", []string{})
+
+			Expect(err).ToNot(HaveOccurred())
+			Expect(exitCode).To(Equal(1))
+		})
+
 		It("is able to call through on a condition", func() {
 			sourceString(`
 			test_main() {
@@ -182,6 +191,23 @@ var _ = Describe("Integration", func() {
 			Expect(stderr).To(gbytes.Say("<1> grep lemo"))
 			Expect(stderr).To(gbytes.Say("<1 received"))
 			Expect(stdout).To(gbytes.Say("lemons"))
+		})
+
+		It("propagates error when piping input to called through command", func() {
+			sourceString(`
+			test_main() {
+			  echo "Oranges and
+			  lemons
+			  say the bells
+			  of St. Clement's" | grep "$1"
+			}
+			`)
+
+			gobs := []Gob{SpyAndCallThrough("grep")}
+			ApplyMocks(bash, gobs)
+			exitCode, err := bash.Run("test_main", []string{"apple"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(exitCode).To(Equal(1))
 		})
 
 		Context("shallow mocking", func() {
@@ -273,14 +299,14 @@ var _ = Describe("Integration", func() {
 			Expect(string(stdout.Contents())).To(ContainSubstring("berries"))
 		})
 
-		It("does not propagate a subshell error when calling through", func() {
+		It("propagates a subshell error when calling through", func() {
 			sourceString(`test_main() { me=$(ls /bogus); }`)
 			gobs := []Gob{MockOrCallThrough("ls", "echo wild", "[ 1 -eq 1 ]")}
 			ApplyMocks(bash, gobs)
 			status, err := bash.Run("test_main", []string{})
 
-			Expect(status).To(Equal(0))
 			Expect(err).ToNot(HaveOccurred())
+			Expect(status).To(Equal(1))
 		})
 	})
 

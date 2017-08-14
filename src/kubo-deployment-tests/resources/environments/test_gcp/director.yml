@@ -1,5 +1,5 @@
 iaas: gcp
-project_id: # GCP project ID
+project_id: GCP_Project_ID # GCP project ID
 network: # GCP network
 subnetwork: # GCP subnetwork
 tags: # tags below are used if jumpbox and NAT were deployed using https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/blob/master/docs/bosh/main.tf
@@ -22,9 +22,6 @@ internal_gw: # internal gateway
 
 director_name: # user friendly Director name
 dns_recursor_ip: # DNS IP address for resolving non-BOSH hostnames
-
-stemcell_version: stemcell.version.gcp # version of the stemcell used in all Kubo deployments. Quote the version to satisfy YAML parsers
-stemcell_url: # path to a stemcell used in all Kubo deployments
 
 credhub_release_url: https://bosh.io/d/github.com/pivotal-cf/credhub-release?v=1.0.0
 kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release-latest.tgz

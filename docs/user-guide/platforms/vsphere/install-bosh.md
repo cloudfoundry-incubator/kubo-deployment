@@ -1,6 +1,7 @@
 # Deploying BOSH for KUBO on vSphere
 
-**Prerequisite:** The machine executing the commands below must be able to access VMs on the vSphere network. Depending on your network topology, a bastion host (jumpbox) may be needed.
+**Prerequisite:** The machine executing the commands below must be able to access VMs on the vSphere network.
+Depending on your network topology, a bastion host (jumpbox) may be needed.
 
 1. Clone the kubo-deployment repo and change directory into it.
 
@@ -20,10 +21,12 @@
     ./bin/generate_env_config "${kubo_env}" ${kubo_env_name} vsphere
     ```
 
-1.  Populate the environment config skeleton create at `${kubo_env_path}/director.yml`
-
-    The `kubo_env_path` will point to the folder containing the kubo settings,
+    The `kubo_env_path` will point to the folder containing the Kubo settings,
     and will be referred to throughout this guide as `KUBO_ENV`.
+
+1.  Populate the environment config skeleton created at `${kubo_env_path}/director.yml`
+    Fill the vSphere user password in the `${kubo_env_path}/director-secrets.yml`.
+    Make sure not to check that file into the VCS.
 
 1. Deploy a BOSH director for Kubo
 

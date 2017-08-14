@@ -11,13 +11,6 @@
   value: ((kubernetes_master_host))
 
 - type: replace
-  path: /variables/name=tls-kubernetes/options/alternative_names
-  value:
-  - ((cf-tcp-router-name))
-  - ((kubernetes_master_host))
-  - 10.100.200.1
-
-- type: replace
   path: /instance_groups/name=master/jobs/-
   value:
     name: kubernetes-api-route-registrar
@@ -33,16 +26,12 @@
 - type: replace
   path: /instance_groups/-
   value:
-    name: proxy
+    name: route-sync
     instances: 1
     networks:
     - name: ((deployments_network))
     azs: [z1]
     jobs:
-    - name: nginx
-      release: kubo
-    - name: flanneld
-      release: kubo
     - name: kubeconfig
       release: kubo
       properties:
@@ -50,10 +39,6 @@
         kubelet-password: ((kubelet-password))
         tls:
           kubernetes: ((tls-kubernetes))
-    - name: kubernetes-proxy
-      release: kubo
-      properties:
-        kubernetes-api-url: "https://((kubernetes_master_host)):((kubernetes_master_port))"
     - name: route-sync
       release: kubo
       properties:

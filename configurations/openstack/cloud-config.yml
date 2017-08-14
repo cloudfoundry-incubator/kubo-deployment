@@ -16,7 +16,7 @@ vm_types:
 
 - name: worker
   cloud_properties:
-    instance_type: m1.xlarge
+    instance_type: m1.large
     root_disk_size_gb: 100
 
 disk_types:

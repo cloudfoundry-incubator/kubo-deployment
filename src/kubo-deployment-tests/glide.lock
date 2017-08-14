@@ -1,10 +1,10 @@
 hash: 322b732fb2a9f02a3b10cf1bb0f95652b6a9a136a1c8b9e33edc9b6646d9df25
-updated: 2017-05-23T11:48:19.612949687+01:00
+updated: 2017-07-25T09:43:20.804392124+01:00
 imports:
 - name: github.com/jhvhs/gob-mock
-  version: 4c8dc9acd659b42f88b1aef44762d7f65e809458
+  version: 747b9f8df7ba67ed6abd4de82e8bb7e5deb021bf
 - name: github.com/onsi/ginkgo
-  version: 43e2af1f01ace55adbb6d7d0f30416476db1baae
+  version: 77a8c1e5c40d6bb6c5eb4dd4bdce9763564f6298
   subpackages:
   - config
   - extensions/table
@@ -14,15 +14,18 @@ imports:
   - internal/leafnodes
   - internal/remote
   - internal/spec
+  - internal/spec_iterator
   - internal/specrunner
   - internal/suite
   - internal/testingtproxy
   - internal/writer
   - reporters
   - reporters/stenographer
+  - reporters/stenographer/support/go-colorable
+  - reporters/stenographer/support/go-isatty
   - types
 - name: github.com/onsi/gomega
-  version: c90bd38f8da6e92f8b114953db2f0ad7361fb4b4
+  version: 334b8f472b3af5d541c5642701c1e29e2126f486
   subpackages:
   - format
   - gbytes
@@ -46,8 +49,8 @@ testImports:
 - name: github.com/tonnerre/golang-text
   version: 048ed3d792f7104850acbc8cfc01e5a6070f4c04
 - name: golang.org/x/sys
-  version: a408501be4d17ee978c04a618e7a1b22af058c0e
+  version: fb4cac33e3196ff7f507ab9b2d2a44b0142f5b5a
   subpackages:
   - unix
 - name: gopkg.in/yaml.v2
-  version: e4d366fc3c7938e2958e662b4258c7a89e1f0e3e
+  version: cd8b52f8269e0feb286dfeef29f8fe4d5b397e0b

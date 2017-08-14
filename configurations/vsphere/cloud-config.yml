@@ -34,7 +34,7 @@ vm_types:
 - name: worker
   cloud_properties:
     ram: 8192
-    cpu: 1
+    cpu: 4
     disk: 102400
 
 disk_types:

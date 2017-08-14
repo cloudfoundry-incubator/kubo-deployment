@@ -11,9 +11,10 @@ import (
 )
 
 var _ = Describe("Deploy KuBOSH", func() {
-	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp")
-	validvSphereEnvironment := path.Join(testEnvironmentPath, "test_vsphere")
-	validOpenstackEnvironment := path.Join(testEnvironmentPath, "test_openstack")
+	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp_with_creds")
+	validvSphereEnvironment := path.Join(testEnvironmentPath, "test_vsphere_with_creds")
+	validOpenstackEnvironment := path.Join(testEnvironmentPath, "test_openstack_with_creds")
+	validAwsEnvironment := path.Join(testEnvironmentPath, "test_aws_with_creds")
 
 	JustBeforeEach(func() {
 		bash.Source("", func(string) ([]byte, error) {
@@ -33,7 +34,7 @@ var _ = Describe("Deploy KuBOSH", func() {
 			code, err := bash.Run("main", params)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).NotTo(Equal(0))
-			Expect(stdout).To(gbytes.Say("Usage: "))
+			Expect(stderr).To(gbytes.Say("Usage: "))
 		},
 			Entry("has no arguments", []string{}),
 			Entry("has one argument", []string{"gcp"}),
@@ -60,35 +61,36 @@ var _ = Describe("Deploy KuBOSH", func() {
 			ApplyMocks(bash, []Gob{boshMock})
 		})
 
-		It("runs with a valid environment and an extra file", func() {
-			code, err := bash.Run("main", []string{validGcpEnvironment, pathFromRoot("README.md")})
-			Expect(err).NotTo(HaveOccurred())
-			Expect(code).To(Equal(0))
-		})
-
 		It("deploys to a GCP environment", func() {
 			code, err := bash.Run("main", []string{validGcpEnvironment, pathFromRoot("README.md")})
-			Expect(stderr).To(gbytes.Say("/bosh-deployment/gcp/cpi.yml"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
+			Expect(stderr).To(gbytes.Say("/bosh-deployment/gcp/cpi.yml"))
 		})
 
 		It("deploys to a vSphere environment", func() {
 			code, err := bash.Run("main", []string{validvSphereEnvironment, pathFromRoot("README.md")})
-			Expect(stderr).To(gbytes.Say("/bosh-deployment/vsphere/cpi.yml"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
+			Expect(stderr).To(gbytes.Say("/bosh-deployment/vsphere/cpi.yml"))
 		})
 
 		It("deploys to an Openstack environment", func() {
 			code, err := bash.Run("main", []string{validOpenstackEnvironment, pathFromRoot("README.md")})
-			Expect(stderr).To(gbytes.Say("/bosh-deployment/openstack/cpi.yml"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
+			Expect(stderr).To(gbytes.Say("/bosh-deployment/openstack/cpi.yml"))
+		})
+
+		It("deploys to an AWS environment", func() {
+			code, err := bash.Run("main", []string{validAwsEnvironment, pathFromRoot("README.md")})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr).To(gbytes.Say("/bosh-deployment/aws/cpi.yml"))
 		})
 
 		It("expands the environment path", func() {
-			relativePath := testEnvironmentPath + "/../environments/test_gcp"
+			relativePath := testEnvironmentPath + "/../environments/test_gcp_with_creds"
 			code, err := bash.Run("main", []string{relativePath, pathFromRoot("README.md")})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))

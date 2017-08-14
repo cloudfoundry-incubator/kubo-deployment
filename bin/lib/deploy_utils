@@ -57,74 +57,78 @@ upload_release() {
 }
 
 generate_manifest() {
-  if [ $# -ne 3 ]; then
-    echo "Required arguments are <path to kubo bosh environment>, <deployment name> and <base manifest path> in ${BASH_SOURCE[0]}:generate_manifest()"
+  if [ $# -ne 4 ]; then
+    echo "Required arguments are <path to kubo bosh environment>, <deployment name>, <base manifest path> and <director uuid> in ${BASH_SOURCE[0]}:generate_manifest()"
     exit 1
   fi
 
   local bosh_environment=$1
   local deployment_name=$2
   local manifest_path=$3
+  local director_uuid=$4
 
   manifest_dir=$(cd "$(dirname "${manifest_path}")"; pwd)
   manifest="$(cat "${manifest_path}")"
   local routing_mode="$(bosh-cli int "${bosh_environment}/director.yml" --path='/routing_mode')"
   local iaas="$(bosh-cli int "${bosh_environment}/director.yml" --path='/iaas')"
 
-  if [ -e "${bosh_environment}/${deployment_name}.yml" ]; then
-    manifest=$(echo "${manifest}" | bosh-cli int - --ops-file="${bosh_environment}/${deployment_name}.yml")
+  if [ -f "${bosh_environment}/${deployment_name}.yml" ]; then
+    manifest=$(bosh-cli int <(echo "${manifest}") --ops-file="${bosh_environment}/${deployment_name}.yml")
   fi
 
   if bosh-cli int "${bosh_environment}/director.yml" --path='/http_proxy' &>/dev/null; then
-    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/add-http-proxy.yml")
+    manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/add-http-proxy.yml")
   fi
 
   if bosh-cli int "${bosh_environment}/director.yml" --path='/https_proxy' &>/dev/null; then
-    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/add-https-proxy.yml")
+    manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/add-https-proxy.yml")
   fi
 
   if bosh-cli int "${bosh_environment}/director.yml" --path='/no_proxy' &>/dev/null; then
-    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/add-no-proxy.yml")
+    manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/add-no-proxy.yml")
   fi
-
 
   case "$routing_mode" in
     cf)
-      manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/cf-routing.yml")
-      manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
+      manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/cf-routing.yml")
+      if [ -f "${manifest_dir}/ops-files/remove-haproxy.yml" ]; then
+        manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
+      fi
     ;;
     proxy)
 
       if [ "openstack" == "$iaas" ] || [ "vsphere" == "$iaas" ]; then
-        manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/master-haproxy-"$iaas".yml")
+        manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/master-haproxy-"$iaas".yml")
       fi
 
-      manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/worker-haproxy.yml")
+      manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/worker-haproxy.yml")
       if [ "openstack" == "$iaas" ]; then
-        manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/worker-haproxy-openstack.yml")
+        manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/worker-haproxy-openstack.yml")
       fi
     ;;
     *)
-      manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
+      if [ -f "${manifest_dir}/ops-files/remove-haproxy.yml" ]; then
+        manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
+      fi
     ;;
   esac
 
-  if [ -e "${manifest_dir}/ops-files/${iaas}-cloud-provider.yml" ]; then
-    manifest=$(echo "$manifest" | bosh-cli int - --ops-file="${manifest_dir}/ops-files/${iaas}-cloud-provider.yml")
+  if [ -f "${manifest_dir}/ops-files/${iaas}-cloud-provider.yml" ]; then
+    manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/${iaas}-cloud-provider.yml" -v director_uuid="${director_uuid}")
   fi
 
-  if [ -e "${bosh_environment}/${deployment_name}-vars.yml" ]; then
-    manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/${deployment_name}-vars.yml")
+  if [ -f "${bosh_environment}/${deployment_name}-vars.yml" ]; then
+    manifest=$(bosh-cli int <(echo "${manifest}") --vars-file="${bosh_environment}/${deployment_name}-vars.yml")
   fi
 
-  manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/director.yml" --var=deployment_name="${deployment_name}")
+  manifest=$(bosh-cli int <(echo "${manifest}") --vars-file="${bosh_environment}/director.yml" --var=deployment_name="${deployment_name}")
 
-  if [ -e "${bosh_environment}/creds.yml" ]; then
-    manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/creds.yml")
+  if [ -f "${bosh_environment}/creds.yml" ]; then
+    manifest=$(bosh-cli int <(echo "${manifest}") --vars-file="${bosh_environment}/creds.yml")
   fi
 
-  if [ -e "${bosh_environment}/director-secrets.yml" ]; then
-    manifest=$(echo "${manifest}" | bosh-cli int - --vars-file="${bosh_environment}/director-secrets.yml")
+  if [ -f "${bosh_environment}/director-secrets.yml" ]; then
+    manifest=$(bosh-cli int <(echo "${manifest}") --vars-file="${bosh_environment}/director-secrets.yml")
   fi
 
   printf "%s" "${manifest}"
