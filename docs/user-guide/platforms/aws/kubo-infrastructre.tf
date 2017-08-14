@@ -161,6 +161,100 @@ data "aws_ami" "ubuntu" {
     owners = ["099720109477"] # Canonical
 }
 
+resource "aws_iam_role_policy" "kubernetes-cloud-provider-master" {
+    name = "kubernetes-cloud-provider-master"
+    role = "${aws_iam_role.kubernetes-cloud-provider-master.id}"
+
+    policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "ec2:*",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_instance_profile" "kubernetes-cloud-provider-master" {
+    name = "kubernetes-cloud-provider-master"
+    role = "${aws_iam_role.kubernetes-cloud-provider-master.name}"
+}
+
+resource "aws_iam_role" "kubernetes-cloud-provider-master" {
+    name = "kubernetes-cloud-provider-master"
+    assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "kubernetes-cloud-provider-worker" {
+    name = "kubernetes-cloud-provider-worker"
+    role = "${aws_iam_role.kubernetes-cloud-provider-worker.id}"
+
+    policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "ec2:Describe*",
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": "ec2:AttachVolume",
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": "ec2:DetachVolume",
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_instance_profile" "kubernetes-cloud-provider-worker" {
+    name = "kubernetes-cloud-provider-worker"
+    role = "${aws_iam_role.kubernetes-cloud-provider-worker.name}"
+}
+
+resource "aws_iam_role" "kubernetes-cloud-provider-worker" {
+    name = "kubernetes-cloud-provider-worker"
+    assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_instance" "bastion" {
     ami           = "${data.aws_ami.ubuntu.id}"
     instance_type = "t2.micro"
