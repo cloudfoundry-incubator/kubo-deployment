@@ -128,6 +128,7 @@ Kubo clusters currently support the following Kubernetes Volume types:
 - hostPath
 - gcePersistentDisk
 - VsphereVolume
+- AWSElasticBlockStore
 
 To use storage in the Kubo clusters the `cloud-provider` job must be configured on the master and worker instances. See the [cloud-provider spec](https://github.com/cloudfoundry-incubator/kubo-release/blob/master/jobs/cloud-provider/spec) for details on the properties that are needed for each cloud-provider type.
 

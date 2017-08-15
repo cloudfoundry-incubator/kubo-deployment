@@ -3,3 +3,5 @@ subnet_id: # AWS Subnet ID
 default_key_name: # AWS Key Name
 default_security_groups: # Array of AWS Security Groups
 region: # AWS Region ID
+master_iam_instance_profile: # IAM Instance profile required by cloud provider on k8s master
+worker_iam_instance_profile: # IAM Instance profile required by cloud provider on k8s worker
