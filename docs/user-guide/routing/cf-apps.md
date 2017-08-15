@@ -1,6 +1,9 @@
 # Enabling application access via CF routers
 [Cloud Foundry routers](https://docs.cloudfoundry.org/devguide/deploy-apps/routes-domains.html#http-vs-tcp-routes)
-can be used to expose both TCP and HTTP level routes to the applications deployed in the Kubo cluster.
+can be used to expose both TCP and HTTP level routes to the Kubernetes services.
+
+## Preconditions
+1. K8s service must be exposed using a single `NodePort`
 
 ## Creating TCP Routes
 1. Add a label to your service where the label is named `tcp-route-sync` and the value of the label is the frontend port that you want to expose your application on
