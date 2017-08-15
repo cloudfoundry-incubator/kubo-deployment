@@ -140,6 +140,9 @@ instance_groups:
   vm_type: worker
   persistent_disk_type: 10240
 
+tags:
+  KubernetesCluster: ((director_name))/((deployment_name))
+
 update:
   canaries: 1
   max_in_flight: 1
