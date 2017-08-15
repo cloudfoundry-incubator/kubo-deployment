@@ -68,10 +68,16 @@
             ],
             "Effect": "Allow",
             "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "iam:PassRole",
+            "Resource": "arn:aws:iam::<account_id>:role/*kubo*"
         }
     ]
 }
 ```
+> Please note that you will need to fill in your account id (without hyphens) in resource for `iam:PassRole`.
 
 1. Fill in `${kubo_env_path}/director-secrets.yml` with access key id and access key secret for the newly created user.
 
