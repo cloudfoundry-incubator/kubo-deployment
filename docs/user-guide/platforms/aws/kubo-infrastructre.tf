@@ -161,9 +161,9 @@ data "aws_ami" "ubuntu" {
     owners = ["099720109477"] # Canonical
 }
 
-resource "aws_iam_role_policy" "kubernetes-cloud-provider-master" {
-    name = "kubernetes-cloud-provider-master"
-    role = "${aws_iam_role.kubernetes-cloud-provider-master.id}"
+resource "aws_iam_role_policy" "kubo-master" {
+    name = "${var.prefix}kubo-master"
+    role = "${aws_iam_role.kubo-master.id}"
 
     policy = <<EOF
 {
@@ -179,13 +179,13 @@ resource "aws_iam_role_policy" "kubernetes-cloud-provider-master" {
 EOF
 }
 
-resource "aws_iam_instance_profile" "kubernetes-cloud-provider-master" {
-    name = "kubernetes-cloud-provider-master"
-    role = "${aws_iam_role.kubernetes-cloud-provider-master.name}"
+resource "aws_iam_instance_profile" "kubo-master" {
+    name = "${var.prefix}kubo-master"
+    role = "${aws_iam_role.kubo-master.name}"
 }
 
-resource "aws_iam_role" "kubernetes-cloud-provider-master" {
-    name = "kubernetes-cloud-provider-master"
+resource "aws_iam_role" "kubo-master" {
+    name = "${var.prefix}kubo-master"
     assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -203,9 +203,9 @@ resource "aws_iam_role" "kubernetes-cloud-provider-master" {
 EOF
 }
 
-resource "aws_iam_role_policy" "kubernetes-cloud-provider-worker" {
-    name = "kubernetes-cloud-provider-worker"
-    role = "${aws_iam_role.kubernetes-cloud-provider-worker.id}"
+resource "aws_iam_role_policy" "kubo-worker" {
+    name = "${var.prefix}kubo-worker"
+    role = "${aws_iam_role.kubo-worker.id}"
 
     policy = <<EOF
 {
@@ -231,13 +231,13 @@ resource "aws_iam_role_policy" "kubernetes-cloud-provider-worker" {
 EOF
 }
 
-resource "aws_iam_instance_profile" "kubernetes-cloud-provider-worker" {
-    name = "kubernetes-cloud-provider-worker"
-    role = "${aws_iam_role.kubernetes-cloud-provider-worker.name}"
+resource "aws_iam_instance_profile" "kubo-worker" {
+    name = "${var.prefix}kubo-worker"
+    role = "${aws_iam_role.kubo-worker.name}"
 }
 
-resource "aws_iam_role" "kubernetes-cloud-provider-worker" {
-    name = "kubernetes-cloud-provider-worker"
+resource "aws_iam_role" "kubo-worker" {
+    name = "${var.prefix}kubo-worker"
     assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
