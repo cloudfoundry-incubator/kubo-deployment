@@ -37,7 +37,43 @@
     
     > Alternatively, it is possible to directly edit the file located at `${kubo_env_path}/director.yml`
 
-1. Fill in `${kubo_env_path}/director-secrets.yml` with your access key id and access key secret
+1. Go to IAM console (or use [aws-cli](https://aws.amazon.com/cli/)) and create a user with `Programmatic access` and following policy:
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "ec2:AssociateAddress",
+                "ec2:AttachVolume",
+                "ec2:CreateVolume",
+                "ec2:DeleteSnapshot",
+                "ec2:DeleteVolume",
+                "ec2:DescribeAddresses",
+                "ec2:DescribeImages",
+                "ec2:DescribeInstances",
+                "ec2:DescribeRegions",
+                "ec2:DescribeSecurityGroups",
+                "ec2:DescribeSnapshots",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeVolumes",
+                "ec2:DetachVolume",
+                "ec2:CreateSnapshot",
+                "ec2:CreateTags",
+                "ec2:RunInstances",
+                "ec2:TerminateInstances",
+                "ec2:RegisterImage",
+                "ec2:DeregisterImage",
+                "elasticloadbalancing:*"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+1. Fill in `${kubo_env_path}/director-secrets.yml` with access key id and access key secret for the newly created user.
 
 1. Deploy a BOSH director for Kubo
     
