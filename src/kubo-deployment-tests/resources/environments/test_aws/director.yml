@@ -8,7 +8,7 @@ internal_cidr: # CIDR range that BOSH will deploy to
 internal_gw: # internal gateway
 kubernetes_master_port: 12345 # Port to use for Kubernetes API
 
-director_name: # user friendly Director name
+director_name: TheDirector # user friendly Director name
 dns_recursor_ip: # DNS IP address for resolving non-BOSH hostnames
 
 credhub_release_url: https://bosh.io/d/github.com/pivotal-cf/credhub-release?v=1.0.0
