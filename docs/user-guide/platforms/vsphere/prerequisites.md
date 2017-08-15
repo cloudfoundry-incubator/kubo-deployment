@@ -28,11 +28,6 @@ Please make sure to have all the following details:
         - Inventory
             - Modify cluster
         - Local operations
-    - Inventory Service
-        - vSphere Tagging
-            - Create vSphere Tag
-            - Delete vSphere Tag
-            - Edit vSphere Tag
     - Network
     - Resource
         - Assign virtual machine to resource pool
@@ -47,6 +42,7 @@ Please make sure to have all the following details:
         - Service configuration
         - Snapshot management
     - vApp
+    - vCenter Inventory Service
 
 1. vCenter IP address
 1. Username and password for the _bosh user_
