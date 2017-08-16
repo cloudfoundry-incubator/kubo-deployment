@@ -29,12 +29,8 @@ networks:
 - name: ((deployments_network))
   type: dynamic
   subnets:
-  - range: ((internal_cidr))
-    gateway: ((internal_gw))
-    azs: [z1]
+  - azs: [z1]
     dns: [((internal_ip))]
-    reserved:
-    - ((reserved_ips))
     cloud_properties:
       net_id: ((net_id))
 - name: vip

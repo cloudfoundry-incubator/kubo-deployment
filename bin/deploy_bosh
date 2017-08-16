@@ -106,6 +106,7 @@ generate_manifest_openstack() {
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/misc/powerdns.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
+    --ops-file "$(repo_directory)/configurations/openstack/bosh-dynamic-net.yml" \
     --ops-file "$(repo_directory)/configurations/openstack/multi-tenant.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --vars-file "${bosh_env}/director.yml"  \
