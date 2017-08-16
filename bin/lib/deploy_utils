@@ -110,6 +110,9 @@ generate_manifest() {
       if [ -f "${manifest_dir}/ops-files/remove-haproxy.yml" ]; then
         manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
       fi
+      if [[ "aws" == "$iaas" ]]; then
+        manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/aws-lb.yml")
+      fi
     ;;
   esac
 
