@@ -25,26 +25,20 @@ provider "aws" {
 resource "aws_security_group" "api" {
     name        = "${var.prefix}api-access"
     vpc_id = "${var.vpc_id}"
-}
 
-resource "aws_security_group_rule" "outbound" {
-    type            = "egress"
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    source_security_group_id = "${aws_security_group.api.id}"
+    ingress {
+      from_port   = 8443
+      to_port     = 8443
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
 
-    security_group_id = "${var.node_security_group_id}"
-}
-
-resource "aws_security_group_rule" "uaa" {
-    type            = "ingress"
-    from_port       = 8443
-    to_port         = 8443
-    protocol        = "-1"
-    source_security_group_id = "${aws_security_group.api.id}"
-
-    security_group_id = "${var.node_security_group_id}"
+    egress {
+      from_port       = 0
+      to_port         = 0
+      protocol        = "-1"
+      cidr_blocks     = ["0.0.0.0/0"]
+    }
 }
 
 resource "aws_security_group_rule" "api" {
@@ -81,29 +75,23 @@ resource "aws_elb" "api" {
 resource "aws_security_group" "apps" {
     name        = "${var.prefix}apps-access"
     vpc_id = "${var.vpc_id}"
+
+    ingress {
+      from_port   = 30000
+      to_port     = 32767
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    egress {
+      from_port       = 0
+      to_port         = 0
+      protocol        = "-1"
+      cidr_blocks     = ["0.0.0.0/0"]
+    }
 }
 
-resource "aws_security_group_rule" "apps-outbound" {
-    type            = "egress"
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    cidr_blocks     = ["0.0.0.0/0"]
-
-    security_group_id = "${var.node_security_group_id}"
-}
-
-resource "aws_security_group_rule" "apps-inbound" {
-    type            = "ingress"
-    from_port       = 30000
-    to_port         = 32767
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
-
-    security_group_id = "${var.node_security_group_id}"
-}
-
-resource "aws_security_group_rule" "apps-internal" {
+resource "aws_security_group_rule" "apps" {
     type            = "ingress"
     from_port       = 0
     to_port         = 0
