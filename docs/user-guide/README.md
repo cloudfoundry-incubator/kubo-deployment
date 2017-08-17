@@ -83,7 +83,7 @@ no_proxy: # e.g. '1.2.3.4,2.3.4.5'
 Once the infrastructure has been set up, a Kubernetes cluster can be deployed by running `deploy_k8s`. This command will download all the packages necessary to deploy Kubernetes, and then bring up the master, worker, and etcd nodes as a managed cluster:
 
 ```bash
-cd /share/kubo-deployment
+# From the kubo-deployment directory:
 bin/deploy_k8s <KUBO_ENV> <MY_CLUSTER_NAME>
 ```
 
