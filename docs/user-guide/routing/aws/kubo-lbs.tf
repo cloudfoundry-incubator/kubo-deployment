@@ -37,12 +37,12 @@ resource "aws_security_group_rule" "outbound" {
     security_group_id = "${var.node_security_group_id}"
 }
 
-resource "aws_security_group_rule" "uaa" {
+resource "aws_security_group_rule" "k8s-api" {
     type            = "ingress"
     from_port       = 8443
     to_port         = 8443
     protocol        = "-1"
-    source_security_group_id = "${aws_security_group.api.id}"
+    cidr_blocks     = [ "0.0.0.0/0" ]
 
     security_group_id = "${var.node_security_group_id}"
 }
