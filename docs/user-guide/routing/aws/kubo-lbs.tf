@@ -41,16 +41,6 @@ resource "aws_security_group" "api" {
     }
 }
 
-resource "aws_security_group_rule" "api" {
-    type            = "ingress"
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    source_security_group_id = "${aws_security_group.api.id}"
-
-    security_group_id = "${var.node_security_group_id}"
-}
-
 resource "aws_elb" "api" {
     name               = "${var.prefix}kubo-api"
     subnets = ["${var.public_subnet_id}"]
