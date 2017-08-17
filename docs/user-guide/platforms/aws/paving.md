@@ -47,6 +47,12 @@ rules to secure access to the kubo deployment.
     cd kubo-deployment/docs/user-guide/platforms/aws
     ```
 
+1. Initialise terraform working directory
+
+    ```bash
+    terraform init
+    ```
+
 1. Create the resources (should take between 60-90 seconds):
 
     > **Note:** It's possible to preview the terraform execution plan by running the same command, using `plan` in place of `apply`
