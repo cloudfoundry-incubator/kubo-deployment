@@ -179,6 +179,11 @@ resource "aws_iam_role_policy" "kubo-master" {
       "Effect": "Allow",
       "Action": "ec2:*",
       "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "elasticloadbalancing:*",
+      "Resource": "*"
     }
   ]
 }
