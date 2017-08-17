@@ -41,7 +41,7 @@ main() {
   elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "proxy" ]; then
 
     if [ "${bosh_iaas}" == "vsphere" ]; then
-        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/k8s_master_static_ip_vsphere.yml")
+        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/k8s_haproxy_static_ips_vsphere.yml")
     elif [ "${bosh_iaas}" == "openstack" ]; then
         cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
     else
