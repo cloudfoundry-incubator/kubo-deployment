@@ -24,7 +24,7 @@ variable "key_name" {
     type = "string"
 }
 
-variable "private_key" {
+variable "private_key_filename" {
     type = "string"
 }
 
@@ -293,14 +293,14 @@ resource "aws_instance" "bastion" {
             "sudo mkdir /share",
             "sudo chown ubuntu:ubuntu /share",
             "git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share/kubo-deployment",
-            "echo \"${var.private_key}\" > /home/ubuntu/deployer.pem",
+            "echo \"${file(var.private_key_filename)}\" > /home/ubuntu/deployer.pem",
             "chmod 600 /home/ubuntu/deployer.pem"
 	]
 
         connection {
             type     = "ssh"
             user = "ubuntu"
-            private_key = "${var.private_key}"
+            private_key = "${file(var.private_key_filename)}"
         }
     }
 

@@ -22,7 +22,7 @@ named `deployer` and save the key file on your machine at ~/deployer.pem.
     export AWS_SECRET_ACCESS_KEY=<Your AWS secret access key>
     export vpc_id=<An existing VPC for deploying kubo>
     export key_name=deployer # name of private key to use on Kubo VMs
-    export private_key="$(cat ~/${key_name}.pem)" # private key to use on Kubo VMs
+    export private_key_filename="~/${key_name}.pem" # private key to use on Kubo VMs
     export region=us-west-2 # region that you will deploy Kubo in
     export zone=us-west-2a # zone that you will deploy Kubo in
     export public_subnet_ip_prefix="10.0.1" # subnet that will be used for bastion VM, NAT Gateway and load balancers
@@ -65,7 +65,7 @@ rules to secure access to the kubo deployment.
       -var prefix="${prefix}" \
       -var public_subnet_ip_prefix="${public_subnet_ip_prefix}" \
       -var private_subnet_ip_prefix="${private_subnet_ip_prefix}" \
-      -var private_key="${private_key}" \
+      -var private_key_filename="${private_key_filename}" \
       -var key_name="${key_name}" \
       -state=${kubo_terraform_state}
     ```
