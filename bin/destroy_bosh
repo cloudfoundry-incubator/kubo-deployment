@@ -87,7 +87,8 @@ destroy_aws() {
     --state "${bosh_env}/state.json" \
     --var-file private_key="${key_filename}" \
     --vars-store "${bosh_env}/creds.yml" \
-    --vars-file "${bosh_env}/director.yml"
+    --vars-file "${bosh_env}/director.yml" \
+    --vars-file "${bosh_env}/director-secrets.yml"
 }
 
 destroy_vsphere() {
@@ -101,7 +102,7 @@ destroy_vsphere() {
       --state "${bosh_env}/state.json" \
       --vars-store "${bosh_env}/creds.yml" \
       --vars-file "${bosh_env}/director.yml" \
-      --vars-file "${bosh_env}/director-secrets.yml" 
+      --vars-file "${bosh_env}/director-secrets.yml"
 }
 
 destroy_openstack() {
