@@ -38,7 +38,7 @@
     > Alternatively, it is possible to directly edit the file located at `${kubo_env_path}/director.yml`
 
 1. Go to IAM console (or use [aws-cli](https://aws.amazon.com/cli/)) and create a user with `Programmatic access` and following policy:
-    > Please note that you will need to fill in your account id (without hyphens) in resource for iam:PassRole.
+    > Please note that you will need to fill in your account id (__without hyphens__) in resource for iam:PassRole.
     ```json
     {
         "Version": "2012-10-17",

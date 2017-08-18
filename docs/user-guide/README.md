@@ -141,8 +141,11 @@ For documentation on configuring Kubernetes to access storage for your cloud-pro
 Use the BOSH CLI if you want to destroy the cluster:
 
 ```bash
+bosh-cli -e <KUBO_ENV> login
 bosh-cli -e <KUBO_ENV_NAME> -d <MY_CLUSTER_NAME> delete-deployment
 ```
+
+Your username is admin and your password is the `admin_password` field in `<KUBO_ENV>/creds.yml`.
 
 `KUBO_ENV_NAME` was set up in the Install BOSH step.
 

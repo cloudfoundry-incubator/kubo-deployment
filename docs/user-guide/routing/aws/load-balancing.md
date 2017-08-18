@@ -1,7 +1,6 @@
 # Configuring AWS IaaS routing for Kubo
 
-On platforms that support native load-balancers kubo can be configured to leverage the
-IaaS load balancers. Currently, only the GCP and AWS platforms are supported.
+This document describes how to configure native AWS load balancers for Kubo.
 
 ## Prerequisites
 
