@@ -37,6 +37,10 @@ provider "aws" {
     region = "${var.region}"
 }
 
+resource "random_id" "kubernetes-cluster-tag" {
+  byte_length = 16
+}
+
 resource "aws_internet_gateway" "gateway" {
     vpc_id = "${var.vpc_id}"
 }
@@ -85,6 +89,7 @@ resource "aws_subnet" "private" {
 
     tags {
       Name = "${var.prefix}kubo-private"
+      KubernetesCluster = "${random_id.kubernetes-cluster-tag.b64}"
     }
 }
 
@@ -300,6 +305,7 @@ resource "aws_instance" "bastion" {
             "export default_key_name=${var.key_name}",
             "export region=${var.region}",
             "export zone=${var.zone}",
+            "export kubernetes_cluster_tag=${random_id.kubernetes-cluster-tag.b64}",
             "EOF'",
             "sudo mkdir /share",
             "sudo chown ubuntu:ubuntu /share",
