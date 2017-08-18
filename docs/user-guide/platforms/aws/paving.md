@@ -69,3 +69,4 @@ rules to secure access to the kubo deployment.
       -var key_name="${key_name}" \
       -state=${kubo_terraform_state}
     ```
+    > **Note:** The previously created bastion box will be deleted by subsequent runs of the `terraform apply`  
