@@ -1,4 +1,4 @@
 - type: replace
   path: /tags?
   value:
-    KubernetesCluster: ((director_name))/((deployment_name))
+    KubernetesCluster: ((kubernetes_cluster_tag))
