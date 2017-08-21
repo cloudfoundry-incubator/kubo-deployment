@@ -52,6 +52,7 @@ resource "aws_subnet" "public" {
 
     tags {
       Name = "${var.prefix}kubo-public"
+      KubernetesCluster = "${random_id.kubernetes-cluster-tag.b64}"
     }
 }
 
