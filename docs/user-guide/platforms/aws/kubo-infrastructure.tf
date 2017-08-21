@@ -37,6 +37,10 @@ provider "aws" {
     region = "${var.region}"
 }
 
+resource "random_id" "kubernetes-cluster-tag" {
+  byte_length = 16
+}
+
 resource "aws_internet_gateway" "gateway" {
     vpc_id = "${var.vpc_id}"
 }
@@ -48,6 +52,7 @@ resource "aws_subnet" "public" {
 
     tags {
       Name = "${var.prefix}kubo-public"
+      KubernetesCluster = "${random_id.kubernetes-cluster-tag.b64}"
     }
 }
 
@@ -85,6 +90,7 @@ resource "aws_subnet" "private" {
 
     tags {
       Name = "${var.prefix}kubo-private"
+      KubernetesCluster = "${random_id.kubernetes-cluster-tag.b64}"
     }
 }
 
@@ -287,7 +293,7 @@ resource "aws_instance" "bastion" {
             "curl -L https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.0.0/credhub-linux-1.0.0.tgz | tar zxv && sudo chmod a+x credhub && sudo mv credhub /usr/bin",
             "sudo curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/bin/kubectl && sudo chmod a+x /usr/bin/kubectl",
             "sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.27-linux-amd64 -o /usr/bin/bosh-cli && sudo chmod a+x /usr/bin/bosh-cli",
-            "sudo wget https://releases.hashicorp.com/terraform/0.7.7/terraform_0.7.7_linux_amd64.zip",
+            "sudo wget https://releases.hashicorp.com/terraform/0.10.2/terraform_0.10.2_linux_amd64.zip",
             "sudo unzip terraform*.zip -d /usr/local/bin",
             "sudo sh -c 'sudo cat > /etc/profile.d/bosh.sh <<'EOF'",
             "#!/bin/bash",
@@ -300,6 +306,7 @@ resource "aws_instance" "bastion" {
             "export default_key_name=${var.key_name}",
             "export region=${var.region}",
             "export zone=${var.zone}",
+            "export kubernetes_cluster_tag=${random_id.kubernetes-cluster-tag.b64}",
             "EOF'",
             "sudo mkdir /share",
             "sudo chown ubuntu:ubuntu /share",

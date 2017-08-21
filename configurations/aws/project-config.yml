@@ -5,3 +5,4 @@ default_security_groups: # Array of AWS Security Groups
 region: # AWS Region ID
 master_iam_instance_profile: # IAM Instance profile required by cloud provider on k8s master
 worker_iam_instance_profile: # IAM Instance profile required by cloud provider on k8s worker
+kubernetes_cluster_tag: # Tag to match public ELB subnet, Kubo workers subnet and Kubo worker VMs to make Kubernetes support ELB
