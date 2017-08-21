@@ -33,6 +33,11 @@ setup the Load balancers:
    export AWS_SECRET_ACCESS_KEY=<Your AWS secret access key>
    ``` 
 
+1. Initialise Terraform state
+
+   ```bash
+   terraform init
+   ```
 1. Create the resources
    
    ```bash
