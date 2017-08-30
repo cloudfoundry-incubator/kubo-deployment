@@ -5,11 +5,11 @@
 set -o pipefail -e
 
 print_usage() {
-  echo "Usage: $(basename "$0") [BOSH_ENV]"
+  echo "Usage: $(basename "$0") [KUBO_ENV]"
   echo ""
-  echo "BOSH_ENV is the path to your BOSH environment configuration folder"
+  echo "KUBO_ENV is the path to your Kubo environment configuration folder"
   echo ""
-  echo "This script sets up an alias in bosh-cli for your BOSH_ENV"
+  echo "This script sets up an alias in bosh-cli for your KUBO_ENV"
 }
 
 main() {

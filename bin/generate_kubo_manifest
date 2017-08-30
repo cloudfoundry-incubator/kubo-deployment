@@ -5,10 +5,10 @@ set -e -o pipefail
 [ -z "$DEBUG" ] || set -x
 
 print_help() {
-  echo "Usage: ${BASH_SOURCE[0]} [BOSH_ENV] [DEPLOYMENT_NAME] [DIRECTOR_UUID]"
+  echo "Usage: ${BASH_SOURCE[0]} [KUBO_ENV] [DEPLOYMENT_NAME] [DIRECTOR_UUID]"
   echo ""
-  echo "BOSH_ENV is the path to the KuBOSH environment folder."
-  echo "    If there is a creds.yml file in BOSH_ENV directory,"
+  echo "KUBO_ENV is the path to the Kubo environment folder."
+  echo "    If there is a creds.yml file in KUBO_ENV directory,"
   echo "    it will be used fill in the credentials during manifest"
   echo "    generation. Otherwise, BOSH director will search for the"
   echo "    credentials in CredHub"
@@ -16,11 +16,11 @@ print_help() {
   echo "DEPLOYMENT_NAME is the name for your k8s deployment"
   echo ""
   echo "A note on manifest customisation:"
-  echo "  - if a <BOSH_ENV>/<DEPLOYMENT_NAME>.yml is present,"
+  echo "  - if a <KUBO_ENV>/<DEPLOYMENT_NAME>.yml is present,"
   echo "    it will be interpreted as a set of go-patch(*) commands"
   echo "    and applied to the generated manifest."
   echo "    (*) see https://github.com/cppforlife/go-patch"
-  echo "  - if a <BOSH_ENV>/<DEPLOYMENT_NAME>-vars.yml is present,"
+  echo "  - if a <KUBO_ENV>/<DEPLOYMENT_NAME>-vars.yml is present,"
   echo "    it will be used to override the variables in the"
   echo "    generated manifest. See $(repo_directory)/manifests/kubo.yml"
   echo "    to discover which variables are available in the Kubo manifest."

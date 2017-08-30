@@ -93,7 +93,7 @@ Exit code 1
 
 ### Solution
 
-Please make sure that you are logged in with `bosh-cli`. The password can be found in `<BOSH_ENV>/creds.yml`, in the `admin_password` field.
+Please make sure that you are logged in with `bosh-cli`. The password can be found in `<KUBO_ENV>/creds.yml`, in the `admin_password` field.
 
 
 ## Master is not running after the update
@@ -110,11 +110,11 @@ Error: 'master/0 (20f5c31f-4329-46a7-ae03-484f0a17f6a3)' is not running after up
 
 #### Check the CF credentials
 
-Please check the fields `routing-cf-client-id` in `<BOSH_ENV>/director.yml` and `routing-cf-client-secret` in `<BOSH_ENV>/director-secrets.yml` and ensure that the UAAC credentials that you are using are valid. You can use the [UAAC CLI](https://docs.cloudfoundry.org/adminguide/uaa-user-management.html) to create and manage credentials.
+Please check the fields `routing-cf-client-id` in `<KUBO_ENV>/director.yml` and `routing-cf-client-secret` in `<KUBO_ENV>/director-secrets.yml` and ensure that the UAAC credentials that you are using are valid. You can use the [UAAC CLI](https://docs.cloudfoundry.org/adminguide/uaa-user-management.html) to create and manage credentials.
 
 #### Check the accessibility of the routing API URL
  
-Please check that the route to the TCP routing API URL is accessible.  The URL is defined in the field `routing-cf-api-url` in your `<BOSH_ENV>/director.yml`.
+Please check that the route to the TCP routing API URL is accessible.  The URL is defined in the field `routing-cf-api-url` in your `<KUBO_ENV>/director.yml`.
 
 ## Timeout failures during OSS deployment
 
@@ -131,7 +131,7 @@ If you have access to a domain then you can increase reliability by using it for
 When deploying K8S following a redeployment of BOSH, the following error message may be displayed:
 
 ```
-$ bin/deploy_k8s <BOSH_ENV> <NAME> public
+$ bin/deploy_k8s <KUBO_ENV> <NAME> public
 =====================================
 |     BOSH K8S Cluster Deployer     |
 =====================================
@@ -149,7 +149,7 @@ Exit code 1
 Reset BOSH alias to use new SSL certificate.
 
 ```
-$ bin/set_bosh_alias <BOSH_ENV>
+$ bin/set_bosh_alias <KUBO_ENV>
 ```
 
 ## Worker failure during deployment of second cluster
