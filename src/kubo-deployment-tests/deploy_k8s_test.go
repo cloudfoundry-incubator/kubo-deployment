@@ -28,6 +28,15 @@ var _ = Describe("Deploy K8s", func() {
 		})
 	})
 
+	Context("default", func() {
+		It("deploys with local release", func() {
+			code, err := bash.Run("main", []string{validGcpEnvironment, "deployment"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr).To(gbytes.Say("bosh-cli upload-release kubo-release.tgz"))
+		})
+	})
+
 	Context("skip", func() {
 		It("deploys with skip upload successfully", func() {
 			code, err := bash.Run("main", []string{validGcpEnvironment, "deployment", "skip"})
@@ -49,6 +58,7 @@ var _ = Describe("Deploy K8s", func() {
 			code, err := bash.Run("main", []string{validGcpEnvironment, "deployment", "local"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
+			Expect(stderr).To(gbytes.Say("bosh-cli upload-release kubo-release.tgz"))
 		})
 
 		It("uploads the stemcell successfully for GCP", func() {

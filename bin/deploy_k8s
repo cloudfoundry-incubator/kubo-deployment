@@ -61,7 +61,7 @@ main() {
 
   case ${release_source} in
     "dev"|"public"|"local"|"skip") ;;
-    "") release_source="public";;
+    "") release_source="local";;
     *) print_usage; exit 1;;
   esac
 
