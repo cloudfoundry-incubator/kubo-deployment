@@ -323,3 +323,7 @@ resource "aws_instance" "bastion" {
     }
 
 }
+
+output "bosh-bastion-ip" {
+    value = "${aws_instance.bastion.public_ip}"
+}

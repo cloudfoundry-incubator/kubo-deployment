@@ -1,11 +1,10 @@
 # Deploying BOSH for KUBO on AWS
 
-1. Find the Public DNS name of the bastion instance on AWS
-
 1. SSH onto the bastion created during the [paving step](paving.md)
 
     ```bash
-    ssh -i ~/deployer.pem ubuntu@<public DNS name>
+    cd $(dirname $kubo_terraform_state)
+    ssh -i ~/deployer.pem ubuntu@$(terraform output bosh-bastion-ip)
     ```
     
 1. Change directory to the root of the kubo-deployment repo
