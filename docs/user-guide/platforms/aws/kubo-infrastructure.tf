@@ -24,7 +24,7 @@ variable "key_name" {
     type = "string"
 }
 
-variable "private_key" {
+variable "private_key_filename" {
     type = "string"
 }
 
@@ -35,6 +35,10 @@ variable "prefix" {
 
 provider "aws" {
     region = "${var.region}"
+}
+
+resource "random_id" "kubernetes-cluster-tag" {
+  byte_length = 16
 }
 
 resource "aws_internet_gateway" "gateway" {
@@ -48,6 +52,7 @@ resource "aws_subnet" "public" {
 
     tags {
       Name = "${var.prefix}kubo-public"
+      KubernetesCluster = "${random_id.kubernetes-cluster-tag.b64}"
     }
 }
 
@@ -85,6 +90,7 @@ resource "aws_subnet" "private" {
 
     tags {
       Name = "${var.prefix}kubo-private"
+      KubernetesCluster = "${random_id.kubernetes-cluster-tag.b64}"
     }
 }
 
@@ -108,21 +114,27 @@ resource "aws_route_table_association" "private" {
 
 resource "aws_security_group" "nodes" {
     name        = "${var.prefix}node-access"
-    vpc_id = "${var.vpc_id}"
+    vpc_id      = "${var.vpc_id}"
+}
 
-    ingress {
-      from_port   = 8443
-      to_port     = 8443
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
+resource "aws_security_group_rule" "outbound" {
+    type            = "egress"
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
 
-    egress {
-      from_port       = 0
-      to_port         = 0
-      protocol        = "-1"
-      cidr_blocks     = ["0.0.0.0/0"]
-    }
+    security_group_id = "${aws_security_group.nodes.id}"
+}
+
+resource "aws_security_group_rule" "UAA" {
+    type        = "ingress"
+    from_port   = 8443
+    to_port     = 8443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+
+    security_group_id = "${aws_security_group.nodes.id}"
 }
 
 resource "aws_security_group_rule" "ssh" {
@@ -161,6 +173,105 @@ data "aws_ami" "ubuntu" {
     owners = ["099720109477"] # Canonical
 }
 
+resource "aws_iam_role_policy" "kubo-master" {
+    name = "${var.prefix}kubo-master"
+    role = "${aws_iam_role.kubo-master.id}"
+
+    policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "ec2:*",
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "elasticloadbalancing:*",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_instance_profile" "kubo-master" {
+    name = "${var.prefix}kubo-master"
+    role = "${aws_iam_role.kubo-master.name}"
+}
+
+resource "aws_iam_role" "kubo-master" {
+    name = "${var.prefix}kubo-master"
+    assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "kubo-worker" {
+    name = "${var.prefix}kubo-worker"
+    role = "${aws_iam_role.kubo-worker.id}"
+
+    policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "ec2:Describe*",
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": "ec2:AttachVolume",
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": "ec2:DetachVolume",
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_instance_profile" "kubo-worker" {
+    name = "${var.prefix}kubo-worker"
+    role = "${aws_iam_role.kubo-worker.name}"
+}
+
+resource "aws_iam_role" "kubo-worker" {
+    name = "${var.prefix}kubo-worker"
+    assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_instance" "bastion" {
     ami           = "${data.aws_ami.ubuntu.id}"
     instance_type = "t2.micro"
@@ -182,7 +293,7 @@ resource "aws_instance" "bastion" {
             "curl -L https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.0.0/credhub-linux-1.0.0.tgz | tar zxv && sudo chmod a+x credhub && sudo mv credhub /usr/bin",
             "sudo curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/bin/kubectl && sudo chmod a+x /usr/bin/kubectl",
             "sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.27-linux-amd64 -o /usr/bin/bosh-cli && sudo chmod a+x /usr/bin/bosh-cli",
-            "sudo wget https://releases.hashicorp.com/terraform/0.7.7/terraform_0.7.7_linux_amd64.zip",
+            "sudo wget https://releases.hashicorp.com/terraform/0.10.2/terraform_0.10.2_linux_amd64.zip",
             "sudo unzip terraform*.zip -d /usr/local/bin",
             "sudo sh -c 'sudo cat > /etc/profile.d/bosh.sh <<'EOF'",
             "#!/bin/bash",
@@ -195,19 +306,24 @@ resource "aws_instance" "bastion" {
             "export default_key_name=${var.key_name}",
             "export region=${var.region}",
             "export zone=${var.zone}",
+            "export kubernetes_cluster_tag=${random_id.kubernetes-cluster-tag.b64}",
             "EOF'",
             "sudo mkdir /share",
             "sudo chown ubuntu:ubuntu /share",
             "git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share/kubo-deployment",
-            "echo \"${var.private_key}\" > /home/ubuntu/deployer.pem",
+            "echo \"${file(var.private_key_filename)}\" > /home/ubuntu/deployer.pem",
             "chmod 600 /home/ubuntu/deployer.pem"
 	]
 
         connection {
             type     = "ssh"
             user = "ubuntu"
-            private_key = "${var.private_key}"
+            private_key = "${file(var.private_key_filename)}"
         }
     }
 
+}
+
+output "bosh-bastion-ip" {
+    value = "${aws_instance.bastion.public_ip}"
 }

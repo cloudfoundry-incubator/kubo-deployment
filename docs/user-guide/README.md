@@ -83,14 +83,14 @@ no_proxy: # e.g. '1.2.3.4,2.3.4.5'
 Once the infrastructure has been set up, a Kubernetes cluster can be deployed by running `deploy_k8s`. This command will download all the packages necessary to deploy Kubernetes, and then bring up the master, worker, and etcd nodes as a managed cluster:
 
 ```bash
-cd /share/kubo-deployment
+# From the kubo-deployment directory:
 bin/deploy_k8s <KUBO_ENV> <MY_CLUSTER_NAME>
 ```
 
 `KUBO_ENV` is located at `<ENV_PATH>/<ENV_NAME>` and `MY_CLUSTER_NAME` is a unique name for the cluster. Run `bin/deploy_k8s --help` for more options on how to tell BOSH which release tarballs to use for the Kubo deployment:
 
 * manually built from the local repo (`dev`)
-* precompiled from internet (`public`)
+* precompiled from internet (`public`) - This is the default option
 * manually downloaded to a specific location (`local`)
 * pre-uploaded to BOSH (`skip`)
 
@@ -128,6 +128,7 @@ Kubo clusters currently support the following Kubernetes Volume types:
 - hostPath
 - gcePersistentDisk
 - VsphereVolume
+- AWSElasticBlockStore
 
 To use storage in the Kubo clusters the `cloud-provider` job must be configured on the master and worker instances. See the [cloud-provider spec](https://github.com/cloudfoundry-incubator/kubo-release/blob/master/jobs/cloud-provider/spec) for details on the properties that are needed for each cloud-provider type.
 
@@ -140,8 +141,11 @@ For documentation on configuring Kubernetes to access storage for your cloud-pro
 Use the BOSH CLI if you want to destroy the cluster:
 
 ```bash
+bosh-cli -e <KUBO_ENV> login
 bosh-cli -e <KUBO_ENV_NAME> -d <MY_CLUSTER_NAME> delete-deployment
 ```
+
+Your username is admin and your password is the `admin_password` field in `<KUBO_ENV>/creds.yml`.
 
 `KUBO_ENV_NAME` was set up in the Install BOSH step.
 

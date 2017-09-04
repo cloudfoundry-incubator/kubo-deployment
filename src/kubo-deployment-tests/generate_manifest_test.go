@@ -97,6 +97,24 @@ var _ = Describe("Generate manifest", func() {
 			Expect(firstRun).To(Equal(secondRun))
 		})
 
+		It("does not include aws tags in the gcp manifest", func() {
+			bash.Run("main", []string{kuboEnv, "foo", "bar"})
+
+			Expect(stdout).NotTo(gbytes.Say("\ntags:\n  KubernetesCluster:"))
+		})
+
+		It("does include aws tags in the aws with iaas routing manifest", func() {
+			bash.Run("main", []string{filepath.Join(testEnvironmentPath, "test_aws"), "zing", "x"})
+
+			Expect(stdout).To(gbytes.Say("\ntags:\n  KubernetesCluster:"))
+		})
+
+		It("does include aws tags in the aws with cf routing mode manifest", func() {
+			bash.Run("main", []string{filepath.Join(testEnvironmentPath, "test_aws_cf"), "zing", "x"})
+
+			Expect(stdout).To(gbytes.Say("\ntags:\n  KubernetesCluster:"))
+		})
+
 		It("generates a manifest without the secrets", func() {
 			secretlessEnv := filepath.Join(testEnvironmentPath, "secretless")
 			status, err := bash.Run("main", []string{secretlessEnv, "sensors", "director_uuid"})

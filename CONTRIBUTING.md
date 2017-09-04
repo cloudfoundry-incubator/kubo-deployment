@@ -35,7 +35,7 @@ The sequence to run deployment tests includes the following steps:
 >  1. deploy a kubernetes cluster on the new KuBOSH
 >  1. deploy a workload on the cluster and make sure it is working
 
-Optionally, it is possible to tear down the service by running `bosh-cli -e <BOSH_ENV> -d <CLUSTER_DEPLOYMENT_NAME> delete-deployment` followed by the `bin/destroy_bosh` command.
+Optionally, it is possible to tear down the service by running `bosh-cli -e <KUBO_ENV> -d <CLUSTER_DEPLOYMENT_NAME> delete-deployment` followed by the `bin/destroy_bosh` command.
 
 ## Additional BOSH configuration
 We support only basic BOSH configuration. If you have some additional ops-file that will be useful for community, add them to https://github.com/cloudfoundry/bosh-deployment We have included this repo as a subtree and update it periodically.

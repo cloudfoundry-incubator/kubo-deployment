@@ -1,0 +1,7 @@
+- type: replace
+  path: /instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider?
+  value: &aws_cloud_provider
+    type: aws
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider?
+  value: *aws_cloud_provider

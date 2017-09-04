@@ -8,10 +8,10 @@
 
 1. The following OpenStack services:
    
-    - [Identity](http://www.openstack.org/software/openstack-shared-services/)
-    - [Compute](http://www.openstack.org/software/openstack-compute/)
-    - [Image](http://www.openstack.org/software/openstack-shared-services/)
-    - *(Recommended)* [OpenStack Networking](https://www.openstack.org/software/)
+    - [Identity](https://www.openstack.org/software/project-navigator#security)
+    - [Compute](https://www.openstack.org/software/project-navigator#compute)
+    - [Image](https://www.openstack.org/software/project-navigator#compute)
+    - *(Recommended)* [OpenStack Networking](https://www.openstack.org/software/project-navigator#networking)
       provides network scaling and automated management functions.
       **Please note:** Nova networking is known to work, but is not actively
       tested, as it is deprecated.
@@ -19,6 +19,7 @@
 1. An existing OpenStack project
 
 1. The network should be configured to allow the following traffic:
+    > **Note:** You can find the network settings in Compute > Access & Security, clicking the Manage Rules button for your security group.
 
     - Incoming TCP traffic for port 8443 for Kubernetes API 
     - Incoming TCP traffic for port range 30000-32765

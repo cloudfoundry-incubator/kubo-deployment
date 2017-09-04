@@ -115,6 +115,7 @@ instance_groups:
         ip_masq: false
         log_level: error
         storage_driver: overlay
+        default_ulimits: [ "nofile=65536" ]
       env: {}
   - name: kubeconfig
     release: kubo

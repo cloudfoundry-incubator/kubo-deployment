@@ -11,9 +11,9 @@ echo
 
 print_usage() {
   local release_path=$(cd $(basename "$0"/../..) > /dev/null; pwd)
-  echo "Usage: $(basename "$0") [BOSH_ENV] [DEPLOYMENT_NAME] [RELEASE_SOURCE]"
+  echo "Usage: $(basename "$0") [KUBO_ENV] [DEPLOYMENT_NAME] [RELEASE_SOURCE]"
   echo ""
-  echo "BOSH_ENV is the path to your BOSH environment configuration folder"
+  echo "KUBO_ENV is the path to your Kubo environment configuration folder"
   echo ""
   echo "DEPLOYMENT_NAME is the name of your kubo deployment"
   echo ""
@@ -21,10 +21,10 @@ print_usage() {
   echo "  options:"
   echo "     dev    - Build a dev release from the local machine."
   echo "              The kubo-release repo must exist in ${release_path}"
-  echo "     public - (default) Use published precompiled release from the Internet"
-  echo "              Uses 'kubo_release_url' from <BOSH_ENV>/director.yml"
+  echo "     public - Use published precompiled release from the Internet"
+  echo "              Uses 'kubo_release_url' from <KUBO_ENV>/director.yml"
   echo "              This option requires latest version of kubo-deployment"
-  echo "     local  - Use local tarball release"
+  echo "     local  - (default) Use local tarball release"
   echo "              The kubo-release.tgz must exist in ${release_path}"
   echo "     skip   - Use releases already uploaded to the BOSH director"
   echo ""
@@ -61,7 +61,7 @@ main() {
 
   case ${release_source} in
     "dev"|"public"|"local"|"skip") ;;
-    "") release_source="public";;
+    "") release_source="local";;
     *) print_usage; exit 1;;
   esac
 

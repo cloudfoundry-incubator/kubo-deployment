@@ -1,0 +1,4 @@
+- type: replace
+  path: /tags?
+  value:
+    KubernetesCluster: ((kubernetes_cluster_tag))

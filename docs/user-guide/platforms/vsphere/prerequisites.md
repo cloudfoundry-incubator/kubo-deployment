@@ -28,11 +28,6 @@ Please make sure to have all the following details:
         - Inventory
             - Modify cluster
         - Local operations
-    - Inventory Service
-        - vSphere Tagging
-            - Create vSphere Tag
-            - Delete vSphere Tag
-            - Edit vSphere Tag
     - Network
     - Resource
         - Assign virtual machine to resource pool
@@ -47,16 +42,18 @@ Please make sure to have all the following details:
         - Service configuration
         - Snapshot management
     - vApp
+    - vCenter Inventory Service
 
-1. vCenter IP address
-1. Username and password for the _bosh user_
-1. A vSphere datacenter name
-1. A name of an existing cluster in the datacenter
-1. A name for an existing datastore in the same datacenter
-1. A name for an existing resource pool in the cluster
-1. A name for a Templates folder
-1. A name for a VMs folder
-1. A name for a disks folder
+1. Ensure you have the following vSphere configuration details. These values will be required later during the deployment of BOSH and Kubo.
+    - vCenter IP address
+    - Username and password for the _bosh user_
+    - A vSphere datacenter name
+    - A name of an existing cluster in the datacenter
+    - A name for an existing datastore in the same datacenter
+    - A name for an existing resource pool in the cluster
+    - A name for a Templates folder
+    - A name for a VMs folder
+    - A name for a disks folder
 
 The folders mentioned above will be created during deployment if they do not exist at that time.
 
