@@ -53,8 +53,15 @@ main() {
     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
   fi
 
-  if [[ -f "${CLOUD_CONFIG_OPS_FILE}" ]]; then
-    cloud_config=$(bosh-cli int <(echo "${cloud_config}") --ops-file="${CLOUD_CONFIG_OPS_FILE}")
+  if [[ ! -z "${CLOUD_CONFIG_OPS_FILES}" ]]; then
+    local ops_string=""
+    while IFS=':' read -ra cloud_config_ops_files; do
+      for ops_file in ${cloud_config_ops_files[@]}; do
+        ops_string="${ops_string} --ops-file=${ops_file}"
+      done
+    done <<< "${CLOUD_CONFIG_OPS_FILES}"
+
+    cloud_config=$(bosh-cli int <(echo "${cloud_config}") ${ops_string})
   fi
 
   echo -n "${cloud_config}"
