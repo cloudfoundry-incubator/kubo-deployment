@@ -264,6 +264,7 @@ chmod a+x /usr/bin/set_iaas_routing
 
 # Get kubo-deployment
 wget https://storage.googleapis.com/kubo-public/kubo-deployment-latest.tgz
+mkdir /share
 tar -xvf kubo-deployment-latest.tgz -C /share
 chmod -R 777 /share
 
