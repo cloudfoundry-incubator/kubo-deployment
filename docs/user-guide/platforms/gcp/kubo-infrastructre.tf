@@ -230,7 +230,6 @@ sed -i -e 's/^\(network:\).*\(#.*\)/\1 ${var.network} \2/' "$1"
 sed -i -e 's/^\(subnetwork:\).*\(#.*\)/\1 ${google_compute_subnetwork.kubo-subnet.name} \2/' "$1"
 sed -i -e 's/^\(zone:\).*\(#.*\)/\1 ${var.zone} \2/' "$1"
 sed -i -e 's/^\(service_account:\).*\(#.*\)/\1 ${google_service_account.kubo.email} \2/' "$1"
-sed -i -e 's/^\(worker_node_tag:\).*\(#.*\)/\1 ${var.prefix}bosh-kubo-worker \2/' "$1"
 
 # Generic updates
 random_key=$$(hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom)
@@ -263,9 +262,10 @@ sed -i -e "s/^\(master_target_pool:\).*\(#.*\).*$/\1 $${master_target_pool} \2/"
 EOF
 chmod a+x /usr/bin/set_iaas_routing
 
-# Clone repo
+# Get kubo-deployment
+wget https://storage.googleapis.com/kubo-public/kubo-deployment-latest.tgz
 mkdir /share
-git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share/kubo-deployment
+tar -xvf kubo-deployment-latest.tgz -C /share
 chmod -R 777 /share
 
 # Install Terraform

@@ -12,9 +12,9 @@ releases:
   url: https://storage.googleapis.com/kubo-public/docker-28.0.1-ubuntu-trusty-3421.11-20170720-164316-303456764-20170720164324.tgz
   sha1: 0ac80f013cc686047cdd7ccc428a8784c5e691bc
 - name: haproxy
-  url: https://storage.googleapis.com/kubo-public/haproxy-8.3.0-ubuntu-trusty-3421.11-20170721-091831-348952426-20170721091831.tgz
-  sha1: 19f705d4958b24a4c49e9ec8770b5bee4ba454be
-  version: latest
+  version: 8.4.0
+  url: https://github.com/cloudfoundry-incubator/haproxy-boshrelease/releases/download/v8.4.0/haproxy-8.4.0.tgz
+  sha1: a3a911f0cf8e672b27c6cb16318fd8c7c77f5bde
 
 stemcells:
 - alias: trusty
