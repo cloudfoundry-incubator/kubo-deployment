@@ -40,10 +40,12 @@ rules to secure access to the kubo deployment.
 
 ### Steps
 
-1. Clone this repository and go into the installation docs directory:
+1. Get latest version of kubo-deployment:
 
     ```bash
-    git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git
+    cd ~
+    wget https://storage.googleapis.com/kubo-public/kubo-deployment-latest.tgz
+    tar -xvf kubo-deployment-latest.tgz
     cd kubo-deployment/docs/user-guide/platforms/aws
     ```
 
@@ -69,4 +71,4 @@ rules to secure access to the kubo deployment.
       -var key_name="${key_name}" \
       -state=${kubo_terraform_state}
     ```
-    > **Note:** The previously created bastion box will be deleted by subsequent runs of the `terraform apply`  
+    > **Note:** The previously created bastion box will be deleted by subsequent runs of the `terraform apply`

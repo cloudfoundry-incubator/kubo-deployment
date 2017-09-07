@@ -262,9 +262,9 @@ sed -i -e "s/^\(master_target_pool:\).*\(#.*\).*$/\1 $${master_target_pool} \2/"
 EOF
 chmod a+x /usr/bin/set_iaas_routing
 
-# Clone repo
-mkdir /share
-git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share/kubo-deployment
+# Get kubo-deployment
+wget https://storage.googleapis.com/kubo-public/kubo-deployment-latest.tgz
+tar -xvf kubo-deployment-latest.tgz -C /share
 chmod -R 777 /share
 
 # Install Terraform

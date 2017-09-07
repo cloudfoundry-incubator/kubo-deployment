@@ -78,8 +78,6 @@ no_proxy: # e.g. '1.2.3.4,2.3.4.5'
 
 ## Deploying Kubo
 
-> **Note:** Make sure you have the latest version of `kubo-deployment` before continuing. Using tarballs that contain old versions of `kubo-deployment` might result in an error.
-
 Once the infrastructure has been set up, a Kubernetes cluster can be deployed by running `deploy_k8s`. This command will download all the packages necessary to deploy Kubernetes, and then bring up the master, worker, and etcd nodes as a managed cluster:
 
 ```bash

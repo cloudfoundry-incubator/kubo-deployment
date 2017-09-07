@@ -2,10 +2,12 @@
 
 **Prerequisite:** The machine executing the commands below must be able to access VMs on the OpenStack network. Depending on your network topology, a bastion host (jumpbox) may be needed.
 
-1. Clone the kubo-deployment repo and change directory into it.
+1. Get latest version of kubo-deployment:
 
     ```bash
-    git clone https://github.com/cloudfoundry-incubator/kubo-deployment
+    cd ~
+    wget https://storage.googleapis.com/kubo-public/kubo-deployment-latest.tgz
+    tar -xvf kubo-deployment-latest.tgz
     cd kubo-deployment
     ```
 
@@ -22,7 +24,7 @@
 
 1.  Populate the environment config skeleton created at
     `${kubo_env_path}/director.yml`.
-    
+
     > Inside `director.yml`, `default_key_name` should be set to the name of
       an OpenStack key pair. The private key from that pair will be required
       when we deploy BOSH. We'll refer to this private key later as `private_key.pem`.

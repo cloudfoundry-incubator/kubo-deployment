@@ -70,11 +70,12 @@ rules to secure access to the kubo deployment.
 
 ### Steps
 
-1. Clone this repository and go into the installation docs directory:
+1. Get latest version of kubo-deployment:
 
     ```bash
     cd ~
-    git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git
+    wget https://storage.googleapis.com/kubo-public/kubo-deployment-latest.tgz
+    tar -xvf kubo-deployment-latest.tgz
     cd ~/kubo-deployment/docs/user-guide/platforms/gcp
     ```
 1. Initialize the terraform cloud provider:
