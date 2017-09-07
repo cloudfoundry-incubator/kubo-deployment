@@ -32,6 +32,8 @@
     hourlyBillingFlag: true
     networkComponents:
     - maxSpeed: 100
+    datacenter:
+      name: ((sl_datacenter))
 
 - type: replace
   path: /disk_pools/name=disks/disk_size

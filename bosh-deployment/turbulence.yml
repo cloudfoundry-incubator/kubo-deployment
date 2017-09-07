@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: turbulence
-    version: 0.7
-    url: https://bosh.io/d/github.com/cppforlife/turbulence-release?v=0.7
-    sha1: 6e9d33e7372925b55a929be6852c10758c0173cb
+    version: 0.8
+    url: https://bosh.io/d/github.com/cppforlife/turbulence-release?v=0.8
+    sha1: f9e20d7cc421bf5e71c74e397a690b1e660e15c5
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
@@ -16,7 +16,7 @@
       cert: ((turbulence_api_ssl))
       director:
         host: ((internal_ip))
-        ca_cert: ((director_ssl.ca))
+        cert: ((director_ssl))
         client: director_turbulence_api
         client_secret: ((director_turbulence_api_client_secret))
 

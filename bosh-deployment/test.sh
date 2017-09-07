@@ -18,10 +18,10 @@ function bosh() {
 }
 
 echo -e "\nUsed compiled releases\n"
-grep -r -i s3.amazonaws.com/bosh-compiled-release-tarballs . | grep -v grep
+grep -r -i s3.amazonaws.com/bosh-compiled-release-tarballs . | grep -v grep | grep -v ./.git
 
 echo -e "\nUsed stemcells\n"
-grep -r -i d/stemcells . | grep -v grep
+grep -r -i d/stemcells . | grep -v grep | grep -v ./.git
 
 echo -e "\nExamples\n"
 
@@ -400,6 +400,29 @@ bosh create-env bosh.yml \
   -v internal_ip=192.168.56.6 \
   -v internal_gw=192.168.56.1 \
   -v internal_cidr=192.168.56.0/24
+
+echo "- VirtualBox with IPv6 (remote)"
+bosh create-env bosh.yml \
+  --state=$vars_store_prefix \
+  --vars-store $(mktemp ${vars_store_prefix}.XXXXXX) \
+  -o virtualbox/cpi.yml \
+  -o virtualbox/outbound-network.yml \
+  -o jumpbox-user.yml \
+  -o uaa.yml \
+  -o credhub.yml \
+  -o misc/ipv6/bosh.yml \
+  -o misc/ipv6/uaa.yml \
+  -o misc/ipv6/credhub.yml \
+  -o virtualbox/remote.yml \
+  -o virtualbox/ipv6/cpi.yml \
+  -o virtualbox/ipv6/remote.yml \
+  -v director_name=vbox \
+  -v internal_cidr=fd7a:eeed:e696:969f:0000:0000:0000:0000/64 \
+  -v internal_gw=fd7a:eeed:e696:969f:0000:0000:0000:0001 \
+  -v internal_ip=fd7a:eeed:e696:969f:0000:0000:0000:0004 \
+  -v outbound_network_name=NatNetwork \
+  -v vbox_host=fd7a:eeed:e696:969f:0000:0000:0000:0001 \
+  -v vbox_username=test
 
 echo "- VirtualBox with BOSH Lite with garden-runc"
 bosh create-env bosh.yml \
