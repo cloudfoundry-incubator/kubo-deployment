@@ -3,8 +3,8 @@
   value:
     name: config-server
     version: 0.0.1
-    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/config-server-0.0.1-ubuntu-trusty-3421.9-20170621-054646-35724067-20170621054651.tgz?versionId=yZEwe6tPH17F9oFP4CgMg8s0fzN_VTzJ
-    sha1: bd991a7a43623fd056ca4041e78461fbd369b3d8
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/config-server-0.0.1-ubuntu-trusty-3445.7-20170901-011556-139681448-20170901011602.tgz?versionId=szQ96hNd7pCkgAnXTjVs4GAxA.GMTRnW
+    sha1: 89d01060b842a28af63f71cbdf03baca875fa905
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
