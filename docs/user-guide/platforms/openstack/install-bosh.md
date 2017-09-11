@@ -23,7 +23,7 @@
     ```
 
 1.  Populate the environment config skeleton created at
-    `${kubo_env_path}/director.yml`.
+    `${kubo_env_path}/director.yml` and `${kubo_env_path}/director-secrets.yml`.
 
     > Inside `director.yml`, `default_key_name` should be set to the name of
       an OpenStack key pair. The private key from that pair will be required
