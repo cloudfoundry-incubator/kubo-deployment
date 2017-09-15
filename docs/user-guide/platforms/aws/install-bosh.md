@@ -91,6 +91,6 @@
     `state.json` contains 
     [environment state for the BOSH environment](https://bosh.io/docs/cli-envs.html#deployment-state).
 
-    Subsequent runs of `bin/bosh_deploy` will apply changes made to
+    Subsequent runs of `bin/deploy_bosh` will apply changes made to
     the configuration to an already existing BOSH installation, reusing
     the credentials stored in the `creds.yml`.
