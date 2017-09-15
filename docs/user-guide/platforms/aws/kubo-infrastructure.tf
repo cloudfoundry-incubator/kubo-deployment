@@ -310,7 +310,8 @@ resource "aws_instance" "bastion" {
             "EOF'",
             "sudo mkdir /share",
             "sudo chown ubuntu:ubuntu /share",
-            "git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git /share/kubo-deployment",
+            "wget https://storage.googleapis.com/kubo-public/kubo-deployment-latest.tgz",
+            "tar -xvf kubo-deployment-latest.tgz -C /share",
             "echo \"${file(var.private_key_filename)}\" > /home/ubuntu/deployer.pem",
             "chmod 600 /home/ubuntu/deployer.pem"
 	]

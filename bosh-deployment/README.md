@@ -30,67 +30,21 @@ See [test.sh](test.sh) for example usage of different ops files.
 
 ## Sample installation instructions
 
-* [BOSH Lite on VirtualBox](docs/bosh-lite-on-vbox.md)
-* AWS (below)
-
-```
-$ git clone https://github.com/cloudfoundry/bosh-deployment ~/workspace/bosh-deployment
-
-# Create a directory to keep Director deployment
-$ mkdir -p ~/deployments/bosh-1
-
-$ cd ~/deployments/bosh-1
-
-# Deploy a Director -- ./creds.yml is generated automatically
-$ bosh create-env ~/workspace/bosh-deployment/bosh.yml \
-  --state ./state.json \
-  -o ~/workspace/bosh-deployment/aws/cpi.yml \
-  --vars-store ./creds.yml \
-  -v access_key_id=... \
-  -v secret_access_key=... \
-  -v region=us-east-1 \
-  -v az=us-east-1b \
-  -v default_key_name=bosh \
-  -v default_security_groups=[bosh] \
-  -v subnet_id=subnet-... \
-  -v director_name=bosh-1 \
-  -v internal_cidr=10.0.0.0/24 \
-  -v internal_gw=10.0.0.1 \
-  -v internal_ip=10.0.0.6 \
-  --var-file private_key=~/Downloads/bosh.pem
-
-# Alias deployed Director
-$ bosh -e 10.0.0.6 --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca) alias-env bosh-1
-
-# Log in to the Director
-$ export BOSH_CLIENT=admin
-$ export BOSH_CLIENT_SECRET=`bosh int ./creds.yml --path /admin_password`
-
-# Update cloud config -- single az
-$ bosh -e bosh-1 update-cloud-config ~/workspace/bosh-deployment/aws/cloud-config.yml \
-  -v az=us-east-1b \
-  -v subnet_id=subnet-... \
-  -v internal_cidr=10.0.0.0/24 \
-  -v internal_gw=10.0.0.1
-
-# Upload specific stemcell
-$ bosh -e bosh-1 upload-stemcell https://...
-
-# Get a deployment running
-$ git clone https://github.com/cppforlife/zookeeper-release ~/workspace/zookeeper-release
-$ bosh -e bosh-1 -d zookeeper deploy ~/workspace/zookeeper-release/manifests/zookeeper.yml
-```
-
-To generate creds (without deploying anything) or just to check if your manifest builds:
-
-```
-$ bosh int ~/workspace/bosh-deployment/bosh.yml \
-  --var-errs \
-  -o ~/workspace/bosh-deployment/aws/cpi.yml \
-  --vars-store ./creds.yml \
-  -v access_key_id=... \
-  -v secret_access_key=...
-```
+* [Create an environment](https://bosh.io/docs/init.html)
+    * [On Local machine (BOSH Lite)](https://bosh.io/docs/bosh-lite.html)
+    * [On AWS](https://bosh.io/docs/init-aws.html)
+    * [On Azure](https://bosh.io/docs/init-azure.html)
+    * [On OpenStack](https://bosh.io/docs/init-openstack.html)
+    * [On vSphere](https://bosh.io/docs/init-vsphere.html)
+    * [On vCloud](https://bosh.io/docs/init-vcloud.html)
+    * [On SoftLayer](https://bosh.io/docs/init-softlayer.html)
+    * [On Google Compute Platform](https://bosh.io/docs/init-google.html)
+* Access your BOSH director
+    * Through a VPN
+	    * [`bosh create-env`, OpenVPN option](https://github.com/dpb587/openvpn-bosh-release)
+    * Through a jumpbox
+	    * [`bosh create-env` option](https://github.com/cppforlife/jumpbox-deployment)
+    * [Expose Director on a Public IP](https://bosh.io/docs/init-external-ip.html) (not recommended)
 
 Please ensure you have security groups setup correctly. i.e:
 

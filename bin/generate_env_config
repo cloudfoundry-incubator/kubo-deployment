@@ -4,6 +4,10 @@
 
 set -o pipefail -e
 
+repo_directory() {
+  echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)"
+}
+
 print_usage() {
   echo ""
   echo "Usage: $0 PATH NAME IAAS"
@@ -58,12 +62,12 @@ main() {
     exit 1
   fi
 
-  source_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-
   bosh_env_dir="${bosh_path}/${bosh_name}"
   mkdir -p "$bosh_env_dir"
-  ensure_config_file "${source_dir}/configurations/$iaas/project-config.yml" "${source_dir}/configurations/generic/project-config.yml" "${bosh_env_dir}/director.yml"
-  ensure_config_file "${source_dir}/configurations/$iaas/project-secrets.yml" "${source_dir}/configurations/generic/project-secrets.yml" "${bosh_env_dir}/director-secrets.yml"
+  echo "Repo directory is [$(repo_directory)]"
+  ensure_config_file "$(repo_directory)/configurations/$iaas/project-config.yml" "$(repo_directory)/configurations/generic/project-config.yml" "${bosh_env_dir}/director.yml"
+  ensure_config_file "$(repo_directory)/configurations/$iaas/project-secrets.yml" "$(repo_directory)/configurations/generic/project-secrets.yml" "${bosh_env_dir}/director-secrets.yml"
+  echo "" >> "${bosh_env_dir}/director.yml"
   echo "iaas: $iaas" >> "${bosh_env_dir}/director.yml"
   echo "Update any generated files for your environment before deployment"
 }

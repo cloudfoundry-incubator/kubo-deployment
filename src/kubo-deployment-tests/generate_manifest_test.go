@@ -70,6 +70,7 @@ var _ = Describe("Generate manifest", func() {
 			Entry("kubernetes API URL", "\n      kubernetes-api-url: https://12\\.23\\.34\\.45:101928\n"),
 			Entry("Auto-generated kubelet password", "\n      kubelet-password: \\(\\(kubelet-password\\)\\)\n"),
 			Entry("Auto-generated admin password", "\n      admin-password: \\(\\(kubo-admin-password\\)\\)\n"),
+			Entry("worker node tag", "\n          worker-node-tag: TheDirector-grinder-worker"),
 		)
 
 		It("should include a variable section with tls-kubelet, tls-kubernetes", func() {

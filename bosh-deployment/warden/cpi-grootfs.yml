@@ -1,0 +1,4 @@
+---
+- type: replace
+  path: /cloud_provider/properties/warden_cpi/actions?/expand_stemcell_tarball
+  value: false

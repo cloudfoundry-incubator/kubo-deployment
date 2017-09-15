@@ -3,15 +3,15 @@
   path: /releases/-
   value:
     name: bosh-vsphere-cpi
-    version: 42
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release?v=42
-    sha1: 924e13a70f6ee26b388ced696080e4f020fdf84f
+    version: 44
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release?v=44
+    sha1: a4540e8182c6b3568e06c7b8c7c1801cc00e5667
 
 - type: replace
   path: /resource_pools/name=vms/stemcell?
   value:
-    url: https://bosh.io/d/stemcells/bosh-vsphere-esxi-ubuntu-trusty-go_agent?v=3421.9
-    sha1: f5de77161ee2cc4014cde055c845f7b1cfc9f005
+    url: https://bosh.io/d/stemcells/bosh-vsphere-esxi-ubuntu-trusty-go_agent?v=3445.7
+    sha1: 7384d9dec403ed7943f76c0ea508f7185a01ba0b
 
 # Configure sizes
 - type: replace
@@ -19,7 +19,7 @@
   value:
     cpu: 2
     ram: 4_096
-    disk: 20_000
+    disk: 40_000
 
 - type: replace
   path: /networks/name=default/subnets/0/cloud_properties?

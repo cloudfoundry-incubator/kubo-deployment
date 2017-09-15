@@ -31,7 +31,7 @@ main() {
   elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "iaas" ]; then
 
     if [ "${bosh_iaas}" == "gcp" ]; then
-       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/load_balancer_target_pools.yml")
+       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/load-balancer-target-pools.yml")
     elif [ "${bosh_iaas}" == "aws" ]; then
        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/aws-lb-cloud-config.yml")
     else
@@ -41,7 +41,7 @@ main() {
   elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "proxy" ]; then
 
     if [ "${bosh_iaas}" == "vsphere" ]; then
-        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/k8s_haproxy_static_ips_vsphere.yml")
+        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/k8s-haproxy-static-ips-vsphere.yml")
     elif [ "${bosh_iaas}" == "openstack" ]; then
         cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
     else
@@ -53,8 +53,15 @@ main() {
     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
   fi
 
-  if [[ -f "${CLOUD_CONFIG_OPS_FILE}" ]]; then
-    cloud_config=$(bosh-cli int <(echo "${cloud_config}") --ops-file="${CLOUD_CONFIG_OPS_FILE}")
+  if [[ ! -z "${CLOUD_CONFIG_OPS_FILES}" ]]; then
+    local ops_string=""
+    while IFS=':' read -ra cloud_config_ops_files; do
+      for ops_file in ${cloud_config_ops_files[@]}; do
+        ops_string="${ops_string} --ops-file=${ops_file}"
+      done
+    done <<< "${CLOUD_CONFIG_OPS_FILES}"
+
+    cloud_config=$(bosh-cli int <(echo "${cloud_config}") ${ops_string})
   fi
 
   echo -n "${cloud_config}"

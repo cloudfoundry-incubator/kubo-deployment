@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	. "github.com/jhvhs/gob-mock"
 	. "github.com/onsi/ginkgo"
@@ -61,12 +62,18 @@ var _ = Describe("Generate cloud config", func() {
 		Expect(command.Run()).To(Succeed())
 	})
 
-	It("applies an extra cloud config ops file when CLOUD_CONFIG_OPS_FILE variable is set", func() {
-		bash.Export("CLOUD_CONFIG_OPS_FILE", filepath.Join(resourcesPath, "ops-files", "cloud-config-plus.yml"))
+	It("applies extra cloud config ops files when CLOUD_CONFIG_OPS_FILES variable is set", func() {
+		opsFiles := []string{
+			filepath.Join(resourcesPath, "ops-files", "cloud-config-plus.yml"),
+			filepath.Join(resourcesPath, "ops-files", "cloud-config-plus-plus.yml"),
+		}
+
+		bash.Export("CLOUD_CONFIG_OPS_FILES", strings.Join(opsFiles, ":"))
 		status, err := bash.Run("main", []string{kuboEnv})
 		Expect(err).NotTo(HaveOccurred())
 		Expect(status).To(Equal(0))
 
 		Expect(stdout).To(gbytes.Say("machine_type: foo"))
+		Expect(stdout).To(gbytes.Say("tags: supertest"))
 	})
 })
