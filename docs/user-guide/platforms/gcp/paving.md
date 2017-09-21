@@ -11,14 +11,16 @@
     export prefix=my-kubo # This prefix should be unique for every install
     ```
 
-1. Create a GCP network using the [GCP dashboard](https://console.cloud.google.com/networking/networks/list). Configure a CIDR range with a mask exactly 24-bits large for a GCP subnet (it will be automatically created later). In the example below, we're using a subnet with CIDR range `10.0.1.0/24`.
+1. Create a VPC network using the [GCP dashboard](https://console.cloud.google.com/networking/networks/list). When you a create a VPC network, the dashboard will also force you to create a subnet. For now, just create a dummy subnet. After the VPC has been created, delete the dummy subnet.
 
-    Export environment variables for these resources:
+1.  Later on, our scripts will automatically create a subnet. To specify which IP range to use, export the subnet IP prefix:
 
     ```bash
-    export network=<your GCP network name>
+    export network=<your VPC network name>
     export subnet_ip_prefix="10.0.1" # Your subnet prefix
     ```
+    
+     In the above example, we used the prefix `10.0.1`. If you want to customize the prefix, please use a CIDR range with a mask exactly 24-bits large.
 
     > **Note:** When using the [Cloud Foundry routing mode](../../routing/cf.md) the GCP network above needs to be the same network that CloudFoundry is using.
 
