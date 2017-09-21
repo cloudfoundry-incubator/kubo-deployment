@@ -11,7 +11,7 @@
     export prefix=my-kubo # This prefix should be unique for every install
     ```
 
-1. Create a GCP network using the [GCP dashboard](https://console.cloud.google.com). Configure a CIDR range with a mask exactly 24-bits large for a GCP subnet (it will be automatically created later). In the example below, we're using a subnet with CIDR range `10.0.1.0/24`.
+1. Create a GCP network using the [GCP dashboard](https://console.cloud.google.com/networking/networks/list). Configure a CIDR range with a mask exactly 24-bits large for a GCP subnet (it will be automatically created later). In the example below, we're using a subnet with CIDR range `10.0.1.0/24`.
 
     Export environment variables for these resources:
 
