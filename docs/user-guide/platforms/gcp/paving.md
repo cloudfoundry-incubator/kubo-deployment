@@ -67,7 +67,7 @@
 
 ## Deploy Supporting Infrastructure
 
-For security purposes, the BOSH director we'll be creating will not be directly accessible to the public internet. Instead, commands will be proxied through a (bastion)[https://en.wikipedia.org/wiki/Bastion_host] VM. 
+For security purposes, the BOSH director we'll be creating will not be directly accessible to the public internet. Instead, commands will be proxied through a [bastion](https://en.wikipedia.org/wiki/Bastion_host) VM. 
 
 We'll use terraform to set up the bastion and the appropriate set of firewall rules.
 
