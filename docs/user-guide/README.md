@@ -82,6 +82,8 @@ Once the infrastructure has been set up, a Kubernetes cluster can be deployed by
 
 `deploy_k8s` will require the `KUBO_ENV` and a cluster name. Refer for previous instructions for the location of `KUBO_ENV`. As for the cluster name, you can use any string, in this case we're using `my-cluster`.
 
+> Make sure you're running the follow commands inside the `kubo-deployment` directory. If you had followed the steps in the _Infrastructure Paving_ section above, then you should SSH into the bastion VM to find `kubo-deployment`.
+
 ```bash
 export cluster_name=my-cluster
 # From the kubo-deployment directory:
