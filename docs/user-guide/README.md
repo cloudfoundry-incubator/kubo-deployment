@@ -80,12 +80,15 @@ no_proxy: # e.g. '1.2.3.4,2.3.4.5'
 
 Once the infrastructure has been set up, a Kubernetes cluster can be deployed by running `deploy_k8s`. This command will download all the packages necessary to deploy Kubernetes, and then bring up the master, worker, and etcd nodes as a managed cluster:
 
+`deploy_k8s` will require the `KUBO_ENV` and a cluster name. Refer for previous instructions for the location of `KUBO_ENV`. As for the cluster name, you can use any string, in this case we're using `my-cluster`.
+
 ```bash
+export cluster_name=my-cluster
 # From the kubo-deployment directory:
-bin/deploy_k8s <KUBO_ENV> <MY_CLUSTER_NAME>
+bin/deploy_k8s <KUBO_ENV> ${cluster_name}
 ```
 
-`KUBO_ENV` is located at `<ENV_PATH>/<ENV_NAME>` and `MY_CLUSTER_NAME` is a unique name for the cluster. Run `bin/deploy_k8s --help` for more options on how to tell BOSH which release tarballs to use for the Kubo deployment:
+Run `bin/deploy_k8s --help` for more options on how to tell BOSH which release tarballs to use for the Kubo deployment:
 
 * manually built from the local repo (`dev`)
 * precompiled from internet (`public`)
@@ -103,7 +106,7 @@ The `kubo-deployment` provides a number of ways to customize Kubo settings. Plea
 Once the cluster is deployed, setup `kubectl` and access your new Kubernetes cluster
 
 ```bash
-bin/set_kubeconfig <KUBO_ENV> <MY_CLUSTER_NAME>
+bin/set_kubeconfig <KUBO_ENV> ${cluster_name}
 ```
 
 To verify that the settings have been applied correctly, run the following command:
@@ -140,7 +143,7 @@ Use the BOSH CLI if you want to destroy the cluster:
 
 ```bash
 bosh-cli -e <KUBO_ENV> login
-bosh-cli -e <KUBO_ENV_NAME> -d <MY_CLUSTER_NAME> delete-deployment
+bosh-cli -e <KUBO_ENV_NAME> -d ${cluster_name} delete-deployment
 ```
 
 Your username is admin and your password is the `admin_password` field in `<KUBO_ENV>/creds.yml`.
