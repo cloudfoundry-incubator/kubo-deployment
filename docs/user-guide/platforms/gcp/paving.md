@@ -67,8 +67,9 @@
 
 ## Deploy Supporting Infrastructure
 
-This step sets up a subnetwork with a bastion VM and a set of firewall
-rules to secure access to the kubo deployment.
+For security purposes, the BOSH director we'll be creating will not be directly accessible to the public internet. Instead, commands will be proxied through a (bastion)[https://en.wikipedia.org/wiki/Bastion_host] VM. 
+
+We'll use terraform to set up the bastion and the appropriate set of firewall rules.
 
 ### Steps
 
