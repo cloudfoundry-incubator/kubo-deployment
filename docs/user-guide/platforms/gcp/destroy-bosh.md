@@ -28,3 +28,26 @@ docker run -i -t \
     -var zone=${zone} \
     -var subnet_ip_prefix=${subnet_ip_prefix}
 ```
+
+## Teardown the GCP Account created for Terraform
+
+1. Remove the IAM policy binding
+
+    ```bash
+    gcloud projects remove-iam-policy-binding ${project_id} \
+      --member serviceAccount:${service_account_email} \
+      --role roles/owner
+    ```
+
+1. Remove the service account
+
+   ```bash
+   gcloud iam service-accounts delete ${service_account_email}
+   ```
+   
+1. Remove the service account key JSON from your computer
+
+   ```bash
+   rm ~/terraform.key.json
+   ```
+   
