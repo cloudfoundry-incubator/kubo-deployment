@@ -8,6 +8,7 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
+	"fmt"
 )
 
 var _ = Describe("Deploy KuBOSH", func() {
@@ -22,6 +23,7 @@ var _ = Describe("Deploy KuBOSH", func() {
 		})
 	})
 
+	mockKeyFile := pathFromRoot("README.md")
 	Context("fails", func() {
 		BeforeEach(func() {
 			boshCli := SpyAndConditionallyCallThrough("bosh-cli", "[[ \"$1\" =~ ^int ]]")
@@ -42,7 +44,7 @@ var _ = Describe("Deploy KuBOSH", func() {
 		)
 
 		It("is given an invalid environment path", func() {
-			code, err := bash.Run(pathToScript("deploy_bosh"), []string{pathFromRoot(""), pathFromRoot("README.md")})
+			code, err := bash.Run(pathToScript("deploy_bosh"), []string{pathFromRoot(""), mockKeyFile})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).NotTo(Equal(0))
 		})
@@ -62,28 +64,28 @@ var _ = Describe("Deploy KuBOSH", func() {
 		})
 
 		It("deploys to a GCP environment", func() {
-			code, err := bash.Run("main", []string{validGcpEnvironment, pathFromRoot("README.md")})
+			code, err := bash.Run("main", []string{validGcpEnvironment, mockKeyFile})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 			Expect(stderr).To(gbytes.Say("/bosh-deployment/gcp/cpi.yml"))
 		})
 
 		It("deploys to a vSphere environment", func() {
-			code, err := bash.Run("main", []string{validvSphereEnvironment, pathFromRoot("README.md")})
+			code, err := bash.Run("main", []string{validvSphereEnvironment, mockKeyFile})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 			Expect(stderr).To(gbytes.Say("/bosh-deployment/vsphere/cpi.yml"))
 		})
 
 		It("deploys to an Openstack environment", func() {
-			code, err := bash.Run("main", []string{validOpenstackEnvironment, pathFromRoot("README.md")})
+			code, err := bash.Run("main", []string{validOpenstackEnvironment, mockKeyFile})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 			Expect(stderr).To(gbytes.Say("/bosh-deployment/openstack/cpi.yml"))
 		})
 
 		It("deploys to an AWS environment", func() {
-			code, err := bash.Run("main", []string{validAwsEnvironment, pathFromRoot("README.md")})
+			code, err := bash.Run("main", []string{validAwsEnvironment, mockKeyFile})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 			Expect(stderr).To(gbytes.Say("/bosh-deployment/aws/cpi.yml"))
@@ -91,10 +93,28 @@ var _ = Describe("Deploy KuBOSH", func() {
 
 		It("expands the environment path", func() {
 			relativePath := testEnvironmentPath + "/../environments/test_gcp_with_creds"
-			code, err := bash.Run("main", []string{relativePath, pathFromRoot("README.md")})
+			code, err := bash.Run("main", []string{relativePath, mockKeyFile})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 			Expect(stderr).NotTo(gbytes.Say("\\.\\./environments/test_gcp"))
+		})
+
+		Context("To enable BOSH DNS", func() {
+			It("enables local DNS", func() {
+				code, err := bash.Run("generate_manifest_generic", []string{validGcpEnvironment})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(0))
+				Expect(stderr).To(gbytes.Say("/bosh-deployment/local-dns.yml"))
+				Expect(stdout).To(gbytes.Say("local_dns:\n[ ]+enabled: true"))
+			})
+
+			It("adds BOSH DNS runtime config", func() {
+				code, err := bash.Run("main", []string{validGcpEnvironment, mockKeyFile})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(0))
+				Expect(stderr).To(gbytes.Say(fmt.Sprintf("update-runtime-config %s", pathFromRoot("bosh-deployment/runtime-configs/dns.yml"))))
+			})
+
 		})
 	})
 })

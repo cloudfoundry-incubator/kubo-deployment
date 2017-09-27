@@ -52,6 +52,7 @@ main() {
   bosh_manifest=$("generate_manifest_$iaas" "${bosh_env}" "${extra_filename}")
   deploy_bosh "${bosh_env}" "${bosh_manifest}"
   "$(repo_directory)/bin/set_bosh_alias" "${bosh_env}"
+  bosh-cli -e "$(basename "$bosh_env")" update-runtime-config "$(repo_directory)/bosh-deployment/runtime-configs/dns.yml"
 }
 
 deploy_bosh() {
@@ -70,30 +71,21 @@ generate_manifest_gcp() {
   local bosh_env service_account_filename bosh_manifest
   bosh_env="$1"
   service_account_filename="$2"
-  bosh-cli int "$(repo_directory)/bosh-deployment/bosh.yml"  \
+
+  generate_manifest_generic "$bosh_env" \
     --ops-file "$(repo_directory)/bosh-deployment/gcp/cpi.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/misc/powerdns.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
-    --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --ops-file "$(repo_directory)/configurations/gcp/user-agent-config.yml" \
-    --var-file gcp_credentials_json="${service_account_filename}" \
-    --vars-file "${bosh_env}/director.yml" ${BOSH_EXTRA_OPS}
+    --var-file gcp_credentials_json="${service_account_filename}"
 }
 
 generate_manifest_vsphere() {
   local bosh_env
   bosh_env="$1"
 
-  bosh-cli int "$(repo_directory)/bosh-deployment/bosh.yml"  \
+  generate_manifest_generic "$bosh_env" \
+    --vars-file "${bosh_env}/director-secrets.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/vsphere/cpi.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/vsphere/resource-pool.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/misc/powerdns.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
-    --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
-    --vars-file "${bosh_env}/director.yml" \
-    --vars-file "${bosh_env}/director-secrets.yml" ${BOSH_EXTRA_OPS}
+    --ops-file "$(repo_directory)/bosh-deployment/vsphere/resource-pool.yml"
 }
 
 generate_manifest_openstack() {
@@ -101,16 +93,11 @@ generate_manifest_openstack() {
   bosh_env="$1"
   key_filename="$2"
 
-  bosh-cli int  "$(repo_directory)/bosh-deployment/bosh.yml"  \
-    --ops-file "$(repo_directory)/bosh-deployment/openstack/cpi.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/misc/powerdns.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
-    --ops-file "$(repo_directory)/configurations/openstack/multi-tenant.yml" \
-    --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
-    --vars-file "${bosh_env}/director.yml"  \
+  generate_manifest_generic "$bosh_env" \
     --vars-file "${bosh_env}/director-secrets.yml"  \
-    --var-file private_key="${key_filename}" ${BOSH_EXTRA_OPS}
+    --ops-file "$(repo_directory)/bosh-deployment/openstack/cpi.yml" \
+    --ops-file "$(repo_directory)/configurations/openstack/multi-tenant.yml" \
+    --var-file private_key="${key_filename}"
 
 }
 
@@ -119,15 +106,25 @@ generate_manifest_aws() {
   bosh_env="$1"
   key_filename="$2"
 
+  generate_manifest_generic "$bosh_env" \
+    --var-file private_key="${key_filename}"\
+    --vars-file "${bosh_env}/director-secrets.yml"  \
+    --ops-file "$(repo_directory)/bosh-deployment/aws/cpi.yml"
+}
+
+generate_manifest_generic() {
+  local bosh_env
+  bosh_env="$1"; shift
+  iaas_specific_args="$@"
+
   bosh-cli int "$(repo_directory)/bosh-deployment/bosh.yml"  \
-    --ops-file "$(repo_directory)/bosh-deployment/aws/cpi.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
-    --ops-file "$(repo_directory)/bosh-deployment/misc/powerdns.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/local-dns.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
-    --vars-file "${bosh_env}/director.yml"  \
-    --vars-file "${bosh_env}/director-secrets.yml"  \
-    --var-file private_key="${key_filename}" ${BOSH_EXTRA_OPS}
+    --vars-file "${bosh_env}/director.yml" \
+    ${iaas_specific_args} \
+    ${BOSH_EXTRA_OPS}
 }
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"
