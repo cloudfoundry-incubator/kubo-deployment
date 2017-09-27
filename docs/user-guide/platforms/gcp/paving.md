@@ -64,6 +64,11 @@
     ```bash
     export GOOGLE_CREDENTIALS=$(cat ~/terraform.key.json)
     ```
+    
+    Note: if Terraform refuses to accept the key JSON as the content of `GOOGLE_CREDENTIALS`, provide the path to the file instead, using `GOOGLE_APPLICATION_CREDENTIALS`:
+    ```bash
+    export GOOGLE_APPLICATION_CREDENTIALS=~/terraform.key.json
+    ```
 
 ## Deploy Supporting Infrastructure
 
