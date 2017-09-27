@@ -112,7 +112,7 @@ var _ = Describe("Deploy KuBOSH", func() {
 				code, err := bash.Run("main", []string{validGcpEnvironment, mockKeyFile})
 				Expect(err).NotTo(HaveOccurred())
 				Expect(code).To(Equal(0))
-				Expect(stderr).To(gbytes.Say(fmt.Sprintf("update-runtime-config %s", pathFromRoot("bosh-deployment/runtime-configs/dns.yml"))))
+				Expect(stderr).To(gbytes.Say(fmt.Sprintf("update-runtime-config -n %s", pathFromRoot("bosh-deployment/runtime-configs/dns.yml"))))
 			})
 
 		})
