@@ -5,8 +5,8 @@ releases:
   sha1: 5bcbf78b69767f04dd8be4314197142181e82357
 
 addons:
-- name: dns
+- name: bosh-dns
   jobs:
-  - name: dns
-    release: dns
+  - name: bosh-dns
+    release: bosh-dns
     properties: {}

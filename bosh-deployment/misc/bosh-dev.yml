@@ -31,7 +31,7 @@
   value:
     alias: default
     os: ubuntu-trusty
-    version: "3421.3"
+    version: "3445.7"
 
 - type: replace
   path: /instance_groups/name=bosh/stemcell?
