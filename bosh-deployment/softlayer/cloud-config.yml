@@ -43,17 +43,20 @@ networks:
 
 - name: dynamic
   type: dynamic
-  dns: [((internal_ip)), 8.8.8.8, 10.0.80.11, 10.0.80.12]
-  cloud_properties:
-    PrimaryNetworkComponent:
-      NetworkVlan:
-        Id: ((sl_vlan_public))
-    PrimaryBackendNetworkComponent:
-      NetworkVlan:
-        Id: ((sl_vlan_private))
+  subnets:
+  - dns: [((internal_ip)), 8.8.8.8, 10.0.80.11, 10.0.80.12]
+    azs: [z1, z2, z3]
+    cloud_properties:
+      PrimaryNetworkComponent:
+        NetworkVlan:
+          Id: ((sl_vlan_public))
+      PrimaryBackendNetworkComponent:
+        NetworkVlan:
+          Id: ((sl_vlan_private))
 
 compilation:
   workers: 5
   reuse_compilation_vms: true
   vm_type: default
   network: dynamic
+  az: z1
