@@ -55,6 +55,13 @@
         NetworkVlan:
           Id: ((sl_vlan_private))
 
+- type: remove
+  path: /networks/name=default
+
+- type: replace
+  path: /resource_pools/name=vms/network
+  value: dynamic
+
 # Add CPI job
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
@@ -67,6 +74,9 @@
   value:
     name: dynamic
     default: [gateway, dns]
+
+- type: remove
+  path: /instance_groups/name=bosh/networks/name=default
 
 - type: replace
   path: /instance_groups/name=bosh/properties/director/cpi_job?
