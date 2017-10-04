@@ -139,7 +139,6 @@ instance_groups:
       kubernetes-api-url: *kubo_url
   stemcell: trusty
   vm_type: worker
-  persistent_disk_type: 10240
 
 update:
   canaries: 1
