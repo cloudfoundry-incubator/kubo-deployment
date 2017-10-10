@@ -104,8 +104,6 @@ instance_groups:
   - name: *network-name
   azs: [z1]
   jobs:
-  - name: use-ephemeral-storage-for-docker
-    release: kubo
   - name: flanneld
     release: kubo
   - name: docker
@@ -141,6 +139,7 @@ instance_groups:
       kubernetes-api-url: *kubo_url
   stemcell: trusty
   vm_type: worker
+  persistent_disk_type: 10240
 
 update:
   canaries: 1
