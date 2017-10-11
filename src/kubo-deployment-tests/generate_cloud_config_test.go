@@ -76,4 +76,17 @@ var _ = Describe("Generate cloud config", func() {
 		Expect(stdout).To(gbytes.Say("machine_type: foo"))
 		Expect(stdout).To(gbytes.Say("tags: supertest"))
 	})
+
+	It("applies extra cloud config ops files when CLOUD_CONFIG_OPS_FILES variable is set to one file", func() {
+		opsFiles := []string{
+			filepath.Join(resourcesPath, "ops-files", "cloud-config-plus.yml"),
+		}
+
+		bash.Export("CLOUD_CONFIG_OPS_FILES", strings.Join(opsFiles, ":"))
+		status, err := bash.Run("main", []string{kuboEnv})
+		Expect(err).NotTo(HaveOccurred())
+		Expect(status).To(Equal(0))
+
+		Expect(stdout).To(gbytes.Say("machine_type: foo"))
+	})
 })

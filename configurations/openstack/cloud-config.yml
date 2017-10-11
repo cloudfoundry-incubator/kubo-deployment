@@ -30,7 +30,7 @@ networks:
   type: dynamic
   subnets:
   - azs: [z1]
-    dns: [((internal_ip))]
+    dns: [((dns_recursor_ip))]
     cloud_properties:
       net_id: ((net_id))
 - name: vip
