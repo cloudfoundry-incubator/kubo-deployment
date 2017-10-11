@@ -13,5 +13,3 @@ To view the new Kubo documentation, visit https://docs-kubo.cfapps.io/, or jump 
 ## Contribute to the New Docs
 
 To learn how to contribute to the new Kubo documentation, see the README in https://github.com/cloudfoundry/docs-kubo.
-
-
