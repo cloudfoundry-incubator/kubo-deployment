@@ -20,7 +20,6 @@ Because the new Kubo documentation is currently in development, it does not yet 
 
 * [CF Routing](routing/cf.md): Configure Cloud Foundry to handle routing for your Kubo deployment.
 * [Customized Kubo installation](customized-kubo-installation.md): Perform a customized Kubo installation that modifies the default behavior. 
-* [Troubleshooting](troubleshooting.md): Troubleshoot commonly encountered problems with installing or running a Kubo deployment.
 
 See below for more information that will soon be incorporated into the Kubo documentation.
 
