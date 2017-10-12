@@ -15,8 +15,6 @@ kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest
 # routing_mode: proxy
 # kubernetes_master_host: # IP address of the HA Proxy master node
 # kubernetes_master_port: # Port for kubernetes api-server on HA Proxy master node
-# master_haproxy_tcp_frontend_port: # Port that the HA Proxy master will receive traffic on
-# master_haproxy_tcp_backend_port: # Port that the HA Proxy master will forward traffic to
 # worker_haproxy_ip_addresses: # IP address of the HA Proxy worker node
 # worker_haproxy_tcp_frontend_port: # Port that the HA Proxy worker will receive traffic on
 # worker_haproxy_tcp_backend_port: # Port that the HA Proxy worker will forward traffic to
