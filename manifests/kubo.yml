@@ -3,14 +3,14 @@ name: ((deployment_name))
 releases:
 - name: kubo-etcd
   version: 2
-  url: https://storage.googleapis.com/kubo-public/kubo-etcd-2-ubuntu-trusty-3421.11-20170721-091603-591124789-20170721091609.tgz
-  sha1: 91f7a6592ee6c5242854f3654fe786574e816ffc
+  url: https://storage.googleapis.com/kubo-public/kubo-etcd-2-ubuntu-trusty-3445.11-20170927-150426-34307934-20170927150432.tgz
+  sha1: 90d5584a2e6dbe71b2675b6c7395bedb264969d2
 - name: kubo
   version: latest
 - name: docker
   version: 28.0.1
-  url: https://storage.googleapis.com/kubo-public/docker-28.0.1-ubuntu-trusty-3421.11-20170720-164316-303456764-20170720164324.tgz
-  sha1: 0ac80f013cc686047cdd7ccc428a8784c5e691bc
+  url: https://storage.googleapis.com/kubo-public/docker-28.0.1-ubuntu-trusty-3445.11-20170927-150522-492831268-20170927150533.tgz
+  sha1: 8b5df0aab503e04b1dde9ebd174f018d588400a2
 - name: haproxy
   version: 8.4.0
   url: https://github.com/cloudfoundry-incubator/haproxy-boshrelease/releases/download/v8.4.0/haproxy-8.4.0.tgz
@@ -19,7 +19,7 @@ releases:
 stemcells:
 - alias: trusty
   os: ubuntu-trusty
-  version: "3421.11"
+  version: "3445.11"
 
 instance_groups:
 - name: etcd
