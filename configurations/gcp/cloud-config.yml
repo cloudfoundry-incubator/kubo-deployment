@@ -11,7 +11,7 @@ networks:
   - range: ((internal_cidr))
     gateway: ((internal_gw))
     dns:
-    - ((internal_ip))
+    - ((dns_recursor_ip))
     az: z1
     cloud_properties:
       network_name: ((network))
