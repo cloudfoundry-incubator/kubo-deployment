@@ -1,27 +1,7 @@
 # Load-balancing for OpenStack using HAProxy
 
-When deploying Kubo on OpenStack, HAProxy can be used for external access to the Kubernetes Master node (for administration traffic), and the Kubernetes Workers (for application traffic). This is due to the fact that OpenStack does not have first-party load-balancing support. In order to enable this, configure `director.yml` as follows:
+**The information in this topic has been relocated to the new Kubo documentation site.**
 
+**See the [Step 2: Configure HAProxy](https://docs-kubo.cfapps.io/installing/openstack/deploying-bosh-openstack/#step-2-configure-haproxy) section of the ***Deploying BOSH for Kubo on OpenStack* topic.**
 
-Enable HAProxy routing:
-```
-routing_mode: proxy
-```
-
-Configure master IP address and port number (the IP address must be a Floating IP, allocated to the project, and not associated with any other instances):
-```
-kubernetes_master_host: 12.34.56.78
-kubernetes_master_port: 443
-```
-
-Configure worker IP address  (the IP address must be a Floating IP, allocated to the project, and not associated with any other instances):
-```
-worker_haproxy_ip_addresses: 12.34.56.79
-```
-
-Configure front-end and back-end ports for HAProxy TCP pass-through.
-```
-worker_haproxy_tcp_frontend_port: 1234
-worker_haproxy_tcp_backend_port: 4321
-```
-*Note*: the current implementation of HAProxy routing is a single-port TCP pass-through. In order to route traffic to multiple Kubernetes services, consider using an Ingress Controller (https://github.com/kubernetes/ingress/tree/master/examples).
+**For an overview of how to deploy Kubo on OpenStack, see [Preparing OpenStack for Kubo](https://docs-kubo.cfapps.io/installing/openstack/).**
