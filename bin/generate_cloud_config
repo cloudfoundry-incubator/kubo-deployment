@@ -61,7 +61,7 @@ main() {
       done
     done <<< "${CLOUD_CONFIG_OPS_FILES}"
 
-    cloud_config=$(bosh-cli int <(echo "${cloud_config}") ${ops_string})
+    cloud_config=$(bosh-cli int <(echo "${cloud_config}") ${ops_string} --vars-file ${bosh_env}/director.yml)
   fi
 
   echo -n "${cloud_config}"
