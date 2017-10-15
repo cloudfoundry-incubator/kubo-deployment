@@ -72,10 +72,6 @@ generate_manifest() {
   local routing_mode="$(bosh-cli int "${bosh_environment}/director.yml" --path='/routing_mode')"
   local iaas="$(bosh-cli int "${bosh_environment}/director.yml" --path='/iaas')"
 
-  if [ -f "${bosh_environment}/${deployment_name}.yml" ]; then
-    manifest=$(bosh-cli int <(echo "${manifest}") --ops-file="${bosh_environment}/${deployment_name}.yml")
-  fi
-
   if bosh-cli int "${bosh_environment}/director.yml" --path='/http_proxy' &>/dev/null; then
     manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/add-http-proxy.yml")
   fi
@@ -119,6 +115,10 @@ generate_manifest() {
 
   if [ -f "${manifest_dir}/ops-files/${iaas}-cloud-provider.yml" ]; then
     manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/${iaas}-cloud-provider.yml" -v director_uuid="${director_uuid}")
+  fi
+
+  if [ -f "${bosh_environment}/${deployment_name}.yml" ]; then
+    manifest=$(bosh-cli int <(echo "${manifest}") --ops-file="${bosh_environment}/${deployment_name}.yml")
   fi
 
   if [ -f "${bosh_environment}/${deployment_name}-vars.yml" ]; then
