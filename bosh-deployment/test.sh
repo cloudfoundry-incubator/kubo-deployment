@@ -67,7 +67,7 @@ echo "- AWS with UAA + config-server"
 bosh create-env bosh.yml \
   -o aws/cpi.yml \
   -o uaa.yml \
-  -o config-server.yml \
+  -o misc/config-server.yml \
   --state=$tmp_file \
   --vars-store $(mktemp ${tmp_file}.XXXXXX) \
   -v director_name=test \

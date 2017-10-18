@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: bosh-docker-cpi
-    version: 0.0.2
-    url: https://bosh.io/d/github.com/cppforlife/bosh-docker-cpi-release?v=0.0.2
-    sha1: a0068cca7ae596ce37b64cfb26412200bcb22890
+    version: 0.0.3
+    url: https://bosh.io/d/github.com/cppforlife/bosh-docker-cpi-release?v=0.0.3
+    sha1: 9eb1457a5f268a8e3a21765d151366e28f7d5ea3
 
 - type: replace
   path: /releases/-

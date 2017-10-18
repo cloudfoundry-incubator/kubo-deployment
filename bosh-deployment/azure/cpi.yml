@@ -3,9 +3,9 @@
   path: /releases/-
   value:
     name: bosh-azure-cpi
-    version: 27
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-azure-cpi-release?v=27
-    sha1: 3174ed9900d8557e7df6599019d11a49b84b96b9
+    version: 29
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-azure-cpi-release?v=29
+    sha1: 630901d22de58597ef8d5a23be9a5b7107d9ecb4
 
 - type: replace
   path: /resource_pools/name=vms/stemcell?
