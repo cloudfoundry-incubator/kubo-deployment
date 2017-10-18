@@ -47,7 +47,6 @@ var _ = Describe("Generate manifest", func() {
 		},
 			Entry("deployment name", "\nname: klingon\n"),
 			Entry("network name", "\n  networks:\n  - name: network-name\n"),
-			Entry("kubernetes API URL", "\n      kubernetes-api-url: https://a.router.name:101928\n"),
 			Entry("kubernetes external port", "\n      external_kubo_port: 101928\n"),
 			Entry("CF API URL", "\n        api_url: cf.api.url\n"),
 			Entry("CF UAA URL", "\n        uaa_url: cf.uaa.url\n"),
@@ -67,7 +66,6 @@ var _ = Describe("Generate manifest", func() {
 		},
 			Entry("deployment name", "\nname: grinder\n"),
 			Entry("network name", "\n  networks:\n  - name: network-name\n"),
-			Entry("kubernetes API URL", "\n      kubernetes-api-url: https://12\\.23\\.34\\.45:101928\n"),
 			Entry("Auto-generated kubelet password", "\n      kubelet-password: \\(\\(kubelet-password\\)\\)\n"),
 			Entry("Auto-generated admin password", "\n      admin-password: \\(\\(kubo-admin-password\\)\\)\n"),
 			Entry("worker node tag", "\n          worker-node-tag: TheDirector-grinder-worker"),
@@ -79,6 +77,19 @@ var _ = Describe("Generate manifest", func() {
 			Expect(status).To(Equal(0))
 
 			Expect(stdout).To(gbytes.Say("variables:"))
+			Expect(stdout).To(gbytes.Say("tls-kubelet"))
+			Expect(stdout).To(gbytes.Say("tls-kubernetes"))
+		})
+
+		It("should include an alternative name with master.kubo for the tls-kubernetes variable", func() {
+			status, err := bash.Run("main", []string{kuboEnv, "cucumber", "director_uuid"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+
+			Expect(stdout).To(gbytes.Say("variables:"))
+			Expect(stdout).To(gbytes.Say("tls-kubernetes"))
+			Expect(stdout).To(gbytes.Say("alternative_names:"))
+			Expect(stdout).To(gbytes.Say("master.kubo"))
 		})
 
 		It("should reproduce the same manifest on the second run", func() {

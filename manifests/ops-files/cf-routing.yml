@@ -35,7 +35,6 @@
     - name: kubeconfig
       release: kubo
       properties:
-        kubernetes-api-url: "https://((kubernetes_master_host)):((kubernetes_master_port))"
         kubelet-password: ((kubelet-password))
         tls:
           kubernetes: ((tls-kubernetes))

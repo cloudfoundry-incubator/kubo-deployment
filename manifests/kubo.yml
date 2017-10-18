@@ -44,6 +44,8 @@ instance_groups:
   - name: *network-name
   azs: [z1]
   jobs:
+  - name: kubo-dns-aliases
+    release: kubo
   - name: cloud-provider
     release: kubo
     properties: {}
@@ -62,7 +64,6 @@ instance_groups:
   - name: kubeconfig
     release: kubo
     properties:
-      kubernetes-api-url: &kubo_url "https://((kubernetes_master_host)):((kubernetes_master_port))"
       kubelet-password: ((kubelet-password))
       tls:
         kubernetes: ((tls-kubernetes))
@@ -73,8 +74,6 @@ instance_groups:
     release: kubo
   - name: kubernetes-system-specs
     release: kubo
-    properties:
-      kubernetes-api-url: *kubo_url
   stemcell: trusty
   vm_type: master
 
@@ -104,6 +103,8 @@ instance_groups:
   - name: *network-name
   azs: [z1]
   jobs:
+  - name: kubo-dns-aliases
+    release: kubo
   - name: flanneld
     release: kubo
   - name: docker
@@ -120,7 +121,6 @@ instance_groups:
   - name: kubeconfig
     release: kubo
     properties:
-      kubernetes-api-url: *kubo_url
       kubelet-password: ((kubelet-password))
       tls:
         kubernetes: ((tls-kubernetes))
@@ -130,13 +130,10 @@ instance_groups:
   - name: kubelet
     release: kubo
     properties:
-      kubernetes-api-url: *kubo_url
       tls:
         kubelet: ((tls-kubelet))
   - name: kubernetes-proxy
     release: kubo
-    properties:
-      kubernetes-api-url: *kubo_url
   stemcell: trusty
   vm_type: worker
   persistent_disk_type: 10240
@@ -176,3 +173,4 @@ variables:
     - kubernetes.default
     - kubernetes.default.svc
     - kubernetes.default.svc.cluster.local
+    - master.kubo
