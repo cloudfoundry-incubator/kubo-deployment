@@ -9,6 +9,8 @@ import (
 
 	"io"
 
+	boshtpl "github.com/cloudfoundry/bosh-cli/director/template"
+	"github.com/cppforlife/go-patch/patch"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
@@ -38,39 +40,62 @@ var _ = Describe("Generate manifest", func() {
 	Context("successful manifest generation", func() {
 		kuboEnv := filepath.Join(testEnvironmentPath, "test_gcp")
 
-		DescribeTable("populated properties for CF-based deployment", func(line string) {
+		DescribeTable("populated properties for CF-based deployment", func(yPath, value string) {
 			cfEnv := filepath.Join(testEnvironmentPath, "test_vsphere_with_creds")
-			status, err := bash.Run("main", []string{cfEnv, "klingon", "director_uuid"})
+			status, _ := bash.Run("main", []string{cfEnv, "klingon", "director_uuid"})
 
+			var manifest map[string]interface{}
+			err := yaml.Unmarshal(stdout.Contents(), &manifest)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
-			Expect(stdout).To(gbytes.Say(line))
+			template := boshtpl.NewTemplate([]byte(stdout.Contents()))
+			vars := boshtpl.StaticVariables{}
+			ops := patch.FindOp{Path: patch.MustNewPointerFromString(yPath)}
+
+			bytes, err := template.Evaluate(vars, ops, boshtpl.EvaluateOpts{ExpectAllKeys: false})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(string(bytes[:len(bytes)-1])).To(Equal(value))
 		},
-			Entry("deployment name", "\nname: klingon\n"),
-			Entry("network name", "\n  networks:\n  - name: network-name\n"),
-			Entry("kubernetes external port", "\n      external_kubo_port: 101928\n"),
-			Entry("CF API URL", "\n        api_url: cf.api.url\n"),
-			Entry("CF UAA URL", "\n        uaa_url: cf.uaa.url\n"),
-			Entry("CF Client ID", "\n        uaa_client_id: cf.client.id\n"),
-			Entry("CF Client Secret", "\n        uaa_client_secret: cf.client.secret\n"),
-			Entry("Auto-generated kubelet password", "\n      kubelet-password: \\(\\(kubelet-password\\)\\)\n"),
-			Entry("Auto-generated admin password", "\n      admin-password: \\(\\(kubo-admin-password\\)\\)\n"),
+			Entry("deployment name", "/name", "klingon"),
+			Entry("network name", "/instance_groups/name=etcd/networks/0/name", "network-name"),
+			Entry("Master Kubeconfig Kubernetes API URL", "/instance_groups/name=master/jobs/name=kubeconfig/properties/kubernetes-api-url", "https://a.router.name:101928"),
+			Entry("Master Kubeconfig Kubelet Password", "/instance_groups/name=master/jobs/name=kubeconfig/properties/kubelet-password", "((kubelet-password))"),
+			Entry("Master Sys Spec Kubernetes API URL", "/instance_groups/name=master/jobs/name=kubernetes-system-specs/properties/kubernetes-api-url", "https://a.router.name:101928"),
+			Entry("Worker Kubeconfig Kubernetes API URL", "/instance_groups/name=worker/jobs/name=kubeconfig/properties/kubernetes-api-url", "https://a.router.name:101928"),
+			Entry("Kubelet Kubernetes API URL", "/instance_groups/name=worker/jobs/name=kubelet/properties/kubernetes-api-url", "https://a.router.name:101928"),
+			Entry("K8s Proxy Kubernetes API URL", "/instance_groups/name=worker/jobs/name=kubernetes-proxy/properties/kubernetes-api-url", "https://a.router.name:101928"),
+			Entry("kubernetes external port", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/external_kubo_port", "101928"),
+			Entry("CF API URL", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/api_url", "cf.api.url"),
+			Entry("CF UAA URL", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_url", "cf.uaa.url"),
+			Entry("CF Client ID", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_client_id", "cf.client.id"),
+			Entry("CF Client Secret", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_client_secret", "cf.client.secret"),
+			Entry("Auto-generated kubelet password", "/instance_groups/name=master/jobs/name=kubernetes-api/properties/kubelet-password", "((kubelet-password))"),
+			Entry("Auto-generated admin password", "/instance_groups/name=master/jobs/name=kubernetes-api/properties/admin-password", "((kubo-admin-password))"),
 		)
 
-		DescribeTable("populated properties for IaaS-based deployment", func(line string) {
-			status, err := bash.Run("main", []string{kuboEnv, "grinder", "director_uuid"})
+		DescribeTable("populated properties for IaaS-based deployment", func(yPath, value string) {
+			status, _ := bash.Run("main", []string{kuboEnv, "grinder", "director_uuid"})
 
+			var manifest map[string]interface{}
+			err := yaml.Unmarshal(stdout.Contents(), &manifest)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
-			Expect(stdout).To(gbytes.Say(line))
+			template := boshtpl.NewTemplate([]byte(stdout.Contents()))
+			vars := boshtpl.StaticVariables{}
+			ops := patch.FindOp{Path: patch.MustNewPointerFromString(yPath)}
+
+			bytes, err := template.Evaluate(vars, ops, boshtpl.EvaluateOpts{ExpectAllKeys: false})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(string(bytes[:len(bytes)-1])).To(Equal(value))
 		},
-			Entry("deployment name", "\nname: grinder\n"),
-			Entry("network name", "\n  networks:\n  - name: network-name\n"),
-			Entry("Auto-generated kubelet password", "\n      kubelet-password: \\(\\(kubelet-password\\)\\)\n"),
-			Entry("Auto-generated admin password", "\n      admin-password: \\(\\(kubo-admin-password\\)\\)\n"),
-			Entry("worker node tag", "\n          worker-node-tag: TheDirector-grinder-worker"),
+			Entry("deployment name", "/name", "grinder"),
+			Entry("network name", "/instance_groups/name=etcd/networks/0/name", "network-name"),
+			Entry("Kubernetes API URL", "/instance_groups/name=master/jobs/name=kubernetes-system-specs/properties/kubernetes-api-url", "https://12.23.34.45:101928"),
+			Entry("Auto-generated kubelet password", "/instance_groups/name=master/jobs/name=kubernetes-api/properties/kubelet-password", "((kubelet-password))"),
+			Entry("Auto-generated admin password", "/instance_groups/name=master/jobs/name=kubernetes-api/properties/admin-password", "((kubo-admin-password))"),
+			Entry("worker node tag", "/instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider/gce/worker-node-tag", "TheDirector-grinder-worker"),
 		)
 
 		It("should always use dns addresses", func() {

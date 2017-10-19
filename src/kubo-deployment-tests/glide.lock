@@ -1,6 +1,10 @@
-hash: 322b732fb2a9f02a3b10cf1bb0f95652b6a9a136a1c8b9e33edc9b6646d9df25
-updated: 2017-07-25T09:43:20.804392124+01:00
+hash: c1e8c4b14b082b44b0789c783d9a12e71fef02695659f44cd071c11cdcd32dc3
+updated: 2017-10-19T11:05:34.186588597-07:00
 imports:
+- name: github.com/cppforlife/go-patch
+  version: 250da0e0e68ce3367b4302f34218f6c064eb9559
+  subpackages:
+  - patch
 - name: github.com/jhvhs/gob-mock
   version: 747b9f8df7ba67ed6abd4de82e8bb7e5deb021bf
 - name: github.com/onsi/ginkgo
@@ -42,6 +46,20 @@ imports:
 - name: github.com/progrium/go-basher
   version: 6a5b35fcdaea1ddfc145720efc903869413629e7
 testImports:
+- name: github.com/bmatcuk/doublestar
+  version: dd6a6f0a8cdfaaa88b08cf26cf1bc7d69003ee13
+- name: github.com/charlievieth/fs
+  version: 7dc373669fa10ddf827c37c595dee30a2f001be9
+- name: github.com/cloudfoundry/bosh-cli
+  version: 21639e8e6993776462b30e9923aab2a80cb7c3cc
+  subpackages:
+  - director/template
+- name: github.com/cloudfoundry/bosh-utils
+  version: 148a52cad58d6cb03d4f5c134bf484ea3fafd874
+  subpackages:
+  - errors
+  - logger
+  - system
 - name: github.com/kardianos/osext
   version: ae77be60afb1dcacde03767a8c37337fad28ac14
 - name: github.com/mitchellh/go-homedir
