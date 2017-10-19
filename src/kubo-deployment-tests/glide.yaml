@@ -4,3 +4,4 @@ import:
 - package: github.com/onsi/ginkgo
 - package: github.com/onsi/gomega
 - package: github.com/jhvhs/gob-mock
+- package: github.com/cppforlife/go-patch
