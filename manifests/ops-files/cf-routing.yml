@@ -32,6 +32,8 @@
     - name: ((deployments_network))
     azs: [z1]
     jobs:
+    - name: kubo-dns-aliases
+      release: kubo
     - name: kubeconfig
       release: kubo
       properties:
