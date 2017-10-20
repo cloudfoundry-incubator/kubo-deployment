@@ -32,10 +32,11 @@
     - name: ((deployments_network))
     azs: [z1]
     jobs:
+    - name: kubo-dns-aliases
+      release: kubo
     - name: kubeconfig
       release: kubo
       properties:
-        kubernetes-api-url: "https://((kubernetes_master_host)):((kubernetes_master_port))"
         kubelet-password: ((kubelet-password))
         tls:
           kubernetes: ((tls-kubernetes))

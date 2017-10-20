@@ -122,6 +122,7 @@ generate_manifest_generic() {
   bosh-cli int "$(repo_directory)/bosh-deployment/bosh.yml"  \
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/local-dns.yml" \
+    --ops-file "$(repo_directory)/configurations/generic/dns-addresses.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/credhub.yml" \
     --ops-file "$(repo_directory)/configurations/generic/bosh-admin-client.yml" \
     --vars-file "${bosh_env}/director.yml" \
