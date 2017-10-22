@@ -78,6 +78,9 @@ instance_groups:
     release: kubo
   - name: kubernetes-system-specs
     release: kubo
+    properties:
+      admin-username: admin
+      authorization-mode: rbac
   stemcell: trusty
   vm_type: master
 
