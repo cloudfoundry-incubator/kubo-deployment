@@ -80,6 +80,7 @@ instance_groups:
     release: kubo
     properties:
       admin-username: admin
+      admin-password: ((kubo-admin-password))
       authorization-mode: rbac
   stemcell: trusty
   vm_type: master
