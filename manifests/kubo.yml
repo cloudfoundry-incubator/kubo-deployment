@@ -62,7 +62,7 @@ instance_groups:
       kubelet-password: ((kubelet-password))
       backend_port: 8443 # Bosh links hack
       port: ((kubernetes_master_port))
-      authorization-mode: rbac
+      authorization-mode: &authorization_mode ((authorization_mode))
       tls:
         kubernetes: ((tls-kubernetes))
   - name: kubeconfig
@@ -81,7 +81,7 @@ instance_groups:
     properties:
       admin-username: admin
       admin-password: ((kubo-admin-password))
-      authorization-mode: rbac
+      authorization-mode: *authorization_mode
   stemcell: trusty
   vm_type: master
 

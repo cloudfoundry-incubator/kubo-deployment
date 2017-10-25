@@ -1,0 +1,33 @@
+iaas: gcp
+project_id: GCP_Project_ID # GCP project ID
+network: # GCP network
+subnetwork: # GCP subnetwork
+tags: # tags below are used if jumpbox and NAT were deployed using https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/blob/master/docs/bosh/main.tf
+  - "no-ip" # allow access to the Internet from BOSH director using NAT
+  - internal # allow access to the instances in same network from BOSH
+zone: # name of GCP zone
+
+internal_ip: internal.ip # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into.
+
+deployments_network: network-name # Network name to deploy service in your cloud config
+
+routing-cf-api-url: cf.api.url # TCP routing API URL. In PCF: https://api.<system domain>
+routing-cf-client-id: cf.client.id # Routing UAA client name that will be used to register tcp routes
+routing-cf-uaa-url: cf.uaa.url # Routing UAA URL In PCF: https://uaa.<system domain>
+
+credhub_encryption_key: # 16 byte number in HEX format: i.e. ABCDEF0123456789ABCDEF0123456789
+
+authorization_mode: abac
+
+internal_cidr: # CIDR range that BOSH will deploy to
+internal_gw: # internal gateway
+
+director_name: TheDirector # user friendly Director name
+dns_recursor_ip: # DNS IP address for resolving non-BOSH hostnames
+
+credhub_release_url: https://bosh.io/d/github.com/pivotal-cf/credhub-release?v=1.0.0
+kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release-latest.tgz
+
+routing_mode: iaas
+kubernetes_master_host: 12.23.34.45
+kubernetes_master_port: 101928

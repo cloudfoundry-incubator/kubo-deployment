@@ -125,6 +125,10 @@ generate_manifest() {
     manifest=$(bosh-cli int <(echo "${manifest}") --vars-file="${bosh_environment}/${deployment_name}-vars.yml")
   fi
 
+  if ! bosh-cli int "${bosh_environment}/director.yml" --path='/authorization_mode' &>/dev/null; then
+    manifest=$(bosh-cli int <(echo "${manifest}") --var authorization_mode=rbac)
+  fi
+
   manifest=$(bosh-cli int <(echo "${manifest}") --vars-file="${bosh_environment}/director.yml" --var=deployment_name="${deployment_name}")
 
   if [ -f "${bosh_environment}/creds.yml" ]; then
