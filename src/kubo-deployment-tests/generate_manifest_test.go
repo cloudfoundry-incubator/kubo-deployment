@@ -245,7 +245,7 @@ var _ = Describe("Generate manifest", func() {
 		}
 	})
 
-	It("should create kubernetes-tls for alternate name specified in kubernetes_master_host", func() {
+	It("should set the tls-kubernetes common_name to the kubernetes_master_host", func() {
 		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_external", "name", "director_uuid")
 
 		stdoutTemp := gbytes.NewBuffer()
@@ -263,5 +263,25 @@ var _ = Describe("Generate manifest", func() {
 
 		Expect(command2.Run()).To(Succeed())
 		Expect(stdout).To(gbytes.Say("12.23.34.45"))
+	})
+
+	It("should add the kubernetes_master_host to tls-kubernetes alternative_names", func() {
+		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_external", "name", "director_uuid")
+
+		stdoutTemp := gbytes.NewBuffer()
+		stderrTemp := gbytes.NewBuffer()
+
+		command.Stdout = io.MultiWriter(stdoutTemp, GinkgoWriter)
+		command.Stderr = io.MultiWriter(stderrTemp, GinkgoWriter)
+		command.Dir = pathFromRoot("")
+		Expect(command.Run()).To(Succeed())
+
+		command2 := exec.Command("bosh-cli", "int", "-", "--path", "/variables/name=tls-kubernetes/options/alternative_names")
+		command2.Stdin = stdoutTemp
+		command2.Stdout = bash.Stdout
+		command2.Stderr = bash.Stderr
+
+		Expect(command2.Run()).To(Succeed())
+		Expect(stdout).To(gbytes.Say("- 12.23.34.45"))
 	})
 })
