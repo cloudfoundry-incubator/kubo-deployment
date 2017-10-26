@@ -11,6 +11,7 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
+	"io"
 )
 
 var _ = Describe("Generate manifest", func() {
@@ -242,5 +243,25 @@ var _ = Describe("Generate manifest", func() {
 			Expect(command.Run()).To(Succeed(), fmt.Sprintf("Failed with environmenrt %s", env))
 			Expect(string(errBuffer.Contents())).To(HaveLen(0))
 		}
+	})
+
+	It("should create kubernetes-tls for alternate name specified in kubernetes_master_host", func() {
+		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_external", "name", "director_uuid")
+
+		stdoutTemp := gbytes.NewBuffer()
+		stderrTemp := gbytes.NewBuffer()
+
+		command.Stdout = io.MultiWriter(stdoutTemp, GinkgoWriter)
+		command.Stderr = io.MultiWriter(stderrTemp, GinkgoWriter)
+		command.Dir = pathFromRoot("")
+		Expect(command.Run()).To(Succeed())
+
+		command2 := exec.Command("bosh-cli", "int", "-", "--path", "/variables/name=tls-kubernetes/options/common_name")
+		command2.Stdin = stdoutTemp
+		command2.Stdout = bash.Stdout
+		command2.Stderr = bash.Stderr
+
+		Expect(command2.Run()).To(Succeed())
+		Expect(stdout).To(gbytes.Say("12.23.34.45"))
 	})
 })
