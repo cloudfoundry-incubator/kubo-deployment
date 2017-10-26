@@ -20,7 +20,7 @@ var _ = Describe("set_kubeconfig", func() {
 			return repoDirectoryFunction, nil
 		})
 		boshMock := MockOrCallThrough("bosh-cli", `echo "Secret data"`, `[[ "$1" =~ ^int ]] && ! [[ "$2" =~ creds.yml$ ]]`)
-		credMock := Mock("credhub",`echo '{"value": {"ca": "certiffy cat"}}'`)
+		credMock := Mock("credhub", `echo '{"value": {"ca": "certiffy cat"}}'`)
 		mocks := []Gob{Spy("kubectl"), boshMock, credMock}
 		ApplyMocks(bash, mocks)
 

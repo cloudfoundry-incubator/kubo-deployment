@@ -3,12 +3,12 @@ package kubo_deployment_tests_test
 import (
 	"path"
 
+	"fmt"
 	. "github.com/jhvhs/gob-mock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
-	"fmt"
 )
 
 var _ = Describe("Deploy KuBOSH", func() {

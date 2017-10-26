@@ -7,11 +7,12 @@ import (
 
 	yaml "gopkg.in/yaml.v2"
 
+	"io"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
-	"io"
 )
 
 var _ = Describe("Generate manifest", func() {
@@ -71,6 +72,22 @@ var _ = Describe("Generate manifest", func() {
 			Entry("Auto-generated admin password", "\n      admin-password: \\(\\(kubo-admin-password\\)\\)\n"),
 			Entry("worker node tag", "\n          worker-node-tag: TheDirector-grinder-worker"),
 		)
+
+		It("should always use dns addresses", func() {
+			status, err := bash.Run("main", []string{kuboEnv, "grinder", "director_uuid"})
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+
+			var manifest struct {
+				Features struct {
+					UseDnsAddresses bool `yaml:"use_dns_addresses"`
+				} `yaml:"features"`
+			}
+			yaml.Unmarshal(stdout.Contents(), &manifest)
+
+			Expect(manifest.Features.UseDnsAddresses).To(BeTrue())
+		})
 
 		It("should include a variable section with tls-kubelet, tls-kubernetes", func() {
 			status, err := bash.Run("main", []string{kuboEnv, "cucumber", "director_uuid"})

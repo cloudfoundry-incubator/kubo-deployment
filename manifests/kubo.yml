@@ -1,5 +1,8 @@
 name: ((deployment_name))
 
+features:
+  use_dns_addresses: true
+
 releases:
 - name: kubo-etcd
   version: 2
