@@ -6,6 +6,7 @@ This repository contains the documentation and manifests for deploying [kubo-rel
 
 
 **Slack**: #kubo on https://slack.cloudfoundry.org
+**Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
 
 ## CI Status
 
