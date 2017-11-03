@@ -26,6 +26,8 @@ kubernetes_master_host: # IP address that can be used to reach the Kubernetes AP
 kubernetes_master_port: 8443 # Kubernetes API server port
 master_target_pool: # target pool that master nodes will be a part of
 
+authorization_mode: abac # RBAC or ABAC authorization modes for the K8s cluster. Note: RBAC is not stable as of 0.8.x.
+
 # CF routing mode settings
 # Uncomment and configure the lines below to leverage CF routing instead of IaaS routing
 # routing_mode: cf
