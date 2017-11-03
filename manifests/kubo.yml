@@ -62,6 +62,7 @@ instance_groups:
       kubelet-password: ((kubelet-password))
       kube-proxy-password: ((kube-proxy-password))
       kube-scheduler-password: ((kube-scheduler-password))
+      route-sync-password: ((route-sync-password))
       backend_port: 8443 # Bosh links hack
       port: ((kubernetes_master_port))
       authorization-mode: &authorization_mode ((authorization_mode))
@@ -73,6 +74,7 @@ instance_groups:
       kubelet-password: ((kubelet-password))
       kube-proxy-password: ((kube-proxy-password))
       kube-scheduler-password: ((kube-scheduler-password))
+      route-sync-password: ((route-sync-password))
       tls:
         kubernetes: ((tls-kubernetes))
   - name: kubernetes-controller-manager
@@ -137,6 +139,7 @@ instance_groups:
       kubelet-password: ((kubelet-password))
       kube-proxy-password: ((kube-proxy-password))
       kube-scheduler-password: ((kube-scheduler-password))
+      route-sync-password: ((route-sync-password))
       tls:
         kubernetes: ((tls-kubernetes))
   - name: cloud-provider
@@ -168,6 +171,8 @@ variables:
 - name: kube-proxy-password
   type: password
 - name: kube-scheduler-password
+  type: password
+- name: route-sync-password
   type: password
 - name: kubo_ca
   type: certificate
