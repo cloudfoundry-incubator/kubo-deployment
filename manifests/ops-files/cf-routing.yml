@@ -38,6 +38,8 @@
       release: kubo
       properties:
         kubelet-password: ((kubelet-password))
+        kube-proxy-password: ((kube-proxy-password))
+        kube-scheduler-password: ((kube-scheduler-password))
         tls:
           kubernetes: ((tls-kubernetes))
     - name: route-sync
