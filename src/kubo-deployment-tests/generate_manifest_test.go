@@ -131,12 +131,12 @@ var _ = Describe("Generate manifest", func() {
 			Expect(stdout).To(gbytes.Say("master.kubo"))
 		})
 
-		It("should default the authorization mode property to RBAC", func() {
+		It("should default the authorization mode property to ABAC", func() {
 			status, err := bash.Run("main", []string{kuboEnv, "cucumber", "director_uuid"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
-			Expect(stdout).To(gbytes.Say("authorization-mode: rbac"))
+			Expect(stdout).To(gbytes.Say("authorization-mode: abac"))
 		})
 
 		It("should use the abac authorization mode set in the kubo environment", func() {

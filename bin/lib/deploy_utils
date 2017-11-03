@@ -126,7 +126,7 @@ generate_manifest() {
   fi
 
   if ! bosh-cli int "${bosh_environment}/director.yml" --path='/authorization_mode' &>/dev/null; then
-    manifest=$(bosh-cli int <(echo "${manifest}") --var authorization_mode=rbac)
+    manifest=$(bosh-cli int <(echo "${manifest}") --var authorization_mode=abac)
   fi
 
   manifest=$(bosh-cli int <(echo "${manifest}") --vars-file="${bosh_environment}/director.yml" --var=deployment_name="${deployment_name}")
