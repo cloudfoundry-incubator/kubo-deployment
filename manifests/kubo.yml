@@ -135,6 +135,8 @@ instance_groups:
     properties:
       kubernetes-api-url: "https://((kubernetes_master_host)):((kubernetes_master_port))"
       kubelet-password: ((kubelet-password))
+      kube-proxy-password: ((kube-proxy-password))
+      kube-scheduler-password: ((kube-scheduler-password))
       tls:
         kubernetes: ((tls-kubernetes))
   - name: cloud-provider
