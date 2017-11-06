@@ -169,6 +169,7 @@ variables:
   options:
     ca: kubo_ca
     common_name: kubelet.kubo.internal
+    alternative_names: []
     organization: "system:nodes"
 - name: tls-kubernetes
   type: certificate
