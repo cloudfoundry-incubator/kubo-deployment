@@ -25,26 +25,10 @@ stemcells:
   version: "3468.5"
 
 instance_groups:
-- name: etcd
-  instances: 3
+- name: master
+  instances: 1
   networks:
   - name: &network-name ((deployments_network))
-  azs: [z1]
-  jobs:
-  - name: etcd
-    release: kubo-etcd
-    properties:
-      etcd:
-        require_ssl: false
-        peer_require_ssl: false
-  stemcell: trusty
-  vm_type: common
-  persistent_disk_type: 5120
-
-- name: master
-  instances: 2
-  networks:
-  - name: *network-name
   azs: [z1]
   jobs:
   - name: kubo-dns-aliases
@@ -82,6 +66,12 @@ instance_groups:
       admin-username: admin
       admin-password: ((kubo-admin-password))
       authorization-mode: *authorization_mode
+  - name: etcd
+    release: kubo-etcd
+    properties:
+      etcd:
+        require_ssl: false
+        peer_require_ssl: false
   stemcell: trusty
   vm_type: master
 
