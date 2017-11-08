@@ -44,18 +44,11 @@ var _ = Describe("Generate manifest", func() {
 			cfEnv := filepath.Join(testEnvironmentPath, "test_vsphere_with_creds")
 			status, _ := bash.Run("main", []string{cfEnv, "klingon", "director_uuid"})
 
-			var manifest map[string]interface{}
-			err := yaml.Unmarshal(stdout.Contents(), &manifest)
-			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
-			template := boshtpl.NewTemplate([]byte(stdout.Contents()))
-			vars := boshtpl.StaticVariables{}
-			ops := patch.FindOp{Path: patch.MustNewPointerFromString(yPath)}
-
-			bytes, err := template.Evaluate(vars, ops, boshtpl.EvaluateOpts{ExpectAllKeys: false})
+			pathValue, err := propertyFromManifest(yPath, stdout.Contents())
 			Expect(err).NotTo(HaveOccurred())
-			Expect(string(bytes[:len(bytes)-1])).To(Equal(value))
+			Expect(pathValue).To(Equal(value))
 		},
 			Entry("deployment name", "/name", "klingon"),
 			Entry("network name", "/instance_groups/name=master/networks/0/name", "network-name"),
@@ -75,18 +68,11 @@ var _ = Describe("Generate manifest", func() {
 		DescribeTable("populated properties for IaaS-based deployment", func(yPath, value string) {
 			status, _ := bash.Run("main", []string{kuboEnv, "grinder", "director_uuid"})
 
-			var manifest map[string]interface{}
-			err := yaml.Unmarshal(stdout.Contents(), &manifest)
-			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
-			template := boshtpl.NewTemplate([]byte(stdout.Contents()))
-			vars := boshtpl.StaticVariables{}
-			ops := patch.FindOp{Path: patch.MustNewPointerFromString(yPath)}
-
-			bytes, err := template.Evaluate(vars, ops, boshtpl.EvaluateOpts{ExpectAllKeys: false})
+			pathValue, err := propertyFromManifest(yPath, stdout.Contents())
 			Expect(err).NotTo(HaveOccurred())
-			Expect(string(bytes[:len(bytes)-1])).To(Equal(value))
+			Expect(pathValue).To(Equal(value))
 		},
 			Entry("deployment name", "/name", "grinder"),
 			Entry("network name", "/instance_groups/name=master/networks/0/name", "network-name"),
@@ -102,14 +88,9 @@ var _ = Describe("Generate manifest", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
-			var manifest struct {
-				Features struct {
-					UseDnsAddresses bool `yaml:"use_dns_addresses"`
-				} `yaml:"features"`
-			}
-			yaml.Unmarshal(stdout.Contents(), &manifest)
-
-			Expect(manifest.Features.UseDnsAddresses).To(BeTrue())
+			pathValue, err := propertyFromManifest("/features/use_dns_addresses", stdout.Contents())
+			Expect(err).NotTo(HaveOccurred())
+			Expect(pathValue).To(Equal("true"))
 		})
 
 		It("should include a variable section with tls-kubelet, tls-kubernetes", func() {
@@ -358,17 +339,9 @@ var _ = Describe("Generate manifest", func() {
 		command.Dir = pathFromRoot("")
 		Expect(command.Run()).To(Succeed())
 
-		var manifest map[string]interface{}
-		err := yaml.Unmarshal(stdout.Contents(), &manifest)
+		value, err := propertyFromManifest("/instance_groups/name=master/networks/0/static_ips", stdout.Contents())
 		Expect(err).NotTo(HaveOccurred())
-
-		template := boshtpl.NewTemplate([]byte(stdout.Contents()))
-		vars := boshtpl.StaticVariables{}
-		ops := patch.FindOp{Path: patch.MustNewPointerFromString("/instance_groups/name=master/networks/0/static_ips")}
-
-		bytes, err := template.Evaluate(vars, ops, boshtpl.EvaluateOpts{ExpectAllKeys: false})
-		Expect(err).NotTo(HaveOccurred())
-		Expect(string(bytes[:len(bytes)-1])).To(Equal("- 1.2.3.4"))
+		Expect(value).To(Equal("- 1.2.3.4"))
 	})
 
 	It("should assign static ip to the master in open stack with proxy mode", func() {
@@ -378,22 +351,28 @@ var _ = Describe("Generate manifest", func() {
 		command.Dir = pathFromRoot("")
 		Expect(command.Run()).To(Succeed())
 
-		var manifest map[string]interface{}
-		err := yaml.Unmarshal(stdout.Contents(), &manifest)
+		value, err := propertyFromManifest("/instance_groups/name=master/networks/0/type", stdout.Contents())
 		Expect(err).NotTo(HaveOccurred())
+		Expect(value).To(Equal("vip"))
 
-		template := boshtpl.NewTemplate([]byte(stdout.Contents()))
-		vars := boshtpl.StaticVariables{}
-		ops := patch.FindOp{Path: patch.MustNewPointerFromString("/instance_groups/name=master/networks/0/type")}
-
-		bytes, err := template.Evaluate(vars, ops, boshtpl.EvaluateOpts{ExpectAllKeys: false})
+		value, err = propertyFromManifest("/instance_groups/name=master/networks/0/static_ips", stdout.Contents())
 		Expect(err).NotTo(HaveOccurred())
-		Expect(string(bytes[:len(bytes)-1])).To(Equal("vip"))
-
-		ops = patch.FindOp{Path: patch.MustNewPointerFromString("/instance_groups/name=master/networks/0/static_ips")}
-		bytes, err = template.Evaluate(vars, ops, boshtpl.EvaluateOpts{ExpectAllKeys: false})
-		Expect(err).NotTo(HaveOccurred())
-		Expect(string(bytes[:len(bytes)-1])).To(Equal("- 1.2.3.4"))
+		Expect(value).To(Equal("- 1.2.3.4"))
 	})
 
 })
+
+func propertyFromManifest(path string, manifestString []byte) (string, error) {
+	var manifest map[string]interface{}
+	err := yaml.Unmarshal(manifestString, &manifest)
+	if err != nil {
+		return "", err
+	}
+
+	template := boshtpl.NewTemplate([]byte(stdout.Contents()))
+	vars := boshtpl.StaticVariables{}
+	ops := patch.FindOp{Path: patch.MustNewPointerFromString(path)}
+
+	bytes, err := template.Evaluate(vars, ops, boshtpl.EvaluateOpts{ExpectAllKeys: false})
+	return string(bytes[:len(bytes)-1]), err
+}
