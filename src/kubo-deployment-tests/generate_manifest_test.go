@@ -350,4 +350,50 @@ var _ = Describe("Generate manifest", func() {
 		Expect(command2.Run()).To(Succeed())
 		Expect(stdout).To(gbytes.Say("- 12.23.34.45"))
 	})
+
+	It("should assign static ip to the master in vsphere with proxy mode", func() {
+		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_vsphere_with_haproxy", "name", "director_uuid")
+		command.Stdout = bash.Stdout
+		command.Stderr = bash.Stderr
+		command.Dir = pathFromRoot("")
+		Expect(command.Run()).To(Succeed())
+
+		var manifest map[string]interface{}
+		err := yaml.Unmarshal(stdout.Contents(), &manifest)
+		Expect(err).NotTo(HaveOccurred())
+
+		template := boshtpl.NewTemplate([]byte(stdout.Contents()))
+		vars := boshtpl.StaticVariables{}
+		ops := patch.FindOp{Path: patch.MustNewPointerFromString("/instance_groups/name=master/networks/0/static_ips")}
+
+		bytes, err := template.Evaluate(vars, ops, boshtpl.EvaluateOpts{ExpectAllKeys: false})
+		Expect(err).NotTo(HaveOccurred())
+		Expect(string(bytes[:len(bytes)-1])).To(Equal("- 1.2.3.4"))
+	})
+
+	It("should assign static ip to the master in open stack with proxy mode", func() {
+		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_openstack_with_haproxy", "name", "director_uuid")
+		command.Stdout = bash.Stdout
+		command.Stderr = bash.Stderr
+		command.Dir = pathFromRoot("")
+		Expect(command.Run()).To(Succeed())
+
+		var manifest map[string]interface{}
+		err := yaml.Unmarshal(stdout.Contents(), &manifest)
+		Expect(err).NotTo(HaveOccurred())
+
+		template := boshtpl.NewTemplate([]byte(stdout.Contents()))
+		vars := boshtpl.StaticVariables{}
+		ops := patch.FindOp{Path: patch.MustNewPointerFromString("/instance_groups/name=master/networks/0/type")}
+
+		bytes, err := template.Evaluate(vars, ops, boshtpl.EvaluateOpts{ExpectAllKeys: false})
+		Expect(err).NotTo(HaveOccurred())
+		Expect(string(bytes[:len(bytes)-1])).To(Equal("vip"))
+
+		ops = patch.FindOp{Path: patch.MustNewPointerFromString("/instance_groups/name=master/networks/0/static_ips")}
+		bytes, err = template.Evaluate(vars, ops, boshtpl.EvaluateOpts{ExpectAllKeys: false})
+		Expect(err).NotTo(HaveOccurred())
+		Expect(string(bytes[:len(bytes)-1])).To(Equal("- 1.2.3.4"))
+	})
+
 })
