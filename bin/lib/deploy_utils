@@ -92,10 +92,6 @@ generate_manifest() {
       fi
     ;;
     proxy)
-      if [ "openstack" == "$iaas" ] || [ "vsphere" == "$iaas" ]; then
-        manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/master-haproxy-"$iaas".yml")
-      fi
-
       manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/worker-haproxy.yml")
       if [ "openstack" == "$iaas" ] || [ "vsphere" == "$iaas" ]; then
         manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/worker-haproxy-"$iaas".yml")

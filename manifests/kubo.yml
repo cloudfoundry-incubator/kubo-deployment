@@ -75,26 +75,6 @@ instance_groups:
   stemcell: trusty
   vm_type: master
 
-- name: master-haproxy
-  instances: 1
-  networks:
-  - name: ((deployments_network))
-    default: [dns, gateway]
-  azs: [z1]
-  stemcell: trusty
-  vm_type: common
-  jobs:
-  - name: haproxy
-    release: haproxy
-
-    consumes:
-      tcp_backend: { from: master_haproxy }
-
-    properties:
-      ha_proxy:
-        disable_http: true
-        tcp_link_port: 9999 # required, but not used
-
 - name: worker
   instances: 3
   networks:
