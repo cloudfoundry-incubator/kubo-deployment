@@ -136,5 +136,16 @@ generate_manifest() {
     manifest=$(bosh-cli int <(echo "${manifest}") --vars-file="${bosh_environment}/director-secrets.yml")
   fi
 
+  if [[ ! -z "${ADDITIONAL_MANIFEST_OPS_FILES}" ]]; then
+    local ops_string=""
+    while IFS=':' read -ra additional_manifest_ops_files; do
+      for ops_file in ${additional_manifest_ops_files[@]}; do
+        ops_string="${ops_string} --ops-file=${ops_file}"
+      done
+    done <<< "${ADDITIONAL_MANIFEST_OPS_FILES}"
+
+    manifest=$(bosh-cli int <(echo "${manifest}") ${ops_string} --vars-file ${bosh_environment}/director.yml)
+  fi
+
   printf "%s" "${manifest}"
 }
