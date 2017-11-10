@@ -5,9 +5,9 @@ features:
 
 releases:
 - name: kubo-etcd
-  version: 2
-  url: https://storage.googleapis.com/kubo-public/kubo-etcd-2-ubuntu-trusty-3468.5-20171107-125206-82655546-20171107125213.tgz
-  sha1: 044b7a019baae96e97adc7a19da84c64d949a763
+  version: 4
+  url: https://github.com/pivotal-cf-experimental/kubo-etcd/releases/download/v4/kubo-etcd.4.tgz
+  sha1: f94ab00d423765e2c740836788dc256caa1af014
 - name: kubo
   version: latest
 - name: docker
@@ -72,6 +72,7 @@ instance_groups:
       etcd:
         require_ssl: false
         peer_require_ssl: false
+        delete_data_dir_on_stop: false
   stemcell: trusty
   vm_type: master
 
