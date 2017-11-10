@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 set -e
 
+# Install bats for testing the bash scripts
+pushd /tmp > /dev/null
+git clone https://github.com/sstephenson/bats.git ; cd bats ; ./install.sh /usr/local
+popd > /dev/null
+
+export CURR_DIR=$(cd "$(dirname $BASH_SOURCE[0])"; pwd)
+echo "Running bash script tests"
+pushd "${CURR_DIR}" > /dev/null
+  bats ./tests/
+popd > /dev/null
+
 export GOPATH=$(cd "$(dirname $BASH_SOURCE[0])"/../; pwd)
 pushd "${GOPATH}/src/kubo-deployment-tests" > /dev/null
   ginkgo .
