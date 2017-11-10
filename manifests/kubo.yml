@@ -6,14 +6,14 @@ features:
 releases:
 - name: kubo-etcd
   version: 2
-  url: https://github.com/pivotal-cf-experimental/kubo-etcd/releases/download/v2/kubo-etcd.2.tgz
-  sha1: ae95e661cd9df3bdc59ee38bf94dd98e2f280d4f
+  url: https://storage.googleapis.com/kubo-public/kubo-etcd-2-ubuntu-trusty-3468.5-20171107-125206-82655546-20171107125213.tgz
+  sha1: 044b7a019baae96e97adc7a19da84c64d949a763
 - name: kubo
   version: latest
 - name: docker
   version: 28.0.1
-  url: https://bosh.io/d/github.com/cf-platform-eng/docker-boshrelease?v=28.0.1
-  sha1: 448eaa2f478dc8794933781b478fae02aa44ed6b
+  url: https://storage.googleapis.com/kubo-public/docker-28.0.1-ubuntu-trusty-3468.5-20171107-125514-444936754-20171107125523.tgz
+  sha1: 985e7d430f97cc8a95b539c1bdd04be0d55c10bd
 - name: haproxy
   version: 8.4.0
   url: https://github.com/cloudfoundry-incubator/haproxy-boshrelease/releases/download/v8.4.0/haproxy-8.4.0.tgz
