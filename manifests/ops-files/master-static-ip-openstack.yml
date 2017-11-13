@@ -4,3 +4,6 @@
     name: vip
     type: vip
     static_ips: [((kubernetes_master_host))]
+- type: replace
+  path: /instance_groups/name=master/networks/0/default?
+  value: [dns, gateway]
