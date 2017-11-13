@@ -351,11 +351,11 @@ var _ = Describe("Generate manifest", func() {
 		command.Dir = pathFromRoot("")
 		Expect(command.Run()).To(Succeed())
 
-		value, err := propertyFromManifest("/instance_groups/name=master/networks/0/type", stdout.Contents())
+		value, err := propertyFromManifest("/instance_groups/name=master/networks/1/type", stdout.Contents())
 		Expect(err).NotTo(HaveOccurred())
 		Expect(value).To(Equal("vip"))
 
-		value, err = propertyFromManifest("/instance_groups/name=master/networks/0/static_ips", stdout.Contents())
+		value, err = propertyFromManifest("/instance_groups/name=master/networks/1/static_ips", stdout.Contents())
 		Expect(err).NotTo(HaveOccurred())
 		Expect(value).To(Equal("- 1.2.3.4"))
 	})
