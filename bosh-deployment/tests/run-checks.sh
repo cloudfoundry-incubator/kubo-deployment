@@ -2,6 +2,8 @@
 
 set -eu
 
+cd ..
+
 tmp_file=/tmp/bosh-deployment-test
 touch $tmp_file
 

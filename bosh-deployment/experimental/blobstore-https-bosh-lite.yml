@@ -1,0 +1,5 @@
+---
+
+- type: replace
+  path: /variables/name=blobstore_ssl/options/alternative_names?/-
+  value: "10.254.50.4"

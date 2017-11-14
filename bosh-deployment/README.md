@@ -1,6 +1,21 @@
 # bosh-deployment
 
-Requires BOSH CLI v2:
+* [Create an environment](https://bosh.io/docs/init.html)
+    * [On Local machine (BOSH Lite)](https://bosh.io/docs/bosh-lite.html)
+    * [On AWS](https://bosh.io/docs/init-aws.html)
+    * [On Azure](https://bosh.io/docs/init-azure.html)
+    * [On OpenStack](https://bosh.io/docs/init-openstack.html)
+    * [On vSphere](https://bosh.io/docs/init-vsphere.html)
+    * [On vCloud](https://bosh.io/docs/init-vcloud.html)
+    * [On SoftLayer](https://bosh.io/docs/init-softlayer.html)
+    * [On Google Compute Platform](https://bosh.io/docs/init-google.html)
+
+* Access your BOSH director
+    * Through a VPN
+        * [`bosh create-env`, OpenVPN option](https://github.com/dpb587/openvpn-bosh-release)
+    * Through a jumpbox
+        * [`bosh create-env` option](https://github.com/cppforlife/jumpbox-deployment)
+    * [Expose Director on a Public IP](https://bosh.io/docs/init-external-ip.html) (not recommended)
 
 * [CLI v2](https://bosh.io/docs/cli-v2.html)
     * [`create-env` Dependencies](https://bosh.io/docs/cli-env-deps.html)
@@ -26,25 +41,9 @@ Requires BOSH CLI v2:
 - `misc/proxy.yml`: Configure HTTP proxy for Director and CPI
 - `runtime-configs/syslog.yml`: Runtime config to enable syslog forwarding
 
-See [test.sh](test.sh) for example usage of different ops files.
+See [tests/run-checks.sh](tests/run-checks.sh) for example usage of different ops files.
 
-## Sample installation instructions
-
-* [Create an environment](https://bosh.io/docs/init.html)
-    * [On Local machine (BOSH Lite)](https://bosh.io/docs/bosh-lite.html)
-    * [On AWS](https://bosh.io/docs/init-aws.html)
-    * [On Azure](https://bosh.io/docs/init-azure.html)
-    * [On OpenStack](https://bosh.io/docs/init-openstack.html)
-    * [On vSphere](https://bosh.io/docs/init-vsphere.html)
-    * [On vCloud](https://bosh.io/docs/init-vcloud.html)
-    * [On SoftLayer](https://bosh.io/docs/init-softlayer.html)
-    * [On Google Compute Platform](https://bosh.io/docs/init-google.html)
-* Access your BOSH director
-    * Through a VPN
-	    * [`bosh create-env`, OpenVPN option](https://github.com/dpb587/openvpn-bosh-release)
-    * Through a jumpbox
-	    * [`bosh create-env` option](https://github.com/cppforlife/jumpbox-deployment)
-    * [Expose Director on a Public IP](https://bosh.io/docs/init-external-ip.html) (not recommended)
+## Security Groups
 
 Please ensure you have security groups setup correctly. i.e:
 

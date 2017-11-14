@@ -2,16 +2,16 @@
 - type: replace
   path: /releases/-
   value:
-    version: 34
     name: bosh-openstack-cpi
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-openstack-cpi-release?v=34
-    sha1: cd9bfb50673b4a4f830e2808c80b1985fd342c2c
+    version: 35
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-openstack-cpi-release?v=35
+    sha1: 314b040cb0df72651174d262892aa8c4d75f9031
 
 - type: replace
   path: /resource_pools/name=vms/stemcell?
   value:
-    url: https://bosh.io/d/stemcells/bosh-openstack-kvm-ubuntu-trusty-go_agent?v=3445.7
-    sha1: be99ce385099c341fa75b04034dd0018117d9bfb
+    url: https://bosh.io/d/stemcells/bosh-openstack-kvm-ubuntu-trusty-go_agent?v=3468.1
+    sha1: 387e59075399a40b9b688664cb01a51f460ede22
 
 # Configure sizes
 - type: replace

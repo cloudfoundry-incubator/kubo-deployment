@@ -10,12 +10,17 @@ addons:
   - name: bosh-dns
     release: bosh-dns
     properties:
+      cache:
+        enabled: true
       health:
         enabled: true
         server:
           tls: ((/dns_healthcheck_server_tls))
         client:
           tls: ((/dns_healthcheck_client_tls))
+  include:
+    stemcells:
+    - os: ubuntu-trusty
 
 variables:
 - name: /dns_healthcheck_tls_ca

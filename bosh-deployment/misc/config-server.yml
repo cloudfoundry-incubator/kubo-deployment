@@ -3,8 +3,8 @@
   value:
     name: config-server
     version: 0.0.1
-    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/config-server-0.0.1-ubuntu-trusty-3445.7-20170901-011556-139681448-20170901011602.tgz?versionId=szQ96hNd7pCkgAnXTjVs4GAxA.GMTRnW
-    sha1: 89d01060b842a28af63f71cbdf03baca875fa905
+    url: https://bosh.io/d/github.com/cloudfoundry/config-server-release?v=0.0.1
+    sha1: 6372fd76e6e9da5a292de47c300fe33a85f970bf
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
