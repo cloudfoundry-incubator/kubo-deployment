@@ -81,6 +81,7 @@ instance_groups:
         delete_data_dir_on_stop: false
   stemcell: trusty
   vm_type: master
+  persistent_disk_type: 5120
 
 - name: worker
   instances: 3
