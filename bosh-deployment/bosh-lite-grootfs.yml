@@ -3,8 +3,8 @@
   value:
     name: grootfs
     version: "0.24.0"
-    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/grootfs-0.24.0-ubuntu-trusty-3445.7-20170901-233410-125583009-20170901233415.tgz?versionId=lBvgCDLDAFFjnbaL6YpAdG5OmP0KTJ5e
-    sha1: b59d4ce4152013c21a4b136b43660d220c5f274a
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/grootfs-0.24.0-ubuntu-trusty-3468.1-20171027-221900-570463629-20171027221905.tgz?versionId=CiUX1NE_V__3Aw8YIwf6.Tl6h3rterR1
+    sha1: 9e21618f66eb5b2ed4cfb768c6ce6e7fb677910f
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=garden/properties?/garden/image_plugin?

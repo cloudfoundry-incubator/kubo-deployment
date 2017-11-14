@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: credhub
-    version: 1.5.0
-    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/credhub-1.5.0-ubuntu-trusty-3445.7-20171010-224932-312558772-20171010224936.tgz?versionId=foI.VuVtyJ5sCeL_yjztJ6J1DzcVNF7j
-    sha1: 7f5f6f55fe64d4ea79c1e0432e2972f4530af41b
+    version: "1.6.1"
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/credhub-1.6.1-ubuntu-trusty-3468.1-20171027-223445-89551422-20171027223451.tgz?versionId=VZ3.604W9Rq1R7OrJc_WqUeJPPpupZqa
+    sha1: 0fe7019e68137af0452185f5f61a70c4cbb48d51
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
