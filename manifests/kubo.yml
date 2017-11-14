@@ -181,26 +181,3 @@ variables:
     ca: kubo_ca
     common_name: ((kubernetes_master_host))
     alternative_names: [((kubernetes_master_host))]
-
-# This can be removed once BOSH supports variables in the runtime-config
-- name: /dns_healthcheck_tls_ca
-  type: certificate
-  options:
-    is_ca: true
-    common_name: dns-healthcheck-tls-ca
-
-- name: /dns_healthcheck_server_tls
-  type: certificate
-  options:
-    ca: /dns_healthcheck_tls_ca
-    common_name: health.bosh-dns
-    extended_key_usage:
-    - server_auth
-
-- name: /dns_healthcheck_client_tls
-  type: certificate
-  options:
-    ca: /dns_healthcheck_tls_ca
-    common_name: health.bosh-dns
-    extended_key_usage:
-    - client_auth
