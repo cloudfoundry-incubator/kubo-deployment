@@ -11,9 +11,9 @@ releases:
 - name: kubo
   version: latest
 - name: docker
-  version: 30.1.3
-  url: https://github.com/cloudfoundry-community/docker-boshrelease/releases/download/v30.1.3/docker-30.1.3.tgz
-  sha1: bd6f68b9981453fbc72f50c15119f16663f27bad
+  version: 30.1.4
+  url: https://github.com/cloudfoundry-community/docker-boshrelease/releases/download/v30.1.4/docker-30.1.4.tgz
+  sha1: f79a70452b3ddae52f5ac78dd37ff8d9e6ec19e2
 - name: haproxy
   version: 8.4.0
   url: https://github.com/cloudfoundry-incubator/haproxy-boshrelease/releases/download/v8.4.0/haproxy-8.4.0.tgz
@@ -101,6 +101,7 @@ instance_groups:
       iptables: false
       ip_masq: false
       log_level: error
+      store_dir: /var/vcap/data
       storage_driver: overlay
       default_ulimits: [ "nofile=65536" ]
       tls_cacert: ((tls-docker.ca))
