@@ -63,15 +63,15 @@ resource "google_project_iam_policy" "common-policy" {
   policy_data = "${data.google_iam_policy.common.policy_data}"
 }
 
-resource "google_project_iam_policy" "master-policy" {
-  project     = "${var.projectid}"
-  policy_data = "${data.google_iam_policy.master.policy_data}"
-}
+# resource "google_project_iam_policy" "master-policy" {
+#   project     = "${var.projectid}"
+#   policy_data = "${data.google_iam_policy.master.policy_data}"
+# }
 
-resource "google_project_iam_policy" "worker-policy" {
-  project     = "${var.projectid}"
-  policy_data = "${data.google_iam_policy.worker.policy_data}"
-}
+# resource "google_project_iam_policy" "worker-policy" {
+#   project     = "${var.projectid}"
+#   policy_data = "${data.google_iam_policy.worker.policy_data}"
+# }
 
 data "google_iam_policy" "common" {
   binding {
@@ -79,89 +79,7 @@ data "google_iam_policy" "common" {
 
     members = [
       "serviceAccount:${google_service_account.common.email}",
-    ]
-  }
-
-  binding {
-    role = "roles/compute.networkAdmin"
-
-    members = [
-      "serviceAccount:${google_service_account.common.email}",
-    ]
-  }
-
-  binding {
-    role = "roles/compute.securityAdmin"
-
-    members = [
-      "serviceAccount:${google_service_account.common.email}",
-    ]
-  }
-
-  binding {
-    role = "roles/compute.instanceAdmin"
-
-    members = [
-      "serviceAccount:${google_service_account.common.email}",
-    ]
-  }
-
-  binding {
-    role = "roles/iam.serviceAccountActor"
-
-    members = [
-      "serviceAccount:${google_service_account.common.email}",
-    ]
-  }
-}
-
-data "google_iam_policy" "master" {
-  binding {
-    role = "roles/compute.storageAdmin"
-
-    members = [
       "serviceAccount:${google_service_account.master.email}",
-    ]
-  }
-
-  binding {
-    role = "roles/compute.networkAdmin"
-
-    members = [
-      "serviceAccount:${google_service_account.master.email}",
-    ]
-  }
-
-  binding {
-    role = "roles/compute.securityAdmin"
-
-    members = [
-      "serviceAccount:${google_service_account.master.email}",
-    ]
-  }
-
-  binding {
-    role = "roles/compute.instanceAdmin"
-
-    members = [
-      "serviceAccount:${google_service_account.maste.email}",
-    ]
-  }
-
-  binding {
-    role = "roles/iam.serviceAccountActor"
-
-    members = [
-      "serviceAccount:${google_service_account.master.email}",
-    ]
-  }
-}
-
-data "google_iam_policy" "worker" {
-  binding {
-    role = "roles/compute.storageAdmin"
-
-    members = [
       "serviceAccount:${google_service_account.worker.email}",
     ]
   }
@@ -170,6 +88,8 @@ data "google_iam_policy" "worker" {
     role = "roles/compute.networkAdmin"
 
     members = [
+      "serviceAccount:${google_service_account.common.email}",
+      "serviceAccount:${google_service_account.master.email}",
       "serviceAccount:${google_service_account.worker.email}",
     ]
   }
@@ -178,7 +98,10 @@ data "google_iam_policy" "worker" {
     role = "roles/compute.securityAdmin"
 
     members = [
+      "serviceAccount:${google_service_account.common.email}",
+      "serviceAccount:${google_service_account.master.email}",
       "serviceAccount:${google_service_account.worker.email}",
+
     ]
   }
 
@@ -186,6 +109,8 @@ data "google_iam_policy" "worker" {
     role = "roles/compute.instanceAdmin"
 
     members = [
+      "serviceAccount:${google_service_account.common.email}",
+      "serviceAccount:${google_service_account.master.email}",
       "serviceAccount:${google_service_account.worker.email}",
     ]
   }
@@ -194,6 +119,8 @@ data "google_iam_policy" "worker" {
     role = "roles/iam.serviceAccountActor"
 
     members = [
+      "serviceAccount:${google_service_account.common.email}",
+      "serviceAccount:${google_service_account.master.email}",
       "serviceAccount:${google_service_account.worker.email}",
     ]
   }
