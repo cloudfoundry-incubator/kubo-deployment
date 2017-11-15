@@ -43,22 +43,42 @@ provider "google" {
     region = "${var.region}"
 }
 
-resource "google_service_account" "kubo" {
-  account_id   = "${var.prefix}kubo"
-  display_name = "${var.prefix} kubo"
+resource "google_service_account" "common" {
+  account_id   = "${var.prefix}-kubo-common"
+  display_name = "${var.prefix} kubo-common"
 }
 
-resource "google_project_iam_policy" "policy" {
+resource "google_service_account" "master" {
+  account_id   = "${var.prefix}-kubo-master"
+  display_name = "${var.prefix} kubo-master"
+}
+
+resource "google_service_account" "worker" {
+  account_id   = "${var.prefix}-kubo-worker"
+  display_name = "${var.prefix} kubo-worker"
+}
+
+resource "google_project_iam_policy" "common-policy" {
   project     = "${var.projectid}"
-  policy_data = "${data.google_iam_policy.admin.policy_data}"
+  policy_data = "${data.google_iam_policy.common.policy_data}"
 }
 
-data "google_iam_policy" "admin" {
+resource "google_project_iam_policy" "master-policy" {
+  project     = "${var.projectid}"
+  policy_data = "${data.google_iam_policy.master.policy_data}"
+}
+
+resource "google_project_iam_policy" "worker-policy" {
+  project     = "${var.projectid}"
+  policy_data = "${data.google_iam_policy.worker.policy_data}"
+}
+
+data "google_iam_policy" "common" {
   binding {
     role = "roles/compute.storageAdmin"
 
     members = [
-      "serviceAccount:${google_service_account.kubo.email}",
+      "serviceAccount:${google_service_account.common.email}",
     ]
   }
 
@@ -66,7 +86,7 @@ data "google_iam_policy" "admin" {
     role = "roles/compute.networkAdmin"
 
     members = [
-      "serviceAccount:${google_service_account.kubo.email}",
+      "serviceAccount:${google_service_account.common.email}",
     ]
   }
 
@@ -74,7 +94,7 @@ data "google_iam_policy" "admin" {
     role = "roles/compute.securityAdmin"
 
     members = [
-      "serviceAccount:${google_service_account.kubo.email}",
+      "serviceAccount:${google_service_account.common.email}",
     ]
   }
 
@@ -82,7 +102,7 @@ data "google_iam_policy" "admin" {
     role = "roles/compute.instanceAdmin"
 
     members = [
-      "serviceAccount:${google_service_account.kubo.email}",
+      "serviceAccount:${google_service_account.common.email}",
     ]
   }
 
@@ -90,7 +110,91 @@ data "google_iam_policy" "admin" {
     role = "roles/iam.serviceAccountActor"
 
     members = [
-      "serviceAccount:${google_service_account.kubo.email}",
+      "serviceAccount:${google_service_account.common.email}",
+    ]
+  }
+}
+
+data "google_iam_policy" "master" {
+  binding {
+    role = "roles/compute.storageAdmin"
+
+    members = [
+      "serviceAccount:${google_service_account.master.email}",
+    ]
+  }
+
+  binding {
+    role = "roles/compute.networkAdmin"
+
+    members = [
+      "serviceAccount:${google_service_account.master.email}",
+    ]
+  }
+
+  binding {
+    role = "roles/compute.securityAdmin"
+
+    members = [
+      "serviceAccount:${google_service_account.master.email}",
+    ]
+  }
+
+  binding {
+    role = "roles/compute.instanceAdmin"
+
+    members = [
+      "serviceAccount:${google_service_account.maste.email}",
+    ]
+  }
+
+  binding {
+    role = "roles/iam.serviceAccountActor"
+
+    members = [
+      "serviceAccount:${google_service_account.master.email}",
+    ]
+  }
+}
+
+data "google_iam_policy" "worker" {
+  binding {
+    role = "roles/compute.storageAdmin"
+
+    members = [
+      "serviceAccount:${google_service_account.worker.email}",
+    ]
+  }
+
+  binding {
+    role = "roles/compute.networkAdmin"
+
+    members = [
+      "serviceAccount:${google_service_account.worker.email}",
+    ]
+  }
+
+  binding {
+    role = "roles/compute.securityAdmin"
+
+    members = [
+      "serviceAccount:${google_service_account.worker.email}",
+    ]
+  }
+
+  binding {
+    role = "roles/compute.instanceAdmin"
+
+    members = [
+      "serviceAccount:${google_service_account.worker.email}",
+    ]
+  }
+
+  binding {
+    role = "roles/iam.serviceAccountActor"
+
+    members = [
+      "serviceAccount:${google_service_account.worker.email}",
     ]
   }
 }
@@ -231,7 +335,9 @@ sed -i -e 's/^\(project_id:\).*\(#.*\)/\1 ${var.projectid} \2/' "$1"
 sed -i -e 's/^\(network:\).*\(#.*\)/\1 ${var.network} \2/' "$1"
 sed -i -e 's/^\(subnetwork:\).*\(#.*\)/\1 ${google_compute_subnetwork.kubo-subnet.name} \2/' "$1"
 sed -i -e 's/^\(zone:\).*\(#.*\)/\1 ${var.zone} \2/' "$1"
-sed -i -e 's/^\(service_account:\).*\(#.*\)/\1 ${google_service_account.kubo.email} \2/' "$1"
+sed -i -e 's/^\(service_account_master:\).*\(#.*\)/\1 ${google_service_account.master.email} \2/' "$1"
+sed -i -e 's/^\(service_account_worker:\).*\(#.*\)/\1 ${google_service_account.worker.email} \2/' "$1"
+sed -i -e 's/^\(service_account_common:\).*\(#.*\)/\1 ${google_service_account.common.email} \2/' "$1"
 
 # Generic updates
 sed -i -e 's/^\(internal_ip:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.252 \2/' "$1"
