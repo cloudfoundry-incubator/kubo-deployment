@@ -17,10 +17,10 @@ variable "zone" {
     type = "string"
     default = "us-east1-d"
 }
-
-
-variable "network" {
+    
+variable "network_name" {
     type = "string"
+    default = ""
 }
 
 variable "prefix" {
@@ -51,6 +51,10 @@ resource "google_service_account" "kubo" {
 resource "google_project_iam_policy" "policy" {
   project     = "${var.projectid}"
   policy_data = "${data.google_iam_policy.admin.policy_data}"
+}
+    
+resource "google_compute_network" "network" {
+  name = "${var.network_name}"
 }
 
 data "google_iam_policy" "admin" {
@@ -98,7 +102,7 @@ data "google_iam_policy" "admin" {
 resource "google_compute_route" "nat-primary" {
   name        = "${var.prefix}nat-primary"
   dest_range  = "0.0.0.0/0"
-  network       = "${var.network}"
+  network       = "${google_compute_network.network.name}"
   next_hop_instance = "${google_compute_instance.nat-instance-private-with-nat-primary.name}"
   next_hop_instance_zone = "${var.zone}"
   priority    = 800
@@ -110,13 +114,13 @@ resource "google_compute_subnetwork" "kubo-subnet" {
   name          = "${var.prefix}kubo-${var.region}"
   region        = "${var.region}"
   ip_cidr_range = "${var.subnet_ip_prefix}.0/24"
-  network       = "https://www.googleapis.com/compute/v1/projects/${var.projectid}/global/networks/${var.network}"
+  network       = "${google_compute_network.network.self_link}"
 }
 
 // Allow SSH to BOSH bastion
 resource "google_compute_firewall" "bosh-bastion" {
   name    = "${var.prefix}bosh-bastion"
-  network = "${var.network}"
+  network = "${google_compute_network.network.name}"
 
   allow {
     protocol = "icmp"
@@ -133,7 +137,7 @@ resource "google_compute_firewall" "bosh-bastion" {
 // Allow all traffic within subnet
 resource "google_compute_firewall" "intra-subnet-open" {
   name    = "${var.prefix}intra-subnet-open"
-  network = "${var.network}"
+  network = "${google_compute_network.network.name}"
 
   allow {
     protocol = "icmp"
@@ -206,7 +210,7 @@ export ssh_key_path=$HOME/.ssh/bosh
 
 # Vars from Terraform
 export subnetwork=${google_compute_subnetwork.kubo-subnet.name}
-export network=${var.network}
+export network=${var.network_name}
 export subnet_ip_prefix=${var.subnet_ip_prefix}
 export service_account_email=${var.service_account_email}
 export project_id=${var.projectid}
@@ -228,7 +232,7 @@ fi
 
 # GCP specific updates
 sed -i -e 's/^\(project_id:\).*\(#.*\)/\1 ${var.projectid} \2/' "$1"
-sed -i -e 's/^\(network:\).*\(#.*\)/\1 ${var.network} \2/' "$1"
+sed -i -e 's/^\(network:\).*\(#.*\)/\1 ${var.network_name} \2/' "$1"
 sed -i -e 's/^\(subnetwork:\).*\(#.*\)/\1 ${google_compute_subnetwork.kubo-subnet.name} \2/' "$1"
 sed -i -e 's/^\(zone:\).*\(#.*\)/\1 ${var.zone} \2/' "$1"
 sed -i -e 's/^\(service_account:\).*\(#.*\)/\1 ${google_service_account.kubo.email} \2/' "$1"
