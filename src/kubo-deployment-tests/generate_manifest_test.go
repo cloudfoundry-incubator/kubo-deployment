@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 
 	"io"
 
@@ -374,5 +374,13 @@ func propertyFromManifest(path string, manifestString []byte) (string, error) {
 	ops := patch.FindOp{Path: patch.MustNewPointerFromString(path)}
 
 	bytes, err := template.Evaluate(vars, ops, boshtpl.EvaluateOpts{ExpectAllKeys: false})
-	return string(bytes[:len(bytes)-1]), err
+	return choppedString(bytes), err
+}
+
+func choppedString(bytes []byte) string {
+	if len(bytes) > 0 {
+		return string(bytes[:len(bytes)-1])
+	} else {
+		return ""
+	}
 }
