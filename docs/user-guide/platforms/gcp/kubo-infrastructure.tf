@@ -58,22 +58,12 @@ resource "google_service_account" "worker" {
   display_name = "${var.prefix} kubo-worker"
 }
 
-resource "google_project_iam_policy" "common-policy" {
+resource "google_project_iam_policy" "policy" {
   project     = "${var.projectid}"
-  policy_data = "${data.google_iam_policy.common.policy_data}"
+  policy_data = "${data.google_iam_policy.admin.policy_data}"
 }
 
-# resource "google_project_iam_policy" "master-policy" {
-#   project     = "${var.projectid}"
-#   policy_data = "${data.google_iam_policy.master.policy_data}"
-# }
-
-# resource "google_project_iam_policy" "worker-policy" {
-#   project     = "${var.projectid}"
-#   policy_data = "${data.google_iam_policy.worker.policy_data}"
-# }
-
-data "google_iam_policy" "common" {
+data "google_iam_policy" "admin" {
   binding {
     role = "roles/compute.storageAdmin"
 
