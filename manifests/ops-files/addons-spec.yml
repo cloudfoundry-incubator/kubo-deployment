@@ -1,0 +1,4 @@
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kubernetes-system-specs/properties/addons-spec?
+  value:  | #do not delete the following line return
+  

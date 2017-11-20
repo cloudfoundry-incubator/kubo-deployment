@@ -15,6 +15,7 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
+	"strings"
 )
 
 var _ = Describe("Generate manifest", func() {
@@ -228,6 +229,48 @@ var _ = Describe("Generate manifest", func() {
 			Expect(status).To(Equal(0))
 			Expect(stdout).To(gbytes.Say("\n      kubelet-password: Shields up, ancient life!\n"))
 		})
+
+		It("should not embed addons_specs if not specified in the director", func() {
+			status, err := bash.Run("main", []string{kuboEnv, "grinder", "director_uuid"})
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+
+			pathValue, err := propertyFromManifest("/instance_groups/name=master/jobs/name=kubernetes-system-specs/properties/addons_spec", stdout.Contents())
+			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).To(ContainSubstring("Expected to find a map key 'addons_spec'"))
+			Expect(pathValue).To(Equal(""))
+		})
+
+		It("should embed addons_specs", func() {
+			opsfileEnv := filepath.Join(testEnvironmentPath, "with_addons")
+			status, err := bash.Run("main", []string{opsfileEnv, "name", "director_uuid"})
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+			pathValue, err := propertyFromManifest("/instance_groups/name=master/jobs/name=kubernetes-system-specs/properties/addons-spec", stdout.Contents())
+
+			Expect(pathValue).To(Equal("valid:\n  key: value"))
+		})
+	})
+
+	It("errors out if addons_spec file is missing", func() {
+		noAddonsEnv := filepath.Join(testEnvironmentPath, "absent_addons_spec_failing")
+		status, err := bash.Run("main", []string{noAddonsEnv, "coaster", "director_uuid"})
+
+		Expect(err).NotTo(HaveOccurred())
+
+		Expect(status).NotTo(Equal(0))
+		Expect(strings.Contains(string(stdout.Contents()), "No file exists")).To(BeTrue())
+	})
+
+	It("errors out if addons_spec file is not valid yaml", func() {
+		invalidAddonsEnv := filepath.Join(testEnvironmentPath, "invalid_addons_spec_failing")
+		status, err := bash.Run("main", []string{invalidAddonsEnv, "coaster", "director_uuid"})
+
+		Expect(err).NotTo(HaveOccurred())
+		Expect(status).NotTo(Equal(0))
+		Expect(strings.Contains(string(stdout.Contents()), "Invalid yaml")).To(BeTrue())
 	})
 
 	It("expands the bosh environment path to absolute value", func() {
@@ -267,6 +310,9 @@ var _ = Describe("Generate manifest", func() {
 	It("should generate a valid manifest", func() {
 		files, _ := filepath.Glob(testEnvironmentPath + "/*")
 		for _, env := range files {
+			if strings.Contains(env, "_failing"){
+				continue
+			}
 			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name", "director_uuid")
 			out := gbytes.NewBuffer()
 			command.Stdout = out
@@ -282,6 +328,9 @@ var _ = Describe("Generate manifest", func() {
 	It("should not write anything to stderr", func() {
 		files, _ := filepath.Glob(testEnvironmentPath + "/*")
 		for _, env := range files {
+			if strings.Contains(env, "_failing"){
+				continue
+			}
 			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name", "director_uuid")
 			errBuffer := gbytes.NewBuffer()
 			command.Stdout = GinkgoWriter
