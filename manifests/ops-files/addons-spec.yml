@@ -1,4 +1,9 @@
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kubernetes-system-specs/properties/addons-spec?
-  value:  | #do not delete the following line return
-  
+  path: /instance_groups/name=master/jobs/-
+  value:
+    name: apply-specs
+    release: kubo
+    properties:
+      authorization-mode: ((authorization-mode))
+      admin-password: ((kubo-admin-password))
+      addons-spec: ((addons-spec))

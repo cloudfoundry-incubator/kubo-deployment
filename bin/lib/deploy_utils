@@ -136,7 +136,6 @@ generate_manifest() {
     manifest=$(bosh-cli int <(echo "${manifest}") --vars-file="${bosh_environment}/director-secrets.yml")
   fi
 
-
   if bosh-cli int "${bosh_environment}/director.yml" --path='/addons_spec_path' &> /dev/null; then
     addon_path=$(bosh-cli int "${bosh_environment}/director.yml" --path='/addons_spec_path')
     addon_path="${bosh_environment}/${addon_path}"
@@ -150,13 +149,7 @@ generate_manifest() {
       exit 1
     fi
 
-    cat ${manifest_dir}/ops-files/addons-spec.yml > ./temp-opsfile.yml
-    sed  's/^/     /' ${addon_path} >> ./temp-opsfile.yml # indent yaml
-
-    manifest=$(bosh-cli int <(echo "${manifest}") --ops-file=./temp-opsfile.yml)
-
-    rm ./temp-opsfile.yml
-
+    manifest=$(bosh-cli int <(echo "${manifest}") --ops-file="${manifest_dir}/ops-files/addons-spec.yml" --var-file="addons-spec=${addon_path}")
   fi
 
   printf "%s" "${manifest}"

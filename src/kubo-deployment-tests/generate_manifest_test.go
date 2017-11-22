@@ -230,28 +230,29 @@ var _ = Describe("Generate manifest", func() {
 			Expect(stdout).To(gbytes.Say("\n      kubelet-password: Shields up, ancient life!\n"))
 		})
 
-		It("should not embed addons_specs if not specified in the director", func() {
+		It("should not embed addons-specs if not specified in the director", func() {
 			status, err := bash.Run("main", []string{kuboEnv, "grinder", "director_uuid"})
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
-			pathValue, err := propertyFromManifest("/instance_groups/name=master/jobs/name=kubernetes-system-specs/properties/addons_spec", stdout.Contents())
+			pathValue, err := propertyFromManifest("/instance_groups/name=master/jobs/name=apply-specs", stdout.Contents())
 			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(ContainSubstring("Expected to find a map key 'addons_spec'"))
+			Expect(err.Error()).To(ContainSubstring("Expected to find exactly one matching array item for path '/instance_groups/name=master/jobs/name=apply-specs' but found 0"))
 			Expect(pathValue).To(Equal(""))
 		})
 
-		It("should embed addons_specs", func() {
+		It("should embed addons-specs", func() {
 			opsfileEnv := filepath.Join(testEnvironmentPath, "with_addons")
 			status, err := bash.Run("main", []string{opsfileEnv, "name", "director_uuid"})
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
-			pathValue, err := propertyFromManifest("/instance_groups/name=master/jobs/name=kubernetes-system-specs/properties/addons-spec", stdout.Contents())
+			pathValue, err := propertyFromManifest("/instance_groups/name=master/jobs/name=apply-specs/properties/addons-spec", stdout.Contents())
 
-			Expect(pathValue).To(Equal("valid:\n  key: value"))
+			Expect(pathValue).To(Equal("|-\n  valid:\n    key: value"))
 		})
+
 	})
 
 	It("errors out if addons_spec file is missing", func() {
