@@ -262,7 +262,7 @@ var _ = Describe("Generate manifest", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(status).NotTo(Equal(0))
-		Expect(strings.Contains(string(stdout.Contents()), "No file exists")).To(BeTrue())
+		Expect(strings.Contains(string(stderr.Contents()), "No file exists")).To(BeTrue())
 	})
 
 	It("errors out if addons_spec file is not valid yaml", func() {
@@ -271,7 +271,7 @@ var _ = Describe("Generate manifest", func() {
 
 		Expect(err).NotTo(HaveOccurred())
 		Expect(status).NotTo(Equal(0))
-		Expect(strings.Contains(string(stdout.Contents()), "Invalid yaml")).To(BeTrue())
+		Expect(strings.Contains(string(stderr.Contents()), "Invalid yaml")).To(BeTrue())
 	})
 
 	It("expands the bosh environment path to absolute value", func() {
