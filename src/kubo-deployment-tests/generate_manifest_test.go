@@ -311,7 +311,7 @@ var _ = Describe("Generate manifest", func() {
 	It("should generate a valid manifest", func() {
 		files, _ := filepath.Glob(testEnvironmentPath + "/*")
 		for _, env := range files {
-			if strings.Contains(env, "_failing"){
+			if strings.Contains(env, "_failing") {
 				continue
 			}
 			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name", "director_uuid")
@@ -329,7 +329,7 @@ var _ = Describe("Generate manifest", func() {
 	It("should not write anything to stderr", func() {
 		files, _ := filepath.Glob(testEnvironmentPath + "/*")
 		for _, env := range files {
-			if strings.Contains(env, "_failing"){
+			if strings.Contains(env, "_failing") {
 				continue
 			}
 			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name", "director_uuid")
