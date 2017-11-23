@@ -51,7 +51,7 @@ main() {
     exit 1
   fi
 
-  local source_dir bosh_path bosh_name iaas
+  local bosh_path bosh_name iaas
 
   bosh_path="$(cd "$1"; pwd)"
   bosh_name="$2"
