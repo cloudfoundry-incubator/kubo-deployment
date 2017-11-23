@@ -47,4 +47,8 @@ main() {
   generate_manifest "${bosh_env}" "${deployment_name}" "$(repo_directory)/manifests/kubo.yml" "${director_uuid}"
 }
 
-[[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"
+is_run_standalone() {
+  [[ "$0" == "${BASH_SOURCE[0]}" ]]
+}
+
+is_run_standalone && main "$@"
