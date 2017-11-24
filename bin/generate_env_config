@@ -40,7 +40,7 @@ main() {
   echo "====================================="
   echo ""
 
-  if [ $# != 3 ]; then
+  if [ $# -ne 3 ]; then
     print_usage
     exit 1
   fi

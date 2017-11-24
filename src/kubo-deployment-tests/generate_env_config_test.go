@@ -90,6 +90,59 @@ var _ = Describe("generate_env_config", func() {
 		})
 	})
 
+	Context("config contains iaas-specific properties", func() {
+		var (
+			envDir  string
+			err     error
+			envName = "Lamas"
+		)
+
+		BeforeEach(func() {
+			envDir, err = ioutil.TempDir("", "generateEnvConfig")
+			Expect(err).ToNot(HaveOccurred())
+
+			err = os.Mkdir(path.Join(envDir, envName), 0777)
+			Expect(err).ToNot(HaveOccurred())
+
+			bash.Source("", func(string) ([]byte, error) {
+				return []byte(fmt.Sprintf(`repo_directory() { echo "%s"; }`, pathFromRoot(""))), nil
+			})
+		})
+
+		AfterEach(func() {
+			defer os.RemoveAll(envDir)
+		})
+
+		expectPropertyToExistForIaaS := func(iaas, configFile, propertyName string) {
+			status, err := bash.Run("main", []string{envDir, envName, iaas})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+			directorPath := path.Join(envDir, envName, configFile)
+			director, err := ioutil.ReadFile(directorPath)
+			Expect(err).NotTo(HaveOccurred())
+			_, err = propertyFromYaml("/"+propertyName, director)
+			Expect(err).ToNot(HaveOccurred())
+		}
+
+		DescribeTable("checks property is present in director.yml", func(iaas string, propertyName string) {
+			expectPropertyToExistForIaaS(iaas, "director.yml", propertyName)
+		},
+			Entry("AWS", "aws", "master_iam_instance_profile"),
+			Entry("GCP", "gcp", "service_account"),
+			Entry("OpenStack", "openstack", "openstack_domain"),
+			Entry("vSphere", "vsphere", "vcenter_ip"),
+		)
+
+		DescribeTable("checks property is present in director-secrets.yml", func(iaas string, propertyName string) {
+			expectPropertyToExistForIaaS(iaas, "director-secrets.yml", propertyName)
+		},
+			Entry("AWS", "aws", "access_key_id"),
+			Entry("OpenStack", "openstack", "openstack_password"),
+			Entry("vSphere", "vsphere", "vcenter_password"),
+		)
+
+	})
+
 	It("gracefully concatenates the templates", func() {
 		iaas := "aws"
 		status, _ := bash.Run("main", []string{"/tmp", "b00t", iaas})
@@ -97,13 +150,19 @@ var _ = Describe("generate_env_config", func() {
 
 		config, err := ioutil.ReadFile("/tmp/b00t/director.yml")
 		Expect(err).NotTo(HaveOccurred())
-		configString := string(config)
-		Expect(configString).To(ContainSubstring(fmt.Sprintf("\niaas: %s", iaas)))
-		Expect(configString).To(ContainSubstring("\nsome-other: setting"))
+
+		expectPathContent("/some-other", config, "setting")
+		expectPathContent("/iaas", config, iaas)
 
 		secrets, err := ioutil.ReadFile("/tmp/b00t/director-secrets.yml")
 		Expect(err).NotTo(HaveOccurred())
-		secretsString := string(secrets)
-		Expect(secretsString).To(ContainSubstring("\nssshhh: ssshhh"))
+
+		expectPathContent("/ssshhh", secrets, "ssshhh")
 	})
 })
+
+func expectPathContent(yamlPath string, yamlSlice []byte, content string) {
+	value, err := propertyFromYaml(yamlPath, yamlSlice)
+	Expect(err).ToNot(HaveOccurred())
+	Expect(value).To(Equal(content))
+}
