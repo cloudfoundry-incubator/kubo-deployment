@@ -30,12 +30,13 @@ var _ = Describe("Generate manifest", func() {
 		status, err := bash.Run("main", params)
 
 		Expect(err).NotTo(HaveOccurred())
-		Expect(status).NotTo(Equal(0))
+		Expect(status).To(Equal(1))
+		Expect(stdout).To(gbytes.Say("Usage:"))
 	},
 		Entry("no params", []string{}),
 		Entry("single parameter", []string{"a"}),
-		Entry("three parameters", []string{"a", "b", "c"}),
-		Entry("with missing environment", []string{"/missing", "a"}),
+		Entry("two parameters", []string{"a", "b"}),
+		Entry("with missing environment", []string{"/missing", "a", "guid"}),
 	)
 
 	Context("successful manifest generation", func() {
