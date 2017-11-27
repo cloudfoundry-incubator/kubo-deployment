@@ -47,19 +47,19 @@ var _ = Describe("set_kubeconfig", func() {
 		})
 
 		It("should set cluster config on kubectl", func() {
-			Expect(stderr).To(gbytes.Say("kubectl config set-cluster deployment-name --server=https://12.23.34.45:101928"))
+			Expect(stderr).To(gbytes.Say("kubectl config set-cluster kubo:TheDirector:deployment-name --server=https://12.23.34.45:101928"))
 		})
 
 		It("should set credentials on kubectl", func() {
-			Expect(stderr).To(gbytes.Say("kubectl config set-credentials deployment-name-admin --token=\\w+"))
+			Expect(stderr).To(gbytes.Say("kubectl config set-credentials kubo:TheDirector:deployment-name-admin --token=\\w+"))
 		})
 
 		It("should set context on kubectl", func() {
-			Expect(stderr).To(gbytes.Say("kubectl config set-context kubo-deployment-name --cluster=deployment-name --user=deployment-name-admin"))
+			Expect(stderr).To(gbytes.Say("kubectl config set-context kubo:TheDirector:deployment-name --cluster=kubo:TheDirector:deployment-name --user=kubo:TheDirector:deployment-name-admin"))
 		})
 
 		It("should use context on kubectl", func() {
-			Expect(stderr).To(gbytes.Say("kubectl config use-context kubo-deployment-name"))
+			Expect(stderr).To(gbytes.Say("kubectl config use-context kubo:TheDirector:deployment-name"))
 		})
 	})
 })
