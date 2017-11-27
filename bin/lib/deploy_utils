@@ -140,12 +140,12 @@ generate_manifest() {
     addon_path=$(bosh-cli int "${bosh_environment}/director.yml" --path='/addons_spec_path')
     addon_path="${bosh_environment}/${addon_path}"
     if [[ ! -f "${addon_path}" ]]; then
-      echo "No file exists at the path specified in addons_spec_path parameter of director.yml"
+      echo "No file exists at the path specified in addons_spec_path property of director.yml" >&2
       exit 1
     fi
 
     if ! bosh-cli int "${addon_path}" &> /dev/null; then
-      echo "Invalid yaml at the path specified for the addons_spec_path parameter of director.yml"
+      echo "Invalid yaml at the path specified for the addons_spec_path property of director.yml" >&2
       exit 1
     fi
 

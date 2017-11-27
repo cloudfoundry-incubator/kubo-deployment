@@ -2,20 +2,16 @@ package kubo_deployment_tests_test
 
 import (
 	"fmt"
+	"io"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
-	"gopkg.in/yaml.v2"
-
-	"io"
-
-	boshtpl "github.com/cloudfoundry/bosh-cli/director/template"
-	"github.com/cppforlife/go-patch/patch"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
-	"strings"
+	"gopkg.in/yaml.v2"
 )
 
 var _ = Describe("Generate manifest", func() {
@@ -30,12 +26,13 @@ var _ = Describe("Generate manifest", func() {
 		status, err := bash.Run("main", params)
 
 		Expect(err).NotTo(HaveOccurred())
-		Expect(status).NotTo(Equal(0))
+		Expect(status).To(Equal(1))
+		Expect(stdout).To(gbytes.Say("Usage:"))
 	},
 		Entry("no params", []string{}),
 		Entry("single parameter", []string{"a"}),
-		Entry("three parameters", []string{"a", "b", "c"}),
-		Entry("with missing environment", []string{"/missing", "a"}),
+		Entry("two parameters", []string{"a", "b"}),
+		Entry("with missing environment", []string{"/missing", "a", "guid"}),
 	)
 
 	Context("successful manifest generation", func() {
@@ -47,7 +44,7 @@ var _ = Describe("Generate manifest", func() {
 
 			Expect(status).To(Equal(0))
 
-			pathValue, err := propertyFromManifest(yPath, stdout.Contents())
+			pathValue, err := propertyFromYaml(yPath, stdout.Contents())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(pathValue).To(Equal(value))
 		},
@@ -71,7 +68,7 @@ var _ = Describe("Generate manifest", func() {
 
 			Expect(status).To(Equal(0))
 
-			pathValue, err := propertyFromManifest(yPath, stdout.Contents())
+			pathValue, err := propertyFromYaml(yPath, stdout.Contents())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(pathValue).To(Equal(value))
 		},
@@ -89,7 +86,7 @@ var _ = Describe("Generate manifest", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
-			pathValue, err := propertyFromManifest("/features/use_dns_addresses", stdout.Contents())
+			pathValue, err := propertyFromYaml("/features/use_dns_addresses", stdout.Contents())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(pathValue).To(Equal("true"))
 		})
@@ -236,7 +233,7 @@ var _ = Describe("Generate manifest", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
-			pathValue, err := propertyFromManifest("/instance_groups/name=master/jobs/name=apply-specs", stdout.Contents())
+			pathValue, err := propertyFromYaml("/instance_groups/name=master/jobs/name=apply-specs", stdout.Contents())
 			Expect(err).To(HaveOccurred())
 			Expect(err.Error()).To(ContainSubstring("Expected to find exactly one matching array item for path '/instance_groups/name=master/jobs/name=apply-specs' but found 0"))
 			Expect(pathValue).To(Equal(""))
@@ -248,7 +245,7 @@ var _ = Describe("Generate manifest", func() {
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
-			pathValue, err := propertyFromManifest("/instance_groups/name=master/jobs/name=apply-specs/properties/addons-spec", stdout.Contents())
+			pathValue, err := propertyFromYaml("/instance_groups/name=master/jobs/name=apply-specs/properties/addons-spec", stdout.Contents())
 
 			Expect(pathValue).To(Equal("|-\n  valid:\n    key: value"))
 		})
@@ -262,7 +259,7 @@ var _ = Describe("Generate manifest", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(status).NotTo(Equal(0))
-		Expect(strings.Contains(string(stdout.Contents()), "No file exists")).To(BeTrue())
+		Expect(strings.Contains(string(stderr.Contents()), "No file exists")).To(BeTrue())
 	})
 
 	It("errors out if addons_spec file is not valid yaml", func() {
@@ -271,7 +268,7 @@ var _ = Describe("Generate manifest", func() {
 
 		Expect(err).NotTo(HaveOccurred())
 		Expect(status).NotTo(Equal(0))
-		Expect(strings.Contains(string(stdout.Contents()), "Invalid yaml")).To(BeTrue())
+		Expect(strings.Contains(string(stderr.Contents()), "Invalid yaml")).To(BeTrue())
 	})
 
 	It("expands the bosh environment path to absolute value", func() {
@@ -311,7 +308,7 @@ var _ = Describe("Generate manifest", func() {
 	It("should generate a valid manifest", func() {
 		files, _ := filepath.Glob(testEnvironmentPath + "/*")
 		for _, env := range files {
-			if strings.Contains(env, "_failing"){
+			if strings.Contains(env, "_failing") {
 				continue
 			}
 			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name", "director_uuid")
@@ -329,7 +326,7 @@ var _ = Describe("Generate manifest", func() {
 	It("should not write anything to stderr", func() {
 		files, _ := filepath.Glob(testEnvironmentPath + "/*")
 		for _, env := range files {
-			if strings.Contains(env, "_failing"){
+			if strings.Contains(env, "_failing") {
 				continue
 			}
 			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name", "director_uuid")
@@ -389,7 +386,7 @@ var _ = Describe("Generate manifest", func() {
 		command.Dir = pathFromRoot("")
 		Expect(command.Run()).To(Succeed())
 
-		value, err := propertyFromManifest("/instance_groups/name=master/networks/0/static_ips", stdout.Contents())
+		value, err := propertyFromYaml("/instance_groups/name=master/networks/0/static_ips", stdout.Contents())
 		Expect(err).NotTo(HaveOccurred())
 		Expect(value).To(Equal("- 1.2.3.4"))
 	})
@@ -401,36 +398,13 @@ var _ = Describe("Generate manifest", func() {
 		command.Dir = pathFromRoot("")
 		Expect(command.Run()).To(Succeed())
 
-		value, err := propertyFromManifest("/instance_groups/name=master/networks/1/type", stdout.Contents())
+		value, err := propertyFromYaml("/instance_groups/name=master/networks/1/type", stdout.Contents())
 		Expect(err).NotTo(HaveOccurred())
 		Expect(value).To(Equal("vip"))
 
-		value, err = propertyFromManifest("/instance_groups/name=master/networks/1/static_ips", stdout.Contents())
+		value, err = propertyFromYaml("/instance_groups/name=master/networks/1/static_ips", stdout.Contents())
 		Expect(err).NotTo(HaveOccurred())
 		Expect(value).To(Equal("- 1.2.3.4"))
 	})
 
 })
-
-func propertyFromManifest(path string, manifestString []byte) (string, error) {
-	var manifest map[string]interface{}
-	err := yaml.Unmarshal(manifestString, &manifest)
-	if err != nil {
-		return "", err
-	}
-
-	template := boshtpl.NewTemplate([]byte(stdout.Contents()))
-	vars := boshtpl.StaticVariables{}
-	ops := patch.FindOp{Path: patch.MustNewPointerFromString(path)}
-
-	bytes, err := template.Evaluate(vars, ops, boshtpl.EvaluateOpts{ExpectAllKeys: false})
-	return choppedString(bytes), err
-}
-
-func choppedString(bytes []byte) string {
-	if len(bytes) > 0 {
-		return string(bytes[:len(bytes)-1])
-	} else {
-		return ""
-	}
-}
