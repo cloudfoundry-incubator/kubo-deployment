@@ -36,6 +36,8 @@ instance_groups:
   - name: cloud-provider
     release: kubo
     properties: {}
+    provides:
+      cloud-provider: {as: master}
   - name: flanneld
     release: kubo
   - name: kubernetes-api
@@ -72,6 +74,8 @@ instance_groups:
       admin-username: admin
       admin-password: ((kubo-admin-password))
       authorization-mode: *authorization_mode
+    consumes:
+      cloud-provider: {from: master}
   - name: etcd
     release: kubo-etcd
     properties:
