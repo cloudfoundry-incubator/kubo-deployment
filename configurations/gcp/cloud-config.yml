@@ -24,7 +24,6 @@ vm_types:
     machine_type: n1-standard-1
     root_disk_size_gb: 20
     root_disk_type: pd-ssd
-    service_account: ((service_account_common))
     tags: ((tags))
 
 - name: master

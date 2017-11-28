@@ -43,11 +43,6 @@ provider "google" {
     region = "${var.region}"
 }
 
-resource "google_service_account" "common" {
-  account_id   = "${var.prefix}-kubo-common"
-  display_name = "${var.prefix} kubo-common"
-}
-
 resource "google_service_account" "master" {
   account_id   = "${var.prefix}-kubo-master"
   display_name = "${var.prefix} kubo-master"
@@ -68,9 +63,7 @@ data "google_iam_policy" "admin" {
     role = "roles/compute.storageAdmin"
 
     members = [
-      "serviceAccount:${google_service_account.common.email}",
       "serviceAccount:${google_service_account.master.email}",
-      "serviceAccount:${google_service_account.worker.email}",
     ]
   }
 
@@ -78,9 +71,7 @@ data "google_iam_policy" "admin" {
     role = "roles/compute.networkAdmin"
 
     members = [
-      "serviceAccount:${google_service_account.common.email}",
       "serviceAccount:${google_service_account.master.email}",
-      "serviceAccount:${google_service_account.worker.email}",
     ]
   }
 
@@ -88,9 +79,7 @@ data "google_iam_policy" "admin" {
     role = "roles/compute.securityAdmin"
 
     members = [
-      "serviceAccount:${google_service_account.common.email}",
       "serviceAccount:${google_service_account.master.email}",
-      "serviceAccount:${google_service_account.worker.email}",
 
     ]
   }
@@ -99,9 +88,7 @@ data "google_iam_policy" "admin" {
     role = "roles/compute.instanceAdmin"
 
     members = [
-      "serviceAccount:${google_service_account.common.email}",
       "serviceAccount:${google_service_account.master.email}",
-      "serviceAccount:${google_service_account.worker.email}",
     ]
   }
 
@@ -109,8 +96,14 @@ data "google_iam_policy" "admin" {
     role = "roles/iam.serviceAccountActor"
 
     members = [
-      "serviceAccount:${google_service_account.common.email}",
       "serviceAccount:${google_service_account.master.email}",
+    ]
+  }
+
+  binding {
+    role = "roles/compute.viewer"
+
+    members = [
       "serviceAccount:${google_service_account.worker.email}",
     ]
   }
@@ -254,7 +247,6 @@ sed -i -e 's/^\(subnetwork:\).*\(#.*\)/\1 ${google_compute_subnetwork.kubo-subne
 sed -i -e 's/^\(zone:\).*\(#.*\)/\1 ${var.zone} \2/' "$1"
 sed -i -e 's/^\(service_account_master:\).*\(#.*\)/\1 ${google_service_account.master.email} \2/' "$1"
 sed -i -e 's/^\(service_account_worker:\).*\(#.*\)/\1 ${google_service_account.worker.email} \2/' "$1"
-sed -i -e 's/^\(service_account_common:\).*\(#.*\)/\1 ${google_service_account.common.email} \2/' "$1"
 
 # Generic updates
 sed -i -e 's/^\(internal_ip:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.252 \2/' "$1"
