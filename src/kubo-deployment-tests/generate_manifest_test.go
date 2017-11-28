@@ -250,6 +250,16 @@ var _ = Describe("Generate manifest", func() {
 			Expect(pathValue).To(Equal("|-\n  valid:\n    key: value"))
 		})
 
+		It("should create 3 worker nodes", func() {
+			status, _ := bash.Run("main", []string{kuboEnv, "grinder", "director_uuid"})
+
+			Expect(status).To(Equal(0))
+
+			pathValue, err := propertyFromYaml("/instance_groups/name=worker/instances", stdout.Contents())
+			Expect(err).NotTo(HaveOccurred())
+			Expect(pathValue).To(Equal("3"))
+		})
+
 	})
 
 	It("errors out if addons_spec file is missing", func() {
@@ -405,6 +415,18 @@ var _ = Describe("Generate manifest", func() {
 		value, err = propertyFromYaml("/instance_groups/name=master/networks/1/static_ips", stdout.Contents())
 		Expect(err).NotTo(HaveOccurred())
 		Expect(value).To(Equal("- 1.2.3.4"))
+	})
+
+	It("setting the worker_count to 5 creates 5 worker nodes", func() {
+		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_gcp_with_5_workers", "name", "director_uuid")
+		command.Stdout = bash.Stdout
+		command.Stderr = bash.Stderr
+		command.Dir = pathFromRoot("")
+		Expect(command.Run()).To(Succeed())
+
+		value, err := propertyFromYaml("/instance_groups/name=worker/instances", stdout.Contents())
+		Expect(err).NotTo(HaveOccurred())
+		Expect(value).To(Equal("5"))
 	})
 
 })

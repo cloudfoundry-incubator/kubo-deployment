@@ -10,6 +10,8 @@ dns_recursor_ip: # DNS IP address for resolving non-BOSH hostnames
 
 kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest.tgz
 
+worker_count: 3
+
 # Proxy routing mode settings
 # Uncomment this section when using Proxy routing mode
 # routing_mode: proxy
