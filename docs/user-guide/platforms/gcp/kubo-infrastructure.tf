@@ -44,12 +44,12 @@ provider "google" {
 }
 
 resource "google_service_account" "master" {
-  account_id   = "${var.prefix}-kubo-master"
+  account_id   = "${var.prefix}kubo-master"
   display_name = "${var.prefix} kubo-master"
 }
 
 resource "google_service_account" "worker" {
-  account_id   = "${var.prefix}-kubo-worker"
+  account_id   = "${var.prefix}kubo-worker"
   display_name = "${var.prefix} kubo-worker"
 }
 
