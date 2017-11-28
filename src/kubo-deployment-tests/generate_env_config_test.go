@@ -128,7 +128,8 @@ var _ = Describe("generate_env_config", func() {
 			expectPropertyToExistForIaaS(iaas, "director.yml", propertyName)
 		},
 			Entry("AWS", "aws", "master_iam_instance_profile"),
-			Entry("GCP", "gcp", "service_account"),
+			Entry("GCP master", "gcp", "service_account_master"),
+			Entry("GCP worker", "gcp", "service_account_worker"),
 			Entry("OpenStack", "openstack", "openstack_domain"),
 			Entry("vSphere", "vsphere", "vcenter_ip"),
 		)
