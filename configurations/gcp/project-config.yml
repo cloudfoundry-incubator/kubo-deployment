@@ -7,4 +7,3 @@ tags: # tags below are used if jumpbox and NAT were deployed using https://githu
 zone: # name of GCP zone
 service_account_master: # service account to be set on Kubo Master VMs
 service_account_worker: # service account to be set on Kubo Worker VMs
-service_account_common: # service account to be set on Kubo common VMs
