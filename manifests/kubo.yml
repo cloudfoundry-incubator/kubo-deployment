@@ -5,9 +5,9 @@ features:
 
 releases:
 - name: kubo-etcd
-  version: 4
-  url: https://github.com/pivotal-cf-experimental/kubo-etcd/releases/download/v4/kubo-etcd.4.tgz
-  sha1: f94ab00d423765e2c740836788dc256caa1af014
+  version: 5
+  url: https://github.com/pivotal-cf-experimental/kubo-etcd/releases/download/v5/kubo-etcd.5.tgz
+  sha1: 23ed1754048ff758ed8fdf75ee1369ca59435181
 - name: kubo
   version: latest
 - name: docker
