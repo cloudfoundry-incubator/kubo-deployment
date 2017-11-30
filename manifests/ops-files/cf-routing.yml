@@ -36,16 +36,12 @@
       release: kubo
     - name: kubeconfig
       release: kubo
-      properties:
-        kubelet-password: ((kubelet-password))
-        kube-proxy-password: ((kube-proxy-password))
-        kube-scheduler-password: ((kube-scheduler-password))
-        route-sync-password: ((route-sync-password))
-        tls:
-          kubernetes: ((tls-kubernetes))
     - name: route-sync
       release: kubo
       properties:
+        route-sync-password: ((route-sync-password))
+        tls:
+          kubernetes: ((tls-kubernetes))
         cloud_foundry:
           uaa_url: ((routing-cf-uaa-url))
           routing_api_url: ((routing-cf-api-url))
