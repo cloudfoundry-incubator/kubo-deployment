@@ -119,8 +119,6 @@ instance_groups:
     release: kubo
     properties:
       kubernetes-api-url: "https://((kubernetes_master_host)):((kubernetes_master_port))"
-      kubelet-password: ((kubelet-password))
-      kube-proxy-password: ((kube-proxy-password))
       kube-scheduler-password: ((kube-scheduler-password))
       route-sync-password: ((route-sync-password))
       tls:
@@ -137,6 +135,10 @@ instance_groups:
         kubelet: ((tls-kubelet))
   - name: kubernetes-proxy
     release: kubo
+    properties:
+      tls:
+        kubernetes: ((tls-kubernetes))
+      kube-proxy-password: ((kube-proxy-password))
   stemcell: trusty
   vm_type: worker
   persistent_disk_type: 10240
