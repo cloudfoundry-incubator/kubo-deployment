@@ -34,8 +34,6 @@
     jobs:
     - name: kubo-dns-aliases
       release: kubo
-    - name: kubeconfig
-      release: kubo
     - name: route-sync
       release: kubo
       properties:

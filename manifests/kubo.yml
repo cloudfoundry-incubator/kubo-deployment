@@ -54,15 +54,6 @@ instance_groups:
       authorization-mode: &authorization_mode ((authorization_mode))
       tls:
         kubernetes: ((tls-kubernetes))
-  - name: kubeconfig
-    release: kubo
-    properties:
-      kubelet-password: ((kubelet-password))
-      kube-proxy-password: ((kube-proxy-password))
-      kube-scheduler-password: ((kube-scheduler-password))
-      route-sync-password: ((route-sync-password))
-      tls:
-        kubernetes: ((tls-kubernetes))
   - name: kubernetes-controller-manager
     release: kubo
     properties:
@@ -119,13 +110,6 @@ instance_groups:
       tls_cert:  ((tls-docker.certificate))
       tls_key: ((tls-docker.private_key))
       env: {}
-  - name: kubeconfig
-    release: kubo
-    properties:
-      kubernetes-api-url: "https://((kubernetes_master_host)):((kubernetes_master_port))"
-      route-sync-password: ((route-sync-password))
-      tls:
-        kubernetes: ((tls-kubernetes))
   - name: cloud-provider
     release: kubo
     properties: {}
