@@ -52,8 +52,6 @@ var _ = Describe("Generate manifest", func() {
 			Entry("network name", "/instance_groups/name=master/networks/0/name", "network-name"),
 			Entry("Master node has the etcd job", "/instance_groups/name=master/jobs/name=etcd/release", "kubo-etcd"),
 			Entry("There is only one master node", "/instance_groups/name=master/instances", "1"),
-			Entry("Master Kubeconfig Kubelet Password", "/instance_groups/name=master/jobs/name=kubeconfig/properties/kubelet-password", "((kubelet-password))"),
-			Entry("Worker Kubeconfig Kubernetes API URL", "/instance_groups/name=worker/jobs/name=kubeconfig/properties/kubernetes-api-url", "https://a.router.name:101928"),
 			Entry("kubernetes external port", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/external_kubo_port", "101928"),
 			Entry("CF API URL", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/api_url", "cf.api.url"),
 			Entry("CF UAA URL", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_url", "cf.uaa.url"),
@@ -77,7 +75,6 @@ var _ = Describe("Generate manifest", func() {
 			Entry("Auto-generated kubelet password", "/instance_groups/name=master/jobs/name=kubernetes-api/properties/kubelet-password", "((kubelet-password))"),
 			Entry("Auto-generated admin password", "/instance_groups/name=master/jobs/name=kubernetes-api/properties/admin-password", "((kubo-admin-password))"),
 			Entry("worker node tag", "/instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider/gce/worker-node-tag", "TheDirector-grinder-worker"),
-			Entry("Kubernetes API URL", "/instance_groups/name=worker/jobs/name=kubeconfig/properties/kubernetes-api-url", "https://12.23.34.45:101928"),
 		)
 
 		It("should always use dns addresses", func() {
