@@ -4,6 +4,9 @@
     name: apply-specs
     release: kubo
     properties:
+      kubelet-password: ((kubelet-password))
       authorization-mode: ((authorization-mode))
       admin-password: ((kubo-admin-password))
       addons-spec: ((addons-spec))
+      tls:
+        kubernetes: ((tls-kubernetes))
