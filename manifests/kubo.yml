@@ -66,7 +66,7 @@ instance_groups:
   - name: kubernetes-system-specs
     release: kubo
     properties:
-      kubelet-password: ((kubelet-password))
+      api-token: ((kubelet-password))
       admin-username: admin
       admin-password: ((kubo-admin-password))
       authorization-mode: *authorization_mode
@@ -116,7 +116,7 @@ instance_groups:
   - name: kubelet
     release: kubo
     properties:
-      kubelet-password: ((kubelet-password))
+      api-token: ((kubelet-password))
       tls:
         kubernetes: ((tls-kubernetes))
         kubelet: ((tls-kubelet))
