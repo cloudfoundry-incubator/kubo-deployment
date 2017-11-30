@@ -257,6 +257,20 @@ var _ = Describe("Generate manifest", func() {
 			Expect(pathValue).To(Equal("3"))
 		})
 
+		It("should not containe GCE service key properties", func() {
+			status, _ := bash.Run("main", []string{kuboEnv, "grinder", "director_uuid"})
+
+			Expect(status).To(Equal(0))
+
+			_, err := propertyFromYaml("/instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider/gce/service_key",
+				stdout.Contents())
+			Expect(err).To(HaveOccurred())
+
+			_, err = propertyFromYaml("/instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider/gce/service_key",
+				stdout.Contents())
+			Expect(err).To(HaveOccurred())
+		})
+
 	})
 
 	It("errors out if addons_spec file is missing", func() {
@@ -320,7 +334,8 @@ var _ = Describe("Generate manifest", func() {
 			}
 			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name", "director_uuid")
 			out := gbytes.NewBuffer()
-			command.Stdout = out
+			command.Stdout = bash.Stdout
+			command.Stderr = bash.Stderr
 			command.Dir = pathFromRoot("")
 			Expect(command.Run()).To(Succeed())
 
@@ -414,7 +429,7 @@ var _ = Describe("Generate manifest", func() {
 		Expect(value).To(Equal("- 1.2.3.4"))
 	})
 
-	It("setting the worker_count to 5 creates 5 worker nodes", func() {
+	It("should set the worker_count to 5 creates 5 worker nodes", func() {
 		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_gcp_with_5_workers", "name", "director_uuid")
 		command.Stdout = bash.Stdout
 		command.Stderr = bash.Stderr
@@ -424,6 +439,28 @@ var _ = Describe("Generate manifest", func() {
 		value, err := propertyFromYaml("/instance_groups/name=worker/instances", stdout.Contents())
 		Expect(err).NotTo(HaveOccurred())
 		Expect(value).To(Equal("5"))
+	})
+
+	Context("when there are gcp services keys in director.yml", func() {
+		It("should verify that the manifest has service_key properties", func() {
+			command := exec.Command("./bin/generate_kubo_manifest",
+				"src/kubo-deployment-tests/resources/environments/test_gcp_with_service_key",
+				"name", "director_uuid")
+			command.Stdout = bash.Stdout
+			command.Stderr = bash.Stderr
+			command.Dir = pathFromRoot("")
+			Expect(command.Run()).To(Succeed())
+
+			value, err := propertyFromYaml("/instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider/gce/service_key",
+				stdout.Contents())
+			Expect(err).NotTo(HaveOccurred())
+			Expect(value).To(Equal("bar"))
+
+			value, err = propertyFromYaml("/instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider/gce/service_key",
+				stdout.Contents())
+			Expect(err).NotTo(HaveOccurred())
+			Expect(value).To(Equal("foo"))
+		})
 	})
 
 })
