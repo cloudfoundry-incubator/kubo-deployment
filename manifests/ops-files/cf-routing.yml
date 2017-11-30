@@ -37,7 +37,7 @@
     - name: route-sync
       release: kubo
       properties:
-        route-sync-password: ((route-sync-password))
+        api-token: ((route-sync-password))
         tls:
           kubernetes: ((tls-kubernetes))
         cloud_foundry:

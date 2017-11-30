@@ -62,7 +62,7 @@ instance_groups:
   - name: kubernetes-scheduler
     release: kubo
     properties:
-      kube-scheduler-password: ((kube-scheduler-password))
+      api-token: ((kube-scheduler-password))
   - name: kubernetes-system-specs
     release: kubo
     properties:
