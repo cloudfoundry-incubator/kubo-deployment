@@ -125,7 +125,7 @@ instance_groups:
     properties:
       tls:
         kubernetes: ((tls-kubernetes))
-      kube-proxy-password: ((kube-proxy-password))
+      api-token: ((kube-proxy-password))
   stemcell: trusty
   vm_type: worker
   persistent_disk_type: 10240
