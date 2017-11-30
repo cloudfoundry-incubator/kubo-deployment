@@ -68,6 +68,8 @@ instance_groups:
     properties: {}
   - name: kubernetes-scheduler
     release: kubo
+    properties:
+      kube-scheduler-password: ((kube-scheduler-password))
   - name: kubernetes-system-specs
     release: kubo
     properties:
@@ -119,7 +121,6 @@ instance_groups:
     release: kubo
     properties:
       kubernetes-api-url: "https://((kubernetes_master_host)):((kubernetes_master_port))"
-      kube-scheduler-password: ((kube-scheduler-password))
       route-sync-password: ((route-sync-password))
       tls:
         kubernetes: ((tls-kubernetes))
