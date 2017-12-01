@@ -1,7 +1,5 @@
 internal_ip: # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into.
 
-deployments_network: # Network name to deploy service in your cloud config
-
 internal_cidr: # CIDR range that BOSH will deploy to
 internal_gw: # internal gateway
 
@@ -21,8 +19,7 @@ worker_count: 3
 # IaaS routing mode settings
 # Comment this section when using CF routing mode
 routing_mode: iaas
-kubernetes_master_host: # IP address that can be used to reach the Kubernetes API, usually the address of a load balancer
-kubernetes_master_port: 8443 # Kubernetes API server port
+kubernetes_master_host: # IP address that can be used to reach the Kubernetes API, usually the address of a load balancer or static IP
 master_target_pool: # target pool that master nodes will be a part of
 
 authorization_mode: abac # RBAC or ABAC authorization modes for the K8s cluster. Note: RBAC is not stable as of 0.8.x.

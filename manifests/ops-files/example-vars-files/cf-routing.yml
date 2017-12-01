@@ -1,0 +1,11 @@
+kubernetes_master_host: tcp.18-216-123-123.sslip.io
+kubernetes_master_port: 8443
+routing-cf-api-url: https://api.18-220-96-96.sslip.io
+routing-cf-uaa-url: https://uaa.18-220-96-96.sslip.io
+routing-cf-app-domain-name: 18-220-96-96.sslip.io
+routing-cf-client-id: routing_api_client
+routing-cf-client-secret: routing-cf-client-secret
+routing-cf-nats-internal-ips: [10.10.1.6,10.10.1.7,10.10.1.8]
+routing-cf-nats-port: 4222
+routing-cf-nats-username: nats
+routing-cf-nats-password: routing-cf-nats-password

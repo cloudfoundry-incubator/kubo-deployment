@@ -1,0 +1,5 @@
+- type: replace
+  path: /networks/type=manual/subnets/0/static
+  value:
+  - ((kubernetes_master_host))
+  - ((worker_haproxy_ip_addresses))

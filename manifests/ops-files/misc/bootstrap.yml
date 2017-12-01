@@ -1,0 +1,47 @@
+- type: replace
+  path: /stemcells/alias=trusty/version
+  value: "3468.11"
+
+- type: replace
+  path: /name
+  value: ((deployment_name))
+
+- type: replace
+  path: /instance_groups/name=master/azs
+  value: [z1]
+
+- type: replace
+  path: /instance_groups/name=master/vm_type
+  value: master
+
+- type: replace
+  path: /instance_groups/name=worker/azs
+  value: [z1]
+
+- type: replace
+  path: /instance_groups/name=worker/vm_type
+  value: worker
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kubernetes-api/properties/port
+  value: ((kubernetes_master_port))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kubernetes-api/properties/authorization-mode
+  value: ((authorization_mode))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kubernetes-system-specs/properties/authorization-mode
+  value: ((authorization_mode))
+
+- type: replace
+  path: /instance_groups/name=worker/instances
+  value: ((worker_count))
+
+- type: replace
+  path: /variables/name=tls-kubernetes/options/common_name
+  value: ((kubernetes_master_host))
+
+- type: replace
+  path: /variables/name=tls-kubernetes/options/alternative_names/-
+  value: ((kubernetes_master_host))

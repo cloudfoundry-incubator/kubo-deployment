@@ -1,7 +1,5 @@
 internal_ip: ip # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into.
 
-deployments_network: # Network name to deploy service in your cloud config
-
 internal_cidr: # CIDR range that BOSH will deploy to
 internal_gw: # internal gateway
 kubernetes_master_port: # Port to use for Kubernetes API

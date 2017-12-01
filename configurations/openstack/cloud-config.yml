@@ -4,7 +4,7 @@ azs:
     availability_zone: ((az))
 
 vm_types:
-- name: common
+- name: minimal
   cloud_properties:
     instance_type: m1.small
     root_disk_size_gb: 20
@@ -19,14 +19,8 @@ vm_types:
     instance_type: m1.large
     root_disk_size_gb: 100
 
-disk_types:
-- name: 10240
-  disk_size: 10240
-- name: 5120
-  disk_size: 5120
-
 networks:
-- name: ((deployments_network))
+- name: default
   type: dynamic
   subnets:
   - azs: [z1]
@@ -41,4 +35,4 @@ compilation:
   reuse_compilation_vms: true
   az: z1
   vm_type: worker
-  network: ((deployments_network))
+  network: default

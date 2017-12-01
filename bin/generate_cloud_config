@@ -56,9 +56,25 @@ main() {
     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
   elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "iaas" ]; then
     if [ "${bosh_iaas}" == "gcp" ]; then
-      cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/load-balancer-target-pools.yml")
+       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/iaas/gcp/cloud-config/load-balancer-target-pools.yml")
+       if ! bosh-cli int "${bosh_env}/director.yml" --path='/service_account_master' &> /dev/null; then
+         ops_string="${ops_string} --ops-file=$(repo_directory)/manifests/ops-files/iaas/gcp/cloud-config/remove-service-account-master.yml"
+       fi
+
+       if ! bosh-cli int "${bosh_env}/director.yml" --path='/service_account_worker' &> /dev/null; then
+         ops_string="${ops_string} --ops-file=$(repo_directory)/manifests/ops-files/iaas/gcp/cloud-config/remove-service-account-worker.yml"
+       fi
     elif [ "${bosh_iaas}" == "aws" ]; then
-      cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/aws-lb-cloud-config.yml")
+       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/iaas/aws/cloud-config/lb.yml")
+    else
+       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
+    fi
+  elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "proxy" ]; then
+
+    if [ "${bosh_iaas}" == "vsphere" ]; then
+        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/k8s-haproxy-static-ips-vsphere.yml")
+    elif [ "${bosh_iaas}" == "openstack" ]; then
+        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
     else
       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
     fi

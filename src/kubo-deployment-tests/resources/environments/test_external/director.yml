@@ -9,8 +9,6 @@ zone: # name of GCP zone
 
 internal_ip: internal.ip # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into.
 
-deployments_network: network-name # Network name to deploy service in your cloud config
-
 internal_cidr: # CIDR range that BOSH will deploy to
 internal_gw: # internal gateway
 

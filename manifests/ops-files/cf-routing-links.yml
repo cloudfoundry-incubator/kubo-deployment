@@ -1,0 +1,63 @@
+- type: replace
+  path: /releases/name=kubo
+  value:
+    name: kubo
+    version: latest
+
+- type: replace
+  path: /variables/name=tls-kubelet/options/common_name
+  value: ((kubernetes_master_host))
+
+- type: replace
+  path: /variables/name=tls-kubelet/options/alternative_names
+  value: [((kubernetes_master_host))]
+
+- type: replace
+  path: /variables/name=tls-kubernetes/options/common_name
+  value: ((kubernetes_master_host))
+
+- type: replace
+  path: /variables/name=tls-kubernetes/options/alternative_names/-
+  value: ((kubernetes_master_host))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/-
+  value:
+    name: kubernetes-api-route-registrar
+    release: kubo
+    consumes:
+      cf-credentials:
+        from: cf-credentials
+        deployment: cf
+    properties:
+      external_kubo_port: ((kubernetes_master_port))
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: route-sync
+    instances: 1
+    networks:
+    - name: default
+    azs: [z1]
+    jobs:
+    - name: kubeconfig
+      release: kubo
+      properties:
+        kubelet-password: ((kubelet-password))
+        kube-proxy-password: ((kube-proxy-password))
+        kube-scheduler-password: ((kube-scheduler-password))
+        route-sync-password: ((route-sync-password))
+        tls:
+          kubernetes: ((tls-kubernetes))
+    - name: route-sync
+      release: kubo
+      consumes:
+        cf-credentials:
+          from: cf-credentials
+          deployment: cf
+      properties:
+        cloud_foundry:
+          app_domain: ((routing-cf-app-domain-name))
+    stemcell: trusty
+    vm_type: minimal

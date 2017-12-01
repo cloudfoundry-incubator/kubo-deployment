@@ -1,0 +1,7 @@
+director_uuid: 139e50ba-d4b7-11e7-b80c-738bbf520820
+vcenter_ip: 10.11.12.2
+vcenter_user: admin
+vcenter_password: password
+vcenter_dc: Interxion ABC1
+vcenter_vms: prod/vms
+vcenter_ds: vol309|vol310

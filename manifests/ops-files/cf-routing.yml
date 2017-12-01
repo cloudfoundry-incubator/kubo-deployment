@@ -11,6 +11,10 @@
   value: ((kubernetes_master_host))
 
 - type: replace
+  path: /variables/name=tls-kubernetes/options/alternative_names/-
+  value: ((kubernetes_master_host))
+
+- type: replace
   path: /instance_groups/name=master/jobs/-
   value:
     name: kubernetes-api-route-registrar
@@ -29,11 +33,9 @@
     name: route-sync
     instances: 1
     networks:
-    - name: ((deployments_network))
+    - name: default
     azs: [z1]
     jobs:
-    - name: kubo-dns-aliases
-      release: kubo
     - name: route-sync
       release: kubo
       properties:
@@ -53,4 +55,4 @@
           user: ((routing-cf-nats-username))
           password: ((routing-cf-nats-password))
     stemcell: trusty
-    vm_type: common
+    vm_type: minimal

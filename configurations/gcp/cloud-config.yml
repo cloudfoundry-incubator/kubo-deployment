@@ -5,7 +5,7 @@ azs:
     zone: ((zone))
 
 networks:
-- name: &network_name ((deployments_network))
+- name: default
   type: dynamic
   subnets:
   - range: ((internal_cidr))
@@ -19,7 +19,7 @@ networks:
       ephemeral_external_ip: false
 
 vm_types:
-- name: common
+- name: minimal
   cloud_properties:
     machine_type: n1-standard-1
     root_disk_size_gb: 20
@@ -42,15 +42,9 @@ vm_types:
     service_account: ((service_account_worker))
     tags: ((tags))
 
-disk_types:
-- name: 10240
-  disk_size: 10240
-- name: 5120
-  disk_size: 5120
-
 compilation:
   workers: 4
-  network: *network_name
+  network: default
   az: z1
   reuse_compilation_vms: true
   vm_type: worker

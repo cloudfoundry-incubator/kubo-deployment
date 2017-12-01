@@ -23,7 +23,7 @@ print_help() {
   echo "    (*) see https://github.com/cppforlife/go-patch"
   echo "  - if a <KUBO_ENV>/<DEPLOYMENT_NAME>-vars.yml is present,"
   echo "    it will be used to override the variables in the"
-  echo "    generated manifest. See $(repo_directory)/manifests/kubo.yml"
+  echo "    generated manifest. See $(repo_directory)/manifests/cfcr.yml"
   echo "    to discover which variables are available in the Kubo manifest."
   echo ""
   echo "DIRECTOR_UUID - The uuid of the director being used for this deployment"
@@ -50,7 +50,7 @@ main() {
 
   # shellcheck disable=SC1090
   . "$(repo_directory)/bin/lib/deploy_utils" > /dev/null
-  generate_manifest "${bosh_env}" "${deployment_name}" "$(repo_directory)/manifests/kubo.yml" "${director_uuid}"
+  generate_manifest "${bosh_env}" "${deployment_name}" "$(repo_directory)/manifests/cfcr.yml" "${director_uuid}"
 }
 
 is_run_standalone() {

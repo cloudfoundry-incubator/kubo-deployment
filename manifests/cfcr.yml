@@ -1,7 +1,4 @@
-name: ((deployment_name))
-
-features:
-  use_dns_addresses: true
+name: cfcr
 
 releases:
 - name: kubo-etcd
@@ -14,21 +11,45 @@ releases:
   version: 30.1.4
   url: https://github.com/cloudfoundry-community/docker-boshrelease/releases/download/v30.1.4/docker-30.1.4.tgz
   sha1: f79a70452b3ddae52f5ac78dd37ff8d9e6ec19e2
+- name: bosh-dns
+  sha1: e38d3e5edd16ce2dca778440b636ab1ea61f892f
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=0.0.11
+  version: 0.0.11
 
 stemcells:
 - alias: trusty
   os: ubuntu-trusty
   version: "3468.13"
 
+addons:
+- name: bosh-dns
+  include:
+    stemcells:
+    - os: ubuntu-trusty
+  jobs:
+  - name: bosh-dns
+    release: bosh-dns
+    properties:
+      cache:
+        enabled: true
+      health:
+        enabled: true
+        server:
+          tls: ((/dns_healthcheck_server_tls))
+        client:
+          tls: ((/dns_healthcheck_client_tls))
+- name: bosh-dns-aliases
+  jobs:
+  - name: kubo-dns-aliases
+    release: kubo
+
 instance_groups:
 - name: master
   instances: 1
   networks:
-  - name: &network-name ((deployments_network))
-  azs: [z1]
+  - name: default
+  azs: [z1,z2,z3]
   jobs:
-  - name: kubo-dns-aliases
-    release: kubo
   - name: cloud-provider
     release: kubo
     properties: {}
@@ -46,8 +67,8 @@ instance_groups:
       kube-scheduler-password: ((kube-scheduler-password))
       route-sync-password: ((route-sync-password))
       backend_port: 8443 # Bosh links hack
-      port: ((kubernetes_master_port))
-      authorization-mode: &authorization_mode ((authorization_mode))
+      port: 8443
+      authorization-mode: rbac
       tls:
         kubernetes:
           ca: ((tls-kubernetes.ca))
@@ -68,7 +89,7 @@ instance_groups:
       api-token: ((kubelet-password))
       admin-username: admin
       admin-password: ((kubo-admin-password))
-      authorization-mode: *authorization_mode
+      authorization-mode: rbac
       tls:
         kubernetes: ((tls-kubernetes))
     consumes:
@@ -81,17 +102,15 @@ instance_groups:
         peer_require_ssl: false
         delete_data_dir_on_stop: false
   stemcell: trusty
-  vm_type: master
-  persistent_disk_type: 5120
+  vm_type: small
+  persistent_disk: 5120
 
 - name: worker
-  instances: ((worker_count))
+  instances: 3
   networks:
-  - name: *network-name
-  azs: [z1]
+  - name: default
+  azs: [z1,z2,z3]
   jobs:
-  - name: kubo-dns-aliases
-    release: kubo
   - name: flanneld
     release: kubo
   - name: docker
@@ -126,8 +145,8 @@ instance_groups:
         kubernetes: ((tls-kubernetes))
       api-token: ((kube-proxy-password))
   stemcell: trusty
-  vm_type: worker
-  persistent_disk_type: 10240
+  vm_type: small-highmem
+  persistent_disk: 10240
 
 update:
   canaries: 1
@@ -156,17 +175,16 @@ variables:
   type: certificate
   options:
     ca: kubo_ca
+    organization: "system:nodes"
     common_name: kubelet.kubo.internal
     alternative_names: []
-    organization: "system:nodes"
 - name: tls-kubernetes
   type: certificate
   options:
     ca: kubo_ca
     organization: "system:masters"
-    common_name: ((kubernetes_master_host))
+    common_name: master.kubo
     alternative_names:
-    - ((kubernetes_master_host))
     - 10.100.200.1
     - kubernetes
     - kubernetes.default
@@ -178,3 +196,29 @@ variables:
   options:
     ca: kubo_ca
     common_name: docker.kubo.internal
+
+- name: /dns_healthcheck_tls_ca
+  opsname: global_dns_healthcheck_tls_ca
+  type: certificate
+  options:
+    is_ca: true
+    common_name: dns-healthcheck-tls-ca
+- name: /dns_healthcheck_server_tls
+  opsname: global_dns_healthcheck_server_tls
+  type: certificate
+  options:
+    ca: /dns_healthcheck_tls_ca
+    common_name: health.bosh-dns
+    extended_key_usage:
+    - server_auth
+- name: /dns_healthcheck_client_tls
+  opsname: global_dns_healthcheck_client_tls
+  type: certificate
+  options:
+    ca: /dns_healthcheck_tls_ca
+    common_name: health.bosh-dns
+    extended_key_usage:
+    - client_auth
+
+features:
+  use_dns_addresses: true

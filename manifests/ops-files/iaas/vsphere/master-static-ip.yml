@@ -1,6 +1,6 @@
 - type: replace
   path: /instance_groups/name=master/networks
   value:
-  - name: ((deployments_network))
+  - name: default
     default: [dns, gateway]
     static_ips: [ ((kubernetes_master_host)) ]

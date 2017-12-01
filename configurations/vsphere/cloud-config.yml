@@ -6,7 +6,7 @@ azs:
     - clusters: [((vcenter_cluster)): { resource_pool: ((vcenter_rp))}]
 
 networks:
-- name: &cloud_network ((deployments_network))
+- name: default
   type: manual
   subnets:
   - range: ((internal_cidr))
@@ -19,7 +19,7 @@ networks:
     static: []
 
 vm_types:
-- name: common
+- name: minimal
   cloud_properties:
     ram: 4096
     cpu: 1
@@ -37,15 +37,9 @@ vm_types:
     cpu: 4
     disk: 102400
 
-disk_types:
-- name: 10240
-  disk_size: 10240
-- name: 5120
-  disk_size: 5120
-
 compilation:
   workers: 4
-  network: *cloud_network
+  network: default
   az: z1
   reuse_compilation_vms: true
   vm_type: worker

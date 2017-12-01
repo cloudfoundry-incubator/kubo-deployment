@@ -1,0 +1,4 @@
+director_name: my-bosh
+deployment_name: cfcr
+network: gcp-network
+project_id: gcp-project-id

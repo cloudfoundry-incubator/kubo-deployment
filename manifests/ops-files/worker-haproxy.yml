@@ -1,0 +1,37 @@
+- type: replace
+  path: /instance_groups/-
+  value:
+      name: worker-haproxy
+      instances: 1
+      networks:
+      - name: default
+        default: [dns, gateway]
+      azs: [z1]
+      stemcell: trusty
+      vm_type: minimal
+      jobs:
+      - name: haproxy
+        release: haproxy
+        consumes:
+          tcp_backend:
+            from: worker_haproxy
+        properties:
+          ha_proxy:
+            disable_http: true
+            tcp_link_port: 9999 # required, but not used
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/backend_port?
+  value: ((worker_haproxy_tcp_backend_port))
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/port?
+  value: ((worker_haproxy_tcp_frontend_port))
+
+- type: replace
+  path: /releases/-
+  value:
+    name: haproxy
+    version: 8.4.0
+    url: https://github.com/cloudfoundry-incubator/haproxy-boshrelease/releases/download/v8.4.0/haproxy-8.4.0.tgz
+    sha1: a3a911f0cf8e672b27c6cb16318fd8c7c77f5bde
