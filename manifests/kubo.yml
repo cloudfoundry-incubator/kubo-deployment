@@ -159,12 +159,10 @@ variables:
     ca: kubo_ca
     common_name: kubelet.kubo.internal
     alternative_names: []
-    organization: "system:nodes"
 - name: tls-kubernetes
   type: certificate
   options:
     ca: kubo_ca
-    organization: "system:masters"
     common_name: ((kubernetes_master_host))
     alternative_names:
     - ((kubernetes_master_host))
