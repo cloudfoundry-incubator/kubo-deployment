@@ -257,7 +257,7 @@ var _ = Describe("Generate manifest", func() {
 			Expect(pathValue).To(Equal("3"))
 		})
 
-		It("should not containe GCE service key properties", func() {
+		It("should not contain GCE service key properties", func() {
 			status, _ := bash.Run("main", []string{kuboEnv, "grinder", "director_uuid"})
 
 			Expect(status).To(Equal(0))

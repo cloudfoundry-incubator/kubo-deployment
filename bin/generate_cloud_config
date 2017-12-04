@@ -24,20 +24,34 @@ main() {
   local bosh_env=$(cd "$1"; pwd)
   local bosh_iaas="$(bosh-cli int ${bosh_env}/director.yml --path '/iaas')"
   local cloud_config
+  local ops_string=""
+
+  if [[ ! -z "${CLOUD_CONFIG_OPS_FILES}" ]]; then
+    while IFS=':' read -ra cloud_config_ops_files; do
+      for ops_file in ${cloud_config_ops_files[@]}; do
+        ops_string="${ops_string} --ops-file=${ops_file}"
+      done
+    done <<< "${CLOUD_CONFIG_OPS_FILES}"
+  fi
 
   if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "cf" ]; then
     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
-
   elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "iaas" ]; then
 
     if [ "${bosh_iaas}" == "gcp" ]; then
        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/load-balancer-target-pools.yml")
+       if ! bosh-cli int "${bosh_env}/director.yml" --path='/service_account_master' &> /dev/null; then
+         ops_string="${ops_string} --ops-file=$(repo_directory)/manifests/ops-files/iaas/gcp/cloud-config/remove-service-account-master.yml"
+       fi
+
+       if ! bosh-cli int "${bosh_env}/director.yml" --path='/service_account_worker' &> /dev/null; then
+         ops_string="${ops_string} --ops-file=$(repo_directory)/manifests/ops-files/iaas/gcp/cloud-config/remove-service-account-worker.yml"
+       fi
     elif [ "${bosh_iaas}" == "aws" ]; then
        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/aws-lb-cloud-config.yml")
     else
        cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
     fi
-
   elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "proxy" ]; then
 
     if [ "${bosh_iaas}" == "vsphere" ]; then
@@ -48,21 +62,11 @@ main() {
       echo "ERROR: Proxy routing mode not supported on [${bosh_iaas}]" >&2
       exit 1
     fi
-
   else
     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
   fi
 
-  if [[ ! -z "${CLOUD_CONFIG_OPS_FILES}" ]]; then
-    local ops_string=""
-    while IFS=':' read -ra cloud_config_ops_files; do
-      for ops_file in ${cloud_config_ops_files[@]}; do
-        ops_string="${ops_string} --ops-file=${ops_file}"
-      done
-    done <<< "${CLOUD_CONFIG_OPS_FILES}"
-
-    cloud_config=$(bosh-cli int <(echo "${cloud_config}") ${ops_string} --vars-file ${bosh_env}/director.yml)
-  fi
+  cloud_config=$(bosh-cli int <(echo "${cloud_config}") ${ops_string} --vars-file ${bosh_env}/director.yml)
 
   echo -n "${cloud_config}"
 }

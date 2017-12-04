@@ -27,3 +27,6 @@ kubo_release_url: https://s3.amazonaws.com/kubo-public/kubo-release-latest.tgz
 routing_mode: iaas
 kubernetes_master_host: 12.23.34.45
 kubernetes_master_port: 101928
+
+service_account_master: master-service-account@google.com
+service_account_worker: worker-service-account@google.com
