@@ -130,9 +130,14 @@ generate_manifest() {
     manifest=$(bosh-cli int <(echo "${manifest}") --var worker_count=3)
   fi
 
-  if bosh-cli int "${bosh_environment}/director.yml" --path='/service_key_worker' &>/dev/null &&
-      bosh-cli int "${bosh_environment}/director.yml" --path='/service_key_master' &>/dev/null; then
-    manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/gcp-add-service-key.yml")
+  if [[ "gcp" == "$iaas" ]]; then
+    if ! bosh-cli int "${bosh_environment}/director.yml" --path='/service_account_worker' &>/dev/null; then
+      manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/gcp-add-service-key-worker.yml")
+    fi
+
+    if ! bosh-cli int "${bosh_environment}/director.yml" --path='/service_account_master' &>/dev/null; then
+      manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/gcp-add-service-key-master.yml")
+    fi
   fi
 
   manifest=$(bosh-cli int <(echo "${manifest}") --vars-file="${bosh_environment}/director.yml" --var=deployment_name="${deployment_name}")

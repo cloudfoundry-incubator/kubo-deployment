@@ -461,6 +461,26 @@ var _ = Describe("Generate manifest", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(value).To(Equal("foo"))
 		})
+
+		Context("And there are gcp service accounts in director.yml", func() {
+			It("should ignore the service keys", func() {
+				command := exec.Command("./bin/generate_kubo_manifest",
+					"src/kubo-deployment-tests/resources/environments/test_gcp_with_service_key_and_service_account",
+					"name", "director_uuid")
+				command.Stdout = bash.Stdout
+				command.Stderr = bash.Stderr
+				command.Dir = pathFromRoot("")
+				Expect(command.Run()).To(Succeed())
+
+				_, err := propertyFromYaml("/instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider/gce/service_key",
+					stdout.Contents())
+				Expect(err).To(HaveOccurred())
+
+				_, err = propertyFromYaml("/instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider/gce/service_key",
+					stdout.Contents())
+				Expect(err).To(HaveOccurred())
+			})
+		})
 	})
 
 })
