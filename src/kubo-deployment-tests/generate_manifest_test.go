@@ -401,34 +401,6 @@ var _ = Describe("Generate manifest", func() {
 		Expect(stdout).To(gbytes.Say("- 12.23.34.45"))
 	})
 
-	It("should assign static ip to the master in vsphere with proxy mode", func() {
-		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_vsphere_with_haproxy", "name", "director_uuid")
-		command.Stdout = bash.Stdout
-		command.Stderr = bash.Stderr
-		command.Dir = pathFromRoot("")
-		Expect(command.Run()).To(Succeed())
-
-		value, err := propertyFromYaml("/instance_groups/name=master/networks/0/static_ips", stdout.Contents())
-		Expect(err).NotTo(HaveOccurred())
-		Expect(value).To(Equal("- 1.2.3.4"))
-	})
-
-	It("should assign static ip to the master in open stack with proxy mode", func() {
-		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_openstack_with_haproxy", "name", "director_uuid")
-		command.Stdout = bash.Stdout
-		command.Stderr = bash.Stderr
-		command.Dir = pathFromRoot("")
-		Expect(command.Run()).To(Succeed())
-
-		value, err := propertyFromYaml("/instance_groups/name=master/networks/1/type", stdout.Contents())
-		Expect(err).NotTo(HaveOccurred())
-		Expect(value).To(Equal("vip"))
-
-		value, err = propertyFromYaml("/instance_groups/name=master/networks/1/static_ips", stdout.Contents())
-		Expect(err).NotTo(HaveOccurred())
-		Expect(value).To(Equal("- 1.2.3.4"))
-	})
-
 	It("should set the worker_count to 5 creates 5 worker nodes", func() {
 		command := exec.Command("./bin/generate_kubo_manifest", "src/kubo-deployment-tests/resources/environments/test_gcp_with_5_workers", "name", "director_uuid")
 		command.Stdout = bash.Stdout

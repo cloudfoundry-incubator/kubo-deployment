@@ -14,10 +14,6 @@ releases:
   version: 30.1.4
   url: https://github.com/cloudfoundry-community/docker-boshrelease/releases/download/v30.1.4/docker-30.1.4.tgz
   sha1: f79a70452b3ddae52f5ac78dd37ff8d9e6ec19e2
-- name: haproxy
-  version: 8.4.0
-  url: https://github.com/cloudfoundry-incubator/haproxy-boshrelease/releases/download/v8.4.0/haproxy-8.4.0.tgz
-  sha1: a3a911f0cf8e672b27c6cb16318fd8c7c77f5bde
 
 stemcells:
 - alias: trusty

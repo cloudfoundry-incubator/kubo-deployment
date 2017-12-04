@@ -1,6 +1,0 @@
-- type: remove
-  path: /releases/name=haproxy
-- type: remove
-  path: /instance_groups/name=master/jobs/name=kubernetes-api/properties/backend_port
-- type: remove
-  path: /instance_groups/name=master/jobs/name=kubernetes-api/properties/port

@@ -84,27 +84,9 @@ generate_manifest() {
     manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/add-no-proxy.yml")
   fi
 
-  case "$routing_mode" in
-    cf)
+  if [[ "$routing_mode" == "cf" ]]; then
       manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/cf-routing.yml")
-      if [ -f "${manifest_dir}/ops-files/remove-haproxy.yml" ]; then
-        manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
-      fi
-    ;;
-    proxy)
-      manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/worker-haproxy.yml")
-      if [ "openstack" == "$iaas" ] || [ "vsphere" == "$iaas" ]; then
-        manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/worker-haproxy-"$iaas".yml")
-        manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/master-static-ip-"$iaas".yml")
-      fi
-    ;;
-    *)
-      if [ -f "${manifest_dir}/ops-files/remove-haproxy.yml" ]; then
-        manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/remove-haproxy.yml")
-      fi
-
-    ;;
-  esac
+  fi
 
   if [[ "aws" == "$iaas" ]]; then
     manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/aws-lb.yml")
