@@ -49,7 +49,10 @@ instance_groups:
       port: ((kubernetes_master_port))
       authorization-mode: &authorization_mode ((authorization_mode))
       tls:
-        kubernetes: ((tls-kubernetes))
+        kubernetes:
+          ca: ((tls-kubernetes.ca))
+          certificate: ((tls-kubernetes.certificate))
+          private_key: ((tls-kubernetes.private_key))
   - name: kubernetes-controller-manager
     release: kubo
     properties:
