@@ -15,6 +15,20 @@ repo_directory() {
   echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)"
 }
 
+ops_string_for_service_accounts() {
+  local bosh_env=$1
+  local ops_string=""
+
+  if ! bosh-cli int "${bosh_env}/director.yml" --path='/service_account_master' &> /dev/null; then
+    ops_string="${ops_string} --ops-file=$(repo_directory)/manifests/ops-files/iaas/gcp/cloud-config/remove-service-account-master.yml"
+  fi
+
+  if ! bosh-cli int "${bosh_env}/director.yml" --path='/service_account_worker' &> /dev/null; then
+    ops_string="${ops_string} --ops-file=$(repo_directory)/manifests/ops-files/iaas/gcp/cloud-config/remove-service-account-worker.yml"
+  fi
+  echo "$ops_string"
+}
+
 main() {
   if [ $# -ne 1 ] ; then
     print_usage
@@ -28,7 +42,7 @@ main() {
 
   if [[ ! -z "${CLOUD_CONFIG_OPS_FILES}" ]]; then
     while IFS=':' read -ra cloud_config_ops_files; do
-      for ops_file in ${cloud_config_ops_files[@]}; do
+      for ops_file in "${cloud_config_ops_files[@]}"; do
         ops_string="${ops_string} --ops-file=${ops_file}"
       done
     done <<< "${CLOUD_CONFIG_OPS_FILES}"
@@ -36,21 +50,17 @@ main() {
 
   if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "cf" ]; then
     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
-  elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "iaas" ]; then
-
     if [ "${bosh_iaas}" == "gcp" ]; then
-       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/load-balancer-target-pools.yml")
-       if ! bosh-cli int "${bosh_env}/director.yml" --path='/service_account_master' &> /dev/null; then
-         ops_string="${ops_string} --ops-file=$(repo_directory)/manifests/ops-files/iaas/gcp/cloud-config/remove-service-account-master.yml"
-       fi
-
-       if ! bosh-cli int "${bosh_env}/director.yml" --path='/service_account_worker' &> /dev/null; then
-         ops_string="${ops_string} --ops-file=$(repo_directory)/manifests/ops-files/iaas/gcp/cloud-config/remove-service-account-worker.yml"
-       fi
+      ops_string="${ops_string} $(ops_string_for_service_accounts "$bosh_env")"
+    fi
+  elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "iaas" ]; then
+    if [ "${bosh_iaas}" == "gcp" ]; then
+      cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/load-balancer-target-pools.yml")
+      ops_string="${ops_string} $(ops_string_for_service_accounts "$bosh_env")"
     elif [ "${bosh_iaas}" == "aws" ]; then
-       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/aws-lb-cloud-config.yml")
+      cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/aws-lb-cloud-config.yml")
     else
-       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
+      cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
     fi
   else
     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
