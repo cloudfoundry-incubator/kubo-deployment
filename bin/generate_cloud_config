@@ -48,15 +48,15 @@ main() {
     done <<< "${CLOUD_CONFIG_OPS_FILES}"
   fi
 
+  if [ "${bosh_iaas}" == "gcp" ]; then
+     ops_string="${ops_string} $(ops_string_for_service_accounts "$bosh_env")"
+  fi
+
   if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "cf" ]; then
     cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
-    if [ "${bosh_iaas}" == "gcp" ]; then
-      ops_string="${ops_string} $(ops_string_for_service_accounts "$bosh_env")"
-    fi
   elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "iaas" ]; then
     if [ "${bosh_iaas}" == "gcp" ]; then
       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/load-balancer-target-pools.yml")
-      ops_string="${ops_string} $(ops_string_for_service_accounts "$bosh_env")"
     elif [ "${bosh_iaas}" == "aws" ]; then
       cloud_config=$(bosh-cli int "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/aws-lb-cloud-config.yml")
     else
