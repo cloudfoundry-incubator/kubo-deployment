@@ -4,6 +4,7 @@ import (
 	"path"
 
 	"fmt"
+
 	. "github.com/jhvhs/gob-mock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
@@ -89,6 +90,7 @@ var _ = Describe("Deploy KuBOSH", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 			Expect(stderr).To(gbytes.Say("/bosh-deployment/aws/cpi.yml"))
+			Expect(stderr).To(gbytes.Say("/manifests/ops-files/iaas/aws/bosh/tags.yml"))
 		})
 
 		It("expands the environment path", func() {

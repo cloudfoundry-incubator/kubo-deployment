@@ -111,7 +111,8 @@ generate_manifest_aws() {
   generate_manifest_generic "$bosh_env" \
     --var-file private_key="${key_filename}"\
     --vars-file "${bosh_env}/director-secrets.yml"  \
-    --ops-file "$(repo_directory)/bosh-deployment/aws/cpi.yml"
+    --ops-file "$(repo_directory)/bosh-deployment/aws/cpi.yml" \
+    --ops-file "$(repo_directory)/manifests/ops-files/iaas/aws/bosh/tags.yml"
 }
 
 generate_manifest_generic() {
