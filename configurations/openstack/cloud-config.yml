@@ -19,12 +19,6 @@ vm_types:
     instance_type: m1.large
     root_disk_size_gb: 100
 
-disk_types:
-- name: 10240
-  disk_size: 10240
-- name: 5120
-  disk_size: 5120
-
 networks:
 - name: ((deployments_network))
   type: dynamic

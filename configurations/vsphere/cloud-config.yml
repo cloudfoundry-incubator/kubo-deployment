@@ -37,12 +37,6 @@ vm_types:
     cpu: 4
     disk: 102400
 
-disk_types:
-- name: 10240
-  disk_size: 10240
-- name: 5120
-  disk_size: 5120
-
 compilation:
   workers: 4
   network: *cloud_network

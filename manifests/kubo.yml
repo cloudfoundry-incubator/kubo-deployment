@@ -82,7 +82,7 @@ instance_groups:
         delete_data_dir_on_stop: false
   stemcell: trusty
   vm_type: master
-  persistent_disk_type: 5120
+  persistent_disk: 5120
 
 - name: worker
   instances: ((worker_count))
@@ -127,7 +127,7 @@ instance_groups:
       api-token: ((kube-proxy-password))
   stemcell: trusty
   vm_type: worker
-  persistent_disk_type: 10240
+  persistent_disk: 10240
 
 update:
   canaries: 1

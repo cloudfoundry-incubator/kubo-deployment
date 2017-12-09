@@ -42,12 +42,6 @@ vm_types:
     service_account: ((service_account_worker))
     tags: ((tags))
 
-disk_types:
-- name: 10240
-  disk_size: 10240
-- name: 5120
-  disk_size: 5120
-
 compilation:
   workers: 4
   network: *network_name

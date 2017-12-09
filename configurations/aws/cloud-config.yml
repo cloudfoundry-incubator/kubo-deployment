@@ -25,12 +25,6 @@ vm_types:
     ephemeral_disk: {size: 100_000}
     iam_instance_profile: ((worker_iam_instance_profile))
 
-disk_types:
-- name: 10240
-  disk_size: 10240
-- name: 5120
-  disk_size: 5120
-
 networks:
 - name: ((deployments_network))
   type: manual
