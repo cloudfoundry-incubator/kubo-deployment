@@ -18,7 +18,7 @@ releases:
 stemcells:
 - alias: trusty
   os: ubuntu-trusty
-  version: "3468.5"
+  version: "3468.13"
 
 instance_groups:
 - name: master
