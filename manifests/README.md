@@ -78,13 +78,6 @@ NAME             TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
 svc/kubernetes   ClusterIP   10.100.200.1   <none>        443/TCP   2h
 ```
 
-## Example Elastic Search
-
-```
-git clone https://github.com/kubernetes/examples kubernetes-examples
-cat kubernetes-examples/staging/elasticsearch/README.md
-```
-
 ## Integrate with Cloud Foundry TCP routing
 
 If you are already running Cloud Foundry, then you can reuse its TCP router to provide public access to your Kubernetes services and the Kubernetes API.
