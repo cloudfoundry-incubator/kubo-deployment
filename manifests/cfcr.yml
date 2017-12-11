@@ -59,6 +59,10 @@ instance_groups:
       cloud-provider: {as: master}
   - name: flanneld
     release: kubo
+    properties:
+      etcd-ca: ((tls-etcd-server.ca))
+      etcd-client-key: ((tls-etcd-server.private_key))
+      etcd-client-cert: ((tls-etcd-server.certificate))
   - name: kubernetes-api
     release: kubo
     properties:
@@ -100,9 +104,15 @@ instance_groups:
     release: kubo-etcd
     properties:
       etcd:
-        require_ssl: false
+        advertise_urls_dns_suffix: etcd.kubo.internal
+        require_ssl: true
         peer_require_ssl: false
         delete_data_dir_on_stop: false
+        ca_cert: ((tls-etcd-server.ca))
+        server_cert: ((tls-etcd-server.certificate))
+        server_key: ((tls-etcd-server.private_key))
+        client_cert: ((tls-etcd-client.certificate))
+        client_key: ((tls-etcd-client.private_key))
   stemcell: trusty
   vm_type: small
   persistent_disk: 5120
@@ -117,6 +127,10 @@ instance_groups:
     release: kubo
   - name: flanneld
     release: kubo
+    properties:
+      etcd-ca: ((tls-etcd-server.ca))
+      etcd-client-key: ((tls-etcd-server.private_key))
+      etcd-client-cert: ((tls-etcd-server.certificate))
   - name: docker
     release: docker
     properties:
@@ -199,6 +213,19 @@ variables:
   options:
     ca: kubo_ca
     common_name: docker.kubo.internal
+- name: tls-etcd-server
+  type: certificate
+  options:
+    ca: kubo_ca
+    common_name: etcd.service.consul
+    alternative_names:
+    - etcd.service.consul
+    - "*.etcd.service.consul"
+- name: tls-etcd-client
+  type: certificate
+  options:
+    ca: kubo_ca
+    common_name: etcdClient
 
 - name: /dns_healthcheck_tls_ca
   opsname: global_dns_healthcheck_tls_ca
