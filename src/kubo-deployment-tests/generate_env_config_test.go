@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path"
+	"path/filepath"
 
 	"os"
 
@@ -14,7 +15,13 @@ import (
 )
 
 var _ = Describe("generate_env_config", func() {
+	var tmpDir string
+
 	BeforeEach(func() {
+		var err error
+		tmpDir, err = ioutil.TempDir("", "generate-env-config")
+		Expect(err).NotTo(HaveOccurred())
+
 		bash.Source(pathToScript("generate_env_config"), nil)
 		bash.Source("", func(string) ([]byte, error) {
 			return []byte(fmt.Sprintf(`repo_directory() { echo "%s"; }`, pathFromRoot("src/kubo-deployment-tests/resources"))), nil
@@ -22,7 +29,7 @@ var _ = Describe("generate_env_config", func() {
 	})
 
 	AfterEach(func() {
-		os.RemoveAll("/tmp/b00t")
+		Expect(os.RemoveAll(tmpDir)).To(Succeed())
 	})
 
 	DescribeTable("with incorrect parameters", func(params []string) {
@@ -146,16 +153,16 @@ var _ = Describe("generate_env_config", func() {
 
 	It("gracefully concatenates the templates", func() {
 		iaas := "aws"
-		status, _ := bash.Run("main", []string{"/tmp", "b00t", iaas})
+		status, _ := bash.Run("main", []string{tmpDir, "b00t", iaas})
 		Expect(status).To(Equal(0))
 
-		config, err := ioutil.ReadFile("/tmp/b00t/director.yml")
+		config, err := ioutil.ReadFile(filepath.Join(tmpDir, "b00t/director.yml"))
 		Expect(err).NotTo(HaveOccurred())
 
 		expectPathContent("/some-other", config, "setting")
 		expectPathContent("/iaas", config, iaas)
 
-		secrets, err := ioutil.ReadFile("/tmp/b00t/director-secrets.yml")
+		secrets, err := ioutil.ReadFile(filepath.Join(tmpDir, "b00t/director-secrets.yml"))
 		Expect(err).NotTo(HaveOccurred())
 
 		expectPathContent("/ssshhh", secrets, "ssshhh")
