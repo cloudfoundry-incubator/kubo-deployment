@@ -39,7 +39,12 @@ interpolate() {
   local tmp_creds_store
   tmp_creds_store=$(mktemp)
 
-  bosh-cli interpolate ${home}/manifests/cfcr.yml $@ -o ${home}/manifests/ops-files/misc/local-config-server.yml --vars-store ${tmp_creds_store} --var-errs --var-errs-unused > /dev/null
+  bosh-cli interpolate ${home}/manifests/cfcr.yml \
+    $@ \
+    -o ${home}/manifests/ops-files/misc/local-config-server.yml \
+    --vars-store ${tmp_creds_store} \
+    --var-errs \
+    --var-errs-unused > /dev/null
   return $?
 }
 
