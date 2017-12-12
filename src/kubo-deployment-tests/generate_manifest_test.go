@@ -332,9 +332,6 @@ var _ = Describe("Generate manifest", func() {
 			if strings.Contains(env, "_failing") {
 				continue
 			}
-			if strings.Contains(env, "test_vsphere_with_haproxy") || strings.Contains(env, "test_openstack_with_haproxy") {
-				continue
-			}
 			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name", "director_uuid")
 			out := gbytes.NewBuffer()
 			command.Stdout = bash.Stdout
@@ -352,9 +349,6 @@ var _ = Describe("Generate manifest", func() {
 		files, _ := filepath.Glob(testEnvironmentPath + "/*")
 		for _, env := range files {
 			if strings.Contains(env, "_failing") {
-				continue
-			}
-			if strings.Contains(env, "test_vsphere_with_haproxy") || strings.Contains(env, "test_openstack_with_haproxy") {
 				continue
 			}
 			command := exec.Command("./bin/generate_kubo_manifest", env, "env-name", "director_uuid")

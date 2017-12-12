@@ -1,2 +1,0 @@
-worker_haproxy_tcp_backend_port: 8443
-worker_haproxy_tcp_frontend_port: 8888

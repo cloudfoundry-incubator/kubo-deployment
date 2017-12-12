@@ -196,13 +196,10 @@ kubectl get all
 |:---  |:---     |:---   |
 | [`cf-routing.yml`](cf-routing.yml) | Combine CFCR with Cloud Foundry routing | Kube API and labeled services advertised to Cloud Foundry routing mesh. Kube API hostname is included in TLS certificates. |
 | [`cf-routing-links.yml`](cf-routing-links.yml) | As above, using BOSH links | Simpler method of integration with Cloud Foundry running on same BOSH [in development] |
-| [`worker-haproxy.yml`](worker-haproxy.yml) | HAProxy routes TCP port to service | Run HAProxy to route single TCP port to single Kubernetes service |
 | **OpenStack** | | |
 | [`iaas/openstack/master-static-ip.yml`](iaas/openstack/master-static-ip.yml) | Attach floating IP to Kube API | Assign allocated floating IP to `master` instance. IP included in TLS certificates. |
-| [`iaas/openstack/worker-haproxy.yml`](iaas/openstack/worker-haproxy.yml) | Floating IPs for HAProxy | Declare your allocated floating IPs for HAProxy routing |
 | **vSphere** | | |
 | [`iaas/vsphere/master-static-ip.yml`](iaas/vsphere/master-static-ip.yml) | Assign static IP to Kube API | Assign static IP to `master` instance. IP included in TLS certificates. |
-| [`iaas/vsphere/worker-haproxy.yml`](iaas/vsphere/worker-haproxy.yml) | Static IPs for HAProxy | Declare your preferred static IPs for HAProxy routing |
 | **gcp** | | |
 | [`iaas/gcp/add-service-key-master.yml`](iaas/gcp/add-service-key-master.yml) | Allow user to specify GCP key instead of service account |  |
 | [`iaas/gcp/add-service-key-worker.yml`](iaas/gcp/add-service-key-worker.yml) | Allow user to specify GCP key instead of service account |  |

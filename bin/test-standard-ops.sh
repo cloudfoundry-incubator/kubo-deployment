@@ -33,11 +33,6 @@ test_standard_ops() {
       # Routing Variations
       check_interpolation "cf-routing.yml" "-l example-vars-files/cf-routing.yml"
       check_interpolation "cf-routing-links.yml" "-l example-vars-files/cf-routing-links.yml"
-      check_interpolation "worker-haproxy.yml" "-l example-vars-files/worker-haproxy.yml"
-      check_interpolation "worker-haproxy.yml" "-o iaas/vsphere/worker-haproxy.yml" "-v worker_haproxy_ip_addresses=10.10.10.10" "-l example-vars-files/worker-haproxy.yml"
-      check_interpolation "worker-haproxy.yml" "-o iaas/vsphere/worker-haproxy.yml" "-o iaas/vsphere/master-static-ip.yml" "-v worker_haproxy_ip_addresses=10.10.10.10" "-l example-vars-files/worker-haproxy.yml" "-v kubernetes_master_host=10.11.11.11"
-      check_interpolation "worker-haproxy.yml" "-o iaas/openstack/worker-haproxy.yml" "-v worker_haproxy_ip_addresses=10.10.10.10" "-l example-vars-files/worker-haproxy.yml"
-      check_interpolation "worker-haproxy.yml" "-o iaas/openstack/worker-haproxy.yml" "-o iaas/openstack/master-static-ip.yml" "-v worker_haproxy_ip_addresses=10.10.10.10" "-l example-vars-files/worker-haproxy.yml" "-v kubernetes_master_host=10.11.11.11"
 
       # HTTP proxy options
       check_interpolation "add-http-proxy.yml" "-v http_proxy=10.10.10.10:8000"
