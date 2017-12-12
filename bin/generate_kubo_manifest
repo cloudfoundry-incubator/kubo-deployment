@@ -49,7 +49,7 @@ main() {
   fi
 
   # shellcheck disable=SC1090
-  . "$(repo_directory)/bin/lib/deploy_utils" > /dev/null
+  source "$(repo_directory)/bin/lib/deploy_utils"
   generate_manifest "${bosh_env}" "${deployment_name}" "$(repo_directory)/manifests/cfcr.yml" "${director_uuid}"
 }
 

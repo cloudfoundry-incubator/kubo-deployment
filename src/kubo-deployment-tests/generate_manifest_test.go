@@ -454,5 +454,4 @@ var _ = Describe("Generate manifest", func() {
 			})
 		})
 	})
-
 })
