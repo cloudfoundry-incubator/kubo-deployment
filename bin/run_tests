@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
+echo "Running ginkgo tests..."
 export GOPATH=$(cd "$(dirname $BASH_SOURCE[0])"/../; pwd)
 pushd "${GOPATH}/src/kubo-deployment-tests" > /dev/null
   ginkgo "$@"
 popd > /dev/null
+
+echo "Running ops file tests..."
+${GOPATH}/bin/run_opsfile_test
