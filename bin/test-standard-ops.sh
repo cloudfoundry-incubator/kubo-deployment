@@ -24,6 +24,8 @@ test_standard_ops() {
       check_interpolation "iaas/aws/cloud-provider.yml"
       check_interpolation "iaas/aws/lb.yml" "-v kubernetes_cluster_tag=test"
       check_interpolation "iaas/gcp/cloud-provider.yml" "-l example-vars-files/iaas/gcp/cloud-provider.yml"
+      check_interpolation "name:iaas/gcp/add-service-key-master.yml" "iaas/gcp/cloud-provider.yml" "-o iaas/gcp/add-service-key-master.yml" "-v service_key_master=foo" "-l example-vars-files/iaas/gcp/cloud-provider.yml"
+      check_interpolation "name:iaas/gcp/add-service-key-worker.yml" "iaas/gcp/cloud-provider.yml" "-o iaas/gcp/add-service-key-worker.yml" "-v service_key_worker=foo" "-l example-vars-files/iaas/gcp/cloud-provider.yml"
       check_interpolation "iaas/openstack/master-static-ip.yml" "-v kubernetes_master_host=10.11.12.13"
       check_interpolation "iaas/vsphere/cloud-provider.yml" "-l example-vars-files/iaas/vsphere/cloud-provider.yml"
       check_interpolation "iaas/vsphere/master-static-ip.yml" "-v kubernetes_master_host=10.11.12.13"
@@ -43,8 +45,7 @@ test_standard_ops() {
       check_interpolation "add-no-proxy.yml" "-v no_proxy=localhost,127.0.0.1"
 
       # Kubernetes
-      check_interpolation "addons-spec.yml" "-v authorization_mode=rbac" "-v addons-spec={}"
-
+      check_interpolation "addons-spec.yml" "-v addons-spec={}"
 
     popd > /dev/null # operations
   popd > /dev/null
