@@ -1,6 +1,6 @@
 - type: replace
   path: /stemcells/alias=trusty/version
-  value: "3468.11"
+  value: "3468.13"
 
 - type: replace
   path: /name
