@@ -1,4 +1,5 @@
 vcenter_ip: # vCenter Host IP
+vcenter_user: # vCenter Username for BOSH
 vcenter_master_user: # vCenter Username for the master node
 vcenter_worker_user: # vCenter Username for the worker nodes
 vcenter_dc: # vCenter Datacenter Name
