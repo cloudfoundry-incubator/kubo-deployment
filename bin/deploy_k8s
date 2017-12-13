@@ -39,7 +39,13 @@ get_director_uuid() {
        bosh-cli int <(bosh-cli environment --json) --path=/Tables/0/Rows/0/uuid
 }
 
+get_deps() {
+  source "$(repo_directory)/bin/lib/deploy_utils"
+}
+
 main() {
+  get_deps
+  PATH=$(repo_directory)/bin:$PATH
   if [ $# -ne 2 ] && [ $# -ne 3 ]; then
     print_usage
     exit  1
@@ -56,8 +62,6 @@ main() {
    print_usage
    exit 1
   fi
-
-  source "$(repo_directory)/bin/lib/deploy_utils"
 
   case ${release_source} in
     "dev"|"public"|"local"|"skip") ;;
