@@ -169,4 +169,39 @@ var _ = Describe("DeployUtils", func() {
 			Expect(stderr).To(gbytes.Say("bosh-cli upload-release release-name"))
 		})
 	})
+
+	Describe("generate_manifest", func(){
+		Context("default manifest", func() {
+			Context("without creds.yml or director-secrets.yml", func() {
+				It("applies dev, bootstrap and use-runtime-config-bosh-dns", func() {
+					bash.Source(pathToScript("lib/deploy_utils"), nil)
+
+					directorMock := Mock("bosh-cli", `
+					if [[ "$3" =~ "addons_spec_path" \
+						|| "$3" =~ "http_proxy" \
+						|| "$3" =~ "https_proxy" \
+						|| "$3" =~ "no_proxy" ]]; then
+						return 1
+					elif [[ "$3" =~ "routing_mode" ]]; then
+						echo "the-routing-mode"
+					elif [[ "$3" =~ "iaas" ]]; then
+						echo "the-iaas"
+					else
+						echo
+					fi`)
+					ApplyMocks(bash, []Gob{directorMock})
+
+					code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", "non-existent-manifest-path", "director-uuid"})
+					Expect(err).NotTo(HaveOccurred())
+					Expect(code).To(Equal(0))
+					Expect(stderr).To(gbytes.Say("routing_mode"))
+					Expect(stderr).To(gbytes.Say("iaas"))
+					Expect(stderr).To(gbytes.Say("misc/dev.yml"))
+					Expect(stderr).To(gbytes.Say("misc/bootstrap.yml"))
+					Expect(stderr).To(gbytes.Say("use-runtime-config-bosh-dns.yml"))
+					Expect(stderr).To(gbytes.Say("--var=deployment_name=\"deployment-name\""))
+				})
+			})
+		})
+	})
 })
