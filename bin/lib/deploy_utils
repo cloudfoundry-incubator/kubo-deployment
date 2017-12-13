@@ -36,7 +36,7 @@ deploy_to_bosh() {
 
 create_and_upload_release() {
   local release_dirname=$1
-  local release_name="${release_dirname%-release}"
+  local release_name="$(basename ${release_dirname%-release})"
 
   if [ -d "$release_dirname" ]; then
     pushd "$release_dirname"
