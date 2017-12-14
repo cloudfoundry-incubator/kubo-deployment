@@ -76,32 +76,19 @@ test_opsfile_interpolation() {
   done
 }
 
-ensure_test_opsfiles_not_in_readme() {
-  pushd ${home} > /dev/null
-    local opsfiles=$(ls operations/test/*.yml)
-    local output=$(grep $(for x in $opsfiles; do echo -n " -e $x"; done;) README.md -c)
-
-    if [ $output == "0" ]; then
-      pass "Test opsfiles do not appear in README"
-    else
-      fail "Test opsfiles appear in README"
-    fi
-  popd > /dev/null
-}
-
 ensure_opsfiles_in_readme() {
   local readme=$1
   shift
 
-  suite_name="$readme"
+  suite_name="Readme Test"
 
   pushd ${home} > /dev/null
     for x in $@; do
-      local basename=$(echo $x | sed -e "s%^manifests/ops-files/%%")
+      local basename=$(echo $x | sed -e "s%$home/manifests/ops-files/%%")
       if [ $(grep \($basename\) $readme -c) != "0" ]; then
-        pass "$basename is in $readme"
+        pass "$basename is in $(basename "$readme")"
       else
-        fail "$basename does not appear in $readme"
+        fail "$basename does not appear in $(basename "$readme")"
       fi
     done;
   popd > /dev/null
@@ -117,9 +104,9 @@ ensure_opsfiles_in_tests() {
     for x in $@; do
       local basename=$(basename $x)
       if [ $(grep $basename ${script_home}/$test -c) != "0" ]; then
-        pass "$x is tested in $test"
+        pass "$basename is tested in $test"
       else
-        fail "$x is ${RED}NOT${NOCOLOR} tested in $test"
+        fail "$basename is ${RED}NOT${NOCOLOR} tested in $test"
       fi
     done;
   popd > /dev/null
@@ -128,18 +115,13 @@ ensure_opsfiles_in_tests() {
 main() {
   echo
   echo -e "${LIGHT_GREEN} ***** Begin affirmative readme operations tests ***** ${NOCOLOR}"
-  ensure_opsfiles_in_readme "manifests/README.md" $(ls manifests/ops-files/*.yml manifests/ops-files/iaas/{aws,gcp,openstack,vsphere}/*.yml)
-  # ensure_opsfiles_in_readme "operations/legacy/README.md" $(ls operations/legacy/*.yml)
-  # ensure_opsfiles_in_readme "operations/community/README.md" $(ls operations/community/*.yml)
-  # ensure_opsfiles_in_readme "operations/experimental/README.md" $(ls operations/experimental/*.yml)
-
-  # echo
-  # echo -e "${LIGHT_GREEN} ***** Begin negative readme operations tests ***** ${NOCOLOR}"
-  # ensure_test_opsfiles_not_in_readme
+  local ops_files;
+  ops_files=$(ls ${home}/manifests/ops-files/*.yml ${home}/manifests/ops-files/iaas/{aws,gcp,openstack,vsphere}/*.yml)
+  ensure_opsfiles_in_readme "$home/manifests/README.md" "$ops_files"
 
   echo
   echo -e "${LIGHT_GREEN} ***** Begin test coverage analysis ***** ${NOCOLOR}"
-  ensure_opsfiles_in_tests "test-standard-ops.sh" $(ls manifests/ops-files/*.yml manifests/ops-files/iaas/{aws,gcp,openstack,vsphere}/*.yml)
+  ensure_opsfiles_in_tests "test-standard-ops.sh" "$ops_files"
 
   echo
   echo -e "${LIGHT_GREEN} ***** Begin interpolation operations tests ***** ${NOCOLOR}"
