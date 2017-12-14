@@ -70,7 +70,7 @@ var _ = Describe("Deploy K8s", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 
-			Expect(stderr).To(gbytes.Say("bosh-cli upload-stemcell https://s3.amazonaws.com/bosh-core-stemcells/google/light-bosh-stemcell-3124.12-google-kvm-ubuntu-trusty-go_agent.tgz"))
+			Expect(stderr).To(gbytes.Say("bosh-cli upload-stemcell https://s3.amazonaws.com/bosh-gce-light-stemcells/light-bosh-stemcell-3124.12-google-kvm-ubuntu-trusty-go_agent.tgz"))
 		})
 
 		It("uploads the stemcell for vSphere", func() {
