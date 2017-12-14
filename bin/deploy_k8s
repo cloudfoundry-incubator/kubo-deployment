@@ -116,7 +116,7 @@ upload_stemcell() {
   if [ "$1" != "skip" ]; then
     case $2 in
     "gcp")
-      bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/google/bosh-stemcell-${stemcell_version}-google-kvm-ubuntu-trusty-go_agent.tgz"
+      bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/google/light-bosh-stemcell-${stemcell_version}-google-kvm-ubuntu-trusty-go_agent.tgz"
       ;;
     "vsphere")
       bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/vsphere/bosh-stemcell-${stemcell_version}-vsphere-esxi-ubuntu-trusty-go_agent.tgz"
