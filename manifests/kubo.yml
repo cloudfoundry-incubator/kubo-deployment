@@ -36,7 +36,22 @@ instance_groups:
       cloud-provider: {as: master}
   - name: flanneld
     release: kubo
-  - name: kubernetes-api
+  - name: docker
+    release: docker
+    properties:
+      bip: 172.17.0.1/24
+      flannel: true
+      iptables: false
+      ip_masq: false
+      log_level: error
+      store_dir: /var/vcap/data
+      storage_driver: overlay
+      default_ulimits: [ "nofile=65536" ]
+      tls_cacert: ((tls-docker.ca))
+      tls_cert:  ((tls-docker.certificate))
+      tls_key: ((tls-docker.private_key))
+      env: {}
+  - name: kubelet-master
     release: kubo
     properties:
       admin-username: admin
@@ -53,15 +68,8 @@ instance_groups:
           ca: ((tls-kubernetes.ca))
           certificate: ((tls-kubernetes.certificate))
           private_key: ((tls-kubernetes.private_key))
-  - name: kubernetes-controller-manager
-    release: kubo
-    properties:
-      tls:
-        kubernetes: ((tls-kubernetes))
-  - name: kubernetes-scheduler
-    release: kubo
-    properties:
-      api-token: ((kube-scheduler-password))
+    consumes:
+      cloud-provider: {from: master}
   - name: kubernetes-system-specs
     release: kubo
     properties:
