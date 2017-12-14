@@ -50,6 +50,8 @@ instance_groups:
   - name: default
   azs: [z1,z2,z3]
   jobs:
+  - name: secure-var-vcap
+    release: kubo
   - name: cloud-provider
     release: kubo
     properties: {}
@@ -111,6 +113,8 @@ instance_groups:
   - name: default
   azs: [z1,z2,z3]
   jobs:
+  - name: secure-var-vcap
+    release: kubo
   - name: flanneld
     release: kubo
   - name: docker
