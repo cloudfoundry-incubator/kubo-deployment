@@ -55,88 +55,122 @@ upload_release() {
   BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli upload-release "$release_name"
 }
 
+set_ops_file_if_path_exists() {
+  local variables_file="$1"
+  local variable_yaml_path="$2"
+  local ops_file_path="$3"
+
+  if bosh-cli int "$variables_file" --path="$variable_yaml_path" &>/dev/null; then
+    echo " --ops-file=\"$ops_file_path\""
+  fi
+}
+
+set_ops_file_if_file_exists() {
+  local ops_file="$1"
+
+  if [[ -f "$ops_file" ]]; then
+    echo " --ops-file=\"$ops_file\""
+  fi
+}
+
+set_vars_file_if_file_exists() {
+  local vars_file="$1"
+
+  if [[ -f "$vars_file" ]]; then
+    echo " --vars-file=\"$vars_file\""
+  fi
+
+}
+set_default_var_if_path_does_not_exist() {
+  local variables_file="$1"
+  local variable_yaml_path="$2"
+  local default_value="$3"
+
+  if [[ -z "$(bosh-cli int "${variables_file}" --path="${variable_yaml_path}" 2>/dev/null)" ]]; then
+    echo " --var ${variable_yaml_path#/}=${default_value}"
+  fi
+}
+
 generate_manifest() {
   if [ $# -ne 4 ]; then
     echo "Required arguments are <path to kubo bosh environment>, <deployment name>, <base manifest path> and <director uuid> in ${BASH_SOURCE[0]}:generate_manifest()"
     exit 1
   fi
 
-  local bosh_environment=$1
-  local deployment_name=$2
-  local manifest_path=$3
-  local director_uuid=$4
+  local bosh_environment="${1}"
+  local deployment_name="${2}"
+  local manifest_path="${3}"
+  local director_uuid="${4}"
 
-  manifest_dir=$(cd "$(dirname "${manifest_path}")"; pwd)
-  manifest="$(cat "${manifest_path}")"
-  local routing_mode="$(bosh-cli int "${bosh_environment}/director.yml" --path='/routing_mode')"
-  local iaas="$(bosh-cli int "${bosh_environment}/director.yml" --path='/iaas')"
+  local director_path="${bosh_environment}/director.yml"
+  local manifest_dir="$(cd "$(dirname "${manifest_path}")"; pwd)"
+  local ops_dir="${manifest_dir}/ops-files"
+  local manifest="$(cat "${manifest_path}")"
+  local routing_mode="$(bosh-cli int "${director_path}" --path='/routing_mode')"
+  local iaas="$(bosh-cli int "${director_path}" --path='/iaas')"
+  local interpolate_arguments="$(set_ops_file_if_path_exists \
+    "${director_path}" \
+    "/http_proxy" \
+    "${ops_dir}/add-http-proxy.yml" \
+  )"
 
-  interpolate_arguments=""
+  interpolate_arguments+="$(set_ops_file_if_path_exists \
+    "${director_path}" \
+    "/https_proxy" \
+    "${ops_dir}/add-https-proxy.yml" \
+  )"
 
-  # common modifications to manifests for wrapper scripts
-  if bosh-cli int "${bosh_environment}/director.yml" --path='/http_proxy' &>/dev/null; then
-    interpolate_arguments+=" --ops-file=\"${manifest_dir}/ops-files/add-http-proxy.yml\""
+  interpolate_arguments+="$(set_ops_file_if_path_exists \
+    "${director_path}" \
+    "/no_proxy" \
+    "${ops_dir}/add-no-proxy.yml" \
+  )"
+
+  interpolate_arguments+="$(set_ops_file_if_file_exists \
+    "${ops_dir}/iaas/${iaas}/cloud-provider.yml")"
+
+  interpolate_arguments+="$(set_ops_file_if_file_exists \
+    "${bosh_environment}/${deployment_name}.yml")"
+
+  interpolate_arguments+="$(set_vars_file_if_file_exists \
+    "${bosh_environment}/${deployment_name}-vars.yml")"
+
+  interpolate_arguments+="$(set_vars_file_if_file_exists \
+    "${bosh_environment}/creds.yml")"
+
+  interpolate_arguments+="$(set_vars_file_if_file_exists \
+    "${bosh_environment}/director-secrets.yml")"
+
+  interpolate_arguments+="$(set_default_var_if_path_does_not_exist \
+    "${director_path}" \
+    "/authorization_mode" \
+    "abac" \
+  )"
+
+  interpolate_arguments+="$(set_default_var_if_path_does_not_exist \
+    "${director_path}" \
+    "/worker_count" \
+    "3" \
+  )"
+
+  if [[ "${routing_mode}" == "cf" ]]; then
+    interpolate_arguments+=" --ops-file=\"${ops_dir}/cf-routing.yml\""
   fi
 
-  if bosh-cli int "${bosh_environment}/director.yml" --path='/https_proxy' &>/dev/null; then
-    interpolate_arguments+=" --ops-file=\"${manifest_dir}/ops-files/add-https-proxy.yml\""
-  fi
-
-  if bosh-cli int "${bosh_environment}/director.yml" --path='/no_proxy' &>/dev/null; then
-    interpolate_arguments+=" --ops-file=\"${manifest_dir}/ops-files/add-no-proxy.yml\""
-  fi
-
-  if [[ "$routing_mode" == "cf" ]]; then
-    interpolate_arguments+=" --ops-file=\"${manifest_dir}/ops-files/cf-routing.yml\""
-  fi
-
-  if [[ "aws" == "$iaas" ]]; then
-    interpolate_arguments+=" --ops-file=\"${manifest_dir}/ops-files/iaas/aws/lb.yml\""
-  fi
-
-  if [ -f "${manifest_dir}/ops-files/iaas/${iaas}/cloud-provider.yml" ]; then
-    interpolate_arguments+=" --ops-file=\"${manifest_dir}/ops-files/iaas/${iaas}/cloud-provider.yml\" -v director_uuid=\"${director_uuid}\""
-  fi
-
-  if [ -f "${bosh_environment}/${deployment_name}.yml" ]; then
-    interpolate_arguments+=" --ops-file=\"${bosh_environment}/${deployment_name}.yml\""
-  fi
-
-  if [ -f "${bosh_environment}/${deployment_name}-vars.yml" ]; then
-    interpolate_arguments+=" --vars-file=\"${bosh_environment}/${deployment_name}-vars.yml\""
-  fi
-
-  if ! bosh-cli int "${bosh_environment}/director.yml" --path='/authorization_mode' &>/dev/null; then
-    interpolate_arguments+=" --var authorization_mode=abac"
-  fi
-
-  if ! bosh-cli int "${bosh_environment}/director.yml" --path='/worker_count' &>/dev/null; then
-    interpolate_arguments+=" --var worker_count=3"
-  fi
-
-  if [[ "gcp" == "$iaas" ]]; then
-    if ! bosh-cli int "${bosh_environment}/director.yml" --path='/service_account_worker' &>/dev/null; then
-      interpolate_arguments+=" --ops-file=\"${manifest_dir}/ops-files/iaas/gcp/add-service-key-worker.yml\""
+  if [[ "aws" == "${iaas}" ]]; then
+    interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/aws/lb.yml\""
+  elif [[ "gcp" == "${iaas}" ]]; then
+    if ! bosh-cli int "${director_path}" --path='/service_account_worker' &>/dev/null; then
+      interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/gcp/add-service-key-worker.yml\""
     fi
 
-    if ! bosh-cli int "${bosh_environment}/director.yml" --path='/service_account_master' &>/dev/null; then
-      interpolate_arguments+=" --ops-file=\"${manifest_dir}/ops-files/iaas/gcp/add-service-key-master.yml\""
+    if ! bosh-cli int "${director_path}" --path='/service_account_master' &>/dev/null; then
+      interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/gcp/add-service-key-master.yml\""
     fi
   fi
 
-  interpolate_arguments+=" --vars-file=\"${bosh_environment}/director.yml\" --var=deployment_name=\"${deployment_name}\""
-
-  if [ -f "${bosh_environment}/creds.yml" ]; then
-    interpolate_arguments+=" --vars-file=\"${bosh_environment}/creds.yml\""
-  fi
-
-  if [ -f "${bosh_environment}/director-secrets.yml" ]; then
-    interpolate_arguments+=" --vars-file=\"${bosh_environment}/director-secrets.yml\""
-  fi
-
-  if bosh-cli int "${bosh_environment}/director.yml" --path='/addons_spec_path' &> /dev/null; then
-    addon_path=$(bosh-cli int "${bosh_environment}/director.yml" --path='/addons_spec_path')
-    addon_path="${bosh_environment}/${addon_path}"
+  if bosh-cli int "${director_path}" --path='/addons_spec_path' &> /dev/null; then
+    local addon_path="${bosh_environment}/$(bosh-cli int "${director_path}" --path='/addons_spec_path')"
     if [[ ! -f "${addon_path}" ]]; then
       echo "No file exists at the path specified in addons_spec_path property of director.yml" >&2
       exit 1
@@ -147,12 +181,15 @@ generate_manifest() {
       exit 1
     fi
 
-    interpolate_arguments+=" --ops-file=\"${manifest_dir}/ops-files/addons-spec.yml\" --var-file=\"addons-spec=${addon_path}\""
+    interpolate_arguments+=" --ops-file=\"${ops_dir}/addons-spec.yml\" --var-file=\"addons-spec=${addon_path}\""
   fi
 
-  manifest=$(bosh-cli int <(echo "$manifest") --ops-file="${manifest_dir}/ops-files/misc/dev.yml" \
-    --ops-file="${manifest_dir}/ops-files/misc/bootstrap.yml" \
-    --ops-file="${manifest_dir}/ops-files/use-runtime-config-bosh-dns.yml" \
+  local manifest=$(bosh-cli int <(echo "${manifest}") --ops-file="${ops_dir}/misc/dev.yml" \
+    --ops-file="${ops_dir}/misc/bootstrap.yml" \
+    --ops-file="${ops_dir}/use-runtime-config-bosh-dns.yml" \
+    --vars-file="${director_path}" \
+    --var deployment_name="${deployment_name}" \
+    --var director_uuid="${director_uuid}" \
     ${interpolate_arguments})
 
   printf "%s" "${manifest}"
