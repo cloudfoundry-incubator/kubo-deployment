@@ -70,7 +70,7 @@ var _ = Describe("Deploy K8s", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 
-			Expect(stderr).To(gbytes.Say("bosh-cli upload-stemcell https://s3.amazonaws.com/bosh-core-stemcells/google/bosh-stemcell-3124.12-google-kvm-ubuntu-trusty-go_agent.tgz"))
+			Expect(stderr).To(gbytes.Say("bosh-cli upload-stemcell https://s3.amazonaws.com/bosh-core-stemcells/google/light-bosh-stemcell-3124.12-google-kvm-ubuntu-trusty-go_agent.tgz"))
 		})
 
 		It("uploads the stemcell for vSphere", func() {
@@ -105,7 +105,7 @@ var _ = Describe("Deploy K8s", func() {
 	})
 
 	Context("When release source is dev", func() {
-		It("should create and upload a release", func(){
+		It("should create and upload a release", func() {
 			createAndUploadReleaseMock := Mock("create_and_upload_release", `echo`)
 			exportBoshEnvironmentMock := Mock("export_bosh_environment", "echo")
 			cloudConfigMock := Mock("set_cloud_config", "echo")
@@ -121,7 +121,7 @@ var _ = Describe("Deploy K8s", func() {
 	})
 
 	Context("When release source is public", func() {
-		It("should upload a release", func(){
+		It("should upload a release", func() {
 			uploadReleaseMock := Mock("upload_release", `echo -n $@`)
 			getSettingMock := Mock("get_setting", `echo url-to-public-release`)
 			exportBoshEnvironmentMock := Mock("export_bosh_environment", "echo")
@@ -175,7 +175,7 @@ var _ = Describe("Deploy K8s", func() {
 })
 
 var _ = Describe("upload_stemcell", func() {
-	BeforeEach(func(){
+	BeforeEach(func() {
 		bash.Source(pathToScript("deploy_k8s"), nil)
 		boshMock := Mock("bosh-cli", "echo")
 		ApplyMocks(bash, []Gob{boshMock})
@@ -191,8 +191,8 @@ var _ = Describe("upload_stemcell", func() {
 		})
 	})
 
-	Context("vSphere", func(){
-		It("should upload a vSphere esxi ubuntu trusty stemcell", func(){
+	Context("vSphere", func() {
+		It("should upload a vSphere esxi ubuntu trusty stemcell", func() {
 			code, err := bash.Run("upload_stemcell", []string{"public", "vsphere"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
@@ -201,8 +201,8 @@ var _ = Describe("upload_stemcell", func() {
 		})
 	})
 
-	Context("OpenStack", func(){
-		It("should upload an OpenStack kvm ubuntu trusty stemcell", func(){
+	Context("OpenStack", func() {
+		It("should upload an OpenStack kvm ubuntu trusty stemcell", func() {
 			code, err := bash.Run("upload_stemcell", []string{"public", "openstack"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
@@ -211,8 +211,8 @@ var _ = Describe("upload_stemcell", func() {
 		})
 	})
 
-	Context("AWS", func(){
-		It("should upload an AWS xen hvm ubuntu trusty light stemcell", func(){
+	Context("AWS", func() {
+		It("should upload an AWS xen hvm ubuntu trusty light stemcell", func() {
 			code, err := bash.Run("upload_stemcell", []string{"public", "aws"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
@@ -221,8 +221,8 @@ var _ = Describe("upload_stemcell", func() {
 		})
 	})
 
-	Context("skip", func(){
-		It("should not upload a stemcell", func(){
+	Context("skip", func() {
+		It("should not upload a stemcell", func() {
 			code, err := bash.Run("upload_stemcell", []string{"skip", "aws"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
