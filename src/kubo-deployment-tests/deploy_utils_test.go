@@ -6,6 +6,7 @@ import (
 	. "github.com/jhvhs/gob-mock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	. "github.com/onsi/ginkgo/extensions/table"
 	"github.com/onsi/gomega/gbytes"
 	"path"
 )
@@ -170,13 +171,289 @@ var _ = Describe("DeployUtils", func() {
 		})
 	})
 
-	Describe("generate_manifest", func(){
-		Context("default manifest", func() {
-			Context("without creds.yml or director-secrets.yml", func() {
-				It("applies dev, bootstrap and use-runtime-config-bosh-dns", func() {
-					bash.Source(pathToScript("lib/deploy_utils"), nil)
+	Describe("generate_manifest", func() {
+		BeforeEach(func() {
+			bash.Source(pathToScript("lib/deploy_utils"), nil)
 
-					directorMock := Mock("bosh-cli", `
+		})
+
+		It("applies dev, bootstrap and use-runtime-config-bosh-dns ops files", func() {
+
+			boshMock := Mock("bosh-cli", `
+			if [[ "$3" =~ "addons_spec_path" \
+				|| "$3" =~ "http_proxy" \
+				|| "$3" =~ "https_proxy" \
+				|| "$3" =~ "no_proxy" ]]; then
+				return 1
+			elif [[ "$3" =~ "routing_mode" ]]; then
+				echo "the-routing-mode"
+			elif [[ "$3" =~ "iaas" ]]; then
+				echo "the-iaas"
+			else
+				echo
+			fi`)
+			ApplyMocks(bash, []Gob{boshMock})
+
+			code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", "non-existent-manifest-path", "director-uuid"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr).To(gbytes.Say("routing_mode"))
+			Expect(stderr).To(gbytes.Say("iaas"))
+			Expect(stderr).To(gbytes.Say("misc/dev.yml"))
+			Expect(stderr).To(gbytes.Say("misc/bootstrap.yml"))
+			Expect(stderr).To(gbytes.Say("use-runtime-config-bosh-dns.yml"))
+			Expect(stderr).To(gbytes.Say("--var=deployment_name=\"deployment-name\""))
+		})
+
+		Context("when http_proxy is set", func() {
+			It("applies add-http-proxy ops file", func() {
+				boshMock := Mock("bosh-cli", `
+				if [[ "$3" =~ "addons_spec_path" \
+					|| "$3" =~ "https_proxy" \
+					|| "$3" =~ "no_proxy" ]]; then
+					return 1
+				elif [[ "$3" =~ "routing_mode" ]]; then
+					echo "the-routing-mode"
+				elif [[ "$3" =~ "iaas" ]]; then
+					echo "the-iaas"
+				else
+					echo
+				fi`)
+				ApplyMocks(bash, []Gob{boshMock})
+
+				code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", "non-existent-manifest-path", "director-uuid"})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(0))
+				Expect(stderr).To(gbytes.Say("add-http-proxy.yml"))
+			})
+		})
+
+
+		Context("when https_proxy is set", func() {
+			It("applies add-https-proxy ops file", func() {
+				boshMock := Mock("bosh-cli", `
+				if [[ "$3" =~ "addons_spec_path" \
+					|| "$3" =~ "http_proxy" \
+					|| "$3" =~ "no_proxy" ]]; then
+					return 1
+				elif [[ "$3" =~ "routing_mode" ]]; then
+					echo "the-routing-mode"
+				elif [[ "$3" =~ "iaas" ]]; then
+					echo "the-iaas"
+				else
+					echo
+				fi`)
+				ApplyMocks(bash, []Gob{boshMock})
+
+				code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", "non-existent-manifest-path", "director-uuid"})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(0))
+				Expect(stderr).To(gbytes.Say("add-https-proxy.yml"))
+			})
+		})
+
+		Context("when no_proxy is set", func() {
+			It("applies no-proxy ops-file", func() {
+				boshMock := Mock("bosh-cli", `
+				if [[ "$3" =~ "addons_spec_path" \
+					|| "$3" =~ "http_proxy" \
+					|| "$3" =~ "https_proxy" ]]; then
+					return 1
+				elif [[ "$3" =~ "routing_mode" ]]; then
+					echo "the-routing-mode"
+				elif [[ "$3" =~ "iaas" ]]; then
+					echo "the-iaas"
+				else
+					echo
+				fi`)
+				ApplyMocks(bash, []Gob{boshMock})
+
+				code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", "non-existent-manifest-path", "director-uuid"})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(0))
+				Expect(stderr).To(gbytes.Say("add-no-proxy.yml"))
+			})
+		})
+
+		Context("when routing_mode is cf", func() {
+			It("applies cf-routing ops-file", func() {
+				boshMock := Mock("bosh-cli", `
+				if [[ "$3" =~ "addons_spec_path" \
+					|| "$3" =~ "http_proxy" \
+					|| "$3" =~ "https_proxy" \
+					|| "$3" =~ "no_proxy" ]]; then
+					return 1
+				elif [[ "$3" =~ "routing_mode" ]]; then
+					echo "cf"
+				elif [[ "$3" =~ "iaas" ]]; then
+					echo "the-iaas"
+				else
+					echo
+				fi`)
+				ApplyMocks(bash, []Gob{boshMock})
+
+				code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", "non-existent-manifest-path", "director-uuid"})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(0))
+				Expect(stderr).To(gbytes.Say("cf-routing.yml"))
+			})
+		})
+
+		Context("when iaas is aws", func() {
+			It("applies aws lb ops-file", func() {
+				boshMock := Mock("bosh-cli", `
+				if [[ "$3" =~ "addons_spec_path" \
+					|| "$3" =~ "http_proxy" \
+					|| "$3" =~ "https_proxy" \
+					|| "$3" =~ "no_proxy" ]]; then
+					return 1
+				elif [[ "$3" =~ "routing_mode" ]]; then
+					echo "the-routing-mode"
+				elif [[ "$3" =~ "iaas" ]]; then
+					echo "aws"
+				else
+					echo
+				fi`)
+				ApplyMocks(bash, []Gob{boshMock})
+
+				code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", "non-existent-manifest-path", "director-uuid"})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(0))
+				Expect(stderr).To(gbytes.Say("aws/lb.yml"))
+			})
+		})
+
+		DescribeTable("applies the cloud_provider ops-file", func(iaas string) {
+			boshMock := Mock("bosh-cli", fmt.Sprintf(`
+			if [[ "$3" =~ "addons_spec_path" \
+				|| "$3" =~ "http_proxy" \
+				|| "$3" =~ "https_proxy" \
+				|| "$3" =~ "no_proxy" ]]; then
+				return 1
+			elif [[ "$3" =~ "routing_mode" ]]; then
+				echo "the-routing-mode"
+			elif [[ "$3" =~ "iaas" ]]; then
+				echo "%s"
+			else
+				echo
+			fi`, iaas))
+			ApplyMocks(bash, []Gob{boshMock})
+
+			code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", pathFromRoot("manifests/cfcr.yml"), "director-uuid"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr).To(gbytes.Say(fmt.Sprintf("%s/cloud-provider.yml", iaas)))
+		},
+			Entry("when the iaas is aws", "aws"),
+			Entry("when the iaas is gcp", "gcp"),
+			Entry("when the iaas is vsphere", "vsphere"),
+		)
+
+		Context("when authorization_mode is not set", func() {
+			It("sets authorization_mode variable to abac", func(){
+				boshMock := Mock("bosh-cli", `
+				if [[ "$3" =~ "addons_spec_path" \
+					|| "$3" =~ "http_proxy" \
+					|| "$3" =~ "https_proxy" \
+					|| "$3" =~ "no_proxy" \
+					|| "$3" =~ "authorization_mode" ]]; then
+					return 1
+				elif [[ "$3" =~ "routing_mode" ]]; then
+					echo "the-routing-mode"
+				elif [[ "$3" =~ "iaas" ]]; then
+					echo "the-iaas"
+				else
+					echo
+				fi`)
+				ApplyMocks(bash, []Gob{boshMock})
+
+				code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", "non-existent-manifest-path", "director-uuid"})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(0))
+				Expect(stderr).To(gbytes.Say("var authorization_mode=abac"))
+			})
+		})
+
+		Context("when worker_count is not set", func() {
+			It("sets worker_count variable to 3", func() {
+				boshMock := Mock("bosh-cli", `
+				if [[ "$3" =~ "addons_spec_path" \
+					|| "$3" =~ "http_proxy" \
+					|| "$3" =~ "https_proxy" \
+					|| "$3" =~ "no_proxy" \
+					|| "$3" =~ "worker_count" ]]; then
+					return 1
+				elif [[ "$3" =~ "routing_mode" ]]; then
+					echo "the-routing-mode"
+				elif [[ "$3" =~ "iaas" ]]; then
+					echo "the-iaas"
+				else
+					echo
+				fi`)
+				ApplyMocks(bash, []Gob{boshMock})
+
+				code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", "non-existent-manifest-path", "director-uuid"})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(0))
+				Expect(stderr).To(gbytes.Say("var worker_count=3"))
+			})
+		})
+
+		Context("when iaas is gcp", func() {
+			Context("when service_account_worker is not set", func(){
+				It("applies the add-service-key-worker ops-file", func() {
+					boshMock := Mock("bosh-cli", `
+						if [[ "$3" =~ "addons_spec_path" \
+							|| "$3" =~ "http_proxy" \
+							|| "$3" =~ "https_proxy" \
+							|| "$3" =~ "no_proxy" \
+							|| "$3" =~ "service_account_worker" ]]; then
+							return 1
+						elif [[ "$3" =~ "routing_mode" ]]; then
+							echo "the-routing-mode"
+						elif [[ "$3" =~ "iaas" ]]; then
+							echo "gcp"
+						else
+							echo
+						fi`)
+					ApplyMocks(bash, []Gob{boshMock})
+
+					code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", "non-existent-manifest-path", "director-uuid"})
+					Expect(err).NotTo(HaveOccurred())
+					Expect(code).To(Equal(0))
+					Expect(stderr).To(gbytes.Say("gcp/add-service-key-worker.yml"))
+				})
+			})
+
+			Context("when service_account_master is not set", func(){
+				It("applies the add-service-key-master ops-file", func() {
+					boshMock := Mock("bosh-cli", `
+						if [[ "$3" =~ "addons_spec_path" \
+							|| "$3" =~ "http_proxy" \
+							|| "$3" =~ "https_proxy" \
+							|| "$3" =~ "no_proxy" \
+							|| "$3" =~ "service_account_master" ]]; then
+							return 1
+						elif [[ "$3" =~ "routing_mode" ]]; then
+							echo "the-routing-mode"
+						elif [[ "$3" =~ "iaas" ]]; then
+							echo "gcp"
+						else
+							echo
+						fi`)
+					ApplyMocks(bash, []Gob{boshMock})
+
+					code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", "non-existent-manifest-path", "director-uuid"})
+					Expect(err).NotTo(HaveOccurred())
+					Expect(code).To(Equal(0))
+					Expect(stderr).To(gbytes.Say("gcp/add-service-key-master.yml"))
+				})
+			})
+		})
+
+		Context("when creds.yml exists", func() {
+			It("applies the creds.yml vars-file", func() {
+				boshMock := Mock("bosh-cli", `
 					if [[ "$3" =~ "addons_spec_path" \
 						|| "$3" =~ "http_proxy" \
 						|| "$3" =~ "https_proxy" \
@@ -189,18 +466,63 @@ var _ = Describe("DeployUtils", func() {
 					else
 						echo
 					fi`)
-					ApplyMocks(bash, []Gob{directorMock})
+				ApplyMocks(bash, []Gob{boshMock})
 
-					code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", "non-existent-manifest-path", "director-uuid"})
-					Expect(err).NotTo(HaveOccurred())
-					Expect(code).To(Equal(0))
-					Expect(stderr).To(gbytes.Say("routing_mode"))
-					Expect(stderr).To(gbytes.Say("iaas"))
-					Expect(stderr).To(gbytes.Say("misc/dev.yml"))
-					Expect(stderr).To(gbytes.Say("misc/bootstrap.yml"))
-					Expect(stderr).To(gbytes.Say("use-runtime-config-bosh-dns.yml"))
-					Expect(stderr).To(gbytes.Say("--var=deployment_name=\"deployment-name\""))
-				})
+				code, err := bash.Run("generate_manifest", []string{path.Join(testEnvironmentPath, "test_gcp_with_creds"), "deployment-name", "non-existent-manifest-path", "director-uuid"})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(0))
+				Expect(stderr).To(gbytes.Say("creds.yml"))
+			})
+		})
+
+		Context("when director-secrets.yml exists", func() {
+			It("applies the director-secrets.yml vars-file", func() {
+				boshMock := Mock("bosh-cli", `
+					if [[ "$3" =~ "addons_spec_path" \
+						|| "$3" =~ "http_proxy" \
+						|| "$3" =~ "https_proxy" \
+						|| "$3" =~ "no_proxy" ]]; then
+						return 1
+					elif [[ "$3" =~ "routing_mode" ]]; then
+						echo "the-routing-mode"
+					elif [[ "$3" =~ "iaas" ]]; then
+						echo "the-iaas"
+					else
+						echo
+					fi`)
+				ApplyMocks(bash, []Gob{boshMock})
+
+				code, err := bash.Run("generate_manifest", []string{path.Join(testEnvironmentPath, "test_gcp_with_creds"), "deployment-name", "non-existent-manifest-path", "director-uuid"})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(0))
+				Expect(stderr).To(gbytes.Say("director-secrets.yml"))
+			})
+		})
+
+		Context("when addons_spec_path exists", func() {
+			It("applies addons-spec.yml ops-file and addon_path as vars file", func(){
+				boshMock := Mock("bosh-cli", `
+					if [[ "$3" =~ "http_proxy" \
+						|| "$3" =~ "https_proxy" \
+						|| "$3" =~ "no_proxy" ]]; then
+						return 1
+					elif [[ "$3" =~ "routing_mode" ]]; then
+						echo "the-routing-mode"
+					elif [[ "$3" =~ "iaas" ]]; then
+						echo "the-iaas"
+					elif [[ "$3" =~ "addons_spec_path" ]]; then
+						echo "addon.yml"
+					else
+						echo
+					fi`)
+				ApplyMocks(bash, []Gob{boshMock})
+
+				code, err := bash.Run("generate_manifest", []string{path.Join(testEnvironmentPath, "with_addons"), "deployment-name", pathFromRoot("manifests/cfcr.yml"), "director-uuid"})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(0))
+				Expect(stderr).To(gbytes.Say("addons-spec.yml"))
+				Expect(stderr).To(gbytes.Say("var-file=\"addons-spec"))
+				Expect(stderr).To(gbytes.Say("addon.yml"))
 			})
 		})
 	})
