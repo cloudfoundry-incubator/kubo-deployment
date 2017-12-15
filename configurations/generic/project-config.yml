@@ -10,12 +10,6 @@ kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest
 
 worker_count: 3
 
-# Proxy routing mode settings
-# Uncomment this section when using Proxy routing mode
-# routing_mode: proxy
-# kubernetes_master_host: # IP address of the HA Proxy master node
-# kubernetes_master_port: # Port for kubernetes api-server on HA Proxy master node
-
 # IaaS routing mode settings
 # Comment this section when using CF routing mode
 routing_mode: iaas
