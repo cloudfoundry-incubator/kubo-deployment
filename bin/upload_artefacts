@@ -56,6 +56,7 @@ main() {
   stemcell_version=$(bosh-cli int "$(repo_directory)/manifests/cfcr.yml" --path /stemcells/0/version)
 
   source "$(repo_directory)/bin/set_bosh_environment"
+  export BOSH_NAME="${BOSH_ENVIRONMENT}"
 
   upload_releases "${release_source}"
   upload_stemcell "${platform}" "${stemcell_version}"
