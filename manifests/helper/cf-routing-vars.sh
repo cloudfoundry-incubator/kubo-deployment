@@ -43,13 +43,13 @@ nats_ip_json="[$nats_ips_list]"
 cat <<YAML
 kubernetes_master_host: ${tcp_hostname}
 kubernetes_master_port: 8443
-routing-cf-api-url: https://api.$system_domain
-routing-cf-uaa-url: https://uaa.$system_domain
-routing-cf-app-domain-name: $app_domain
-routing-cf-client-id: routing_api_client
+routing_cf_api_url: https://api.$system_domain
+routing_cf_uaa_url: https://uaa.$system_domain
+routing_cf_app_domain_name: $app_domain
+routing_cf_client_id: routing_api_client
 routing-cf-client-secret: "${routing_cf_client_secret}"
-routing-cf-nats-internal-ips: ${nats_ip_json}
-routing-cf-nats-port: 4222
-routing-cf-nats-username: nats
+routing_cf_nats_internal_ips: ${nats_ip_json}
+routing_cf_nats_port: 4222
+routing_cf_nats_username: nats
 routing-cf-nats-password: "${nats_password}"
 YAML

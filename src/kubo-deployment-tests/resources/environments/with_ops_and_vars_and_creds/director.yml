@@ -9,9 +9,9 @@ zone: # name of GCP zone
 
 internal_ip: # Internal ip address of the BOSH director. Please select an available ip address in the network you wish to deploy into.
 
-routing-cf-api-url: cf.api.url # TCP routing API URL. In PCF: https://api.<system domain>
-routing-cf-client-id: cf.client.id # Routing UAA client name that will be used to register tcp routes
-routing-cf-uaa-url: cf.uaa.url # Routing UAA URL In PCF: https://uaa.<system domain>
+routing_cf_api_url: cf.api.url # TCP routing API URL. In PCF: https://api.<system domain>
+routing_cf_client_id: cf.client.id # Routing UAA client name that will be used to register tcp routes
+routing_cf_uaa_url: cf.uaa.url # Routing UAA URL In PCF: https://uaa.<system domain>
 
 internal_cidr: # CIDR range that BOSH will deploy to
 internal_gw: # internal gateway

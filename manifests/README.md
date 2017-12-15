@@ -100,14 +100,14 @@ Create a file `cf-vars.yml` which might look like:
 ```yaml
 kubernetes_master_host: tcp.apps.mycompany.com
 kubernetes_master_port: 8443
-routing-cf-api-url: https://api.system.mycompany.com
-routing-cf-uaa-url: https://uaa.system.mycompany.com
-routing-cf-app-domain-name: apps.mycompany.com
-routing-cf-client-id: routing_api_client
+routing_cf_api_url: https://api.system.mycompany.com
+routing_cf_uaa_url: https://uaa.system.mycompany.com
+routing_cf_app_domain_name: apps.mycompany.com
+routing_cf_client_id: routing_api_client
 routing-cf-client-secret: <<credhub get -n my-bosh/cf/uaa_clients_routing_api_client_secret>>
-routing-cf-nats-internal-ips: [10.10.1.6,10.10.1.7,10.10.1.8]
-routing-cf-nats-port: 4222
-routing-cf-nats-username: nats
+routing_cf_nats_internal_ips: [10.10.1.6,10.10.1.7,10.10.1.8]
+routing_cf_nats_port: 4222
+routing_cf_nats_username: nats
 routing-cf-nats-password: <<credhub get -n my-bosh/cf/nats_password>>
 ```
 

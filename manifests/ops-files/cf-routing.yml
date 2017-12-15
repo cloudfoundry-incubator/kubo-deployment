@@ -22,9 +22,9 @@
     properties:
       external_kubo_port: ((kubernetes_master_port))
       cloud_foundry:
-        api_url: ((routing-cf-api-url))
-        uaa_url: ((routing-cf-uaa-url))
-        uaa_client_id: ((routing-cf-client-id))
+        api_url: ((routing_cf_api_url))
+        uaa_url: ((routing_cf_uaa_url))
+        uaa_client_id: ((routing_cf_client_id))
         uaa_client_secret: ((routing-cf-client-secret))
 
 - type: replace
@@ -43,16 +43,16 @@
         tls:
           kubernetes: ((tls-kubernetes))
         cloud_foundry:
-          uaa_url: ((routing-cf-uaa-url))
-          routing_api_url: ((routing-cf-api-url))
-          routing_api_client_id: ((routing-cf-client-id))
+          uaa_url: ((routing_cf_uaa_url))
+          routing_api_url: ((routing_cf_api_url))
+          routing_api_client_id: ((routing_cf_client_id))
           routing_api_client_secret: ((routing-cf-client-secret))
           skip_tls_verification: true
-          app_domain: ((routing-cf-app-domain-name))
+          app_domain: ((routing_cf_app_domain_name))
         nats:
-          machines: ((routing-cf-nats-internal-ips))
-          port: ((routing-cf-nats-port))
-          user: ((routing-cf-nats-username))
+          machines: ((routing_cf_nats_internal_ips))
+          port: ((routing_cf_nats_port))
+          user: ((routing_cf_nats_username))
           password: ((routing-cf-nats-password))
     stemcell: trusty
     vm_type: minimal

@@ -20,13 +20,13 @@ kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest
 # Uncomment and configure the lines below to leverage CF routing instead of IaaS routing
 routing_mode: cf
 kubernetes_master_host: master # Hostname of TCP router. Use `cf domains` to find existing TCP domain. If none exists, see https://docs.cloudfoundry.org/devguide/deploy-apps/routes-domains.html#shared-domains for instructions to create one.
-routing-cf-api-url: # TCP routing API URL. In PCF: https://api.<system domain>
-routing-cf-client-id: # Routing UAA client name that will be used to register tcp routes
-routing-cf-uaa-url: # Routing UAA URL In PCF: https://uaa.<system domain>
-routing-cf-app-domain-name: # Cloud Foundry apps domain
-routing-cf-nats-internal-ips: # An array of internal IP address of Cloud Foundry NATS, e.g. [ '1.2.3.4' ]
-routing-cf-nats-username: nats
-routing-cf-nats-port: 4222
+routing_cf_api_url: # TCP routing API URL. In PCF: https://api.<system domain>
+routing_cf_client_id: # Routing UAA client name that will be used to register tcp routes
+routing_cf_uaa_url: # Routing UAA URL In PCF: https://uaa.<system domain>
+routing_cf_app_domain_name: # Cloud Foundry apps domain
+routing_cf_nats_internal_ips: # An array of internal IP address of Cloud Foundry NATS, e.g. [ '1.2.3.4' ]
+routing_cf_nats_username: nats
+routing_cf_nats_port: 4222
 
 # uncomment these fields to configure proxy settings for docker
 # http_proxy: # e.g. http://my.proxy.local:73636

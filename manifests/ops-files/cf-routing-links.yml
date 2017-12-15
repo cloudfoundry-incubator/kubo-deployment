@@ -58,6 +58,6 @@
           deployment: cf
       properties:
         cloud_foundry:
-          app_domain: ((routing-cf-app-domain-name))
+          app_domain: ((routing_cf_app_domain_name))
     stemcell: trusty
     vm_type: minimal
