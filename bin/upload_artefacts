@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+
+[ -z "$DEBUG" ] || set -x
+
+set -o pipefail -e
+
+
+repo_directory() {
+  echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)"
+}
+
+get_deps() {
+  source "$(repo_directory)/bin/lib/deploy_utils"
+}
+
+
+print_usage() {
+  local release_path=$(cd $(basename "$0"/../..) > /dev/null; pwd)
+  echo "Usage: $(basename "$0") [KUBO_ENV] [RELEASE_SOURCE]"
+  echo ""
+  echo "KUBO_ENV is the path to your Kubo environment configuration folder"
+  echo ""
+  echo "RELEASE_SOURCE specifies where to find the kubo BOSH release"
+  echo "  options:"
+  echo "     dev    - Build a dev release from the local machine."
+  echo "              The kubo-release repo must exist in ${release_path}"
+  echo "     public - Use published precompiled release from the Internet"
+  echo "              Uses 'kubo_release_url' from <KUBO_ENV>/director.yml"
+  echo "              This option requires latest version of kubo-deployment"
+  echo "     local  - (default) Use local tarball release"
+  echo "              The kubo-release.tgz must exist in ${release_path}"
+  echo ""
+}
+
+main() {
+  get_deps
+
+  export BOSH_ENV="$(cd "${1}"; pwd -P)"
+  local platform=$(bosh-cli int ${BOSH_ENV}/director.yml --path /iaas)
+  local release_source="${2}"
+
+  if [ -z "$platform" ]; then
+   echo "${BOSH_ENV} is not a valid BOSH environment."
+   echo "Please use 'generate_env_config' to create one."
+   print_usage
+   exit 1
+  fi
+
+  case ${release_source} in
+    "dev"|"public"|"local") ;;
+    "") release_source="local";;
+    *) print_usage; exit 1;;
+  esac
+
+
+  stemcell_version=$(bosh-cli int "$(repo_directory)/manifests/cfcr.yml" --path /stemcells/0/version)
+
+  source "$(repo_directory)/bin/set_bosh_environment"
+
+  upload_releases "${release_source}"
+  upload_stemcell "${platform}" "${stemcell_version}"
+}
+
+upload_releases() {
+  local release_source=$1
+
+  case ${release_source} in
+    "dev")
+      pushd "$(repo_directory)/../" > /dev/null
+        create_and_upload_release 'kubo-release'
+      popd > /dev/null
+      ;;
+    "public")
+       upload_release "$(get_setting director.yml "/kubo_release_url")"
+      ;;
+    "local")
+      pushd "$(repo_directory)/../" > /dev/null
+        upload_release "kubo-release.tgz"
+      popd > /dev/null
+	    ;;
+    *)
+      echo "unknown RELEASE_SOURCE: '${release_source}'"
+      exit 1
+    esac
+}
+
+upload_stemcell() {
+  local iaas=$1
+  local stemcell_version=$2
+
+  case ${iaas} in
+  "gcp")
+    bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-gce-light-stemcells/light-bosh-stemcell-${stemcell_version}-google-kvm-ubuntu-trusty-go_agent.tgz"
+    ;;
+  "vsphere")
+    bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/vsphere/bosh-stemcell-${stemcell_version}-vsphere-esxi-ubuntu-trusty-go_agent.tgz"
+    ;;
+  "openstack")
+    bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/openstack/bosh-stemcell-${stemcell_version}-openstack-kvm-ubuntu-trusty-go_agent.tgz"
+    ;;
+   "aws")
+    bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-${stemcell_version}-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"
+    ;;
+  esac
+}
+
+[[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"

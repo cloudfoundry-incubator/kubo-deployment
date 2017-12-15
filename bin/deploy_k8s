@@ -45,6 +45,7 @@ get_deps() {
 
 main() {
   get_deps
+
   PATH=$(repo_directory)/bin:$PATH
   if [ $# -ne 2 ] && [ $# -ne 3 ]; then
     print_usage
@@ -72,63 +73,18 @@ main() {
   BOSH_ENV="$bosh_env" source "$(repo_directory)/bin/set_bosh_environment"
 
   export_bosh_environment "${bosh_env}"
-  upload_releases "${release_source}"
   set_cloud_config
-  manifest=$("$(repo_directory)/bin/generate_kubo_manifest" "${bosh_env}" "${deployment_name}" "$(get_director_uuid)")
-  stemcell_version=$(bosh-cli int <(echo -n "${manifest}") --path '/stemcells/0/version')
-  upload_stemcell "${release_source}" "${platform}" "${stemcell_version}"
 
+  if [[ "${release_source}" != "skip" ]]; then
+    upload_artefacts "${bosh_env}" "${release_source}"
+  fi
+
+  manifest=$("$(repo_directory)/bin/generate_kubo_manifest" "${bosh_env}" "${deployment_name}" "$(get_director_uuid)")
   deploy_to_bosh "${manifest}" "${deployment_name}"
 
   if bosh-cli int <(echo -n "${manifest}") --path /instance_groups/name=master/jobs/name=apply-specs &>/dev/null; then
     bosh-cli -d "${deployment_name}" run-errand apply-specs
   fi
 }
-
-upload_releases() {
-  local release_source=$1
-
-  case ${release_source} in
-    "dev")
-      pushd "$(repo_directory)/../" > /dev/null
-        create_and_upload_release 'kubo-release'
-      popd > /dev/null
-      ;;
-    "public")
-       upload_release "$(get_setting director.yml "/kubo_release_url")"
-      ;;
-    "local")
-      pushd "$(repo_directory)/../" > /dev/null
-        upload_release "kubo-release.tgz"
-      popd > /dev/null
-      ;;
-    "skip")
-    	echo "Skipped uploading releases"
-	;;
-    *)
-      echo "unknown RELEASE_SOURCE: '${release_source}'"
-      exit 1
-    esac
-}
-
-upload_stemcell() {
-  local stemcell_version=$3
-  if [ "$1" != "skip" ]; then
-    case $2 in
-    "gcp")
-      bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-gce-light-stemcells/light-bosh-stemcell-${stemcell_version}-google-kvm-ubuntu-trusty-go_agent.tgz"
-      ;;
-    "vsphere")
-      bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/vsphere/bosh-stemcell-${stemcell_version}-vsphere-esxi-ubuntu-trusty-go_agent.tgz"
-      ;;
-    "openstack")
-      bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/openstack/bosh-stemcell-${stemcell_version}-openstack-kvm-ubuntu-trusty-go_agent.tgz"
-      ;;
-     "aws")
-      bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-${stemcell_version}-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"
-      ;;
-    esac
-  fi
- }
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"
