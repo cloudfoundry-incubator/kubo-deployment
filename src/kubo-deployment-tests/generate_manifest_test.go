@@ -176,7 +176,7 @@ var _ = Describe("Generate manifest", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
-			Expect(stdout).To(gbytes.Say("\n        uaa_client_secret: \\(\\(routing-cf-client-secret\\)\\)\n"))
+			Expect(stdout).To(gbytes.Say("\n        uaa_client_secret: \\(\\(routing_cf_client_secret\\)\\)\n"))
 		})
 
 		It("uses ops-files to modify the manifest", func() {
