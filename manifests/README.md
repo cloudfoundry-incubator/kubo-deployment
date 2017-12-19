@@ -104,11 +104,11 @@ routing_cf_api_url: https://api.system.mycompany.com
 routing_cf_uaa_url: https://uaa.system.mycompany.com
 routing_cf_app_domain_name: apps.mycompany.com
 routing_cf_client_id: routing_api_client
-routing-cf-client-secret: <<credhub get -n my-bosh/cf/uaa_clients_routing_api_client_secret>>
+routing_cf_client-secret: <<credhub get -n my-bosh/cf/uaa_clients_routing_api_client_secret>>
 routing_cf_nats_internal_ips: [10.10.1.6,10.10.1.7,10.10.1.8]
 routing_cf_nats_port: 4222
 routing_cf_nats_username: nats
-routing-cf-nats-password: <<credhub get -n my-bosh/cf/nats_password>>
+routing_cf_nats_password: <<credhub get -n my-bosh/cf/nats_password>>
 ```
 
 You can try a helper script which might be able to use `bosh`, `cf`, and `credhub` CLIs to look up all the information:
@@ -128,7 +128,7 @@ In the example `cf-vars.yml` above:
     credhub get -n $BOSH_ENVIRONMENT/cf/nats_password --output-json | jq -r .value
     ```
 
-NOTE: in future we can get rid of the `routing-cf-nats-*` variables and instead use the `nats` link from the `cf` deployment from the same BOSH. https://github.com/cloudfoundry-incubator/kubo-release/pull/134
+NOTE: in future we can get rid of the `routing_cf_nats_*` variables and instead use the `nats` link from the `cf` deployment from the same BOSH. https://github.com/cloudfoundry-incubator/kubo-release/pull/134
 
 NOTE: hopefully one day `cf` deployment will expose its URLs, admin credentials, and UAA clients via links and remove most of the other variables above. E.g. https://github.com/cloudfoundry/capi-release/pull/65
 

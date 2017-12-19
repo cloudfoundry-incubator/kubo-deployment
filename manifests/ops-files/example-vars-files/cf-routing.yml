@@ -4,8 +4,8 @@ routing_cf_api_url: https://api.18-220-96-96.sslip.io
 routing_cf_uaa_url: https://uaa.18-220-96-96.sslip.io
 routing_cf_app_domain_name: 18-220-96-96.sslip.io
 routing_cf_client_id: routing_api_client
-routing-cf-client-secret: routing-cf-client-secret
+routing_cf_client_secret: routing-cf-client-secret
 routing_cf_nats_internal_ips: [10.10.1.6,10.10.1.7,10.10.1.8]
 routing_cf_nats_port: 4222
 routing_cf_nats_username: nats
-routing-cf-nats-password: routing-cf-nats-password
+routing_cf_nats_password: routing-cf-nats-password

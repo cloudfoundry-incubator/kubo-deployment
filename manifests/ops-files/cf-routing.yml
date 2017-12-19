@@ -25,7 +25,7 @@
         api_url: ((routing_cf_api_url))
         uaa_url: ((routing_cf_uaa_url))
         uaa_client_id: ((routing_cf_client_id))
-        uaa_client_secret: ((routing-cf-client-secret))
+        uaa_client_secret: ((routing_cf_client_secret))
 
 - type: replace
   path: /instance_groups/-
@@ -46,13 +46,13 @@
           uaa_url: ((routing_cf_uaa_url))
           routing_api_url: ((routing_cf_api_url))
           routing_api_client_id: ((routing_cf_client_id))
-          routing_api_client_secret: ((routing-cf-client-secret))
+          routing_api_client_secret: ((routing_cf_client_secret))
           skip_tls_verification: true
           app_domain: ((routing_cf_app_domain_name))
         nats:
           machines: ((routing_cf_nats_internal_ips))
           port: ((routing_cf_nats_port))
           user: ((routing_cf_nats_username))
-          password: ((routing-cf-nats-password))
+          password: ((routing_cf_nats_password))
     stemcell: trusty
     vm_type: minimal

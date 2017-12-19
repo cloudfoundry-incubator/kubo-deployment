@@ -47,9 +47,9 @@ routing_cf_api_url: https://api.$system_domain
 routing_cf_uaa_url: https://uaa.$system_domain
 routing_cf_app_domain_name: $app_domain
 routing_cf_client_id: routing_api_client
-routing-cf-client-secret: "${routing_cf_client_secret}"
+routing_cf_client_secret: "${routing_cf_client_secret}"
 routing_cf_nats_internal_ips: ${nats_ip_json}
 routing_cf_nats_port: 4222
 routing_cf_nats_username: nats
-routing-cf-nats-password: "${nats_password}"
+routing_cf_nats_password: "${nats_password}"
 YAML
