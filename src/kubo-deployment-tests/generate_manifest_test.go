@@ -413,6 +413,50 @@ var _ = Describe("Generate manifest", func() {
 		Expect(value).To(Equal("5"))
 	})
 
+	Context("when there are no resource pools for vcenter", func() {
+		It("should set working dir to not include the director uuid", func() {
+			command := exec.Command("./bin/generate_kubo_manifest",
+				"src/kubo-deployment-tests/resources/environments/test_vsphere_no_rp",
+				"name", "director_uuid")
+			command.Stdout = bash.Stdout
+			command.Stderr = bash.Stderr
+			command.Dir = pathFromRoot("")
+			Expect(command.Run()).To(Succeed())
+
+			value, err := propertyFromYaml("/instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider/vsphere/working-dir",
+				stdout.Contents())
+			Expect(err).NotTo(HaveOccurred())
+			Expect(value).To(Equal("/big_data_center/vm/big_vms"))
+
+			value, err = propertyFromYaml("/instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider/vsphere/working-dir",
+				stdout.Contents())
+			Expect(err).NotTo(HaveOccurred())
+			Expect(value).To(Equal("/big_data_center/vm/big_vms"))
+		})
+	})
+
+	Context("when there are resource pools for vcenter", func() {
+		It("should set working dir to include the director uuid", func() {
+			command := exec.Command("./bin/generate_kubo_manifest",
+				"src/kubo-deployment-tests/resources/environments/test_vsphere",
+				"name", "director_uuid")
+			command.Stdout = bash.Stdout
+			command.Stderr = bash.Stderr
+			command.Dir = pathFromRoot("")
+			Expect(command.Run()).To(Succeed())
+
+			value, err := propertyFromYaml("/instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider/vsphere/working-dir",
+				stdout.Contents())
+			Expect(err).NotTo(HaveOccurred())
+			Expect(value).To(Equal("/big_data_center/vm/big_vms/director_uuid"))
+
+			value, err = propertyFromYaml("/instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider/vsphere/working-dir",
+				stdout.Contents())
+			Expect(err).NotTo(HaveOccurred())
+			Expect(value).To(Equal("/big_data_center/vm/big_vms/director_uuid"))
+		})
+	})
+
 	Context("when there are gcp services keys in director.yml", func() {
 		It("should verify that the manifest has service_key properties", func() {
 			command := exec.Command("./bin/generate_kubo_manifest",

@@ -177,6 +177,10 @@ generate_manifest() {
     if ! bosh-cli int "${director_path}" --path='/service_account_master' &>/dev/null; then
       interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/gcp/add-service-key-master.yml\""
     fi
+  elif [[ "vsphere" == "${iaas}" ]]; then
+    if ! bosh-cli int "${director_path}" --path='/vcenter_rp' &>/dev/null; then
+      interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/vsphere/set-working-dir-no-rp.yml\""
+    fi
   fi
 
   if bosh-cli int "${director_path}" --path='/addons_spec_path' &> /dev/null; then

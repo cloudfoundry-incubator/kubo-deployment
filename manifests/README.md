@@ -216,6 +216,7 @@ kubectl get all
 | [`iaas/gcp/cloud-provider.yml`](iaas/gcp/cloud-provider.yml) | Enable Cloud Provider for OpenStack | - |
 | **vSphere** | | |
 | [`iaas/vsphere/cloud-provider.yml`](iaas/vsphere/cloud-provider.yml) | Enable Cloud Provider for vSphere | - |
+| [`iaas/vsphere/set-working-dir-no-rp.yml`](iaas/vsphere/set-working-dir-no-rp.yml) | Configure vSphere cloud provider's working dir if there is no resource pool | - |
 
 
 ### Proxy
