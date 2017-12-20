@@ -66,6 +66,7 @@ instance_groups:
       admin-password: ((kubo-admin-password))
       kubelet-password: ((kubelet-password))
       kube-proxy-password: ((kube-proxy-password))
+      kube-controller-manager-password: ((kube-controller-manager-password))
       kube-scheduler-password: ((kube-scheduler-password))
       route-sync-password: ((route-sync-password))
       backend_port: 8443 # Bosh links hack
@@ -79,12 +80,15 @@ instance_groups:
   - name: kubernetes-controller-manager
     release: kubo
     properties:
+      api-token: ((kube-controller-manager-password))
       tls:
         kubernetes: ((tls-kubernetes))
   - name: kubernetes-scheduler
     release: kubo
     properties:
       api-token: ((kube-scheduler-password))
+      tls:
+        kubernetes: ((tls-kubernetes))
   - name: kubernetes-system-specs
     release: kubo
     properties:
@@ -171,6 +175,8 @@ variables:
 - name: kubelet-password
   type: password
 - name: kube-proxy-password
+  type: password
+- name: kube-controller-manager-password
   type: password
 - name: kube-scheduler-password
   type: password
