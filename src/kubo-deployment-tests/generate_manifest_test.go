@@ -57,8 +57,8 @@ var _ = Describe("Generate manifest", func() {
 			Entry("CF UAA URL", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_url", "cf.uaa.url"),
 			Entry("CF Client ID", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_client_id", "cf.client.id"),
 			Entry("CF Client Secret", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_client_secret", "cf.client.secret"),
-			Entry("Auto-generated kubelet password", "/instance_groups/name=master/jobs/name=kubernetes-api/properties/kubelet-password", "((kubelet-password))"),
-			Entry("Auto-generated admin password", "/instance_groups/name=master/jobs/name=kubernetes-api/properties/admin-password", "((kubo-admin-password))"),
+			Entry("Auto-generated kubelet password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/kubelet-password", "((kubelet-password))"),
+			Entry("Auto-generated admin password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/admin-password", "((kubo-admin-password))"),
 		)
 
 		DescribeTable("populated properties for IaaS-based deployment", func(yPath, value string) {
@@ -72,8 +72,8 @@ var _ = Describe("Generate manifest", func() {
 		},
 			Entry("deployment name", "/name", "grinder"),
 			Entry("network name", "/instance_groups/name=master/networks/0/name", "default"),
-			Entry("Auto-generated kubelet password", "/instance_groups/name=master/jobs/name=kubernetes-api/properties/kubelet-password", "((kubelet-password))"),
-			Entry("Auto-generated admin password", "/instance_groups/name=master/jobs/name=kubernetes-api/properties/admin-password", "((kubo-admin-password))"),
+			Entry("Auto-generated kubelet password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/kubelet-password", "((kubelet-password))"),
+			Entry("Auto-generated admin password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/admin-password", "((kubo-admin-password))"),
 			Entry("worker node tag", "/instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider/gce/worker-node-tag", "TheDirector-grinder-worker"),
 		)
 

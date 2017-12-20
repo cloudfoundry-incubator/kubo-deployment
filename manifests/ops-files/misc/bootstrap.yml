@@ -19,11 +19,11 @@
   value: worker
 
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kubernetes-api/properties/port
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/port
   value: ((kubernetes_master_port))
 
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kubernetes-api/properties/authorization-mode
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/authorization-mode
   value: ((authorization_mode))
 
 - type: replace

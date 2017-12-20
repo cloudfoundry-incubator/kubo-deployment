@@ -59,7 +59,7 @@ instance_groups:
       cloud-provider: {as: master}
   - name: flanneld
     release: kubo
-  - name: kubernetes-api
+  - name: kube-apiserver
     release: kubo
     properties:
       admin-username: admin
@@ -77,13 +77,13 @@ instance_groups:
           ca: ((tls-kubernetes.ca))
           certificate: ((tls-kubernetes.certificate))
           private_key: ((tls-kubernetes.private_key))
-  - name: kubernetes-controller-manager
+  - name: kube-controller-manager
     release: kubo
     properties:
       api-token: ((kube-controller-manager-password))
       tls:
         kubernetes: ((tls-kubernetes))
-  - name: kubernetes-scheduler
+  - name: kube-scheduler
     release: kubo
     properties:
       api-token: ((kube-scheduler-password))
@@ -153,7 +153,7 @@ instance_groups:
       tls:
         kubernetes: ((tls-kubernetes))
         kubelet: ((tls-kubelet))
-  - name: kubernetes-proxy
+  - name: kube-proxy
     release: kubo
     properties:
       tls:
