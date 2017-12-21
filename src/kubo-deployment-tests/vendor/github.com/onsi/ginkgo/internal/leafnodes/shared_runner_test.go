@@ -272,11 +272,13 @@ func InvalidSharedRunnerBehaviors(build func(body interface{}, timeout time.Dura
 	var (
 		failer                *Failer.Failer
 		componentCodeLocation types.CodeLocation
+		innerCodeLocation     types.CodeLocation
 	)
 
 	BeforeEach(func() {
 		failer = Failer.New()
 		componentCodeLocation = codelocation.New(0)
+		innerCodeLocation = codelocation.New(0)
 	})
 
 	Describe("invalid functions", func() {

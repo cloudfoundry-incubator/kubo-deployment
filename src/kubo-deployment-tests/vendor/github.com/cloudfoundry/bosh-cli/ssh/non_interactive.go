@@ -24,10 +24,10 @@ func (r NonInteractiveRunner) Run(connOpts ConnectionOpts, result boshdir.SSHRes
 		return bosherr.Errorf("Non-interactive SSH expects non-empty command")
 	}
 
-	cmdFactory := func(host boshdir.Host) boshsys.Command {
+	cmdFactory := func(host boshdir.Host, sshArgs SSHArgs) boshsys.Command {
 		return boshsys.Command{
 			Name: "ssh",
-			Args: append([]string{host.Host, "-l", host.Username}, rawCmd...),
+			Args: append(append(sshArgs.OptsForHost(host), sshArgs.LoginForHost(host)...), rawCmd...),
 		}
 	}
 

@@ -241,7 +241,7 @@ var _ = Describe("Assertion", func() {
 				e := recover()
 				RegisterFailHandler(Fail)
 				if e == nil {
-					Fail("expected a panic to have occurred")
+					Fail("expected a panic to have occured")
 				}
 			}()
 

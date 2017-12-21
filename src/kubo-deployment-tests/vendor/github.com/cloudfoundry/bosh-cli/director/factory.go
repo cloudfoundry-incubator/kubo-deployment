@@ -25,7 +25,7 @@ func NewFactory(logger boshlog.Logger) Factory {
 	}
 }
 
-func (f Factory) New(config Config, taskReporter TaskReporter, fileReporter FileReporter) (Director, error) {
+func (f Factory) New(config FactoryConfig, taskReporter TaskReporter, fileReporter FileReporter) (Director, error) {
 	err := config.Validate()
 	if err != nil {
 		return DirectorImpl{}, bosherr.WrapErrorf(
@@ -40,7 +40,7 @@ func (f Factory) New(config Config, taskReporter TaskReporter, fileReporter File
 	return DirectorImpl{client: client}, nil
 }
 
-func (f Factory) httpClient(config Config, taskReporter TaskReporter, fileReporter FileReporter) (Client, error) {
+func (f Factory) httpClient(config FactoryConfig, taskReporter TaskReporter, fileReporter FileReporter) (Client, error) {
 	certPool, err := config.CACertPool()
 	if err != nil {
 		return Client{}, err

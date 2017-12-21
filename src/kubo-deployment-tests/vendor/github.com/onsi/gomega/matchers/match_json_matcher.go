@@ -4,9 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"reflect"
-
 	"github.com/onsi/gomega/format"
+	"reflect"
 )
 
 type MatchJSONMatcher struct {
@@ -40,24 +39,22 @@ func (matcher *MatchJSONMatcher) NegatedFailureMessage(actual interface{}) (mess
 }
 
 func (matcher *MatchJSONMatcher) prettyPrint(actual interface{}) (actualFormatted, expectedFormatted string, err error) {
-	actualString, ok := toString(actual)
-	if !ok {
-		return "", "", fmt.Errorf("MatchJSONMatcher matcher requires a string, stringer, or []byte.  Got actual:\n%s", format.Object(actual, 1))
-	}
-	expectedString, ok := toString(matcher.JSONToMatch)
-	if !ok {
-		return "", "", fmt.Errorf("MatchJSONMatcher matcher requires a string, stringer, or []byte.  Got expected:\n%s", format.Object(matcher.JSONToMatch, 1))
+	actualString, aok := toString(actual)
+	expectedString, eok := toString(matcher.JSONToMatch)
+
+	if !(aok && eok) {
+		return "", "", fmt.Errorf("MatchJSONMatcher matcher requires a string or stringer.  Got:\n%s", format.Object(actual, 1))
 	}
 
 	abuf := new(bytes.Buffer)
 	ebuf := new(bytes.Buffer)
 
 	if err := json.Indent(abuf, []byte(actualString), "", "  "); err != nil {
-		return "", "", fmt.Errorf("Actual '%s' should be valid JSON, but it is not.\nUnderlying error:%s", actualString, err)
+		return "", "", err
 	}
 
 	if err := json.Indent(ebuf, []byte(expectedString), "", "  "); err != nil {
-		return "", "", fmt.Errorf("Expected '%s' should be valid JSON, but it is not.\nUnderlying error:%s", expectedString, err)
+		return "", "", err
 	}
 
 	return abuf.String(), ebuf.String(), nil

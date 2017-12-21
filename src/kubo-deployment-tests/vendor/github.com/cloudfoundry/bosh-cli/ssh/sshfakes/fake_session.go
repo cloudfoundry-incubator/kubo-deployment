@@ -8,15 +8,15 @@ import (
 )
 
 type FakeSession struct {
-	StartStub        func() ([]string, error)
+	StartStub        func() (ssh.SSHArgs, error)
 	startMutex       sync.RWMutex
 	startArgsForCall []struct{}
 	startReturns     struct {
-		result1 []string
+		result1 ssh.SSHArgs
 		result2 error
 	}
 	startReturnsOnCall map[int]struct {
-		result1 []string
+		result1 ssh.SSHArgs
 		result2 error
 	}
 	FinishStub        func() error
@@ -32,7 +32,7 @@ type FakeSession struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeSession) Start() ([]string, error) {
+func (fake *FakeSession) Start() (ssh.SSHArgs, error) {
 	fake.startMutex.Lock()
 	ret, specificReturn := fake.startReturnsOnCall[len(fake.startArgsForCall)]
 	fake.startArgsForCall = append(fake.startArgsForCall, struct{}{})
@@ -53,24 +53,24 @@ func (fake *FakeSession) StartCallCount() int {
 	return len(fake.startArgsForCall)
 }
 
-func (fake *FakeSession) StartReturns(result1 []string, result2 error) {
+func (fake *FakeSession) StartReturns(result1 ssh.SSHArgs, result2 error) {
 	fake.StartStub = nil
 	fake.startReturns = struct {
-		result1 []string
+		result1 ssh.SSHArgs
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeSession) StartReturnsOnCall(i int, result1 []string, result2 error) {
+func (fake *FakeSession) StartReturnsOnCall(i int, result1 ssh.SSHArgs, result2 error) {
 	fake.StartStub = nil
 	if fake.startReturnsOnCall == nil {
 		fake.startReturnsOnCall = make(map[int]struct {
-			result1 []string
+			result1 ssh.SSHArgs
 			result2 error
 		})
 	}
 	fake.startReturnsOnCall[i] = struct {
-		result1 []string
+		result1 ssh.SSHArgs
 		result2 error
 	}{result1, result2}
 }

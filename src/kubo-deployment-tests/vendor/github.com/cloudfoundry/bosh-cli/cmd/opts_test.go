@@ -299,6 +299,38 @@ var _ = Describe("Opts", func() {
 			})
 		})
 
+		Describe("Config", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("Config", opts)).To(Equal(
+					`command:"config" alias:"c" description:"Show current config"`,
+				))
+			})
+		})
+
+		Describe("Configs", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("Configs", opts)).To(Equal(
+					`command:"configs" alias:"cs" description:"List configs"`,
+				))
+			})
+		})
+
+		Describe("UpdateConfig", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("UpdateConfig", opts)).To(Equal(
+					`command:"update-config" alias:"uc" description:"Update config"`,
+				))
+			})
+		})
+
+		Describe("DeleteConfig", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("DeleteConfig", opts)).To(Equal(
+					`command:"delete-config" alias:"dc" description:"Delete config"`,
+				))
+			})
+		})
+
 		Describe("CloudConfig", func() {
 			It("contains desired values", func() {
 				Expect(getStructTagForName("CloudConfig", opts)).To(Equal(
@@ -844,6 +876,131 @@ var _ = Describe("Opts", func() {
 				Expect(getStructTagForName("Alias", args)).To(Equal(
 					`positional-arg-name:"ALIAS" description:"Environment alias"`,
 				))
+			})
+		})
+	})
+
+	Describe("ConfigsOpts", func() {
+		var opts *ConfigsOpts
+
+		BeforeEach(func() {
+			opts = &ConfigsOpts{}
+		})
+
+		Describe("Name", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("Name", opts)).To(Equal(`long:"name" description:"Config name" optional:"true"`))
+			})
+		})
+
+		Describe("Type", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("Type", opts)).To(Equal(`long:"type" description:"Config type" optional:"true"`))
+			})
+		})
+	})
+
+	Describe("ConfigOpts", func() {
+		var opts *ConfigOpts
+
+		BeforeEach(func() {
+			opts = &ConfigOpts{}
+		})
+
+		Describe("Args", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("Args", opts)).To(Equal(`positional-args:"true" required:"true"`))
+			})
+		})
+
+		Describe("Name", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("Name", opts)).To(Equal(`long:"name" description:"Config name" default:"default"`))
+			})
+		})
+	})
+
+	Describe("ConfigArgs", func() {
+		var opts *ConfigArgs
+
+		BeforeEach(func() {
+			opts = &ConfigArgs{}
+		})
+
+		Describe("Type", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("Type", opts)).To(Equal(
+					`positional-arg-name:"TYPE" description:"Config type, e.g. 'cloud', 'runtime', or 'cpi'"`,
+				))
+			})
+		})
+	})
+
+	Describe("UpdateConfigOpts", func() {
+		var opts *UpdateConfigOpts
+
+		BeforeEach(func() {
+			opts = &UpdateConfigOpts{}
+		})
+
+		Describe("Args", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("Args", opts)).To(Equal(`positional-args:"true" required:"true"`))
+			})
+		})
+
+		Describe("Name", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("Name", opts)).To(Equal(`long:"name" description:"Config name" default:"default"`))
+			})
+		})
+	})
+
+	Describe("UpdateConfigArgs", func() {
+		var opts *UpdateConfigArgs
+
+		BeforeEach(func() {
+			opts = &UpdateConfigArgs{}
+		})
+
+		Describe("Type", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("Type", opts)).To(Equal(`positional-arg-name:"TYPE" description:"Config type, e.g. 'cloud', 'runtime', or 'cpi'"`))
+				Expect(getStructTagForName("Config", opts)).To(Equal(`positional-arg-name:"PATH" description:"Path to a YAML config file"`))
+			})
+		})
+	})
+
+	Describe("DeleteConfigOpts", func() {
+		var opts *DeleteConfigOpts
+
+		BeforeEach(func() {
+			opts = &DeleteConfigOpts{}
+		})
+
+		Describe("Args", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("Args", opts)).To(Equal(`positional-args:"true" required:"true"`))
+			})
+		})
+
+		Describe("Name", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("Name", opts)).To(Equal(`long:"name" description:"Config name" default:"default"`))
+			})
+		})
+	})
+
+	Describe("DeleteConfigArgs", func() {
+		var opts *DeleteConfigArgs
+
+		BeforeEach(func() {
+			opts = &DeleteConfigArgs{}
+		})
+
+		Describe("Type", func() {
+			It("contains desired values", func() {
+				Expect(getStructTagForName("Type", opts)).To(Equal(`positional-arg-name:"TYPE" description:"Config type, e.g. 'cloud', 'runtime', or 'cpi'"`))
 			})
 		})
 	})

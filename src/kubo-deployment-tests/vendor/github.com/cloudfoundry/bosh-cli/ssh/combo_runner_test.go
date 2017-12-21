@@ -62,13 +62,13 @@ var _ = Describe("ComboRunner", func() {
 		var (
 			connOpts   ConnectionOpts
 			result     boshdir.SSHResult
-			cmdFactory func(host boshdir.Host) boshsys.Command
+			cmdFactory func(host boshdir.Host, args SSHArgs) boshsys.Command
 		)
 
 		BeforeEach(func() {
 			connOpts = ConnectionOpts{}
 			result = boshdir.SSHResult{}
-			cmdFactory = func(host boshdir.Host) boshsys.Command {
+			cmdFactory = func(host boshdir.Host, args SSHArgs) boshsys.Command {
 				return boshsys.Command{Name: "cmd", Args: []string{host.Host}}
 			}
 		})
@@ -106,30 +106,42 @@ var _ = Describe("ComboRunner", func() {
 			Expect(session.FinishCallCount()).To(Equal(1))
 		})
 
-		// Varies ssh opts length, to make sure that
-		// they are *copied* before being used in cmd.Args append.
-		for optsLen := 1; optsLen < 50; optsLen++ {
-			opts := []string{}
-
-			for i := 0; i < optsLen; i++ {
-				opts = append(opts, fmt.Sprintf("ssh-opt-%d", i))
+		It("provides ssh arguments to customize cmd", func() {
+			cmdFactory = func(host boshdir.Host, args SSHArgs) boshsys.Command {
+				optsStr := strings.Join(args.LoginForHost(host), " ")
+				opts := []string{}
+				switch {
+				case strings.Contains(optsStr, "127.0.0.1"):
+					opts = []string{"ip-1"}
+				case strings.Contains(optsStr, "127.0.0.2"):
+					opts = []string{"ip-2"}
+				default:
+					panic("Unexpected ssh args")
+				}
+				return boshsys.Command{Name: "cmd", Args: opts}
 			}
 
-			It(fmt.Sprintf("adds ssh opts (len %d) after command before other arguments", optsLen), func() {
-				result.Hosts = []boshdir.Host{
-					{Host: "127.0.0.1"},
-					{Host: "127.0.0.2"},
-				}
+			result.Hosts = []boshdir.Host{
+				{Host: "127.0.0.1", Username: "user-1"},
+				{Host: "127.0.0.2", Username: "user-2"},
+			}
 
-				session.StartReturns(opts, nil)
+			sshArgs := SSHArgs{
+				ConnOpts: connOpts,
+				Result:   result,
 
-				cmdRunner.AddProcess(fmt.Sprintf("cmd %s 127.0.0.1", strings.Join(opts, " ")), &fakesys.FakeProcess{})
-				cmdRunner.AddProcess(fmt.Sprintf("cmd %s 127.0.0.2", strings.Join(opts, " ")), &fakesys.FakeProcess{})
+				PrivKeyFile:    fakesys.NewFakeFile("/priv-key", fs),
+				KnownHostsFile: fakesys.NewFakeFile("/priv-key", fs),
+			}
 
-				err := comboRunner.Run(connOpts, result, cmdFactory)
-				Expect(err).ToNot(HaveOccurred())
-			})
-		}
+			session.StartReturns(sshArgs, nil)
+
+			cmdRunner.AddProcess(fmt.Sprintf("cmd ip-1"), &fakesys.FakeProcess{})
+			cmdRunner.AddProcess(fmt.Sprintf("cmd ip-2"), &fakesys.FakeProcess{})
+
+			err := comboRunner.Run(connOpts, result, cmdFactory)
+			Expect(err).ToNot(HaveOccurred())
+		})
 
 		It("writes to ui with a instance prefix", func() {
 			result.Hosts = []boshdir.Host{
@@ -200,7 +212,7 @@ var _ = Describe("ComboRunner", func() {
 			stdout := bytes.NewBufferString("")
 			stderr := bytes.NewBufferString("")
 
-			cmdFactory = func(host boshdir.Host) boshsys.Command {
+			cmdFactory = func(host boshdir.Host, args SSHArgs) boshsys.Command {
 				return boshsys.Command{
 					Name:   "cmd",
 					Args:   []string{host.Host},

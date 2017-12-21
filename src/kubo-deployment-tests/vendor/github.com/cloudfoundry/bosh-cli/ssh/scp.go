@@ -15,10 +15,10 @@ func NewSCPRunner(comboRunner ComboRunner) SCPRunnerImpl {
 }
 
 func (r SCPRunnerImpl) Run(connOpts ConnectionOpts, result boshdir.SSHResult, scpArgs SCPArgs) error {
-	cmdFactory := func(host boshdir.Host) boshsys.Command {
+	cmdFactory := func(host boshdir.Host, sshArgs SSHArgs) boshsys.Command {
 		return boshsys.Command{
 			Name: "scp",
-			Args: scpArgs.ForHost(host), // src/dst args come last
+			Args: append(sshArgs.OptsForHost(host), scpArgs.ForHost(host)...), // src/dst args come last
 		}
 	}
 

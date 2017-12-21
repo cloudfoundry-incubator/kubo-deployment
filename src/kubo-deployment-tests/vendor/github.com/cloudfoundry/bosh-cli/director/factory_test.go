@@ -17,7 +17,7 @@ import (
 var _ = Describe("Factory", func() {
 	Describe("New", func() {
 		It("returns error if config is invalid", func() {
-			_, err := NewFactory(boshlog.NewLogger(boshlog.LevelNone)).New(Config{}, nil, nil)
+			_, err := NewFactory(boshlog.NewLogger(boshlog.LevelNone)).New(FactoryConfig{}, nil, nil)
 			Expect(err).To(HaveOccurred())
 		})
 
@@ -60,7 +60,7 @@ var _ = Describe("Factory", func() {
 				server.Close()
 			})
 
-			DirectorRedirect := func(config Config) http.Header {
+			DirectorRedirect := func(config FactoryConfig) http.Header {
 				h := http.Header{}
 				// URL does not include port, creds
 				h.Add("Location", "https://"+config.Host+"/info")
@@ -68,7 +68,7 @@ var _ = Describe("Factory", func() {
 				return h
 			}
 
-			TasksRedirect := func(config Config) http.Header {
+			TasksRedirect := func(config FactoryConfig) http.Header {
 				h := http.Header{}
 				// URL does not include port, creds
 				h.Add("Location", "https://"+config.Host+"/tasks/123")

@@ -48,7 +48,7 @@ func (s *stage) Perform(name string, closure func() error) error {
 	if err != nil {
 		if skipErr, ok := err.(SkipStageError); ok {
 			s.ui.EndLinef(" Skipped [%s] (%s)", skipErr.SkipMessage(), s.elapsedSince(startTime))
-			s.logger.Info("Skipped stage '%s': %s", name, skipErr.Error())
+			s.logger.Info(s.logTag, "Skipped stage '%s': %s", name, skipErr.Error())
 			return nil
 		}
 		s.ui.EndLinef(" Failed (%s)", s.elapsedSince(startTime))

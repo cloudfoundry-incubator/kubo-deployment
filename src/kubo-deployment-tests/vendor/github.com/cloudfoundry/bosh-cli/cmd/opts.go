@@ -60,6 +60,12 @@ type BoshOpts struct {
 	Locks   LocksOpts   `command:"locks"    description:"List current locks"`
 	CleanUp CleanUpOpts `command:"clean-up" description:"Clean up releases, stemcells, disks, etc."`
 
+	// Config
+	Config       ConfigOpts       `command:"config" alias:"c" description:"Show current config"`
+	Configs      ConfigsOpts      `command:"configs" alias:"cs" description:"List configs"`
+	UpdateConfig UpdateConfigOpts `command:"update-config" alias:"uc" description:"Update config"`
+	DeleteConfig DeleteConfigOpts `command:"delete-config" alias:"dc" description:"Delete config"`
+
 	// Cloud config
 	CloudConfig       CloudConfigOpts       `command:"cloud-config"        alias:"cc"  description:"Show current cloud config"`
 	UpdateCloudConfig UpdateCloudConfigOpts `command:"update-cloud-config" alias:"ucc" description:"Update current cloud config"`
@@ -289,6 +295,49 @@ type InterpolateOpts struct {
 
 type InterpolateArgs struct {
 	Manifest FileBytesArg `positional-arg-name:"PATH" description:"Path to a template that will be interpolated"`
+}
+
+// Config
+type ConfigOpts struct {
+	Args ConfigArgs `positional-args:"true" required:"true"`
+	Name string     `long:"name" description:"Config name" default:"default"`
+
+	cmd
+}
+
+type ConfigArgs struct {
+	Type string `positional-arg-name:"TYPE" description:"Config type, e.g. 'cloud', 'runtime', or 'cpi'"`
+}
+
+type ConfigsOpts struct {
+	Name string `long:"name" description:"Config name" optional:"true"`
+	Type string `long:"type" description:"Config type" optional:"true"`
+
+	cmd
+}
+
+type UpdateConfigOpts struct {
+	Args UpdateConfigArgs `positional-args:"true" required:"true"`
+	Name string           `long:"name" description:"Config name" default:"default"`
+	VarFlags
+	OpsFlags
+	cmd
+}
+
+type UpdateConfigArgs struct {
+	Type   string       `positional-arg-name:"TYPE" description:"Config type, e.g. 'cloud', 'runtime', or 'cpi'"`
+	Config FileBytesArg `positional-arg-name:"PATH" description:"Path to a YAML config file"`
+}
+
+type DeleteConfigOpts struct {
+	Args DeleteConfigArgs `positional-args:"true" required:"true"`
+	Name string           `long:"name" description:"Config name" default:"default"`
+
+	cmd
+}
+
+type DeleteConfigArgs struct {
+	Type string `positional-arg-name:"TYPE" description:"Config type, e.g. 'cloud', 'runtime', or 'cpi'"`
 }
 
 // Cloud config

@@ -17,8 +17,9 @@ import (
 
 var _ = Describe("Factory", func() {
 	var (
-		fs      *fakesys.FakeFileSystem
-		factory Factory
+		fs           *fakesys.FakeFileSystem
+		factory      Factory
+		fakeFilePath string
 	)
 
 	BeforeEach(func() {
@@ -32,6 +33,7 @@ var _ = Describe("Factory", func() {
 		deps.FS = fs
 
 		factory = NewFactory(deps)
+		fakeFilePath = filepath.Join("/", "file")
 	})
 
 	Describe("unknown commands, args and flags", func() {
@@ -192,12 +194,12 @@ var _ = Describe("Factory", func() {
 
 	Describe("deploy command", func() {
 		BeforeEach(func() {
-			err := fs.WriteFileString(filepath.Join("/", "file"), "")
+			err := fs.WriteFileString(fakeFilePath, "")
 			Expect(err).ToNot(HaveOccurred())
 		})
 
 		It("parses multiple skip-drain flags", func() {
-			cmd, err := factory.New([]string{"deploy", "--skip-drain=job1", "--skip-drain=job2", filepath.Join("/", "file")})
+			cmd, err := factory.New([]string{"deploy", "--skip-drain=job1", "--skip-drain=job2", fakeFilePath})
 			Expect(err).ToNot(HaveOccurred())
 
 			slug1, _ := boshdir.NewInstanceGroupOrInstanceSlugFromString("job1")
@@ -211,13 +213,13 @@ var _ = Describe("Factory", func() {
 		})
 
 		It("errors when excluding = from --skip-drain", func() {
-			_, err := factory.New([]string{"deploy", "--skip-drain", "job1", filepath.Join("/", "file")})
+			_, err := factory.New([]string{"deploy", "--skip-drain", "job1", fakeFilePath})
 			Expect(err).To(HaveOccurred())
 			Expect(err.Error()).To(Equal("Not found: open job1: no such file or directory"))
 		})
 
 		It("defaults --skip-drain option value to all", func() {
-			cmd, err := factory.New([]string{"deploy", "--skip-drain", filepath.Join("/", "file")})
+			cmd, err := factory.New([]string{"deploy", "--skip-drain", fakeFilePath})
 			Expect(err).ToNot(HaveOccurred())
 
 			opts := cmd.Opts.(*DeployOpts)
@@ -318,6 +320,33 @@ var _ = Describe("Factory", func() {
 		})
 	})
 
+	Describe("update-config command", func() {
+		BeforeEach(func() {
+			err := fs.WriteFileString(fakeFilePath, "")
+			Expect(err).ToNot(HaveOccurred())
+		})
+
+		It("uses 'default' as default name", func() {
+			cmd, err := factory.New([]string{"update-config", "my-type", fakeFilePath})
+			Expect(err).ToNot(HaveOccurred())
+
+			opts := cmd.Opts.(*UpdateConfigOpts)
+
+			Expect(opts.Name).To(Equal("default"))
+		})
+	})
+
+	Describe("delete-config command", func() {
+		It("uses 'default' as default name", func() {
+			cmd, err := factory.New([]string{"delete-config", "my-type"})
+			Expect(err).ToNot(HaveOccurred())
+
+			opts := cmd.Opts.(*DeleteConfigOpts)
+
+			Expect(opts.Name).To(Equal("default"))
+		})
+	})
+
 	Describe("help options", func() {
 		It("has a help flag", func() {
 			cmd, err := factory.New([]string{"--help"})
@@ -378,6 +407,9 @@ var _ = Describe("Factory", func() {
 			boshOpts.SCP = SCPOpts{}
 			boshOpts.Deploy = DeployOpts{}
 			boshOpts.UpdateRuntimeConfig = UpdateRuntimeConfigOpts{}
+			boshOpts.Config = ConfigOpts{}
+			boshOpts.UpdateConfig = UpdateConfigOpts{}
+			boshOpts.DeleteConfig = DeleteConfigOpts{}
 			return boshOpts
 		}
 

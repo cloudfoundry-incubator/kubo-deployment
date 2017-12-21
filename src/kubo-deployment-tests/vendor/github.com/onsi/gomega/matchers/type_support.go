@@ -150,17 +150,6 @@ func lengthOf(a interface{}) (int, bool) {
 		return 0, false
 	}
 }
-func capOf(a interface{}) (int, bool) {
-	if a == nil {
-		return 0, false
-	}
-	switch reflect.TypeOf(a).Kind() {
-	case reflect.Array, reflect.Chan, reflect.Slice:
-		return reflect.ValueOf(a).Cap(), true
-	default:
-		return 0, false
-	}
-}
 
 func isNil(a interface{}) bool {
 	if a == nil {

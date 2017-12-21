@@ -11,31 +11,31 @@ var _ = Describe("NewConfigFromURL", func() {
 	It("sets host and port (25555) if scheme is specified", func() {
 		config, err := NewConfigFromURL("https://host")
 		Expect(err).ToNot(HaveOccurred())
-		Expect(config).To(Equal(Config{Host: "host", Port: 25555}))
+		Expect(config).To(Equal(FactoryConfig{Host: "host", Port: 25555}))
 	})
 
 	It("sets host and port (25555) if scheme is not specified", func() {
 		config, err := NewConfigFromURL("host")
 		Expect(err).ToNot(HaveOccurred())
-		Expect(config).To(Equal(Config{Host: "host", Port: 25555}))
+		Expect(config).To(Equal(FactoryConfig{Host: "host", Port: 25555}))
 	})
 
 	It("extracts port if scheme is specified", func() {
 		config, err := NewConfigFromURL("https://host:4443")
 		Expect(err).ToNot(HaveOccurred())
-		Expect(config).To(Equal(Config{Host: "host", Port: 4443}))
+		Expect(config).To(Equal(FactoryConfig{Host: "host", Port: 4443}))
 	})
 
 	It("extracts port if scheme is not specified", func() {
 		config, err := NewConfigFromURL("host:4443")
 		Expect(err).ToNot(HaveOccurred())
-		Expect(config).To(Equal(Config{Host: "host", Port: 4443}))
+		Expect(config).To(Equal(FactoryConfig{Host: "host", Port: 4443}))
 	})
 
 	It("works with ipv6 hosts", func() {
 		config, err := NewConfigFromURL("https://[2600:1f17:a63:5c00:5a20:7eec:cf9:e31f]:25555")
 		Expect(err).ToNot(HaveOccurred())
-		Expect(config).To(Equal(Config{Host: "2600:1f17:a63:5c00:5a20:7eec:cf9:e31f", Port: 25555}))
+		Expect(config).To(Equal(FactoryConfig{Host: "2600:1f17:a63:5c00:5a20:7eec:cf9:e31f", Port: 25555}))
 	})
 
 	It("returns error if url is empty", func() {
@@ -78,24 +78,24 @@ var _ = Describe("NewConfigFromURL", func() {
 var _ = Describe("FactoryConfig", func() {
 	Describe("Validate", func() {
 		It("returns without error for basic config", func() {
-			err := Config{Host: "host", Port: 1}.Validate()
+			err := FactoryConfig{Host: "host", Port: 1}.Validate()
 			Expect(err).ToNot(HaveOccurred())
 		})
 
 		It("returns error if host is empty", func() {
-			err := Config{}.Validate()
+			err := FactoryConfig{}.Validate()
 			Expect(err).To(HaveOccurred())
 			Expect(err.Error()).To(Equal("Missing 'Host'"))
 		})
 
 		It("returns error if host is empty", func() {
-			err := Config{Host: "host"}.Validate()
+			err := FactoryConfig{Host: "host"}.Validate()
 			Expect(err).To(HaveOccurred())
 			Expect(err.Error()).To(Equal("Missing 'Port'"))
 		})
 
 		It("returns error if cannot parse PEM formatted block", func() {
-			err := Config{
+			err := FactoryConfig{
 				Host:   "host",
 				Port:   1,
 				CACert: "-",
@@ -108,7 +108,7 @@ var _ = Describe("FactoryConfig", func() {
 
 	Describe("CACertPool", func() {
 		It("returns error if cannot parse PEM formatted block", func() {
-			_, err := Config{
+			_, err := FactoryConfig{
 				Host:   "host",
 				Port:   1,
 				CACert: "-",
@@ -121,7 +121,7 @@ var _ = Describe("FactoryConfig", func() {
 		It("does not create a cert pool from an empty string", func() {
 			caCert := ``
 
-			certPool, err := Config{CACert: caCert}.CACertPool()
+			certPool, err := FactoryConfig{CACert: caCert}.CACertPool()
 			Expect(err).ToNot(HaveOccurred())
 			Expect(certPool).To(BeNil())
 		})
@@ -149,7 +149,7 @@ QAOSxgrLBblGLWcDF9fjMeYaUnI34pHviCKeVxfgsxDR+Jg11F78sPdYLOF6ipBe
 6sKO
 -----END CERTIFICATE-----`
 
-			certPool, err := Config{CACert: caCert}.CACertPool()
+			certPool, err := FactoryConfig{CACert: caCert}.CACertPool()
 			Expect(err).ToNot(HaveOccurred())
 			Expect(certPool.Subjects()[0]).To(ContainSubstring("Internet Widgits Pty Ltd"))
 		})

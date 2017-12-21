@@ -10,7 +10,7 @@ const (
 `
 	spyDefinition = `
   # Spy
-  local in_lines
+  local in_lines=""
   while read -r -t0.1; do
     in_lines="${in_lines}${REPLY}
 "

@@ -35,7 +35,7 @@ type ConnectionOpts struct {
 //go:generate counterfeiter . Session
 
 type Session interface {
-	Start() ([]string, error)
+	Start() (SSHArgs, error)
 	Finish() error
 }
 

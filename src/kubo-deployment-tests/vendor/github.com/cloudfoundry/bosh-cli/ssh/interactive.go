@@ -26,10 +26,10 @@ func (r InteractiveRunner) Run(connOpts ConnectionOpts, result boshdir.SSHResult
 		return bosherr.Errorf("Interactive SSH does not accept commands")
 	}
 
-	cmdFactory := func(host boshdir.Host) boshsys.Command {
+	cmdFactory := func(host boshdir.Host, sshArgs SSHArgs) boshsys.Command {
 		return boshsys.Command{
 			Name: "ssh",
-			Args: []string{host.Host, "-l", host.Username},
+			Args: append(sshArgs.OptsForHost(host), sshArgs.LoginForHost(host)...),
 
 			Stdin:  os.Stdin,
 			Stdout: os.Stdout,

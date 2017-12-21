@@ -2,9 +2,8 @@ package matchers
 
 import (
 	"fmt"
-	"reflect"
-
 	"github.com/onsi/gomega/format"
+	"reflect"
 )
 
 type EqualMatcher struct {
@@ -13,18 +12,12 @@ type EqualMatcher struct {
 
 func (matcher *EqualMatcher) Match(actual interface{}) (success bool, err error) {
 	if actual == nil && matcher.Expected == nil {
-		return false, fmt.Errorf("Refusing to compare <nil> to <nil>.\nBe explicit and use BeNil() instead.  This is to avoid mistakes where both sides of an assertion are erroneously uninitialized.")
+		return false, fmt.Errorf("Refusing to compare <nil> to <nil>.")
 	}
 	return reflect.DeepEqual(actual, matcher.Expected), nil
 }
 
 func (matcher *EqualMatcher) FailureMessage(actual interface{}) (message string) {
-	actualString, actualOK := actual.(string)
-	expectedString, expectedOK := matcher.Expected.(string)
-	if actualOK && expectedOK {
-		return format.MessageWithDiff(actualString, "to equal", expectedString)
-	}
-
 	return format.Message(actual, "to equal", matcher.Expected)
 }
 

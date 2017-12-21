@@ -802,9 +802,11 @@ func (fs *FakeFileSystem) removeAll(path string) error {
 
 func (fs *FakeFileSystem) Glob(pattern string) (matches []string, err error) {
 	if fs.GlobStub != nil {
-		_, err = fs.GlobStub(pattern)
+		matches, err = fs.GlobStub(pattern)
 		if err != nil {
 			return nil, err
+		} else {
+			return matches, nil
 		}
 	}
 

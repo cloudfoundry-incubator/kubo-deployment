@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -16,15 +15,11 @@ import (
 )
 
 func BuildBootstrapCommand() *Command {
-	var (
-		agouti, noDot, internal bool
-		customBootstrapFile     string
-	)
+	var agouti, noDot, internal bool
 	flagSet := flag.NewFlagSet("bootstrap", flag.ExitOnError)
 	flagSet.BoolVar(&agouti, "agouti", false, "If set, bootstrap will generate a bootstrap file for writing Agouti tests")
 	flagSet.BoolVar(&noDot, "nodot", false, "If set, bootstrap will generate a bootstrap file that does not . import ginkgo and gomega")
 	flagSet.BoolVar(&internal, "internal", false, "If set, generate will generate a test file that uses the regular package name")
-	flagSet.StringVar(&customBootstrapFile, "template", "", "If specified, generate will use the contents of the file passed as the bootstrap template")
 
 	return &Command{
 		Name:         "bootstrap",
@@ -35,7 +30,7 @@ func BuildBootstrapCommand() *Command {
 			"Accepts the following flags:",
 		},
 		Command: func(args []string, additionalArgs []string) {
-			generateBootstrap(agouti, noDot, internal, customBootstrapFile)
+			generateBootstrap(agouti, noDot, internal)
 		},
 	}
 }
@@ -137,7 +132,7 @@ func fileExists(path string) bool {
 	return false
 }
 
-func generateBootstrap(agouti, noDot, internal bool, customBootstrapFile string) {
+func generateBootstrap(agouti, noDot, internal bool) {
 	packageName, bootstrapFilePrefix, formattedName := getPackageAndFormattedName()
 	data := bootstrapData{
 		Package:       determinePackageName(packageName, internal),
@@ -167,13 +162,7 @@ func generateBootstrap(agouti, noDot, internal bool, customBootstrapFile string)
 	defer f.Close()
 
 	var templateText string
-	if customBootstrapFile != "" {
-		tpl, err := ioutil.ReadFile(customBootstrapFile)
-		if err != nil {
-			panic(err.Error())
-		}
-		templateText = string(tpl)
-	} else if agouti {
+	if agouti {
 		templateText = agoutiBootstrapText
 	} else {
 		templateText = bootstrapText

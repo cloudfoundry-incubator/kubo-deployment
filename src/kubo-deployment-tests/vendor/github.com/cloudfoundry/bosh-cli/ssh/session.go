@@ -2,7 +2,6 @@ package ssh
 
 import (
 	"fmt"
-	"strings"
 
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
@@ -34,82 +33,31 @@ func NewSessionImpl(
 	return &SessionImpl{connOpts: connOpts, sessOpts: sessOpts, result: result, fs: fs}
 }
 
-func (r *SessionImpl) Start() ([]string, error) {
+func (r *SessionImpl) Start() (SSHArgs, error) {
 	var err error
 
 	r.privKeyFile, err = r.makePrivKeyFile()
 	if err != nil {
-		return nil, err
+		return SSHArgs{}, err
 	}
 
 	r.knownHostsFile, err = r.makeKnownHostsFile()
 	if err != nil {
 		_ = r.fs.RemoveAll(r.privKeyFile.Name())
-		return nil, err
+		return SSHArgs{}, err
 	}
 
-	// Options are used for both ssh and scp
-	cmdOpts := []string{}
+	args := SSHArgs{
+		ConnOpts: r.connOpts,
+		Result:   r.result,
 
-	if r.sessOpts.ForceTTY {
-		cmdOpts = append(cmdOpts, "-tt")
+		ForceTTY: r.sessOpts.ForceTTY,
+
+		PrivKeyFile:    r.privKeyFile,
+		KnownHostsFile: r.knownHostsFile,
 	}
 
-	cmdOpts = append(cmdOpts, []string{
-		"-o", "ServerAliveInterval=30",
-		"-o", "ForwardAgent=no",
-		"-o", "PasswordAuthentication=no",
-		"-o", "IdentitiesOnly=yes",
-		"-o", "IdentityFile=" + r.privKeyFile.Name(),
-		"-o", "StrictHostKeyChecking=yes",
-		"-o", "UserKnownHostsFile=" + r.knownHostsFile.Name(),
-	}...)
-
-	gwUsername, gwHost, gwPrivKeyPath := r.gwOpts(r.connOpts, r.result)
-
-	if len(r.connOpts.SOCKS5Proxy) > 0 {
-		proxyOpt := fmt.Sprintf(
-			"ProxyCommand=nc -X 5 -x %s %%h %%p",
-			strings.TrimPrefix(r.connOpts.SOCKS5Proxy, "socks5://"),
-		)
-
-		cmdOpts = append(cmdOpts, "-o", proxyOpt)
-
-	} else if len(gwHost) > 0 {
-		gwCmdOpts := []string{
-			"-o", "ServerAliveInterval=30",
-			"-o", "ForwardAgent=no",
-			"-o", "ClearAllForwardings=yes",
-			// Strict host key checking for a gateway is not necessary
-			// since ProxyCommand is only used for forwarding TCP and
-			// agent forwarding is disabled
-			"-o", "StrictHostKeyChecking=no",
-			"-o", "UserKnownHostsFile=/dev/null",
-		}
-
-		if len(gwPrivKeyPath) > 0 {
-			gwCmdOpts = append(
-				gwCmdOpts,
-				"-o", "PasswordAuthentication=no",
-				"-o", "IdentitiesOnly=yes",
-				"-o", "IdentityFile="+gwPrivKeyPath,
-			)
-		}
-
-		proxyOpt := fmt.Sprintf(
-			// Always force TTY for gateway ssh
-			"ProxyCommand=ssh -tt -W %%h:%%p -l %s %s %s",
-			gwUsername,
-			gwHost,
-			strings.Join(gwCmdOpts, " "),
-		)
-
-		cmdOpts = append(cmdOpts, "-o", proxyOpt)
-	}
-
-	cmdOpts = append(cmdOpts, r.connOpts.RawOpts...)
-
-	return cmdOpts, nil
+	return args, nil
 }
 
 func (r *SessionImpl) Finish() error {
@@ -166,26 +114,4 @@ func (r SessionImpl) makeKnownHostsFile() (boshsys.File, error) {
 	}
 
 	return file, nil
-}
-
-func (r SessionImpl) gwOpts(connOpts ConnectionOpts, result boshdir.SSHResult) (string, string, string) {
-	if connOpts.GatewayDisable {
-		return "", "", ""
-	}
-
-	// Take server provided gateway options
-	username := result.GatewayUsername
-	host := result.GatewayHost
-
-	if len(connOpts.GatewayUsername) > 0 {
-		username = connOpts.GatewayUsername
-	}
-
-	if len(connOpts.GatewayHost) > 0 {
-		host = connOpts.GatewayHost
-	}
-
-	privKeyPath := connOpts.GatewayPrivateKeyPath
-
-	return username, host, privKeyPath
 }
