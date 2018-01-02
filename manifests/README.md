@@ -214,7 +214,7 @@ kubectl get all
 | **OpenStack** | | |
 | [`iaas/openstack/cloud-provider.yml`](iaas/openstack/cloud-provider.yml) | Enable Cloud Provider for OpenStack | Enable Cloud Provider for OpenStack |
 | **GCP** | | |
-| [`iaas/gcp/cloud-provider.yml`](iaas/gcp/cloud-provider.yml) | Enable Cloud Provider for OpenStack | - |
+| [`iaas/gcp/cloud-provider.yml`](iaas/gcp/cloud-provider.yml) | Enable Cloud Provider for GCP | - |
 | **vSphere** | | |
 | [`iaas/vsphere/cloud-provider.yml`](iaas/vsphere/cloud-provider.yml) | Enable Cloud Provider for vSphere | - |
 | [`iaas/vsphere/set-working-dir-no-rp.yml`](iaas/vsphere/set-working-dir-no-rp.yml) | Configure vSphere cloud provider's working dir if there is no resource pool | - |
