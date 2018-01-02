@@ -212,7 +212,7 @@ kubectl get all
 | [`iaas/aws/cloud-provider.yml`](iaas/aws/cloud-provider.yml) | Enable Cloud Provider for AWS | Requires AWS Instance Profiles (not API keys) to grant Kubernetes access to AWS |
 | [`iaas/aws/lb.yml`](iaas/aws/lb.yml) | Enable instance tagging for AWS |  |
 | **OpenStack** | | |
-| N/A | | |
+| [`iaas/openstack/cloud-provider.yml`](iaas/openstack/cloud-provider.yml) | Enable Cloud Provider for OpenStack | Enable Cloud Provider for OpenStack |
 | **GCP** | | |
 | [`iaas/gcp/cloud-provider.yml`](iaas/gcp/cloud-provider.yml) | Enable Cloud Provider for OpenStack | - |
 | **vSphere** | | |
