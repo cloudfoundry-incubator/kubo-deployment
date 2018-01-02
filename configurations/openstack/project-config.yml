@@ -5,6 +5,5 @@ default_security_groups: # List of security groups for the instances
 net_id: # OpenStack network identifier
 openstack_domain: # OpenStack domain (optional)
 openstack_project: # Openstack project name
-openstack_tenant: # OpenStack tenant (required for multi-tenant environments)
 region: # OpenStack region (optional)
 openstack_username: # OpenStack admin username
