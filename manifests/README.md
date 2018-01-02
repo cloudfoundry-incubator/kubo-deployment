@@ -203,6 +203,7 @@ kubectl get all
 | **gcp** | | |
 | [`iaas/gcp/add-service-key-master.yml`](iaas/gcp/add-service-key-master.yml) | Allow user to specify GCP key instead of service account |  |
 | [`iaas/gcp/add-service-key-worker.yml`](iaas/gcp/add-service-key-worker.yml) | Allow user to specify GCP key instead of service account |  |
+
 ### Infrastructure
 
 | Name | Purpose | Notes |
@@ -232,3 +233,4 @@ kubectl get all
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
 | [`addons-spec.yml`](addons-spec.yml) | Addons to be deployed into the Kubernetes cluster | - |
+| [`allow-privileged-containers.yml`](allow-privileged-containers.yml) | Allows privileged containers for the Kubernetes cluster | - |

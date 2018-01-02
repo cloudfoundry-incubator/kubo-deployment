@@ -75,6 +75,18 @@ set_ops_file_if_path_exists() {
   fi
 }
 
+set_ops_file_if_true() {
+  local variables_file="$1"
+  local variable_yaml_path="$2"
+  local ops_file_path="$3"
+
+  value=$(bosh-cli int "$variables_file" --path="$variable_yaml_path" 2> /dev/null)
+
+  if [[ $value = 'true' ]]; then
+    echo " --ops-file=\"$ops_file_path\""
+  fi
+}
+
 set_ops_file_if_file_exists() {
   local ops_file="$1"
 
@@ -134,6 +146,12 @@ generate_manifest() {
     "${director_path}" \
     "/no_proxy" \
     "${ops_dir}/add-no-proxy.yml" \
+  )"
+
+  interpolate_arguments+="$(set_ops_file_if_true \
+    "${director_path}" \
+    "/allow_privileged_containers" \
+    "${ops_dir}/allow-privileged-containers.yml" \
   )"
 
   interpolate_arguments+="$(set_ops_file_if_file_exists \

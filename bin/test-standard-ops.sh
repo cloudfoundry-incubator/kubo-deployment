@@ -42,6 +42,7 @@ test_standard_ops() {
 
       # Kubernetes
       check_interpolation "addons-spec.yml" "-v addons-spec={}"
+      check_interpolation "allow-privileged-containers.yml"
 
     popd > /dev/null # operations
   popd > /dev/null
