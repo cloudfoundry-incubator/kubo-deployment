@@ -149,6 +149,8 @@ instance_groups:
   - name: cloud-provider
     release: kubo
     properties: {}
+    provides:
+      cloud-provider: {as: worker}
   - name: kubelet
     release: kubo
     properties:
