@@ -339,49 +339,74 @@ resource "aws_instance" "bastion" {
     key_name      = "${var.key_name}"
     vpc_security_group_ids = ["${aws_security_group.nodes.id}"]
     associate_public_ip_address = true
+
     tags {
       Name = "${var.prefix}bosh-bastion"
     }
-    provisioner "remote-exec" {
-        inline = [
-            "set -eu",
-            "sudo apt-get update",
-            "sudo apt-get install -y build-essential zlibc zlib1g-dev ruby ruby-dev openssl libxslt-dev libxml2-dev libssl-dev libreadline6 libreadline6-dev libyaml-dev libsqlite3-dev sqlite3",
-            "sudo apt-get install -y git",
-            "sudo apt-get install -y unzip",
-            "curl -L https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.3.0/credhub-linux-1.3.0.tgz | tar zxv && sudo chmod a+x credhub && sudo mv credhub /usr/bin",
-            "sudo curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/bin/kubectl && sudo chmod a+x /usr/bin/kubectl",
-            "sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.27-linux-amd64 -o /usr/bin/bosh-cli && sudo chmod a+x /usr/bin/bosh-cli",
-            "sudo wget https://releases.hashicorp.com/terraform/0.10.2/terraform_0.10.2_linux_amd64.zip",
-            "sudo unzip terraform*.zip -d /usr/local/bin",
-            "sudo sh -c 'sudo cat > /etc/profile.d/bosh.sh <<'EOF'",
-            "#!/bin/bash",
-            "export private_subnet_id=${aws_subnet.private.id}",
-            "export public_subnet_id=${aws_subnet.public.id}",
-            "export vpc_id=${var.vpc_id}",
-            "export default_security_groups=${aws_security_group.nodes.id}",
-            "export private_subnet_ip_prefix=${var.private_subnet_ip_prefix}",
-            "export prefix=${var.prefix}",
-            "export default_key_name=${var.key_name}",
-            "export region=${var.region}",
-            "export zone=${var.zone}",
-            "export kubernetes_cluster_tag=${random_id.kubernetes-cluster-tag.b64}",
-            "EOF'",
-            "sudo mkdir /share",
-            "sudo chown ubuntu:ubuntu /share",
-            "wget https://storage.googleapis.com/kubo-public/kubo-deployment-latest.tgz",
-            "tar -xvf kubo-deployment-latest.tgz -C /share",
-            "echo \"${file(var.private_key_filename)}\" > /home/ubuntu/deployer.pem",
-            "chmod 600 /home/ubuntu/deployer.pem"
-	]
 
-        connection {
-            type     = "ssh"
-            user = "ubuntu"
-            private_key = "${file(var.private_key_filename)}"
-        }
+    provisioner "file" {
+      source = "update_aws_env"
+      destination = "/tmp/update_aws_env"
+
+      connection {
+        type     = "ssh"
+        user = "ubuntu"
+        private_key = "${file(var.private_key_filename)}"
+      }
     }
 
+    provisioner "file" {
+      source = "set_iaas_routing"
+      destination = "/tmp/set_iaas_routing"
+
+      connection {
+        type     = "ssh"
+        user = "ubuntu"
+        private_key = "${file(var.private_key_filename)}"
+      }
+    }
+
+    provisioner "remote-exec" {
+      inline = [
+        "set -eu",
+        "sudo apt-get update",
+        "sudo apt-get install -y build-essential zlibc zlib1g-dev ruby ruby-dev openssl libxslt-dev libxml2-dev libssl-dev libreadline6 libreadline6-dev libyaml-dev libsqlite3-dev sqlite3",
+        "sudo apt-get install -y git",
+        "sudo apt-get install -y unzip",
+        "curl -L https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.3.0/credhub-linux-1.3.0.tgz | tar zxv && sudo chmod a+x credhub && sudo mv credhub /usr/bin",
+        "sudo curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/bin/kubectl && sudo chmod a+x /usr/bin/kubectl",
+        "sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.27-linux-amd64 -o /usr/bin/bosh-cli && sudo chmod a+x /usr/bin/bosh-cli",
+        "sudo wget https://releases.hashicorp.com/terraform/0.10.2/terraform_0.10.2_linux_amd64.zip",
+        "sudo unzip terraform*.zip -d /usr/local/bin",
+        "sudo sh -c 'sudo cat > /etc/profile.d/bosh.sh <<'EOF'",
+        "#!/bin/bash",
+        "export private_subnet_id=${aws_subnet.private.id}",
+        "export public_subnet_id=${aws_subnet.public.id}",
+        "export vpc_id=${var.vpc_id}",
+        "export default_security_groups=${aws_security_group.nodes.id}",
+        "export private_subnet_ip_prefix=${var.private_subnet_ip_prefix}",
+        "export prefix=${var.prefix}",
+        "export default_key_name=${var.key_name}",
+        "export region=${var.region}",
+        "export zone=${var.zone}",
+        "export kubernetes_cluster_tag=${random_id.kubernetes-cluster-tag.b64}",
+        "EOF'",
+        "sudo mkdir /share",
+        "sudo chown ubuntu:ubuntu /share",
+        "wget https://storage.googleapis.com/kubo-public/kubo-deployment-latest.tgz",
+        "tar -xvf kubo-deployment-latest.tgz -C /share",
+        "echo \"${file(var.private_key_filename)}\" > /home/ubuntu/deployer.pem",
+        "chmod 600 /home/ubuntu/deployer.pem",
+        "sudo install /tmp/update_aws_env /usr/bin",
+        "sudo install /tmp/set_iaas_routing /usr/bin"
+      ]
+
+      connection {
+        type     = "ssh"
+        user = "ubuntu"
+        private_key = "${file(var.private_key_filename)}"
+      }
+    }
 }
 
 output "bosh-bastion-ip" {
