@@ -105,7 +105,7 @@ instance_groups:
     properties:
       etcd:
         dns_health_check_host: 169.254.0.2 # this is the default BOSH DNS nameserver
-        advertise_urls_dns_suffix: etcd.kubo
+        advertise_urls_dns_suffix: etcd.cfcr.internal
         require_ssl: true
         peer_require_ssl: true
         delete_data_dir_on_stop: false
@@ -197,34 +197,34 @@ variables:
   options:
     ca: kubo_ca
     organization: "system:nodes"
-    common_name: kubelet.kubo.internal
+    common_name: kubelet.cfcr.internal
     alternative_names: []
 - name: tls-kubernetes
   type: certificate
   options:
     ca: kubo_ca
     organization: "system:masters"
-    common_name: master.kubo
+    common_name: master.cfcr.internal
     alternative_names:
     - 10.100.200.1
     - kubernetes
     - kubernetes.default
     - kubernetes.default.svc
     - kubernetes.default.svc.cluster.local
-    - master.kubo
+    - master.cfcr.internal
 - name: tls-docker
   type: certificate
   options:
     ca: kubo_ca
-    common_name: docker.kubo.internal
+    common_name: docker.cfcr.internal
 - name: tls-etcd-server
   type: certificate
   options:
     ca: kubo_ca
-    common_name: etcd.kubo
+    common_name: etcd.cfcr.internal
     alternative_names:
-    - etcd.kubo
-    - "*.etcd.kubo"
+    - etcd.cfcr.internal
+    - "*.etcd.cfcr.internal"
 - name: tls-etcd-client
   type: certificate
   options:
@@ -234,9 +234,9 @@ variables:
   type: certificate
   options:
     ca: kubo_ca
-    common_name: etcd.kubo
+    common_name: etcd.cfcr.internal
     alternative_names:
-    - "*.etcd.kubo"
+    - "*.etcd.cfcr.internal"
 
 - name: /dns_healthcheck_tls_ca
   opsname: global_dns_healthcheck_tls_ca

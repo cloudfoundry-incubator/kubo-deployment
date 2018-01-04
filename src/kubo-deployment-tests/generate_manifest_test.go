@@ -98,7 +98,7 @@ var _ = Describe("Generate manifest", func() {
 			Expect(stdout).To(gbytes.Say("tls-kubernetes"))
 		})
 
-		It("should include an alternative name with master.kubo for the tls-kubernetes variable", func() {
+		It("should include an alternative name with master.cfcr.internal for the tls-kubernetes variable", func() {
 			status, err := bash.Run("main", []string{kuboEnv, "cucumber", "director_uuid"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
@@ -106,7 +106,7 @@ var _ = Describe("Generate manifest", func() {
 			Expect(stdout).To(gbytes.Say("variables:"))
 			Expect(stdout).To(gbytes.Say("tls-kubernetes"))
 			Expect(stdout).To(gbytes.Say("alternative_names:"))
-			Expect(stdout).To(gbytes.Say("master.kubo"))
+			Expect(stdout).To(gbytes.Say("master.cfcr.internal"))
 		})
 
 		It("should default the authorization mode property to ABAC", func() {
