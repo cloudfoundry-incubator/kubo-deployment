@@ -114,8 +114,8 @@ set_default_var_if_path_does_not_exist() {
 }
 
 generate_manifest() {
-  if [ $# -ne 4 ]; then
-    echo "Required arguments are <path to kubo bosh environment>, <deployment name>, <base manifest path> and <director uuid> in ${BASH_SOURCE[0]}:generate_manifest()"
+  if [ $# -ne 4 ] && [ $# -ne 5 ]; then
+    echo "Arguments are <path to kubo bosh environment>, <deployment name>, <base manifest path> , <director uuid> and [upgrade cluster flag] in ${BASH_SOURCE[0]}:generate_manifest()"
     exit 1
   fi
 
@@ -123,6 +123,7 @@ generate_manifest() {
   local deployment_name="${2}"
   local manifest_path="${3}"
   local director_uuid="${4}"
+  local upgrade_cluster="${5:-false}"
 
   local director_path="${bosh_environment}/director.yml"
   local manifest_dir="$(cd "$(dirname "${manifest_path}")"; pwd)"
@@ -214,6 +215,10 @@ generate_manifest() {
     fi
 
     interpolate_arguments+=" --ops-file=\"${ops_dir}/addons-spec.yml\" --var-file=\"addons-spec=${addon_path}\""
+  fi
+
+  if [[ "${upgrade_cluster}" == "true" ]]; then
+    interpolate_arguments+=" --ops-file=\"${ops_dir}/misc/one-in-flight.yml\""
   fi
 
   local manifest=$(bosh-cli int <(echo "${manifest}") --ops-file="${ops_dir}/misc/dev.yml" \

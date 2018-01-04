@@ -271,6 +271,26 @@ var _ = Describe("Generate manifest", func() {
 			Expect(err).To(HaveOccurred())
 		})
 
+		It("checks max_in_flight is set to 100% if upgrade cluster flag is not set", func() {
+			status, err := bash.Run("main", []string{kuboEnv, "grinder", "director_uuid"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+
+			pathValue, err := propertyFromYaml("/update/max_in_flight", stdout.Contents())
+			Expect(err).NotTo(HaveOccurred())
+			Expect(pathValue).To(Equal("100%"))
+		})
+
+		It("sets max_in_flight to 1 if upgrade cluster flag is set", func() {
+			status, err := bash.Run("main", []string{"-u", kuboEnv, "grinder", "director_uuid"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+
+			pathValue, err := propertyFromYaml("/update/max_in_flight", stdout.Contents())
+			Expect(err).NotTo(HaveOccurred())
+			Expect(pathValue).To(Equal("1"))
+		})
+
 	})
 
 	It("errors out if addons_spec file is missing", func() {
