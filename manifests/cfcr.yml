@@ -98,6 +98,7 @@ instance_groups:
       authorization-mode: rbac
       tls:
         kubernetes: ((tls-kubernetes))
+        kubernetes-dashboard: ((tls-kubernetes-dashboard))
     consumes:
       cloud-provider: {from: master}
   - name: etcd
@@ -237,6 +238,18 @@ variables:
     common_name: etcd.cfcr.internal
     alternative_names:
     - "*.etcd.cfcr.internal"
+
+- name: kubernetes-dashboard-ca
+  type: certificate
+  options:
+    is_ca: true
+    common_name: ca
+- name: tls-kubernetes-dashboard
+  type: certificate
+  options:
+    ca: kubernetes-dashboard-ca
+    common_name: kubernetesdashboard.cfcr.internal
+    alternative_names: []
 
 - name: /dns_healthcheck_tls_ca
   opsname: global_dns_healthcheck_tls_ca
