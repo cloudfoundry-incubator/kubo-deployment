@@ -8,6 +8,7 @@ vcenter_templates: # vCenter Template Folder Name
 vcenter_disks: # vCenter Disk Folder Name
 vcenter_ds: # vCenter Ephemeral Datastore Name
 vcenter_cluster: # vCenter Cluster
+# vcenter_director_cluster: # vCenter Cluster for the BOSH Director (optional)
 vcenter_rp: # vCenter Resource Pool
 
 network_name: # Network name to deploy service in your cloud config
