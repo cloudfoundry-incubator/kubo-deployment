@@ -78,7 +78,7 @@ var _ = Describe("UpdateStemcell", func() {
 		session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 		Expect(err).ToNot(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
-		Eventually(session).Should(gbytes.Say("^       2\n$"))
+		Eventually(session).Should(gbytes.Say("^\\s*2\n$"))
 	})
 
 })
