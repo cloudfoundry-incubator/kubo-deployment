@@ -16,6 +16,7 @@ import (
 var _ = Describe("Deploy BOSH", func() {
 	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp_with_creds")
 	validvSphereEnvironment := path.Join(testEnvironmentPath, "test_vsphere_with_creds")
+	validvSphereEnvironmentDirectorCluster := path.Join(testEnvironmentPath, "test_vsphere_with_creds_director_cluster")
 	validOpenstackEnvironment := path.Join(testEnvironmentPath, "test_openstack_with_creds")
 	validAwsEnvironment := path.Join(testEnvironmentPath, "test_aws_with_creds")
 
@@ -77,6 +78,14 @@ var _ = Describe("Deploy BOSH", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 			Expect(stderr).To(gbytes.Say("/bosh-deployment/vsphere/cpi.yml"))
+		})
+
+		It("deploys to a vSphere environment with a separate director cluster", func() {
+			code, err := bash.Run("main", []string{validvSphereEnvironmentDirectorCluster, mockKeyFile})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr).To(gbytes.Say("Middle-Earth"))
+			Expect(stderr).NotTo(gbytes.Say("Narnia"))
 		})
 
 		It("deploys to an Openstack environment", func() {
