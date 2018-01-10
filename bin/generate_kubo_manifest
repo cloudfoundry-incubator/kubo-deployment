@@ -5,7 +5,10 @@ set -e -o pipefail
 [ -z "$DEBUG" ] || set -x
 
 print_help() {
-  echo "Usage: ${BASH_SOURCE[0]} [KUBO_ENV] [DEPLOYMENT_NAME] [DIRECTOR_UUID]"
+  echo "Usage: ${BASH_SOURCE[0]} [-u] <KUBO_ENV> <DEPLOYMENT_NAME> <DIRECTOR_UUID>"
+  echo ""
+  echo "Deploy Options:"
+  echo "  -u  generate manifest for cluster upgrade"
   echo ""
   echo "KUBO_ENV is the path to the Kubo environment folder."
   echo "    It must contain a director.yml with the cluster settings."
@@ -34,6 +37,20 @@ repo_directory() {
 }
 
 main() {
+
+  local upgrade_cluster="false"
+  while getopts ':u' option; do
+    case "$option" in
+      u) upgrade_cluster="true"
+         ;;
+     \?) printf "Illegal option: -%s\n" "$OPTARG" >&2
+         print_help
+         exit 64
+         ;;
+    esac
+  done
+  shift $((OPTIND - 1))
+
   if [ $# -ne 3 ]; then
     print_help
     exit 1
@@ -50,7 +67,7 @@ main() {
 
   # shellcheck disable=SC1090
   source "$(repo_directory)/bin/lib/deploy_utils"
-  generate_manifest "${bosh_env}" "${deployment_name}" "$(repo_directory)/manifests/cfcr.yml" "${director_uuid}"
+  generate_manifest "${bosh_env}" "${deployment_name}" "$(repo_directory)/manifests/cfcr.yml" "${director_uuid}" "${upgrade_cluster}"
 }
 
 is_run_standalone() {
