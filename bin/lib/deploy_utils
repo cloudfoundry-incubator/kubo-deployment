@@ -36,6 +36,17 @@ set_cloud_config() {
   echo "$cloud_config" | BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli -n -e "${BOSH_NAME}" update-cloud-config -
 }
 
+check_for_existing_deployment() {
+  local deployment_name=$1
+
+  if [ -z "$deployment_name" ]; then
+    echo "Deployment name is required in $0:check_for_existing_deployment()"
+    exit 1
+  fi
+
+  BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli deployment -d ${deployment_name} | xargs echo -n
+}
+
 deploy_to_bosh() {
   local bosh_manifest=$1
   local deployment_name=$2

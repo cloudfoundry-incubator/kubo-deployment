@@ -171,7 +171,7 @@ instance_groups:
 
 update:
   canaries: 1
-  max_in_flight: 100%
+  max_in_flight: 1
   canary_watch_time: 10000-300000
   update_watch_time: 10000-300000
 

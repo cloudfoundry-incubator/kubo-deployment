@@ -62,6 +62,21 @@ var _ = Describe("DeployUtils", func() {
 		})
 	})
 
+	Describe("check_for_existing_deployment", func() {
+		It("should check for existing deployment", func() {
+			bash.Source(pathToScript("lib/deploy_utils"), nil)
+
+			getBoshSecretMock := Mock("get_bosh_secret", `echo "the-secret"`)
+			boshCliMock := Mock("bosh-cli", `echo -n "$@"`)
+			ApplyMocks(bash, []Gob{getBoshSecretMock, boshCliMock})
+
+			code, err := bash.Run("check_for_existing_deployment", []string{"deployment-name"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr).To(gbytes.Say("bosh-cli deployment -d deployment-name"))
+		})
+	})
+
 	Describe("deploy_to_bosh", func() {
 		It("should deploy to bosh", func() {
 			bash.Source(pathToScript("lib/deploy_utils"), nil)
