@@ -63,6 +63,8 @@ deploy_bosh() {
   bosh_manifest=$2
 
   bosh_manifest_file="$(mktemp)"
+  trap '{ rm "$bosh_manifest_file"; }' EXIT
+
   echo "${bosh_manifest}" > "${bosh_manifest_file}"
   bosh-cli create-env "${bosh_manifest_file}" \
     --vars-store "${bosh_env}/creds.yml" \
