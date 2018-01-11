@@ -25,9 +25,9 @@ get_setting_with_default() {
   local default_value=$3
   local value=$(get_setting $1 $2 2>/dev/null)
   if [[ "$value" == "" ]]; then
-    echo $default_value;
+    echo ${default_value}
   else
-    echo $value
+    echo ${value}
   fi
 }
 
