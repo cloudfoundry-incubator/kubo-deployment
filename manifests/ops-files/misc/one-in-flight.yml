@@ -1,3 +1,0 @@
-- type: replace
-  path: /update/max_in_flight
-  value: 1

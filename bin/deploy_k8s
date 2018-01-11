@@ -11,10 +11,7 @@ echo
 
 print_usage() {
   local release_path=$(cd $(basename "$0"/../..) > /dev/null; pwd)
-  echo "Usage: $(basename "$0") [-u] <KUBO_ENV> <DEPLOYMENT_NAME> [RELEASE_SOURCE]"
-  echo ""
-  echo "Deploy Options:"
-  echo "  -u  upgrade the cluster"
+  echo "Usage: $(basename "$0") [KUBO_ENV] [DEPLOYMENT_NAME] [RELEASE_SOURCE]"
   echo ""
   echo "KUBO_ENV is the path to your Kubo environment configuration folder"
   echo ""
@@ -49,19 +46,6 @@ get_deps() {
 main() {
   get_deps
 
-  local upgrade_cluster="false"
-  while getopts ':u' option; do
-    case "$option" in
-      u) upgrade_cluster="true"
-         ;;
-     \?) printf "Illegal option: -%s\n" "$OPTARG" >&2
-         print_usage
-         exit 64
-         ;;
-    esac
-  done
-  shift $((OPTIND - 1))
-
   PATH=$(repo_directory)/bin:$PATH
   if [ $# -ne 2 ] && [ $# -ne 3 ]; then
     print_usage
@@ -95,11 +79,7 @@ main() {
     upload_artefacts "${bosh_env}" "${release_source}"
   fi
 
-  local manifest_gen_opts
-  if [[ "${upgrade_cluster}" == "true" ]]; then
-    manifest_gen_opts="-u"
-  fi
-  manifest=$("$(repo_directory)/bin/generate_kubo_manifest" ${manifest_gen_opts} "${bosh_env}" "${deployment_name}" "$(get_director_uuid)")
+  manifest=$("$(repo_directory)/bin/generate_kubo_manifest" "${bosh_env}" "${deployment_name}" "$(get_director_uuid)")
   deploy_to_bosh "${manifest}" "${deployment_name}"
 
   if bosh-cli int <(echo -n "${manifest}") --path /instance_groups/name=master/jobs/name=apply-specs &>/dev/null; then
