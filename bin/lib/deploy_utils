@@ -7,7 +7,11 @@ export_bosh_environment() {
 }
 
 get_bosh_secret() {
+  set +x
   get_setting "creds.yml" "/bosh_admin_client_secret"
+  if [[ -n "${DEBUG}" ]]; then
+    set -x
+  fi
 }
 
 get_setting() {

@@ -84,8 +84,6 @@ var _ = Describe("Set bosh alias", func() {
 			err = yaml.Unmarshal(contents, &credsYaml)
 			Expect(err).NotTo(HaveOccurred())
 
-			Eventually(session.Err).Should(gbytes.Say(fmt.Sprintf("BOSH_CLIENT_SECRET=%s", credsYaml.BoshAdminClientSecret)))
-			Eventually(session.Err).Should(gbytes.Say(fmt.Sprintf("BOSH_CA_CERT=%s", directorYaml.DefaultCA.Ca)))
 			Eventually(session.Err).Should(gbytes.Say(fmt.Sprintf("bosh-cli alias-env %s -e %s", testEnvName, directorYaml.InternalIp)))
 		})
 	})

@@ -50,7 +50,10 @@ main() {
   fi
 
   bosh_manifest=$("generate_manifest_$iaas" "${bosh_env}" "${extra_filename}")
+  set +x
   deploy_bosh "${bosh_env}" "${bosh_manifest}"
+  enable_debug_output
+
   "$(repo_directory)/bin/set_bosh_alias" "${bosh_env}"
 
   BOSH_ENV="$bosh_env" source "$(repo_directory)/bin/set_bosh_environment"
@@ -121,6 +124,7 @@ generate_manifest_generic() {
   bosh_env="$1"; shift
   iaas_specific_args="$@"
 
+  set +x
   bosh-cli int "$(repo_directory)/bosh-deployment/bosh.yml"  \
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/local-dns.yml" \
@@ -130,6 +134,13 @@ generate_manifest_generic() {
     --vars-file "${bosh_env}/director.yml" \
     ${iaas_specific_args} \
     ${BOSH_EXTRA_OPS}
+  enable_debug_output
+}
+
+enable_debug_output() {
+  if [[ -n "$DEBUG" ]]; then
+    set -x
+  fi
 }
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"

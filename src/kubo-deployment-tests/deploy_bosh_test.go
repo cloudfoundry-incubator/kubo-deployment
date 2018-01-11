@@ -10,9 +10,10 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
+	"github.com/onsi/gomega/types"
 )
 
-var _ = Describe("Deploy KuBOSH", func() {
+var _ = Describe("Deploy BOSH", func() {
 	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp_with_creds")
 	validvSphereEnvironment := path.Join(testEnvironmentPath, "test_vsphere_with_creds")
 	validOpenstackEnvironment := path.Join(testEnvironmentPath, "test_openstack_with_creds")
@@ -117,6 +118,54 @@ var _ = Describe("Deploy KuBOSH", func() {
 				Expect(stderr).To(gbytes.Say(fmt.Sprintf("update-runtime-config -n %s", pathFromRoot("bosh-deployment/runtime-configs/dns.yml"))))
 			})
 
+		})
+	})
+
+	Context("hides secrets from debug output", func() {
+		BeforeEach(func() {
+			bash.Export("DEBUG", "1")
+			bash.Export("PS4", "+ ")
+			bash.Source(pathToScript("deploy_bosh"), nil)
+			boshMock := MockOrCallThrough("bosh-cli", `echo "bosh-cli $@" >&2`, "[ $1 == 'int' ]")
+			ApplyMocks(bash, []Gob{boshMock})
+		})
+
+		matchDebugOutput := func(value string) types.GomegaMatcher {
+			return MatchRegexp("\\++ .*?" + value)
+		}
+
+		It("on a GCP environment", func() {
+			code, err := bash.Run("main", []string{validGcpEnvironment, mockKeyFile})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr.Contents()).NotTo(matchDebugOutput("test-bosh-admin-client-secret"))
+			Expect(stderr.Contents()).NotTo(matchDebugOutput("test-credhub-user-password"))
+			Expect(stderr.Contents()).NotTo(matchDebugOutput("test-cf.client.secret"))
+		})
+
+		It("on a vSphere environment", func() {
+			code, err := bash.Run("main", []string{validvSphereEnvironment, mockKeyFile})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr.Contents()).NotTo(matchDebugOutput("test-bosh-admin-client-secret"))
+			Expect(stderr.Contents()).NotTo(matchDebugOutput("test-credhub-user-password"))
+			Expect(stderr.Contents()).NotTo(matchDebugOutput("test-routing-cf-client-secret"))
+		})
+
+		It("on an Openstack environment", func() {
+			code, err := bash.Run("main", []string{validOpenstackEnvironment, mockKeyFile})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr.Contents()).NotTo(matchDebugOutput("test-bosh-admin-client-secret"))
+			Expect(stderr.Contents()).NotTo(matchDebugOutput("test-credhub-user-password"))
+		})
+
+		It("on an AWS environment", func() {
+			code, err := bash.Run("main", []string{validAwsEnvironment, mockKeyFile})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr.Contents()).NotTo(matchDebugOutput("test-bosh-admin-client-secret"))
+			Expect(stderr.Contents()).NotTo(matchDebugOutput("test-credhub-user-password"))
 		})
 	})
 })

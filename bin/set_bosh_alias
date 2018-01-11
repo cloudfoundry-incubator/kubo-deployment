@@ -38,7 +38,24 @@ main() {
     fi
 
     ca_cert=$(bosh-cli int "${bosh_env}/creds.yml" --path=/default_ca/ca)
-    BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) BOSH_CA_CERT="${ca_cert}" bosh-cli alias-env "${BOSH_NAME}" -e "$bosh_director_hostname"
+    set +x
+    _bosh_client=${BOSH_CLIENT}
+    _bosh_client_secret=${BOSH_CLIENT_SECRET}
+    _bosh_ca_cert=${BOSH_CA_CERT}
+    export BOSH_CLIENT=bosh_admin
+    export BOSH_CLIENT_SECRET=$(get_bosh_secret)
+    export BOSH_CA_CERT="${ca_cert}"
+    if [[ -n "${DEBUG}" ]]; then
+      set -x
+    fi
+    bosh-cli alias-env "${BOSH_NAME}" -e "$bosh_director_hostname"
+    set +x
+    export BOSH_CLIENT=${_bosh_client}
+    export BOSH_CLIENT_SECRET=${_bosh_client_secret}
+    export BOSH_CA_CERT=${_bosh_ca_cert}
+    if [[ -n "${DEBUG}" ]]; then
+      set -x
+    fi
   popd > /dev/null
 }
 
