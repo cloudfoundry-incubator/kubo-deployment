@@ -17,7 +17,7 @@ var _ = Describe("Destroy KuBOSH", func() {
 
 	Context("fails", func() {
 		JustBeforeEach(func() {
-			ApplyMocks(bash, []Gob{Stub("bosh-cli")})
+			ApplyMocks(bash, []Gob{Stub("bosh")})
 			bash.Source("", func(string) ([]byte, error) {
 				return repoDirectoryFunction, nil
 			})
@@ -50,7 +50,7 @@ var _ = Describe("Destroy KuBOSH", func() {
 	Context("succeeds", func() {
 		BeforeEach(func() {
 			bash.Source(pathToScript("destroy_bosh"), nil)
-			bashMock := MockOrCallThrough("bosh-cli", `echo "bosh-cli $@" >&2`, `[[ "$1" == "int" ]]`)
+			bashMock := MockOrCallThrough("bosh", `echo "bosh $@" >&2`, `[[ "$1" == "int" ]]`)
 			ApplyMocks(bash, []Gob{bashMock})
 		})
 
@@ -62,19 +62,19 @@ var _ = Describe("Destroy KuBOSH", func() {
 
 		It("cleans up before deleting the GCP environment", func() {
 			bash.Run("main", []string{validGcpEnvironment, pathFromRoot("README.md")})
-			Expect(stderr).To(gbytes.Say("bosh-cli clean-up --all"))
-			Expect(stderr).To(gbytes.Say("bosh-cli delete-env"))
+			Expect(stderr).To(gbytes.Say("bosh clean-up --all"))
+			Expect(stderr).To(gbytes.Say("bosh delete-env"))
 		})
 
 		It("cleans up before deleting the OpenStack environment", func() {
 			bash.Run("main", []string{validOpenstackEnvironment, pathFromRoot("README.md")})
-			Expect(stderr).To(gbytes.Say("bosh-cli clean-up --all"))
-			Expect(stderr).To(gbytes.Say("bosh-cli delete-env"))
+			Expect(stderr).To(gbytes.Say("bosh clean-up --all"))
+			Expect(stderr).To(gbytes.Say("bosh delete-env"))
 		})
 
 		It("destroys a GCP environment", func() {
 			code, err := bash.Run("main", []string{validGcpEnvironment, pathFromRoot("README.md")})
-			Expect(stderr).To(gbytes.Say("bosh-cli delete-env"))
+			Expect(stderr).To(gbytes.Say("bosh delete-env"))
 			Expect(stderr).To(gbytes.Say("/bosh-deployment/gcp/cpi.yml"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
@@ -82,7 +82,7 @@ var _ = Describe("Destroy KuBOSH", func() {
 
 		It("destroys a vSphere environment", func() {
 			code, err := bash.Run("main", []string{validvSphereEnvironment, pathFromRoot("README.md")})
-			Expect(stderr).To(gbytes.Say("bosh-cli delete-env"))
+			Expect(stderr).To(gbytes.Say("bosh delete-env"))
 			Expect(stderr).To(gbytes.Say("/bosh-deployment/vsphere/cpi.yml"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
@@ -90,7 +90,7 @@ var _ = Describe("Destroy KuBOSH", func() {
 
 		It("destroys an Openstack environment", func() {
 			code, err := bash.Run("main", []string{validOpenstackEnvironment, pathFromRoot("README.md")})
-			Expect(stderr).To(gbytes.Say("bosh-cli delete-env"))
+			Expect(stderr).To(gbytes.Say("bosh delete-env"))
 			Expect(stderr).To(gbytes.Say("/bosh-deployment/openstack/cpi.yml"))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))

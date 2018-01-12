@@ -17,7 +17,7 @@ var _ = Describe("upload_artefacts", func() {
 
 	BeforeEach(func() {
 		bash.Source(pathToScript("upload_artefacts"), nil)
-		boshMock := MockOrCallThrough("bosh-cli", `echo -n "3124.12"`, `[ "$1" == 'int' ]`)
+		boshMock := MockOrCallThrough("bosh", `echo -n "3124.12"`, `[ "$1" == 'int' ]`)
 		ApplyMocks(bash, []Gob{boshMock})
 	})
 
@@ -32,48 +32,48 @@ var _ = Describe("upload_artefacts", func() {
 			code, err := bash.Run("main", []string{validGcpEnvironment, "local"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
-			Expect(stderr).To(gbytes.Say("bosh-cli upload-release kubo-release.tgz"))
+			Expect(stderr).To(gbytes.Say("bosh upload-release kubo-release.tgz"))
 		})
 
 		It("uploads the stemcell for GCP", func() {
-			boshMock := MockOrCallThrough("bosh-cli", `echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
+			boshMock := MockOrCallThrough("bosh", `echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
 			ApplyMocks(bash, []Gob{boshMock})
 
 			code, err := bash.Run("main", []string{validGcpEnvironment, "local"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 
-			Expect(stderr).To(gbytes.Say("bosh-cli upload-stemcell https://s3.amazonaws.com/bosh-gce-light-stemcells/light-bosh-stemcell-3124.12-google-kvm-ubuntu-trusty-go_agent.tgz"))
+			Expect(stderr).To(gbytes.Say("bosh upload-stemcell https://s3.amazonaws.com/bosh-gce-light-stemcells/light-bosh-stemcell-3124.12-google-kvm-ubuntu-trusty-go_agent.tgz"))
 		})
 
 		It("uploads the stemcell for vSphere", func() {
-			boshMock := MockOrCallThrough("bosh-cli", `echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
+			boshMock := MockOrCallThrough("bosh", `echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
 			ApplyMocks(bash, []Gob{boshMock})
 			code, err := bash.Run("main", []string{validvSphereEnvironment, "local"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 
-			Expect(stderr).To(gbytes.Say("bosh-cli upload-stemcell https://s3.amazonaws.com/bosh-core-stemcells/vsphere/bosh-stemcell-3124.12-vsphere-esxi-ubuntu-trusty-go_agent.tgz"))
+			Expect(stderr).To(gbytes.Say("bosh upload-stemcell https://s3.amazonaws.com/bosh-core-stemcells/vsphere/bosh-stemcell-3124.12-vsphere-esxi-ubuntu-trusty-go_agent.tgz"))
 		})
 
 		It("uploads the stemcell for OpenStack", func() {
-			boshMock := MockOrCallThrough("bosh-cli", `echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
+			boshMock := MockOrCallThrough("bosh", `echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
 			ApplyMocks(bash, []Gob{boshMock})
 			code, err := bash.Run("main", []string{validOpenstackEnvironment, "local"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 
-			Expect(stderr).To(gbytes.Say("bosh-cli upload-stemcell https://s3.amazonaws.com/bosh-core-stemcells/openstack/bosh-stemcell-3124.12-openstack-kvm-ubuntu-trusty-go_agent.tgz"))
+			Expect(stderr).To(gbytes.Say("bosh upload-stemcell https://s3.amazonaws.com/bosh-core-stemcells/openstack/bosh-stemcell-3124.12-openstack-kvm-ubuntu-trusty-go_agent.tgz"))
 		})
 
 		It("uploads the stemcell for AWS", func() {
-			boshMock := MockOrCallThrough("bosh-cli", `echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
+			boshMock := MockOrCallThrough("bosh", `echo -n "3124.12"`, `[ "$1" == 'int' ] && [ ! "$4" == '/stemcells/0/version' ] `)
 			ApplyMocks(bash, []Gob{boshMock})
 			code, err := bash.Run("main", []string{validAWSEnvironment, "local"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 
-			Expect(stderr).To(gbytes.Say("bosh-cli upload-stemcell https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-3124.12-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"))
+			Expect(stderr).To(gbytes.Say("bosh upload-stemcell https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-3124.12-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"))
 		})
 	})
 
@@ -114,7 +114,7 @@ var _ = Describe("upload_artefacts", func() {
 var _ = Describe("upload_stemcell", func() {
 	BeforeEach(func() {
 		bash.Source(pathToScript("upload_artefacts"), nil)
-		boshMock := Mock("bosh-cli", "echo")
+		boshMock := Mock("bosh", "echo")
 		ApplyMocks(bash, []Gob{boshMock})
 	})
 
@@ -123,7 +123,7 @@ var _ = Describe("upload_stemcell", func() {
 			code, err := bash.Run("upload_stemcell", []string{"gcp"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
-			Expect(stderr).To(gbytes.Say("bosh-cli upload-stemcell"))
+			Expect(stderr).To(gbytes.Say("bosh upload-stemcell"))
 			Expect(stderr).To(gbytes.Say("google-kvm-ubuntu-trusty-go_agent"))
 		})
 	})
@@ -133,7 +133,7 @@ var _ = Describe("upload_stemcell", func() {
 			code, err := bash.Run("upload_stemcell", []string{"vsphere"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
-			Expect(stderr).To(gbytes.Say("bosh-cli upload-stemcell"))
+			Expect(stderr).To(gbytes.Say("bosh upload-stemcell"))
 			Expect(stderr).To(gbytes.Say("vsphere-esxi-ubuntu-trusty-go_agent"))
 		})
 	})
@@ -143,7 +143,7 @@ var _ = Describe("upload_stemcell", func() {
 			code, err := bash.Run("upload_stemcell", []string{"openstack"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
-			Expect(stderr).To(gbytes.Say("bosh-cli upload-stemcell"))
+			Expect(stderr).To(gbytes.Say("bosh upload-stemcell"))
 			Expect(stderr).To(gbytes.Say("openstack-kvm-ubuntu-trusty-go_agent"))
 		})
 	})

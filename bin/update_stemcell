@@ -24,7 +24,7 @@ gnused() {
 main() {
   local new_version=$1
 
-  current_version=$(bosh-cli int "$(manifest_file)" --path=/stemcells/0/version)
+  current_version=$(bosh int "$(manifest_file)" --path=/stemcells/0/version)
   if [[ $new_version != $current_version ]]; then
     $(gnused) -i ':a;$!{N;ba};s|\(stemcells:\n- alias: trusty\n  os: ubuntu-trusty\n  version:\)[^\n]*\n|\1 "'"$new_version"'"\n|' "$(manifest_file)"
   fi

@@ -26,9 +26,9 @@ set_bosh_environment() {
   local bosh_env="$1"
   export BOSH_CLIENT=bosh_admin
 
-  BOSH_CLIENT_SECRET=$(bosh-cli int "$bosh_env"/creds.yml --path=/bosh_admin_client_secret)
-  BOSH_CA_CERT=$(bosh-cli int "$bosh_env"/creds.yml --path=/default_ca/ca)
-  BOSH_ENVIRONMENT=$(bosh-cli int "$bosh_env"/director.yml --path=/internal_ip)
+  BOSH_CLIENT_SECRET=$(bosh int "$bosh_env"/creds.yml --path=/bosh_admin_client_secret)
+  BOSH_CA_CERT=$(bosh int "$bosh_env"/creds.yml --path=/default_ca/ca)
+  BOSH_ENVIRONMENT=$(bosh int "$bosh_env"/director.yml --path=/internal_ip)
   export BOSH_CLIENT_SECRET BOSH_CA_CERT BOSH_ENVIRONMENT
 }
 
@@ -42,7 +42,7 @@ main() {
     exit 1
   fi
 
-  iaas=$(bosh-cli int "${bosh_env}/director.yml" --path /iaas)
+  iaas=$(bosh int "${bosh_env}/director.yml" --path /iaas)
 
   if ! [[ "$iaas" =~ ^(gcp|openstack|vsphere|aws)$ ]]; then
     echo "Supported platforms are: 'gcp', 'openstack', 'vsphere', 'aws'"
@@ -67,8 +67,8 @@ destroy_gcp() {
   bosh_env="$1"
   service_account="$2"
 
-  bosh-cli clean-up --all -n
-  bosh-cli delete-env "$(repo_directory)/bosh-deployment/bosh.yml" \
+  bosh clean-up --all -n
+  bosh delete-env "$(repo_directory)/bosh-deployment/bosh.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/gcp/cpi.yml" \
     --state "${bosh_env}/state.json" \
     --var-file gcp_credentials_json="${service_account}" \
@@ -81,8 +81,8 @@ destroy_aws() {
   bosh_env="$1"
   key_filename="$2"
 
-  bosh-cli clean-up --all -n
-  bosh-cli delete-env "$(repo_directory)/bosh-deployment/bosh.yml" \
+  bosh clean-up --all -n
+  bosh delete-env "$(repo_directory)/bosh-deployment/bosh.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/aws/cpi.yml" \
     --state "${bosh_env}/state.json" \
     --var-file private_key="${key_filename}" \
@@ -96,8 +96,8 @@ destroy_vsphere() {
 
   bosh_env="$1"
 
-  bosh-cli clean-up --all -n
-  bosh-cli delete-env "$(repo_directory)/bosh-deployment/bosh.yml" \
+  bosh clean-up --all -n
+  bosh delete-env "$(repo_directory)/bosh-deployment/bosh.yml" \
       --ops-file "$(repo_directory)/bosh-deployment/vsphere/cpi.yml" \
       --state "${bosh_env}/state.json" \
       --vars-store "${bosh_env}/creds.yml" \
@@ -111,8 +111,8 @@ destroy_openstack() {
   bosh_env="$1"
   key_filename="$2"
 
-  bosh-cli clean-up --all -n
-  bosh-cli delete-env "$(repo_directory)/bosh-deployment/bosh.yml" \
+  bosh clean-up --all -n
+  bosh delete-env "$(repo_directory)/bosh-deployment/bosh.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/openstack/cpi.yml" \
     --state "${bosh_env}/state.json" \
     --vars-store "${bosh_env}/creds.yml" \

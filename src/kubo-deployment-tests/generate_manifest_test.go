@@ -372,7 +372,7 @@ var _ = Describe("Generate manifest", func() {
 		command.Dir = pathFromRoot("")
 		Expect(command.Run()).To(Succeed())
 
-		command2 := exec.Command("bosh-cli", "int", "-", "--path", "/variables/name=tls-kubernetes/options/common_name")
+		command2 := exec.Command("bosh", "int", "-", "--path", "/variables/name=tls-kubernetes/options/common_name")
 		command2.Stdin = stdoutTemp
 		command2.Stdout = bash.Stdout
 		command2.Stderr = bash.Stderr
@@ -392,7 +392,7 @@ var _ = Describe("Generate manifest", func() {
 		command.Dir = pathFromRoot("")
 		Expect(command.Run()).To(Succeed())
 
-		command2 := exec.Command("bosh-cli", "int", "-", "--path", "/variables/name=tls-kubernetes/options/alternative_names")
+		command2 := exec.Command("bosh", "int", "-", "--path", "/variables/name=tls-kubernetes/options/alternative_names")
 		command2.Stdin = stdoutTemp
 		command2.Stdout = bash.Stdout
 		command2.Stderr = bash.Stderr
