@@ -90,6 +90,15 @@ var _ = Describe("Generate cloud config", func() {
 		Expect(stdout).To(gbytes.Say("machine_type: foo"))
 	})
 
+	It("hides cloud-config from output with debug flag", func(){
+		bash.Export("DEBUG", "1")
+		status, err := bash.Run("main", []string{kuboEnv})
+		Expect(err).NotTo(HaveOccurred())
+		Expect(status).To(Equal(0))
+
+		Expect(stderr).NotTo(gbytes.Say("azs"))
+	})
+
 	Context("On GCP", func() {
 		Context("With IAAS Routing", func() {
 			Context("When service_accounts for master and worker are provided", func() {
