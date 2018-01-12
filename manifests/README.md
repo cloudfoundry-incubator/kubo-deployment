@@ -187,50 +187,50 @@ kubectl get all
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
-| [`use-runtime-config-bosh-dns.yml`](use-runtime-config-bosh-dns.yml) | Delegate `bosh-dns` addon to BOSH runtime config | Apply this operator file if your BOSH environment has a runtime config that adds the `bosh-dns` job to all instances. By default, `cfcr.yml` will add `bosh-dns` to deployment instances. |
-| [`vm-types.yml`](vm-types.yml) | Specify the `vm_type` for `master` and `worker` instances | By default, `master` and `worker` instances assume `vm_type: small` and `vm_type: small-highmem`, respectively (`vm_types` that are also assumed to exists by https://github.com/cloudfoundry/cf-deployment manifests). You may want to use bespoke `vm_types` so as to scale them, tag them, or apply unique `cloud_properties` independently of other deployments in the same BOSH environment. |
+| [`ops-files/use-runtime-config-bosh-dns.yml`](ops-files/use-runtime-config-bosh-dns.yml) | Delegate `bosh-dns` addon to BOSH runtime config | Apply this operator file if your BOSH environment has a runtime config that adds the `bosh-dns` job to all instances. By default, `cfcr.yml` will add `bosh-dns` to deployment instances. |
+| [`ops-files/vm-types.yml`](ops-files/vm-types.yml) | Specify the `vm_type` for `master` and `worker` instances | By default, `master` and `worker` instances assume `vm_type: small` and `vm_type: small-highmem`, respectively (`vm_types` that are also assumed to exists by https://github.com/cloudfoundry/cf-deployment manifests). You may want to use bespoke `vm_types` so as to scale them, tag them, or apply unique `cloud_properties` independently of other deployments in the same BOSH environment. |
 
 ### Routing options
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
-| [`cf-routing.yml`](cf-routing.yml) | Combine CFCR with Cloud Foundry routing | Kube API and labeled services advertised to Cloud Foundry routing mesh. Kube API hostname is included in TLS certificates. |
-| [`cf-routing-links.yml`](cf-routing-links.yml) | As above, using BOSH links | Simpler method of integration with Cloud Foundry running on same BOSH [in development] |
+| [`ops-files/cf-routing.yml`](ops-files/cf-routing.yml) | Combine CFCR with Cloud Foundry routing | Kube API and labeled services advertised to Cloud Foundry routing mesh. Kube API hostname is included in TLS certificates. |
+| [`ops-files/cf-routing-links.yml`](ops-files/cf-routing-links.yml) | As above, using BOSH links | Simpler method of integration with Cloud Foundry running on same BOSH [in development] |
 | **OpenStack** | | |
-| [`iaas/openstack/master-static-ip.yml`](iaas/openstack/master-static-ip.yml) | Attach floating IP to Kube API | Assign allocated floating IP to `master` instance. IP included in TLS certificates. |
+| [`ops-files/iaas/openstack/master-static-ip.yml`](ops-files/iaas/openstack/master-static-ip.yml) | Attach floating IP to Kube API | Assign allocated floating IP to `master` instance. IP included in TLS certificates. |
 | **vSphere** | | |
-| [`iaas/vsphere/master-static-ip.yml`](iaas/vsphere/master-static-ip.yml) | Assign static IP to Kube API | Assign static IP to `master` instance. IP included in TLS certificates. |
+| [`ops-files/iaas/vsphere/master-static-ip.yml`](ops-files/iaas/vsphere/master-static-ip.yml) | Assign static IP to Kube API | Assign static IP to `master` instance. IP included in TLS certificates. |
 | **gcp** | | |
-| [`iaas/gcp/add-service-key-master.yml`](iaas/gcp/add-service-key-master.yml) | Allow user to specify GCP key instead of service account |  |
-| [`iaas/gcp/add-service-key-worker.yml`](iaas/gcp/add-service-key-worker.yml) | Allow user to specify GCP key instead of service account |  |
+| [`ops-files/iaas/gcp/add-service-key-master.yml`](ops-files/iaas/gcp/add-service-key-master.yml) | Allow user to specify GCP key instead of service account |  |
+| [`ops-files/iaas/gcp/add-service-key-worker.yml`](ops-files/iaas/gcp/add-service-key-worker.yml) | Allow user to specify GCP key instead of service account |  |
 
 ### Infrastructure
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
 | **AWS** | | |
-| [`iaas/aws/cloud-provider.yml`](iaas/aws/cloud-provider.yml) | Enable Cloud Provider for AWS | Requires AWS Instance Profiles (not API keys) to grant Kubernetes access to AWS |
-| [`iaas/aws/lb.yml`](iaas/aws/lb.yml) | Enable instance tagging for AWS |  |
+| [`ops-files/iaas/aws/cloud-provider.yml`](ops-files/iaas/aws/cloud-provider.yml) | Enable Cloud Provider for AWS | Requires AWS Instance Profiles (not API keys) to grant Kubernetes access to AWS |
+| [`ops-files/iaas/aws/lb.yml`](ops-files/iaas/aws/lb.yml) | Enable instance tagging for AWS |  |
 | **OpenStack** | | |
-| [`iaas/openstack/cloud-provider.yml`](iaas/openstack/cloud-provider.yml) | Enable Cloud Provider for OpenStack | Enable Cloud Provider for OpenStack |
+| [`ops-files/iaas/openstack/cloud-provider.yml`](ops-files/iaas/openstack/cloud-provider.yml) | Enable Cloud Provider for OpenStack | Enable Cloud Provider for OpenStack |
 | **GCP** | | |
-| [`iaas/gcp/cloud-provider.yml`](iaas/gcp/cloud-provider.yml) | Enable Cloud Provider for GCP | - |
+| [`ops-files/iaas/gcp/cloud-provider.yml`](ops-files/iaas/gcp/cloud-provider.yml) | Enable Cloud Provider for GCP | - |
 | **vSphere** | | |
-| [`iaas/vsphere/cloud-provider.yml`](iaas/vsphere/cloud-provider.yml) | Enable Cloud Provider for vSphere | - |
-| [`iaas/vsphere/set-working-dir-no-rp.yml`](iaas/vsphere/set-working-dir-no-rp.yml) | Configure vSphere cloud provider's working dir if there is no resource pool | - |
+| [`ops-files/iaas/vsphere/cloud-provider.yml`](ops-files/iaas/vsphere/cloud-provider.yml) | Enable Cloud Provider for vSphere | - |
+| [`ops-files/iaas/vsphere/set-working-dir-no-rp.yml`](ops-files/iaas/vsphere/set-working-dir-no-rp.yml) | Configure vSphere cloud provider's working dir if there is no resource pool | - |
 
 
 ### Proxy
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
-| [`add-http-proxy.yml`](add-http-proxy.yml) | Configure HTTP proxy for containers | Docker passes `http_proxy` environment variable to all containers |
-| [`add-https-proxy.yml`](add-https-proxy.yml) | Configure HTTP proxy for containers | Docker passes `https_proxy` environment variable to all containers |
-| [`add-no-proxy.yml`](add-no-proxy.yml) | Configure HTTP proxy for containers | Docker passes `no_proxy` environment variable to all containers |
+| [`ops-files/add-http-proxy.yml`](ops-files/add-http-proxy.yml) | Configure HTTP proxy for containers | Docker passes `http_proxy` environment variable to all containers |
+| [`ops-files/add-https-proxy.yml`](ops-files/add-https-proxy.yml) | Configure HTTP proxy for containers | Docker passes `https_proxy` environment variable to all containers |
+| [`ops-files/add-no-proxy.yml`](ops-files/add-no-proxy.yml) | Configure HTTP proxy for containers | Docker passes `no_proxy` environment variable to all containers |
 
 ### Kubernetes
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
-| [`addons-spec.yml`](addons-spec.yml) | Addons to be deployed into the Kubernetes cluster | - |
-| [`allow-privileged-containers.yml`](allow-privileged-containers.yml) | Allows privileged containers for the Kubernetes cluster | - |
+| [`ops-files/addons-spec.yml`](ops-files/addons-spec.yml) | Addons to be deployed into the Kubernetes cluster | - |
+| [`ops-files/allow-privileged-containers.yml`](ops-files/allow-privileged-containers.yml) | Allows privileged containers for the Kubernetes cluster | - |
