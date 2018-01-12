@@ -32,8 +32,12 @@ get_setting_with_default() {
 }
 
 set_cloud_config() {
+  set +x
   local cloud_config=$(generate_cloud_config ${BOSH_ENV})
   echo "$cloud_config" | BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli -n -e "${BOSH_NAME}" update-cloud-config -
+  if [[ -n "${DEBUG}" ]]; then
+    set -x
+  fi
 }
 
 check_for_existing_deployment() {
@@ -44,7 +48,12 @@ check_for_existing_deployment() {
     exit 1
   fi
 
-  BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli deployment -d ${deployment_name} | xargs echo -n
+  set +x
+  BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) \
+                    bosh-cli deployment -d ${deployment_name} | xargs echo -n
+  if [[ -n "${DEBUG}" ]]; then
+    set -x
+  fi
 }
 
 deploy_to_bosh() {
@@ -65,7 +74,9 @@ create_and_upload_release() {
 
   if [ -d "$release_dirname" ]; then
     pushd "$release_dirname"
+      set +x
       BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli create-release --force --name "${release_name}"
+      [ -z "$DEBUG" ] || set -x
       upload_release "--name=${release_name}"
     popd
   else
@@ -76,8 +87,11 @@ create_and_upload_release() {
 
 upload_release() {
   local release_name=$1
-
+  set +x
   BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli upload-release "$release_name"
+  if [[ -n "${DEBUG}" ]]; then
+    set -x
+  fi
 }
 
 set_ops_file_if_path_exists() {
@@ -147,6 +161,7 @@ generate_manifest() {
   [ -z "$DEBUG" ] || set -x
   local routing_mode="$(bosh-cli int "${director_path}" --path='/routing_mode')"
   local iaas="$(bosh-cli int "${director_path}" --path='/iaas')"
+  local existing_deployment=$(check_for_existing_deployment "${deployment_name}" 2>/dev/null)
   local interpolate_arguments="$(set_ops_file_if_path_exists \
     "${director_path}" \
     "/http_proxy" \
@@ -216,6 +231,10 @@ generate_manifest() {
     if ! bosh-cli int "${director_path}" --path='/vcenter_rp' &>/dev/null; then
       interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/vsphere/set-working-dir-no-rp.yml\""
     fi
+  fi
+
+  if [[ -z "$existing_deployment" ]]; then
+    interpolate_arguments+=" --ops-file=\"${ops_dir}/misc/first-time-deploy.yml\""
   fi
 
   if bosh-cli int "${director_path}" --path='/addons_spec_path' &> /dev/null; then

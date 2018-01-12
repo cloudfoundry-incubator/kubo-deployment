@@ -49,6 +49,25 @@ var _ = Describe("DeployUtils", func() {
 			Expect(code).To(Equal(0))
 			Expect(stderr).To(gbytes.Say("bosh-cli -n -e env-name update-cloud-config -"))
 		})
+
+		It("Should hide secrets even when debug flag is set", func() {
+			bash.Source(pathToScript("lib/deploy_utils"), nil)
+
+			bash.Export("BOSH_ENV", "kubo-env")
+			bash.Source("", func(string) ([]byte, error) {
+				return []byte(fmt.Sprintf("export PATH=%s:$PATH", pathFromRoot("bin"))), nil
+			})
+
+			getBoshSecretMock := Mock("get_bosh_secret", `echo "the-secret"`)
+			boshCliMock := Mock("bosh-cli", `echo -n "$@"`)
+			ApplyMocks(bash, []Gob{getBoshSecretMock, boshCliMock})
+
+			bash.Export("DEBUG", "1")
+			code, err := bash.Run("set -x; set_cloud_config", []string{})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr).NotTo(gbytes.Say("the-secret"))
+		})
 	})
 
 	Describe("export_bosh_environment", func() {
@@ -63,17 +82,27 @@ var _ = Describe("DeployUtils", func() {
 	})
 
 	Describe("check_for_existing_deployment", func() {
-		It("should check for existing deployment", func() {
+		BeforeEach(func() {
 			bash.Source(pathToScript("lib/deploy_utils"), nil)
 
 			getBoshSecretMock := Mock("get_bosh_secret", `echo "the-secret"`)
 			boshCliMock := Mock("bosh-cli", `echo -n "$@"`)
 			ApplyMocks(bash, []Gob{getBoshSecretMock, boshCliMock})
+		})
 
+		It("should check for existing deployment", func() {
 			code, err := bash.Run("check_for_existing_deployment", []string{"deployment-name"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 			Expect(stderr).To(gbytes.Say("bosh-cli deployment -d deployment-name"))
+		})
+
+		It("should hide secrets", func(){
+			bash.Export("DEBUG", "1")
+			code, err := bash.Run("set -x; check_for_existing_deployment", []string{"deployment-name"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr).NotTo(gbytes.Say("the-secret"))
 		})
 	})
 
@@ -165,6 +194,27 @@ var _ = Describe("DeployUtils", func() {
 				Expect(code).To(Equal(1))
 			})
 		})
+
+		It("Should hide secrets even when debug flag is set", func() {
+			bash.Source(pathToScript("lib/deploy_utils"), nil)
+
+			bash.Source("", func(string) ([]byte, error) {
+				return []byte(fmt.Sprintf("export PATH=%s:$PATH", pathFromRoot("bin"))), nil
+			})
+
+			getBoshSecretMock := Mock("get_bosh_secret", `echo "the-secret"`)
+			boshCliMock := Mock("bosh-cli", `echo -n "$@"`)
+			uploadReleaseMock := Mock("upload_release", `echo`)
+			ApplyMocks(bash, []Gob{getBoshSecretMock, boshCliMock, uploadReleaseMock})
+
+			releasePath := path.Join(resourcesPath, "releases/mock-release")
+
+			bash.Export("DEBUG", "1")
+			code, err := bash.Run("set -x; create_and_upload_release", []string{releasePath})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr).NotTo(gbytes.Say("the-secret"))
+		})
 	})
 
 	Describe("upload_release", func() {
@@ -182,6 +232,24 @@ var _ = Describe("DeployUtils", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 			Expect(stderr).To(gbytes.Say("bosh-cli upload-release release-name"))
+		})
+
+		It("Should hide secrets even when debug flag is set", func() {
+			bash.Source(pathToScript("lib/deploy_utils"), nil)
+
+			bash.Source("", func(string) ([]byte, error) {
+				return []byte(fmt.Sprintf("export PATH=%s:$PATH", pathFromRoot("bin"))), nil
+			})
+
+			getBoshSecretMock := Mock("get_bosh_secret", `echo "the-secret"`)
+			boshCliMock := Mock("bosh-cli", `echo -n "$@"`)
+			ApplyMocks(bash, []Gob{getBoshSecretMock, boshCliMock})
+
+			bash.Export("DEBUG", "1")
+			code, err := bash.Run("set -x; upload_release", []string{"release-name"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr).NotTo(gbytes.Say("the-secret"))
 		})
 	})
 
@@ -625,6 +693,28 @@ var _ = Describe("DeployUtils", func() {
 				Expect(stderr).To(gbytes.Say("addons-spec.yml"))
 				Expect(stderr).To(gbytes.Say("var-file=\"addons-spec"))
 				Expect(stderr).To(gbytes.Say("addon.yml"))
+			})
+		})
+
+		Context("first time deployment", func() {
+			It("applies first-time-deployment ops file", func(){
+				boshMock := Mock("bosh-cli", `
+				if [[ "$3" =~ "addons_spec_path" ]]; then
+					return 1
+				elif [[ "$3" =~ "routing_mode" ]]; then
+					echo "the-routing-mode"
+				elif [[ "$3" =~ "iaas" ]]; then
+					echo "vsphere"
+				else
+					echo
+				fi`)
+				existingDeploymentMock := Mock("check_for_existing_deployment", ``)
+				ApplyMocks(bash, []Gob{boshMock, existingDeploymentMock})
+
+				code, err := bash.Run("generate_manifest", []string{"environment-path", "deployment-name", "manifest-path", "director-uuid"})
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(0))
+				Expect(stderr).To(gbytes.Say("first-time-deploy.yml"))
 			})
 		})
 

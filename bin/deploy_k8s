@@ -80,11 +80,6 @@ main() {
   fi
 
   manifest=$("$(repo_directory)/bin/generate_kubo_manifest" "${bosh_env}" "${deployment_name}" "$(get_director_uuid)")
-  local existing_deployment=$(check_for_existing_deployment "${deployment_name}" 2>/dev/null)
-  if [[ -z "$existing_deployment" ]]; then
-    manifest=$(BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) \
-        bosh-cli int <(echo "${manifest}") --ops-file=\""$(repo_directory)"/manifests/ops-files/misc/first-time-deploy.yml\")
-  fi
 
   deploy_to_bosh "${manifest}" "${deployment_name}"
 
