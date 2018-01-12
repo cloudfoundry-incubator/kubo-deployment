@@ -627,5 +627,28 @@ var _ = Describe("DeployUtils", func() {
 				Expect(stderr).To(gbytes.Say("addon.yml"))
 			})
 		})
+
+		It("hides manifest contents from stderr with debug flag", func(){
+			boshMock := Mock("bosh-cli", `
+				if [[ "$3" =~ "addons_spec_path" \
+					|| "$3" =~ "http_proxy" \
+					|| "$3" =~ "https_proxy" \
+					|| "$3" =~ "no_proxy" ]]; then
+					return 1
+				elif [[ "$3" =~ "routing_mode" ]]; then
+					echo "the-routing-mode"
+				elif [[ "$3" =~ "iaas" ]]; then
+					echo "aws"
+				else
+					echo
+				fi`)
+			ApplyMocks(bash, []Gob{boshMock})
+			bash.Export("DEBUG", "1")
+			code, err := bash.Run("set -x; generate_manifest", []string{"environment-path", "deployment-name", pathFromRoot("manifests/cfcr.yml"), "director-uuid"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+
+			Expect(stderr).ToNot(gbytes.Say("stemcells"))
+		})
 	})
 })

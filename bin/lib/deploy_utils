@@ -142,7 +142,9 @@ generate_manifest() {
   local director_path="${bosh_environment}/director.yml"
   local manifest_dir="$(cd "$(dirname "${manifest_path}")"; pwd)"
   local ops_dir="${manifest_dir}/ops-files"
+  set +x
   local manifest="$(cat "${manifest_path}")"
+  [ -z "$DEBUG" ] || set -x
   local routing_mode="$(bosh-cli int "${director_path}" --path='/routing_mode')"
   local iaas="$(bosh-cli int "${director_path}" --path='/iaas')"
   local interpolate_arguments="$(set_ops_file_if_path_exists \
@@ -231,6 +233,7 @@ generate_manifest() {
     interpolate_arguments+=" --ops-file=\"${ops_dir}/addons-spec.yml\" --var-file=\"addons-spec=${addon_path}\""
   fi
 
+  set +x
   local manifest=$(bosh-cli int <(echo "${manifest}") --ops-file="${ops_dir}/misc/dev.yml" \
     --ops-file="${ops_dir}/misc/bootstrap.yml" \
     --ops-file="${ops_dir}/use-runtime-config-bosh-dns.yml" \
@@ -238,6 +241,7 @@ generate_manifest() {
     --var deployment_name="${deployment_name}" \
     --var director_uuid="${director_uuid}" \
     ${interpolate_arguments})
+  [ -z "$DEBUG" ] || set -x
 
   printf "%s" "${manifest}"
 }
