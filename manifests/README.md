@@ -203,6 +203,7 @@ kubectl get all
 | **gcp** | | |
 | [`iaas/gcp/add-service-key-master.yml`](iaas/gcp/add-service-key-master.yml) | Allow user to specify GCP key instead of service account |  |
 | [`iaas/gcp/add-service-key-worker.yml`](iaas/gcp/add-service-key-worker.yml) | Allow user to specify GCP key instead of service account |  |
+
 ### Infrastructure
 
 | Name | Purpose | Notes |
@@ -211,9 +212,9 @@ kubectl get all
 | [`iaas/aws/cloud-provider.yml`](iaas/aws/cloud-provider.yml) | Enable Cloud Provider for AWS | Requires AWS Instance Profiles (not API keys) to grant Kubernetes access to AWS |
 | [`iaas/aws/lb.yml`](iaas/aws/lb.yml) | Enable instance tagging for AWS |  |
 | **OpenStack** | | |
-| N/A | | |
+| [`iaas/openstack/cloud-provider.yml`](iaas/openstack/cloud-provider.yml) | Enable Cloud Provider for OpenStack | Enable Cloud Provider for OpenStack |
 | **GCP** | | |
-| [`iaas/gcp/cloud-provider.yml`](iaas/gcp/cloud-provider.yml) | Enable Cloud Provider for OpenStack | - |
+| [`iaas/gcp/cloud-provider.yml`](iaas/gcp/cloud-provider.yml) | Enable Cloud Provider for GCP | - |
 | **vSphere** | | |
 | [`iaas/vsphere/cloud-provider.yml`](iaas/vsphere/cloud-provider.yml) | Enable Cloud Provider for vSphere | - |
 | [`iaas/vsphere/set-working-dir-no-rp.yml`](iaas/vsphere/set-working-dir-no-rp.yml) | Configure vSphere cloud provider's working dir if there is no resource pool | - |
@@ -232,3 +233,4 @@ kubectl get all
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
 | [`addons-spec.yml`](addons-spec.yml) | Addons to be deployed into the Kubernetes cluster | - |
+| [`allow-privileged-containers.yml`](allow-privileged-containers.yml) | Allows privileged containers for the Kubernetes cluster | - |

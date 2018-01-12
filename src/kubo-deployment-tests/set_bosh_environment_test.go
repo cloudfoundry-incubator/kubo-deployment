@@ -19,7 +19,7 @@ var _ = Describe("Setup BOSH environment", func() {
 		expectedVariables := map[string]string{
 			"BOSH_ENVIRONMENT":   "internal.ip",
 			"BOSH_CLIENT":        "bosh_admin",
-			"BOSH_CLIENT_SECRET": "secret",
+			"BOSH_CLIENT_SECRET": "test-bosh-admin-client-secret",
 			"BOSH_CA_CERT":       "I-am-a-bosh-ca-cert",
 		}
 

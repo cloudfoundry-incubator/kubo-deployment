@@ -1,0 +1,21 @@
+- type: replace
+  path: /instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider?
+  value:
+    type: openstack
+    openstack:
+      auth-url: ((auth_url))
+      username: ((openstack_username))
+      password: ((openstack_password))
+      tenant-id: ((openstack_project_id))
+      domain-name: ((openstack_domain))
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider?
+  value:
+    type: openstack
+    openstack:
+      auth-url: ((auth_url))
+      username: ((openstack_username))
+      password: ((openstack_password))
+      tenant-id: ((openstack_project_id))
+      domain-name: ((openstack_domain))

@@ -50,7 +50,10 @@ main() {
   fi
 
   bosh_manifest=$("generate_manifest_$iaas" "${bosh_env}" "${extra_filename}")
+  set +x
   deploy_bosh "${bosh_env}" "${bosh_manifest}"
+  enable_debug_output
+
   "$(repo_directory)/bin/set_bosh_alias" "${bosh_env}"
 
   BOSH_ENV="$bosh_env" source "$(repo_directory)/bin/set_bosh_environment"
@@ -63,6 +66,8 @@ deploy_bosh() {
   bosh_manifest=$2
 
   bosh_manifest_file="$(mktemp)"
+  trap '{ rm "$bosh_manifest_file"; }' EXIT
+
   echo "${bosh_manifest}" > "${bosh_manifest_file}"
   bosh-cli create-env "${bosh_manifest_file}" \
     --vars-store "${bosh_env}/creds.yml" \
@@ -98,9 +103,8 @@ generate_manifest_openstack() {
   generate_manifest_generic "$bosh_env" \
     --vars-file "${bosh_env}/director-secrets.yml"  \
     --ops-file "$(repo_directory)/bosh-deployment/openstack/cpi.yml" \
-    --ops-file "$(repo_directory)/configurations/openstack/multi-tenant.yml" \
+    --ops-file "$(repo_directory)/configurations/openstack/human-readable-vm-names-false.yml" \
     --var-file private_key="${key_filename}"
-
 }
 
 generate_manifest_aws() {
@@ -120,6 +124,7 @@ generate_manifest_generic() {
   bosh_env="$1"; shift
   iaas_specific_args="$@"
 
+  set +x
   bosh-cli int "$(repo_directory)/bosh-deployment/bosh.yml"  \
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/local-dns.yml" \
@@ -129,6 +134,13 @@ generate_manifest_generic() {
     --vars-file "${bosh_env}/director.yml" \
     ${iaas_specific_args} \
     ${BOSH_EXTRA_OPS}
+  enable_debug_output
+}
+
+enable_debug_output() {
+  if [[ -n "$DEBUG" ]]; then
+    set -x
+  fi
 }
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"

@@ -56,7 +56,7 @@ var _ = Describe("Generate manifest", func() {
 			Entry("CF API URL", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/api_url", "cf.api.url"),
 			Entry("CF UAA URL", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_url", "cf.uaa.url"),
 			Entry("CF Client ID", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_client_id", "cf.client.id"),
-			Entry("CF Client Secret", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_client_secret", "cf.client.secret"),
+			Entry("CF Client Secret", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_client_secret", "test-routing-cf-client-secret"),
 			Entry("Auto-generated kubelet password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/kubelet-password", "((kubelet-password))"),
 			Entry("Auto-generated admin password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/admin-password", "((kubo-admin-password))"),
 		)
@@ -98,7 +98,7 @@ var _ = Describe("Generate manifest", func() {
 			Expect(stdout).To(gbytes.Say("tls-kubernetes"))
 		})
 
-		It("should include an alternative name with master.kubo for the tls-kubernetes variable", func() {
+		It("should include an alternative name with master.cfcr.internal for the tls-kubernetes variable", func() {
 			status, err := bash.Run("main", []string{kuboEnv, "cucumber", "director_uuid"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
@@ -106,7 +106,7 @@ var _ = Describe("Generate manifest", func() {
 			Expect(stdout).To(gbytes.Say("variables:"))
 			Expect(stdout).To(gbytes.Say("tls-kubernetes"))
 			Expect(stdout).To(gbytes.Say("alternative_names:"))
-			Expect(stdout).To(gbytes.Say("master.kubo"))
+			Expect(stdout).To(gbytes.Say("master.cfcr.internal"))
 		})
 
 		It("should default the authorization mode property to ABAC", func() {
