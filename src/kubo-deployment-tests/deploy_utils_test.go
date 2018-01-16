@@ -68,6 +68,28 @@ var _ = Describe("DeployUtils", func() {
 			Expect(code).To(Equal(0))
 			Expect(stderr).NotTo(gbytes.Say("the-secret"))
 		})
+
+	})
+
+	Describe("deploy_to_bosh", func() {
+		It("Should hide secrets even when debug flag is set", func() {
+			bash.Source(pathToScript("lib/deploy_utils"), nil)
+
+			bash.Export("BOSH_ENV", "kubo-env")
+			bash.Source("", func(string) ([]byte, error) {
+				return []byte(fmt.Sprintf("export PATH=%s:$PATH", pathFromRoot("bin"))), nil
+			})
+
+			getBoshSecretMock := Mock("get_bosh_secret", `echo "the-secret"`)
+			boshCliMock := Mock("bosh", `echo -n "$@"`)
+			ApplyMocks(bash, []Gob{getBoshSecretMock, boshCliMock})
+
+			bash.Export("DEBUG", "1")
+			code, err := bash.Run("set -x; deploy_to_bosh", []string{"bosh_manifest", "deployment_name"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr).NotTo(gbytes.Say("the-secret"))
+		})
 	})
 
 	Describe("export_bosh_environment", func() {
@@ -120,7 +142,7 @@ var _ = Describe("DeployUtils", func() {
 			code, err := bash.Run("deploy_to_bosh", []string{"manifest", "deployment-name"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
-			Expect(stderr).To(gbytes.Say("bosh -d deployment-name -n deploy --no-redact -"))
+			Expect(stderr).To(gbytes.Say("bosh -d deployment-name -n deploy -"))
 		})
 	})
 

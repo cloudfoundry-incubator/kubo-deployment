@@ -6,12 +6,14 @@ export_bosh_environment() {
   export BOSH_NAME=$(basename ${BOSH_ENV})
 }
 
+restore_debug_output() {
+  [[ -z "$DEBUG" ]] || set -x
+}
+
 get_bosh_secret() {
   set +x
   get_setting "creds.yml" "/bosh_admin_client_secret"
-  if [[ -n "${DEBUG}" ]]; then
-    set -x
-  fi
+  restore_debug_output
 }
 
 get_setting() {
@@ -35,9 +37,7 @@ set_cloud_config() {
   set +x
   local cloud_config=$(generate_cloud_config ${BOSH_ENV})
   echo "$cloud_config" | BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh -n -e "${BOSH_NAME}" update-cloud-config -
-  if [[ -n "${DEBUG}" ]]; then
-    set -x
-  fi
+  restore_debug_output
 }
 
 check_for_existing_deployment() {
@@ -51,9 +51,7 @@ check_for_existing_deployment() {
   set +x
   BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) \
                     bosh deployment -d ${deployment_name} | xargs echo -n
-  if [[ -n "${DEBUG}" ]]; then
-    set -x
-  fi
+  restore_debug_output
 }
 
 deploy_to_bosh() {
@@ -65,7 +63,9 @@ deploy_to_bosh() {
     exit 1
   fi
 
-  echo "${bosh_manifest}" | BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh -d ${deployment_name} -n deploy --no-redact -
+  set +x
+  echo "${bosh_manifest}" | BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh -d ${deployment_name} -n deploy -
+  restore_debug_output
 }
 
 create_and_upload_release() {
@@ -76,7 +76,7 @@ create_and_upload_release() {
     pushd "$release_dirname"
       set +x
       BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh create-release --force --name "${release_name}"
-      [ -z "$DEBUG" ] || set -x
+      restore_debug_output
       upload_release "--name=${release_name}"
     popd
   else
@@ -89,9 +89,7 @@ upload_release() {
   local release_name=$1
   set +x
   BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh upload-release "$release_name"
-  if [[ -n "${DEBUG}" ]]; then
-    set -x
-  fi
+  restore_debug_output
 }
 
 set_ops_file_if_path_exists() {
@@ -158,7 +156,7 @@ generate_manifest() {
   local ops_dir="${manifest_dir}/ops-files"
   set +x
   local manifest="$(cat "${manifest_path}")"
-  [ -z "$DEBUG" ] || set -x
+  restore_debug_output
   local routing_mode="$(bosh int "${director_path}" --path='/routing_mode')"
   local iaas="$(bosh int "${director_path}" --path='/iaas')"
   local existing_deployment=$(check_for_existing_deployment "${deployment_name}" 2>/dev/null)
@@ -260,7 +258,7 @@ generate_manifest() {
     --var deployment_name="${deployment_name}" \
     --var director_uuid="${director_uuid}" \
     ${interpolate_arguments})
-  [ -z "$DEBUG" ] || set -x
+  restore_debug_output
 
   printf "%s" "${manifest}"
 }

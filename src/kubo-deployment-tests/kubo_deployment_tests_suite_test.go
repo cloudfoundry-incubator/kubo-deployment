@@ -9,11 +9,12 @@ import (
 	"runtime"
 	"testing"
 
-	homedir "github.com/mitchellh/go-homedir"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/mitchellh/go-homedir"
 	"github.com/onsi/gomega/gbytes"
-	basher "github.com/progrium/go-basher"
+	"github.com/onsi/gomega/types"
+	"github.com/progrium/go-basher"
 )
 
 var (
@@ -30,6 +31,10 @@ var (
 
 func pathToScript(name string) string {
 	return pathFromRoot("bin/" + name)
+}
+
+func matchDebugOutput(value string) types.GomegaMatcher {
+	return MatchRegexp("\\++ .*?" + value)
 }
 
 func pathFromRoot(relativePath string) string {

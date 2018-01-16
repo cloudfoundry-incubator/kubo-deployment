@@ -10,7 +10,6 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
-	"github.com/onsi/gomega/types"
 )
 
 var _ = Describe("Deploy BOSH", func() {
@@ -129,10 +128,6 @@ var _ = Describe("Deploy BOSH", func() {
 			boshMock := MockOrCallThrough("bosh", `echo "bosh $@" >&2`, "[ $1 == 'int' ]")
 			ApplyMocks(bash, []Gob{boshMock})
 		})
-
-		matchDebugOutput := func(value string) types.GomegaMatcher {
-			return MatchRegexp("\\++ .*?" + value)
-		}
 
 		It("on a GCP environment", func() {
 			code, err := bash.Run("main", []string{validGcpEnvironment, mockKeyFile})
