@@ -18,7 +18,7 @@ get_setting() {
   local file_name=$1
   local value_path=$2
 
-  bosh-cli int ${BOSH_ENV}/${file_name} --path "${value_path}" | xargs echo -n
+  bosh int ${BOSH_ENV}/${file_name} --path "${value_path}" | xargs echo -n
 }
 
 get_setting_with_default() {
@@ -34,7 +34,7 @@ get_setting_with_default() {
 set_cloud_config() {
   set +x
   local cloud_config=$(generate_cloud_config ${BOSH_ENV})
-  echo "$cloud_config" | BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli -n -e "${BOSH_NAME}" update-cloud-config -
+  echo "$cloud_config" | BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh -n -e "${BOSH_NAME}" update-cloud-config -
   if [[ -n "${DEBUG}" ]]; then
     set -x
   fi
@@ -50,7 +50,7 @@ check_for_existing_deployment() {
 
   set +x
   BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) \
-                    bosh-cli deployment -d ${deployment_name} | xargs echo -n
+                    bosh deployment -d ${deployment_name} | xargs echo -n
   if [[ -n "${DEBUG}" ]]; then
     set -x
   fi
@@ -65,7 +65,7 @@ deploy_to_bosh() {
     exit 1
   fi
 
-  echo "${bosh_manifest}" | BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli -d ${deployment_name} -n deploy --no-redact -
+  echo "${bosh_manifest}" | BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh -d ${deployment_name} -n deploy --no-redact -
 }
 
 create_and_upload_release() {
@@ -75,7 +75,7 @@ create_and_upload_release() {
   if [ -d "$release_dirname" ]; then
     pushd "$release_dirname"
       set +x
-      BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh-cli create-release --force --name "${release_name}"
+      BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) bosh create-release --force --name "${release_name}"
       [ -z "$DEBUG" ] || set -x
       upload_release "--name=${release_name}"
     popd
@@ -88,7 +88,7 @@ create_and_upload_release() {
 upload_release() {
   local release_name=$1
   set +x
-  BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh-cli upload-release "$release_name"
+  BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret)  bosh upload-release "$release_name"
   if [[ -n "${DEBUG}" ]]; then
     set -x
   fi
@@ -99,7 +99,7 @@ set_ops_file_if_path_exists() {
   local variable_yaml_path="$2"
   local ops_file_path="$3"
 
-  if bosh-cli int "$variables_file" --path="$variable_yaml_path" &>/dev/null; then
+  if bosh int "$variables_file" --path="$variable_yaml_path" &>/dev/null; then
     echo " --ops-file=\"$ops_file_path\""
   fi
 }
@@ -109,7 +109,7 @@ set_ops_file_if_true() {
   local variable_yaml_path="$2"
   local ops_file_path="$3"
 
-  value=$(bosh-cli int "$variables_file" --path="$variable_yaml_path" 2> /dev/null)
+  value=$(bosh int "$variables_file" --path="$variable_yaml_path" 2> /dev/null)
 
   if [[ $value = 'true' ]]; then
     echo " --ops-file=\"$ops_file_path\""
@@ -137,7 +137,7 @@ set_default_var_if_path_does_not_exist() {
   local variable_yaml_path="$2"
   local default_value="$3"
 
-  if [[ -z "$(bosh-cli int "${variables_file}" --path="${variable_yaml_path}" 2>/dev/null)" ]]; then
+  if [[ -z "$(bosh int "${variables_file}" --path="${variable_yaml_path}" 2>/dev/null)" ]]; then
     echo " --var ${variable_yaml_path#/}=${default_value}"
   fi
 }
@@ -159,8 +159,8 @@ generate_manifest() {
   set +x
   local manifest="$(cat "${manifest_path}")"
   [ -z "$DEBUG" ] || set -x
-  local routing_mode="$(bosh-cli int "${director_path}" --path='/routing_mode')"
-  local iaas="$(bosh-cli int "${director_path}" --path='/iaas')"
+  local routing_mode="$(bosh int "${director_path}" --path='/routing_mode')"
+  local iaas="$(bosh int "${director_path}" --path='/iaas')"
   local existing_deployment=$(check_for_existing_deployment "${deployment_name}" 2>/dev/null)
   local interpolate_arguments="$(set_ops_file_if_path_exists \
     "${director_path}" \
@@ -220,15 +220,15 @@ generate_manifest() {
   if [[ "aws" == "${iaas}" ]]; then
     interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/aws/lb.yml\""
   elif [[ "gcp" == "${iaas}" ]]; then
-    if ! bosh-cli int "${director_path}" --path='/service_account_worker' &>/dev/null; then
+    if ! bosh int "${director_path}" --path='/service_account_worker' &>/dev/null; then
       interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/gcp/add-service-key-worker.yml\""
     fi
 
-    if ! bosh-cli int "${director_path}" --path='/service_account_master' &>/dev/null; then
+    if ! bosh int "${director_path}" --path='/service_account_master' &>/dev/null; then
       interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/gcp/add-service-key-master.yml\""
     fi
   elif [[ "vsphere" == "${iaas}" ]]; then
-    if ! bosh-cli int "${director_path}" --path='/vcenter_rp' &>/dev/null; then
+    if ! bosh int "${director_path}" --path='/vcenter_rp' &>/dev/null; then
       interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/vsphere/set-working-dir-no-rp.yml\""
     fi
   fi
@@ -237,14 +237,14 @@ generate_manifest() {
     interpolate_arguments+=" --ops-file=\"${ops_dir}/misc/first-time-deploy.yml\""
   fi
 
-  if bosh-cli int "${director_path}" --path='/addons_spec_path' &> /dev/null; then
-    local addon_path="${bosh_environment}/$(bosh-cli int "${director_path}" --path='/addons_spec_path')"
+  if bosh int "${director_path}" --path='/addons_spec_path' &> /dev/null; then
+    local addon_path="${bosh_environment}/$(bosh int "${director_path}" --path='/addons_spec_path')"
     if [[ ! -f "${addon_path}" ]]; then
       echo "No file exists at the path specified in addons_spec_path property of director.yml" >&2
       exit 1
     fi
 
-    if ! bosh-cli int "${addon_path}" &> /dev/null; then
+    if ! bosh int "${addon_path}" &> /dev/null; then
       echo "Invalid yaml at the path specified for the addons_spec_path property of director.yml" >&2
       exit 1
     fi
@@ -253,7 +253,7 @@ generate_manifest() {
   fi
 
   set +x
-  local manifest=$(bosh-cli int <(echo "${manifest}") --ops-file="${ops_dir}/misc/dev.yml" \
+  local manifest=$(bosh int <(echo "${manifest}") --ops-file="${ops_dir}/misc/dev.yml" \
     --ops-file="${ops_dir}/misc/bootstrap.yml" \
     --ops-file="${ops_dir}/use-runtime-config-bosh-dns.yml" \
     --vars-file="${director_path}" \

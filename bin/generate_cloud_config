@@ -19,11 +19,11 @@ ops_string_for_service_accounts() {
   local bosh_env=$1
   local ops_string=""
 
-  if ! bosh-cli int "${bosh_env}/director.yml" --path='/service_account_master' &> /dev/null; then
+  if ! bosh int "${bosh_env}/director.yml" --path='/service_account_master' &> /dev/null; then
     ops_string="${ops_string} --ops-file=$(repo_directory)/manifests/ops-files/iaas/gcp/cloud-config/remove-service-account-master.yml"
   fi
 
-  if ! bosh-cli int "${bosh_env}/director.yml" --path='/service_account_worker' &> /dev/null; then
+  if ! bosh int "${bosh_env}/director.yml" --path='/service_account_worker' &> /dev/null; then
     ops_string="${ops_string} --ops-file=$(repo_directory)/manifests/ops-files/iaas/gcp/cloud-config/remove-service-account-worker.yml"
   fi
   echo "$ops_string"
@@ -36,7 +36,7 @@ main() {
   fi
 
   local bosh_env=$(cd "$1"; pwd)
-  local bosh_iaas="$(bosh-cli int ${bosh_env}/director.yml --path '/iaas')"
+  local bosh_iaas="$(bosh int ${bosh_env}/director.yml --path '/iaas')"
   local cloud_config
   local ops_string=""
   local cloud_args=""
@@ -53,9 +53,9 @@ main() {
      ops_string="${ops_string} $(ops_string_for_service_accounts "$bosh_env")"
   fi
 
-  if [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "cf" ]; then
+  if [ "$(bosh int "${bosh_env}/director.yml" --path='/routing_mode')" == "cf" ]; then
     cloud_args=$(echo -n "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
-  elif [ "$(bosh-cli int "${bosh_env}/director.yml" --path='/routing_mode')" == "iaas" ]; then
+  elif [ "$(bosh int "${bosh_env}/director.yml" --path='/routing_mode')" == "iaas" ]; then
     if [ "${bosh_iaas}" == "gcp" ]; then
        cloud_args=$(echo -n "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/iaas/gcp/cloud-config/load-balancer-target-pools.yml")
     elif [ "${bosh_iaas}" == "aws" ]; then
@@ -67,7 +67,7 @@ main() {
     cloud_args=$(echo -n "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
   fi
 
-  bosh-cli int ${cloud_args} ${ops_string}
+  bosh int ${cloud_args} ${ops_string}
 }
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"

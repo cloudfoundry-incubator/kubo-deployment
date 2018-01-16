@@ -28,7 +28,7 @@ var _ = Describe("Deploy BOSH", func() {
 	mockKeyFile := pathFromRoot("README.md")
 	Context("fails", func() {
 		BeforeEach(func() {
-			boshCli := SpyAndConditionallyCallThrough("bosh-cli", "[[ \"$1\" =~ ^int ]]")
+			boshCli := SpyAndConditionallyCallThrough("bosh", "[[ \"$1\" =~ ^int ]]")
 			ApplyMocks(bash, []Gob{boshCli})
 		})
 
@@ -61,7 +61,7 @@ var _ = Describe("Deploy BOSH", func() {
 	Context("succeeds", func() {
 		BeforeEach(func() {
 			bash.Source(pathToScript("deploy_bosh"), nil)
-			boshMock := MockOrCallThrough("bosh-cli", `echo "bosh-cli $@" >&2`, "[ $1 == 'int' ]")
+			boshMock := MockOrCallThrough("bosh", `echo "bosh $@" >&2`, "[ $1 == 'int' ]")
 			ApplyMocks(bash, []Gob{boshMock})
 		})
 
@@ -126,7 +126,7 @@ var _ = Describe("Deploy BOSH", func() {
 			bash.Export("DEBUG", "1")
 			bash.Export("PS4", "+ ")
 			bash.Source(pathToScript("deploy_bosh"), nil)
-			boshMock := MockOrCallThrough("bosh-cli", `echo "bosh-cli $@" >&2`, "[ $1 == 'int' ]")
+			boshMock := MockOrCallThrough("bosh", `echo "bosh $@" >&2`, "[ $1 == 'int' ]")
 			ApplyMocks(bash, []Gob{boshMock})
 		})
 

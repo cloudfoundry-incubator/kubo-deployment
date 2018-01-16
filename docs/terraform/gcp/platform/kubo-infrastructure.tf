@@ -287,8 +287,9 @@ unzip terraform*.zip -d /usr/local/bin
 rm /etc/motd
 
 cd
-sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.27-linux-amd64 -o /usr/bin/bosh-cli
-sudo chmod a+x /usr/bin/bosh-cli
+sudo curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.27-linux-amd64 -o /usr/bin/bosh
+sudo chmod a+x /usr/bin/bosh
+sudo ln -s /usr/bin/bosh /usr/bin/bosh-cli
 sudo curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/bin/kubectl
 sudo chmod a+x /usr/bin/kubectl
 curl -L https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/1.4.0/credhub-linux-1.4.0.tgz | tar zxv

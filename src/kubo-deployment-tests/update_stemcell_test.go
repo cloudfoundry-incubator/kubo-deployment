@@ -33,14 +33,13 @@ var _ = Describe("UpdateStemcell", func() {
 		ApplyMocks(bash, []Gob{manifestFileFunctionMock})
 	})
 
-
 	It("should update the manifest with the given version when there's a different version", func() {
 
 		exitCode, err := bash.Run("main", []string{"new-stemcell-version"})
 		Expect(err).ToNot(HaveOccurred())
 		Expect(exitCode).To(Equal(0))
 
-		cmd := exec.Command("bosh-cli", "int", mockManifest, "--path=/stemcells/0/version")
+		cmd := exec.Command("bosh", "int", mockManifest, "--path=/stemcells/0/version")
 		session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 		Expect(err).ToNot(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
@@ -52,7 +51,7 @@ var _ = Describe("UpdateStemcell", func() {
 		fileInfo, err := os.Stat(mockManifest)
 		lastModTimeBefore := fileInfo.ModTime()
 
-		cmd := exec.Command("bosh-cli", "int", mockManifest, "--path=/stemcells/0/version")
+		cmd := exec.Command("bosh", "int", mockManifest, "--path=/stemcells/0/version")
 		session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 		Expect(err).ToNot(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))

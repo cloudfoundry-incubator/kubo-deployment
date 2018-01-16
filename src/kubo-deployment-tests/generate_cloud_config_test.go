@@ -23,15 +23,15 @@ var _ = Describe("Generate cloud config", func() {
 		})
 	})
 
-	It("calls bosh-cli with appropriate arguments", func() {
-		boshMock := SpyAndCallThrough("bosh-cli")
+	It("calls bosh with appropriate arguments", func() {
+		boshMock := SpyAndCallThrough("bosh")
 		ApplyMocks(bash, []Gob{boshMock})
 		status, err := bash.Run("main", []string{kuboEnv})
 
 		Expect(err).NotTo(HaveOccurred())
 		Expect(status).To(Equal(0))
 		cloudConfig := pathFromRoot("configurations/gcp/cloud-config.yml")
-		boshCmd := fmt.Sprintf("bosh-cli int %s --vars-file %s/director.yml", cloudConfig, kuboEnv)
+		boshCmd := fmt.Sprintf("bosh int %s --vars-file %s/director.yml", cloudConfig, kuboEnv)
 		Expect(stderr).To(gbytes.Say(boshCmd))
 	})
 
@@ -90,7 +90,7 @@ var _ = Describe("Generate cloud config", func() {
 		Expect(stdout).To(gbytes.Say("machine_type: foo"))
 	})
 
-	It("hides cloud-config from output with debug flag", func(){
+	It("hides cloud-config from output with debug flag", func() {
 		bash.Export("DEBUG", "1")
 		status, err := bash.Run("main", []string{kuboEnv})
 		Expect(err).NotTo(HaveOccurred())
