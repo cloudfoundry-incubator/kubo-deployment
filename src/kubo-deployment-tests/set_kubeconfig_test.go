@@ -16,9 +16,8 @@ var _ = Describe("set_kubeconfig", func() {
 		bash.Source("", func(string) ([]byte, error) {
 			return repoDirectoryFunction, nil
 		})
-		boshMock := MockOrCallThrough("bosh", `echo "Secret data"`, `[[ "$1" =~ ^int ]] && ! [[ "$2" =~ creds.yml$ ]]`)
-		credMock := Mock("credhub", `echo '{"value": {"ca": "certiffy cat"}}'`)
-		mocks := []Gob{Spy("kubectl"), boshMock, credMock}
+		credMock := Mock("credhub", `set +x; echo '{"value": {"ca": "certiffy cat"}}'; [[ -z "$DEBUG" ]] || set -x`)
+		mocks := []Gob{Spy("kubectl"), credMock}
 		ApplyMocks(bash, mocks)
 
 	})
@@ -62,11 +61,20 @@ var _ = Describe("set_kubeconfig", func() {
 				Expect(stderr).To(gbytes.Say("kubectl config use-context kubo:TheDirector:deployment-name"))
 			})
 		})
+
+		It("Should hide secrets even when debug flag is set", func() {
+			bash.Export("DEBUG", "1")
+			code, err := bash.Run("main", []string{kuboEnv, "deployment-name"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr.Contents()).NotTo(matchDebugOutput("MOCK_PASSWORD"))
+			Expect(stderr.Contents()).NotTo(matchDebugOutput("certiffy cat"))
+		})
 	})
 
 	Context("when kubernetes_master_port is missing", func() {
 		It("should set default value to 8443", func() {
-			status, err := bash.Run("main", []string{filepath.Join(testEnvironmentPath, "test_gcp"), "deployment-name"})
+			status, err := bash.Run("main", []string{filepath.Join(testEnvironmentPath, "test_gcp_with_creds"), "deployment-name"})
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
