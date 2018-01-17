@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-set -e
-set -o pipefail
+set -e -o pipefail
 
-[ -z "${DEBUG}" ] || set -x
+[[ -z "${DEBUG:-}" ]] || set -x
 
 print_usage() {
 cat << EOF

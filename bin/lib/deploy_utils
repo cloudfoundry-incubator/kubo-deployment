@@ -7,7 +7,7 @@ export_bosh_environment() {
 }
 
 restore_debug_output() {
-  [[ -z "$DEBUG" ]] || set -x
+  [[ -z "${DEBUG:-}" ]] || set -x
 }
 
 get_bosh_secret() {

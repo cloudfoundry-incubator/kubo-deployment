@@ -2,7 +2,7 @@
 
 set -e -o pipefail
 
-[ -z "$DEBUG" ] || set -x
+[[ -z "${DEBUG:-}" ]] || set -x
 
 print_help() {
   echo "Usage: ${BASH_SOURCE[0]} [KUBO_ENV] [DEPLOYMENT_NAME] [DIRECTOR_UUID]"
