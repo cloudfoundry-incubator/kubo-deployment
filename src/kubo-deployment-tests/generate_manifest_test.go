@@ -236,13 +236,13 @@ var _ = Describe("Generate manifest", func() {
 			Expect(pathValue).To(Equal(""))
 		})
 
-		It("should embed addons-specs", func() {
+		It("should add an addons-specs instance group", func() {
 			opsfileEnv := filepath.Join(testEnvironmentPath, "with_addons")
 			status, err := bash.Run("main", []string{opsfileEnv, "name", "director_uuid"})
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
-			pathValue, err := propertyFromYaml("/instance_groups/name=master/jobs/name=apply-specs/properties/addons-spec", stdout.Contents())
+			pathValue, err := propertyFromYaml("/instance_groups/name=apply-addons/jobs/name=apply-specs/properties/addons-spec", stdout.Contents())
 
 			Expect(pathValue).To(Equal("|-\n  valid:\n    key: value"))
 		})

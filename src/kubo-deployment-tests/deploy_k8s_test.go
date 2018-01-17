@@ -13,6 +13,7 @@ import (
 
 var _ = Describe("Deploy K8s", func() {
 	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp_with_creds")
+	addonsEnvironment := path.Join(testEnvironmentPath, "with_addons")
 
 	BeforeEach(func() {
 		bash.Source(pathToScript("deploy_k8s"), nil)
@@ -83,7 +84,7 @@ var _ = Describe("Deploy K8s", func() {
 		Expect(stderr).To(gbytes.Say("deploy_to_bosh"))
 	})
 
-	Context("When apply-specs is present in the manifest", func() {
+	Context("When apply-addons is present in the manifest", func() {
 		It("should run apply-specs errand", func() {
 			cloudConfigMock := Mock("set_cloud_config", "echo")
 			exportBoshEnvironmentMock := Mock("export_bosh_environment", "echo")
@@ -95,7 +96,7 @@ var _ = Describe("Deploy K8s", func() {
 			boshMock := MockOrCallThrough("bosh", `echo -n "0"`, `! [[ "$4" =~ 'apply-specs' ]]`)
 			ApplyMocks(bash, []Gob{boshMock})
 
-			code, err := bash.Run("main", []string{validGcpEnvironment, "deployment", "skip"})
+			code, err := bash.Run("main", []string{addonsEnvironment, "deployment", "skip"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 			Expect(stderr).To(gbytes.Say("run-errand apply-specs"))

@@ -83,7 +83,7 @@ main() {
 
   deploy_to_bosh "${manifest}" "${deployment_name}"
 
-  if bosh int <(echo -n "${manifest}") --path /instance_groups/name=master/jobs/name=apply-specs &>/dev/null; then
+  if bosh int <(echo -n "${manifest}") --path /instance_groups/name=apply-addons &>/dev/null; then
     bosh -d "${deployment_name}" run-errand apply-specs
   fi
 }
