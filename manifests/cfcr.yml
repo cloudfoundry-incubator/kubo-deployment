@@ -98,6 +98,8 @@ instance_groups:
       authorization-mode: rbac
       tls:
         kubernetes: ((tls-kubernetes))
+        heapster: ((tls-heapster))
+        influxdb: ((tls-influxdb))
         kubernetes-dashboard: ((tls-kubernetes-dashboard))
     consumes:
       cloud-provider: {from: master}
@@ -238,6 +240,19 @@ variables:
     common_name: etcd.cfcr.internal
     alternative_names:
     - "*.etcd.cfcr.internal"
+- name: tls-heapster
+  type: certificate
+  options:
+    ca: kubo_ca
+    common_name: heapster
+    alternative_names:
+    - "heapster.kube-system.svc.cluster.local"
+- name: tls-influxdb
+  type: certificate
+  options:
+    ca: kubo_ca
+    common_name: monitoring-influxdb
+    alternative_names: []
 
 - name: kubernetes-dashboard-ca
   type: certificate
