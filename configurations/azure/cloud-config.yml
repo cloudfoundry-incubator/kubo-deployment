@@ -1,0 +1,58 @@
+azs:
+- name: z1
+- name: z2
+- name: z3
+
+vm_types:
+- name: minimal
+  cloud_properties:
+    instance_type: Standard_D1_V2
+    ephemeral_disk:
+      use_root_disk: true
+    root_disk:
+      size: 51200
+    availability_set: ((prefix))-mini
+- name: master
+  cloud_properties:
+    instance_type: Standard_D1_V2
+    ephemeral_disk:
+      use_root_disk: true
+    root_disk:
+      size: 51200
+    availability_set: ((prefix))-master
+- name: worker
+  cloud_properties:
+    instance_type: Standard_D3_V2
+    ephemeral_disk:
+      use_root_disk: true
+    root_disk:
+      size: 131072
+    availability_set: ((prefix))-worker
+- name: compile
+  cloud_properties:
+    instance_type: Standard_D2_V2
+    ephemeral_disk:
+      use_root_disk: true
+    root_disk:
+      size: 131072
+
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: ((internal_cidr))
+    gateway: ((internal_gw))
+    azs: [z1, z2, z3]
+    dns: [((dns_recursor_ip))]
+    reserved: [((internal_gw))/30]
+    cloud_properties:
+      resource_group: ((vnet_resource_group_name))
+      virtual_network_name: ((vnet_name))
+      subnet_name: ((subnet_name))
+
+compilation:
+  workers: 5
+  reuse_compilation_vms: true
+  az: z1
+  vm_type: compile
+  network: default

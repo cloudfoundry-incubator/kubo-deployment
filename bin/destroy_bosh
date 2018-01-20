@@ -44,8 +44,8 @@ main() {
 
   iaas=$(bosh int "${bosh_env}/director.yml" --path /iaas)
 
-  if ! [[ "$iaas" =~ ^(gcp|openstack|vsphere|aws)$ ]]; then
-    echo "Supported platforms are: 'gcp', 'openstack', 'vsphere', 'aws'"
+  if ! [[ "$iaas" =~ ^(gcp|openstack|vsphere|azure|aws)$ ]]; then
+    echo "Supported platforms are: 'gcp', 'openstack', 'azure', 'vsphere', 'aws'"
     echo ""
     print_usage
     exit 1
@@ -74,6 +74,21 @@ destroy_gcp() {
     --var-file gcp_credentials_json="${service_account}" \
     --vars-store "${bosh_env}/creds.yml" \
     --vars-file "${bosh_env}/director.yml"
+}
+
+destroy_azure() {
+  local bosh_env key_filename
+  bosh_env="$1"
+  key_filename="$2"
+
+  bosh clean-up --all -n
+  bosh delete-env "$(repo_directory)/bosh-deployment/bosh.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/azure/cpi.yml" \
+    --state "${bosh_env}/state.json" \
+    --var-file private_key="${key_filename}" \
+    --vars-store "${bosh_env}/creds.yml" \
+    --vars-file "${bosh_env}/director.yml" \
+    --vars-file "${bosh_env}/director-secrets.yml"
 }
 
 destroy_aws() {
