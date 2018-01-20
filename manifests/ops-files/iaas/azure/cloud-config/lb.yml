@@ -1,0 +1,3 @@
+- type: replace
+  path: /vm_types/name=master/cloud_properties/load_balancer?
+  value: ((master_target_pool))
