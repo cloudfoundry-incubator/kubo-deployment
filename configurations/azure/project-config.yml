@@ -1,0 +1,17 @@
+location: # Azure location for the cluster
+resource_group_name:  #  Azure Resource Group for the cluster
+vnet_resource_group_name:  # Azure Resource Group for the vnet/subnet
+vnet_name: # Azure VNet for BOSH
+subnet_name: # Azure Subnet name
+default_security_group: # Azure NSG attached to the subnet 
+azure_cloud_name: AzurePublicCloud # can also be AzureUSGovernmentCloud, AzureChinaCloud, or AzureGermanCloud. 
+dns_recursor_ip: 168.63.129.16
+prefix: cfcr # unique prefix for availability sets
+
+# IaaS routing mode settings
+# Comment out this section when using CF routing mode
+routing_mode: iaas
+kubernetes_master_host: # IP address that can be used to reach the Kubernetes API, usually the address of a load balancer or static IP
+kubernetes_master_port: 8443 # Port for the K8S API
+master_target_pool: #  Azure load balancer name that master nodes will be a part of
+
