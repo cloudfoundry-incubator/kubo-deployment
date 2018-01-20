@@ -152,6 +152,8 @@ instance_groups:
     release: kubo
   - name: flanneld
     release: kubo
+  - name: cifs-utils
+    release: kubo
   - name: docker
     release: docker
     properties:
