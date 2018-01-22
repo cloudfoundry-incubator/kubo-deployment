@@ -254,6 +254,7 @@ generate_manifest() {
   local manifest=$(bosh int <(echo "${manifest}") --ops-file="${ops_dir}/misc/dev.yml" \
     --ops-file="${ops_dir}/misc/bootstrap.yml" \
     --ops-file="${ops_dir}/use-runtime-config-bosh-dns.yml" \
+    --ops-file="${ops_dir}/syslog_release.yml" \
     --vars-file="${director_path}" \
     --var deployment_name="${deployment_name}" \
     --var director_uuid="${director_uuid}" \

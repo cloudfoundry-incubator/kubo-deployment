@@ -15,6 +15,10 @@ releases:
   sha1: e38d3e5edd16ce2dca778440b636ab1ea61f892f
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=0.0.11
   version: 0.0.11
+- name: syslog
+  url: http://bosh.io/d/github.com/cloudfoundry/syslog-release?v=11.1.0
+  version: 11.1.0
+  sha1: 0dc6bdb820584d915be548dc32c99168230b8eb3
 
 stemcells:
 - alias: trusty
@@ -50,8 +54,6 @@ instance_groups:
   - name: default
   azs: [z1,z2,z3]
   jobs:
-  - name: secure-var-vcap
-    release: kubo
   - name: cloud-provider
     release: kubo
     properties: {}
@@ -130,8 +132,6 @@ instance_groups:
   - name: default
   azs: [z1,z2,z3]
   jobs:
-  - name: secure-var-vcap
-    release: kubo
   - name: flanneld
     release: kubo
   - name: docker

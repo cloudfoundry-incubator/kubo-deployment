@@ -1,0 +1,25 @@
+- type: replace
+  path: /instance_groups/name=master/jobs/-
+  value:
+    name: syslog_forwarder
+    release: syslog
+    properties:
+      syslog:
+        address: logs.papertrailapp.com
+        port: 19677
+        transport: tcp
+        tls_enabled: true
+        permitted_peer: "*.papertrailapp.com"
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/-
+  value:
+    name: syslog_forwarder
+    release: syslog
+    properties:
+      syslog:
+        address: logs.papertrailapp.com
+        port: 19677
+        transport: tcp
+        tls_enabled: true
+        permitted_peer: "*.papertrailapp.com"
