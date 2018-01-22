@@ -30,4 +30,15 @@ var _ = Describe("Setup BOSH environment", func() {
 			Expect(string(stdout.Contents())).To(ContainSubstring(fmt.Sprintf("%s=%s", key, value)))
 		}
 	})
+
+	It("Succeeds in a strict context", func() {
+		bash.Export("BOSH_ENV", kuboEnv)
+		bash.Source("", func(_ string) ([]byte, error) {
+			return []byte("set -eu"), nil
+		})
+		Expect(bash.Source(pathToScript("set_bosh_environment"), nil)).To(Succeed())
+		exitCode, err := bash.Run("echo", nil)
+		Expect(exitCode).To(Equal(0))
+		Expect(err).NotTo(HaveOccurred())
+	})
 })

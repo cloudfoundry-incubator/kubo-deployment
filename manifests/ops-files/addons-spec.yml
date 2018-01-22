@@ -1,7 +1,16 @@
 - type: replace
-  path: /instance_groups/name=master/jobs/-
+  path: /instance_groups/-
   value:
-    name: apply-specs
-    release: kubo
-    properties:
-      addons-spec: ((addons-spec))
+    name: apply-addons
+    instances: 1
+    networks:
+    - name: default
+    azs: [z1]
+    lifecycle: errand
+    jobs:
+    - name: apply-specs
+      release: kubo
+      properties:
+        addons-spec: ((addons-spec))
+    stemcell: trusty
+    vm_type: minimal

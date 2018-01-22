@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-[ -z "$DEBUG" ] || set -x
-
 set -o pipefail -e
+
+[[ -z "${DEBUG:-}" ]] || set -x
 
 echo "====================================="
 echo "|     BOSH K8S Cluster Deployer     |"
@@ -36,7 +36,7 @@ repo_directory() {
 
 get_director_uuid() {
   BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) \
-       bosh-cli int <(bosh-cli environment --json) --path=/Tables/0/Rows/0/uuid
+       bosh int <(bosh environment --json) --path=/Tables/0/Rows/0/uuid
 }
 
 get_deps() {
@@ -55,7 +55,7 @@ main() {
   local bosh_env="$(cd "${1}"; pwd -P)"
   local deployment_name="${2}"
   local release_source="${3}"
-  local platform=$(bosh-cli int ${bosh_env}/director.yml --path /iaas)
+  local platform=$(bosh int ${bosh_env}/director.yml --path /iaas)
 
   if [ -z "$platform" ]; then
    echo "${bosh_env} is not a valid BOSH environment."
@@ -80,16 +80,11 @@ main() {
   fi
 
   manifest=$("$(repo_directory)/bin/generate_kubo_manifest" "${bosh_env}" "${deployment_name}" "$(get_director_uuid)")
-  local existing_deployment=$(check_for_existing_deployment "${deployment_name}" 2>/dev/null)
-  if [[ -z "$existing_deployment" ]]; then
-    manifest=$(BOSH_ENVIRONMENT="${BOSH_NAME}" BOSH_CLIENT=bosh_admin BOSH_CLIENT_SECRET=$(get_bosh_secret) \
-        bosh-cli int <(echo "${manifest}") --ops-file=\""$(repo_directory)"/manifests/ops-files/misc/first-time-deploy.yml\")
-  fi
 
   deploy_to_bosh "${manifest}" "${deployment_name}"
 
-  if bosh-cli int <(echo -n "${manifest}") --path /instance_groups/name=master/jobs/name=apply-specs &>/dev/null; then
-    bosh-cli -d "${deployment_name}" run-errand apply-specs
+  if bosh int <(echo -n "${manifest}") --path /instance_groups/name=apply-addons &>/dev/null; then
+    bosh -d "${deployment_name}" run-errand apply-specs
   fi
 }
 

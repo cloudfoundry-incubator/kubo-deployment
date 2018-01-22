@@ -1,0 +1,5 @@
+uaa_ssl:
+  ca: TEST CERTIFICATE
+credhub_tls:
+  ca: ANOTHER TEST CERTIFICATE
+credhub_cli_password: MOCK_PASSWORD

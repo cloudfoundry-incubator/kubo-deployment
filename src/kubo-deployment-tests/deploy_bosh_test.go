@@ -10,7 +10,6 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
-	"github.com/onsi/gomega/types"
 )
 
 var _ = Describe("Deploy BOSH", func() {
@@ -28,7 +27,7 @@ var _ = Describe("Deploy BOSH", func() {
 	mockKeyFile := pathFromRoot("README.md")
 	Context("fails", func() {
 		BeforeEach(func() {
-			boshCli := SpyAndConditionallyCallThrough("bosh-cli", "[[ \"$1\" =~ ^int ]]")
+			boshCli := SpyAndConditionallyCallThrough("bosh", "[[ \"$1\" =~ ^int ]]")
 			ApplyMocks(bash, []Gob{boshCli})
 		})
 
@@ -61,7 +60,7 @@ var _ = Describe("Deploy BOSH", func() {
 	Context("succeeds", func() {
 		BeforeEach(func() {
 			bash.Source(pathToScript("deploy_bosh"), nil)
-			boshMock := MockOrCallThrough("bosh-cli", `echo "bosh-cli $@" >&2`, "[ $1 == 'int' ]")
+			boshMock := MockOrCallThrough("bosh", `echo "bosh $@" >&2`, "[ $1 == 'int' ]")
 			ApplyMocks(bash, []Gob{boshMock})
 		})
 
@@ -126,13 +125,9 @@ var _ = Describe("Deploy BOSH", func() {
 			bash.Export("DEBUG", "1")
 			bash.Export("PS4", "+ ")
 			bash.Source(pathToScript("deploy_bosh"), nil)
-			boshMock := MockOrCallThrough("bosh-cli", `echo "bosh-cli $@" >&2`, "[ $1 == 'int' ]")
+			boshMock := MockOrCallThrough("bosh", `echo "bosh $@" >&2`, "[ $1 == 'int' ]")
 			ApplyMocks(bash, []Gob{boshMock})
 		})
-
-		matchDebugOutput := func(value string) types.GomegaMatcher {
-			return MatchRegexp("\\++ .*?" + value)
-		}
 
 		It("on a GCP environment", func() {
 			code, err := bash.Run("main", []string{validGcpEnvironment, mockKeyFile})

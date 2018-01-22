@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-[ -z "$DEBUG" ] || set -x
-
 set -o pipefail -e
+
+[[ -z "${DEBUG:-}" ]] || set -x
 
 repo_directory() {
   echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)"

@@ -39,7 +39,7 @@ interpolate() {
   local tmp_creds_store
   tmp_creds_store=$(mktemp)
 
-  bosh-cli interpolate ${home}/manifests/cfcr.yml \
+  bosh interpolate ${home}/manifests/cfcr.yml \
     $@ \
     -o ${home}/manifests/ops-files/misc/local-config-server.yml \
     --vars-store ${tmp_creds_store} \
@@ -84,7 +84,7 @@ ensure_opsfiles_in_readme() {
 
   pushd ${home} > /dev/null
     for x in $@; do
-      local basename=$(echo $x | sed -e "s%$home/manifests/ops-files/%%")
+      local basename=$(echo $x | sed -e "s%$home/manifests/%%")
       if [ $(grep \($basename\) $readme -c) != "0" ]; then
         pass "$basename is in $(basename "$readme")"
       else
@@ -93,8 +93,8 @@ ensure_opsfiles_in_readme() {
     done;
   popd > /dev/null
 }
-
 ensure_opsfiles_in_tests() {
+
   local test=$1
   shift
 

@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-[ -z "$DEBUG" ] || set -x
-
 set -o pipefail -e
+
+[[ -z "${DEBUG:-}" ]] || set -x
 
 print_usage() {
   echo "Usage: $(basename "$0") [KUBO_ENV]"
   echo ""
   echo "KUBO_ENV is the path to your Kubo environment configuration folder"
   echo ""
-  echo "This script sets up an alias in bosh-cli for your KUBO_ENV"
+  echo "This script sets up an alias in bosh for your KUBO_ENV"
 }
 
 main() {
@@ -37,25 +37,21 @@ main() {
       exit 1
     fi
 
-    ca_cert=$(bosh-cli int "${bosh_env}/creds.yml" --path=/default_ca/ca)
+    ca_cert=$(bosh int "${bosh_env}/creds.yml" --path=/default_ca/ca)
     set +x
-    _bosh_client=${BOSH_CLIENT}
-    _bosh_client_secret=${BOSH_CLIENT_SECRET}
-    _bosh_ca_cert=${BOSH_CA_CERT}
+    _bosh_client=${BOSH_CLIENT:-}
+    _bosh_client_secret=${BOSH_CLIENT_SECRET:-}
+    _bosh_ca_cert=${BOSH_CA_CERT:-}
     export BOSH_CLIENT=bosh_admin
     export BOSH_CLIENT_SECRET=$(get_bosh_secret)
     export BOSH_CA_CERT="${ca_cert}"
-    if [[ -n "${DEBUG}" ]]; then
-      set -x
-    fi
-    bosh-cli alias-env "${BOSH_NAME}" -e "$bosh_director_hostname"
+    [[ -z "${DEBUG:-}" ]] || set -x
+    bosh alias-env "${BOSH_NAME}" -e "$bosh_director_hostname"
     set +x
     export BOSH_CLIENT=${_bosh_client}
     export BOSH_CLIENT_SECRET=${_bosh_client_secret}
     export BOSH_CA_CERT=${_bosh_ca_cert}
-    if [[ -n "${DEBUG}" ]]; then
-      set -x
-    fi
+    [[ -z "${DEBUG:-}" ]] || set -x
   popd > /dev/null
 }
 

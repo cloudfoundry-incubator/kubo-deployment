@@ -13,10 +13,11 @@ import (
 
 var _ = Describe("Deploy K8s", func() {
 	validGcpEnvironment := path.Join(testEnvironmentPath, "test_gcp_with_creds")
+	addonsEnvironment := path.Join(testEnvironmentPath, "with_addons")
 
 	BeforeEach(func() {
 		bash.Source(pathToScript("deploy_k8s"), nil)
-		boshMock := MockOrCallThrough("bosh-cli", `echo -n "3124.12"`, `[ "$1" == 'int' ]`)
+		boshMock := MockOrCallThrough("bosh", `echo -n "3124.12"`, `[ "$1" == 'int' ]`)
 		getDirectorUUIDMock := Mock("get_director_uuid", `echo -n "director-uuid"`)
 		ApplyMocks(bash, []Gob{boshMock, getDirectorUUIDMock})
 	})
@@ -32,7 +33,7 @@ var _ = Describe("Deploy K8s", func() {
 			code, err := bash.Run("main", []string{validGcpEnvironment, "deployment"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
-			Expect(stderr).To(gbytes.Say("bosh-cli upload-release kubo-release.tgz"))
+			Expect(stderr).To(gbytes.Say("bosh upload-release kubo-release.tgz"))
 		})
 	})
 
@@ -83,7 +84,7 @@ var _ = Describe("Deploy K8s", func() {
 		Expect(stderr).To(gbytes.Say("deploy_to_bosh"))
 	})
 
-	Context("When apply-specs is present in the manifest", func() {
+	Context("When apply-addons is present in the manifest", func() {
 		It("should run apply-specs errand", func() {
 			cloudConfigMock := Mock("set_cloud_config", "echo")
 			exportBoshEnvironmentMock := Mock("export_bosh_environment", "echo")
@@ -92,10 +93,10 @@ var _ = Describe("Deploy K8s", func() {
 
 			depsMock := Mock("get_deps", "echo")
 			ApplyMocks(bash, []Gob{depsMock})
-			boshMock := MockOrCallThrough("bosh-cli", `echo -n "0"`, `! [[ "$4" =~ 'apply-specs' ]]`)
+			boshMock := MockOrCallThrough("bosh", `echo -n "0"`, `! [[ "$4" =~ 'apply-specs' ]]`)
 			ApplyMocks(bash, []Gob{boshMock})
 
-			code, err := bash.Run("main", []string{validGcpEnvironment, "deployment", "skip"})
+			code, err := bash.Run("main", []string{addonsEnvironment, "deployment", "skip"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 			Expect(stderr).To(gbytes.Say("run-errand apply-specs"))
@@ -106,7 +107,7 @@ var _ = Describe("Deploy K8s", func() {
 var _ = Describe("get_director_uuid", func() {
 	It("should return UUID from bosh env command", func() {
 		bash.Source(pathToScript("deploy_k8s"), nil)
-		boshMock := MockOrCallThrough("bosh-cli", `echo -n \
+		boshMock := MockOrCallThrough("bosh", `echo -n \
 '{
   "Tables": [
 			{

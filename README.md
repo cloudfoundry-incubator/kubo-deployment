@@ -38,7 +38,7 @@ A specialized BOSH director manages the virtual machines for the Kubo instance. 
 
 ### Networking Topology - using IaaS Load Balancers
 
-![Diagram describing how traffic is routed to Kubo](docs/images/kubo-network.png)
+![Diagram describing how traffic is routed to Kubo](docs/images/cfcr-architecture.png)
 
 The nodes that run the Kubernetes API (master nodes) are exposed through an IaaS specific load balancer. The load balancer will have an external static IP address that is used as a public and internal endpoint for traffic to the Kubernetes API.
 

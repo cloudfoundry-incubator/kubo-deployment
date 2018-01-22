@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-[ -z "$DEBUG" ] || set -x
+[[ -z "${DEBUG:-}" ]] || set -x
 
 set -o pipefail -e
 
@@ -36,7 +36,7 @@ main() {
   get_deps
 
   export BOSH_ENV="$(cd "${1}"; pwd -P)"
-  local platform=$(bosh-cli int ${BOSH_ENV}/director.yml --path /iaas)
+  local platform=$(bosh int ${BOSH_ENV}/director.yml --path /iaas)
   local release_source="${2}"
 
   if [ -z "$platform" ]; then
@@ -53,7 +53,7 @@ main() {
   esac
 
 
-  stemcell_version=$(bosh-cli int "$(repo_directory)/manifests/cfcr.yml" --path /stemcells/0/version)
+  stemcell_version=$(bosh int "$(repo_directory)/manifests/cfcr.yml" --path /stemcells/0/version)
 
   source "$(repo_directory)/bin/set_bosh_environment"
   export BOSH_NAME="${BOSH_ENVIRONMENT}"
@@ -91,16 +91,16 @@ upload_stemcell() {
 
   case ${iaas} in
   "gcp")
-    bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-gce-light-stemcells/light-bosh-stemcell-${stemcell_version}-google-kvm-ubuntu-trusty-go_agent.tgz"
+    bosh upload-stemcell "https://s3.amazonaws.com/bosh-gce-light-stemcells/light-bosh-stemcell-${stemcell_version}-google-kvm-ubuntu-trusty-go_agent.tgz"
     ;;
   "vsphere")
-    bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/vsphere/bosh-stemcell-${stemcell_version}-vsphere-esxi-ubuntu-trusty-go_agent.tgz"
+    bosh upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/vsphere/bosh-stemcell-${stemcell_version}-vsphere-esxi-ubuntu-trusty-go_agent.tgz"
     ;;
   "openstack")
-    bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/openstack/bosh-stemcell-${stemcell_version}-openstack-kvm-ubuntu-trusty-go_agent.tgz"
+    bosh upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/openstack/bosh-stemcell-${stemcell_version}-openstack-kvm-ubuntu-trusty-go_agent.tgz"
     ;;
    "aws")
-    bosh-cli upload-stemcell "https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-${stemcell_version}-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"
+    bosh upload-stemcell "https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-${stemcell_version}-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"
     ;;
   esac
 }

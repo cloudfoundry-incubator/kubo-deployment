@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-[[ -n "$DEBUG" ]] && set -x
+[[ -z "${DEBUG:-}" ]] || set -x
 
 echo "====================================="
 echo "|         KuBOSH Deployer           |"
@@ -34,7 +34,7 @@ main() {
 
   bosh_env=$(cd "${1}"; pwd)
 
-  iaas=$(bosh-cli int "${bosh_env}/director.yml" --path /iaas)
+  iaas=$(bosh int "${bosh_env}/director.yml" --path /iaas)
 
   if ! [[ "$iaas" =~ ^(gcp|openstack|vsphere|aws)$ ]]; then
     echo "Supported platforms are: 'gcp', 'openstack', 'vsphere', 'aws'"
@@ -52,12 +52,12 @@ main() {
   bosh_manifest=$("generate_manifest_$iaas" "${bosh_env}" "${extra_filename}")
   set +x
   deploy_bosh "${bosh_env}" "${bosh_manifest}"
-  enable_debug_output
+  [[ -z "${DEBUG:-}" ]] || set -x
 
   "$(repo_directory)/bin/set_bosh_alias" "${bosh_env}"
 
   BOSH_ENV="$bosh_env" source "$(repo_directory)/bin/set_bosh_environment"
-  bosh-cli update-runtime-config -n "$(repo_directory)/bosh-deployment/runtime-configs/dns.yml"
+  bosh update-runtime-config -n "$(repo_directory)/bosh-deployment/runtime-configs/dns.yml"
 }
 
 deploy_bosh() {
@@ -69,7 +69,7 @@ deploy_bosh() {
   trap '{ rm "$bosh_manifest_file"; }' EXIT
 
   echo "${bosh_manifest}" > "${bosh_manifest_file}"
-  bosh-cli create-env "${bosh_manifest_file}" \
+  bosh create-env "${bosh_manifest_file}" \
     --vars-store "${bosh_env}/creds.yml" \
     --state "${bosh_env}/state.json"
 }
@@ -125,7 +125,7 @@ generate_manifest_generic() {
   iaas_specific_args="$@"
 
   set +x
-  bosh-cli int "$(repo_directory)/bosh-deployment/bosh.yml"  \
+  bosh int "$(repo_directory)/bosh-deployment/bosh.yml"  \
     --ops-file "$(repo_directory)/bosh-deployment/uaa.yml" \
     --ops-file "$(repo_directory)/bosh-deployment/local-dns.yml" \
     --ops-file "$(repo_directory)/configurations/generic/dns-addresses.yml" \
@@ -134,13 +134,8 @@ generate_manifest_generic() {
     --vars-file "${bosh_env}/director.yml" \
     ${iaas_specific_args} \
     ${BOSH_EXTRA_OPS}
-  enable_debug_output
+  [[ -z "${DEBUG:-}" ]] || set -x
 }
 
-enable_debug_output() {
-  if [[ -n "$DEBUG" ]]; then
-    set -x
-  fi
-}
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"
