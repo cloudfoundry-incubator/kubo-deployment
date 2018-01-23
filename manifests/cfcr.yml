@@ -72,6 +72,7 @@ instance_groups:
       backend_port: 8443 # Bosh links hack
       port: 8443
       authorization-mode: rbac
+      service-account-public-key: ((service-account-key.public_key))
       tls:
         kubernetes:
           ca: ((tls-kubernetes.ca))
@@ -81,6 +82,7 @@ instance_groups:
     release: kubo
     properties:
       api-token: ((kube-controller-manager-password))
+      service-account-private-key: ((service-account-key.private_key))
       tls:
         kubernetes: ((tls-kubernetes))
   - name: kube-scheduler
@@ -190,11 +192,13 @@ variables:
   type: password
 - name: route-sync-password
   type: password
+
 - name: kubo_ca
   type: certificate
   options:
     is_ca: true
     common_name: ca
+
 - name: tls-kubelet
   type: certificate
   options:
@@ -202,6 +206,7 @@ variables:
     organization: "system:nodes"
     common_name: kubelet.cfcr.internal
     alternative_names: []
+
 - name: tls-kubernetes
   type: certificate
   options:
@@ -215,11 +220,16 @@ variables:
     - kubernetes.default.svc
     - kubernetes.default.svc.cluster.local
     - master.cfcr.internal
+
+- name: service-account-key
+  type: rsa
+
 - name: tls-docker
   type: certificate
   options:
     ca: kubo_ca
     common_name: docker.cfcr.internal
+
 - name: tls-etcd-server
   type: certificate
   options:
@@ -228,11 +238,13 @@ variables:
     alternative_names:
     - etcd.cfcr.internal
     - "*.etcd.cfcr.internal"
+
 - name: tls-etcd-client
   type: certificate
   options:
     ca: kubo_ca
     common_name: etcdClient
+
 - name: tls-etcd-peer
   type: certificate
   options:
@@ -240,6 +252,7 @@ variables:
     common_name: etcd.cfcr.internal
     alternative_names:
     - "*.etcd.cfcr.internal"
+
 - name: tls-heapster
   type: certificate
   options:
@@ -247,6 +260,7 @@ variables:
     common_name: heapster
     alternative_names:
     - "heapster.kube-system.svc.cluster.local"
+
 - name: tls-influxdb
   type: certificate
   options:
@@ -259,6 +273,7 @@ variables:
   options:
     is_ca: true
     common_name: ca
+
 - name: tls-kubernetes-dashboard
   type: certificate
   options:
@@ -272,6 +287,7 @@ variables:
   options:
     is_ca: true
     common_name: dns-healthcheck-tls-ca
+
 - name: /dns_healthcheck_server_tls
   opsname: global_dns_healthcheck_server_tls
   type: certificate
@@ -280,6 +296,7 @@ variables:
     common_name: health.bosh-dns
     extended_key_usage:
     - server_auth
+
 - name: /dns_healthcheck_client_tls
   opsname: global_dns_healthcheck_client_tls
   type: certificate
