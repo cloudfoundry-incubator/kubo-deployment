@@ -57,6 +57,8 @@ instance_groups:
     properties: {}
     provides:
       cloud-provider: {as: master}
+    consumes:
+      cloud-provider: {from: worker}
   - name: flanneld
     release: kubo
   - name: kube-apiserver
@@ -156,6 +158,8 @@ instance_groups:
     properties: {}
     provides:
       cloud-provider: {as: worker}
+    consumes:
+      cloud-provider: {from: worker}
   - name: kubelet
     release: kubo
     properties:
