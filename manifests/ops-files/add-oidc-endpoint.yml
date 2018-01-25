@@ -1,0 +1,10 @@
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/oidc?
+  value:
+    issuer-url: ((oidc_issuer_url))
+    client-id: ((oidc_client_id))
+    username-claim: ((oidc_username_claim))
+    username-prefix: ((oidc_username_prefix))
+    groups-claim: ((oidc_groups_claim))
+    groups-prefix: ((oidc_groups_prefix))
+    ca: ((oidc_ca))
