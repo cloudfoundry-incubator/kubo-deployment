@@ -64,11 +64,11 @@ The Cloud Foundry subnet must be able to route traffic directly to the Kubo subn
 
 ## Installation
 
-Please follow the [install guide](docs/user-guide/README.md) for installation instructions.
+Please follow the [install guide](https://docs-cfcr.cfapps.io/installing/) for installation instructions.
 
 ## Troubleshooting
 
-Please refer to the [troubleshooting guide](docs/user-guide/troubleshooting.md) to look for solutions to the most common issues. 
+Please refer to the [troubleshooting guide](https://docs-cfcr.cfapps.io/managing/troubleshooting/) to look for solutions to the most common issues.
 
 ## Contributing
 

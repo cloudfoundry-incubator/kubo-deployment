@@ -202,7 +202,7 @@ generate_manifest() {
   interpolate_arguments+="$(set_default_var_if_path_does_not_exist \
     "${director_path}" \
     "/authorization_mode" \
-    "abac" \
+    "rbac" \
   )"
 
   interpolate_arguments+="$(set_default_var_if_path_does_not_exist \

@@ -2,9 +2,9 @@ name: cfcr
 
 releases:
 - name: kubo-etcd
-  version: 7
-  url: https://github.com/pivotal-cf-experimental/kubo-etcd/releases/download/v7/kubo-etcd.7.tgz
-  sha1: 99530c0a07a1fe0e91f126621aa13f9a62ccd46b
+  version: 8
+  url: https://github.com/pivotal-cf-experimental/kubo-etcd/releases/download/v8/kubo-etcd.8.tgz
+  sha1: 267bf72c9f4680b6e1cf542283c653abc74469e2
 - name: kubo
   version: latest
 - name: docker
@@ -19,7 +19,7 @@ releases:
 stemcells:
 - alias: trusty
   os: ubuntu-trusty
-  version: "3468.19"
+  version: "3468.21"
 
 addons:
 - name: bosh-dns
@@ -57,6 +57,8 @@ instance_groups:
     properties: {}
     provides:
       cloud-provider: {as: master}
+    consumes:
+      cloud-provider: {from: master}
   - name: flanneld
     release: kubo
   - name: kube-apiserver
@@ -72,6 +74,7 @@ instance_groups:
       backend_port: 8443 # Bosh links hack
       port: 8443
       authorization-mode: rbac
+      service-account-public-key: ((service-account-key.public_key))
       tls:
         kubernetes:
           ca: ((tls-kubernetes.ca))
@@ -81,6 +84,7 @@ instance_groups:
     release: kubo
     properties:
       api-token: ((kube-controller-manager-password))
+      service-account-private-key: ((service-account-key.private_key))
       tls:
         kubernetes: ((tls-kubernetes))
   - name: kube-scheduler
@@ -154,6 +158,8 @@ instance_groups:
     properties: {}
     provides:
       cloud-provider: {as: worker}
+    consumes:
+      cloud-provider: {from: worker}
   - name: kubelet
     release: kubo
     properties:
@@ -190,11 +196,13 @@ variables:
   type: password
 - name: route-sync-password
   type: password
+
 - name: kubo_ca
   type: certificate
   options:
     is_ca: true
     common_name: ca
+
 - name: tls-kubelet
   type: certificate
   options:
@@ -202,6 +210,7 @@ variables:
     organization: "system:nodes"
     common_name: kubelet.cfcr.internal
     alternative_names: []
+
 - name: tls-kubernetes
   type: certificate
   options:
@@ -215,31 +224,36 @@ variables:
     - kubernetes.default.svc
     - kubernetes.default.svc.cluster.local
     - master.cfcr.internal
+
+- name: service-account-key
+  type: rsa
+
 - name: tls-docker
   type: certificate
   options:
     ca: kubo_ca
     common_name: docker.cfcr.internal
+
 - name: tls-etcd-server
   type: certificate
   options:
     ca: kubo_ca
-    common_name: etcd.cfcr.internal
+    common_name: "*.etcd.cfcr.internal"
     alternative_names:
     - etcd.cfcr.internal
-    - "*.etcd.cfcr.internal"
+
 - name: tls-etcd-client
   type: certificate
   options:
     ca: kubo_ca
     common_name: etcdClient
+
 - name: tls-etcd-peer
   type: certificate
   options:
     ca: kubo_ca
-    common_name: etcd.cfcr.internal
-    alternative_names:
-    - "*.etcd.cfcr.internal"
+    common_name: "*.etcd.cfcr.internal"
+
 - name: tls-heapster
   type: certificate
   options:
@@ -247,6 +261,7 @@ variables:
     common_name: heapster
     alternative_names:
     - "heapster.kube-system.svc.cluster.local"
+
 - name: tls-influxdb
   type: certificate
   options:
@@ -259,6 +274,7 @@ variables:
   options:
     is_ca: true
     common_name: ca
+
 - name: tls-kubernetes-dashboard
   type: certificate
   options:
@@ -272,6 +288,7 @@ variables:
   options:
     is_ca: true
     common_name: dns-healthcheck-tls-ca
+
 - name: /dns_healthcheck_server_tls
   opsname: global_dns_healthcheck_server_tls
   type: certificate
@@ -280,6 +297,7 @@ variables:
     common_name: health.bosh-dns
     extended_key_usage:
     - server_auth
+
 - name: /dns_healthcheck_client_tls
   opsname: global_dns_healthcheck_client_tls
   type: certificate
