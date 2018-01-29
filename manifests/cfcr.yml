@@ -58,7 +58,7 @@ instance_groups:
     provides:
       cloud-provider: {as: master}
     consumes:
-      cloud-provider: {from: master}
+      cloud-provider: {from: worker}
   - name: flanneld
     release: kubo
   - name: kube-apiserver
