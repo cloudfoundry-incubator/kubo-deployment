@@ -238,10 +238,9 @@ variables:
   type: certificate
   options:
     ca: kubo_ca
-    common_name: etcd.cfcr.internal
+    common_name: "*.etcd.cfcr.internal"
     alternative_names:
     - etcd.cfcr.internal
-    - "*.etcd.cfcr.internal"
 
 - name: tls-etcd-client
   type: certificate
@@ -253,9 +252,7 @@ variables:
   type: certificate
   options:
     ca: kubo_ca
-    common_name: etcd.cfcr.internal
-    alternative_names:
-    - "*.etcd.cfcr.internal"
+    common_name: "*.etcd.cfcr.internal"
 
 - name: tls-heapster
   type: certificate
