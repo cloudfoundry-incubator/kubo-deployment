@@ -52,13 +52,6 @@ instance_groups:
   jobs:
   - name: secure-var-vcap
     release: kubo
-  - name: cloud-provider
-    release: kubo
-    properties: {}
-    provides:
-      cloud-provider: {as: master}
-    consumes:
-      cloud-provider: {from: worker}
   - name: flanneld
     release: kubo
   - name: kube-apiserver
@@ -105,8 +98,6 @@ instance_groups:
         heapster: ((tls-heapster))
         influxdb: ((tls-influxdb))
         kubernetes-dashboard: ((tls-kubernetes-dashboard))
-    consumes:
-      cloud-provider: {from: master}
   - name: etcd
     release: kubo-etcd
     properties:
@@ -153,13 +144,6 @@ instance_groups:
       tls_cert:  ((tls-docker.certificate))
       tls_key: ((tls-docker.private_key))
       env: {}
-  - name: cloud-provider
-    release: kubo
-    properties: {}
-    provides:
-      cloud-provider: {as: worker}
-    consumes:
-      cloud-provider: {from: worker}
   - name: kubelet
     release: kubo
     properties:
