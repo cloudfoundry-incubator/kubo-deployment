@@ -1,16 +1,38 @@
 - type: replace
-  path: /instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider?
+  path: /instance_groups/name=master/jobs/-
   value:
-    type: gce
-    gce:
-      project-id: ((project_id))
-      network-name: ((network))
-      worker-node-tag: ((director_name))-((deployment_name))-worker
+    name: cloud-provider
+    release: kubo
+    properties:
+      cloud-provider:
+        type: gce
+        gce:
+          project-id: ((project_id))
+          network-name: ((network))
+          worker-node-tag: ((director_name))-((deployment_name))-worker
+    provides:
+      cloud-provider: {as: master}
+    consumes:
+      cloud-provider: {from: worker}
+
 - type: replace
-  path: /instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider?
+  path: /instance_groups/name=master/jobs/name=kubernetes-system-specs/consumes?
   value:
-    type: gce
-    gce:
-      project-id: ((project_id))
-      network-name: ((network))
-      worker-node-tag: ((director_name))-((deployment_name))-worker
+    cloud-provider: {from: master}
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/-
+  value:
+    name: cloud-provider
+    release: kubo
+    properties:
+      cloud-provider:
+        type: gce
+        gce:
+          project-id: ((project_id))
+          network-name: ((network))
+          worker-node-tag: ((director_name))-((deployment_name))-worker
+    provides:
+      cloud-provider: {as: worker}
+    consumes:
+      cloud-provider: {from: worker}

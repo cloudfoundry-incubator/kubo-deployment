@@ -1,26 +1,48 @@
 - type: replace
-  path: /instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider?
+  path: /instance_groups/name=master/jobs/-
   value:
-    type: vsphere
-    vsphere:
-      user: ((vcenter_master_user))
-      password: ((vcenter_master_password))
-      server: ((vcenter_ip))
-      insecure-flag: 1
-      datacenter: ((vcenter_dc))
-      datastore: ((vcenter_ds))
-      vms: ((vcenter_vms))
-      working-dir: /((vcenter_dc))/vm/((vcenter_vms))/((director_uuid))
+    name: cloud-provider
+    release: kubo
+    properties:
+      cloud-provider:
+        type: vsphere
+        vsphere:
+          user: ((vcenter_master_user))
+          password: ((vcenter_master_password))
+          server: ((vcenter_ip))
+          insecure-flag: 1
+          datacenter: ((vcenter_dc))
+          datastore: ((vcenter_ds))
+          vms: ((vcenter_vms))
+          working-dir: /((vcenter_dc))/vm/((vcenter_vms))/((director_uuid))
+    provides:
+      cloud-provider: {as: master}
+    consumes:
+      cloud-provider: {from: worker}
+
 - type: replace
-  path: /instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider?
+  path: /instance_groups/name=master/jobs/name=kubernetes-system-specs/consumes?
   value:
-    type: vsphere
-    vsphere:
-      user: ((vcenter_worker_user))
-      password: ((vcenter_worker_password))
-      server: ((vcenter_ip))
-      insecure-flag: 1
-      datacenter: ((vcenter_dc))
-      datastore: ((vcenter_ds))
-      vms: ((vcenter_vms))
-      working-dir: /((vcenter_dc))/vm/((vcenter_vms))/((director_uuid))
+    cloud-provider: {from: master}
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/-
+  value:
+    name: cloud-provider
+    release: kubo
+    properties:
+      cloud-provider:
+        type: vsphere
+        vsphere:
+          user: ((vcenter_worker_user))
+          password: ((vcenter_worker_password))
+          server: ((vcenter_ip))
+          insecure-flag: 1
+          datacenter: ((vcenter_dc))
+          datastore: ((vcenter_ds))
+          vms: ((vcenter_vms))
+          working-dir: /((vcenter_dc))/vm/((vcenter_vms))/((director_uuid))
+    provides:
+      cloud-provider: {as: worker}
+    consumes:
+      cloud-provider: {from: worker}

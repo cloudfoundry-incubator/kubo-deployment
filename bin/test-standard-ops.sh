@@ -28,7 +28,7 @@ test_standard_ops() {
       check_interpolation "name:iaas/gcp/add-service-key-worker.yml" "iaas/gcp/cloud-provider.yml" "-o iaas/gcp/add-service-key-worker.yml" "-v service_key_worker=foo" "-l example-vars-files/iaas/gcp/cloud-provider.yml"
       check_interpolation "iaas/openstack/master-static-ip.yml" "-v kubernetes_master_host=10.11.12.13"
       check_interpolation "iaas/vsphere/cloud-provider.yml" "-l example-vars-files/iaas/vsphere/cloud-provider.yml"
-      check_interpolation "iaas/vsphere/set-working-dir-no-rp.yml" "-l example-vars-files/iaas/vsphere/set-working-dir-no-rp.yml"
+      check_interpolation "iaas/vsphere/cloud-provider.yml" "-o iaas/vsphere/set-working-dir-no-rp.yml" "-l example-vars-files/iaas/vsphere/set-working-dir-no-rp.yml"
       check_interpolation "iaas/vsphere/master-static-ip.yml" "-v kubernetes_master_host=10.11.12.13"
 
       # Routing Variations
@@ -43,6 +43,7 @@ test_standard_ops() {
       # Kubernetes
       check_interpolation "addons-spec.yml" "-v addons-spec={}"
       check_interpolation "allow-privileged-containers.yml"
+      check_interpolation "add-oidc-endpoint.yml" "-l example-vars-files/misc/oidc.yml"
 
     popd > /dev/null # operations
   popd > /dev/null
