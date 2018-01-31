@@ -18,6 +18,16 @@ master_target_pool: # target pool that master nodes will be a part of
 
 authorization_mode: rbac # RBAC or ABAC authorization modes for the K8s cluster.
 
+# Kubernetes OIDC settings
+# https://kubernetes.io/docs/admin/authentication/#configuring-the-api-server
+# oidc_issuer_url:
+# oidc_client_id:
+# oidc_username_claim:
+# oidc_username_prefix:
+# oidc_groups_claim:
+# oidc_groups_prefix:
+# oidc_ca:
+
 # CF routing mode settings
 # Uncomment and configure the lines below to leverage CF routing instead of IaaS routing
 # routing_mode: cf

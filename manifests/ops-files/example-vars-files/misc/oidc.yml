@@ -1,0 +1,7 @@
+oidc_issuer_url: https://uaa.kubo.sh
+oidc_client_id: kubernetes
+oidc_username_claim: sub
+oidc_username_prefix: uaa
+oidc_groups_claim: groups
+oidc_groups_prefix: uaa
+oidc_ca: uaa-ca-cert

@@ -498,4 +498,24 @@ var _ = Describe("Generate manifest", func() {
 			})
 		})
 	})
+
+	Context("When there are OIDC properties in director.yml", func() {
+		DescribeTable("added OIDC properties to kube-apiserver", func(property, value string) {
+			oidcEnv := filepath.Join(testEnvironmentPath, "with_oidc")
+			status, _ := bash.Run("main", []string{oidcEnv, "name", "director_uuid"})
+			Expect(status).To(Equal(0))
+
+			pathValue, err := propertyFromYaml("/instance_groups/name=master/jobs/name=kube-apiserver/properties/oidc/"+property, stdout.Contents())
+			Expect(err).NotTo(HaveOccurred())
+			Expect(pathValue).To(Equal(value))
+		},
+			Entry("issuer-url", "issuer-url", "https://uaa.kubo.sh"),
+			Entry("client-id", "client-id", "kubernetes"),
+			Entry("username-claim", "username-claim", "sub"),
+			Entry("username-prefix", "username-prefix", "uaa"),
+			Entry("groups-claim", "groups-claim", "groups"),
+			Entry("groups-prefix", "groups-prefix", "uaa"),
+			Entry("ca", "ca", "uaa-ca-cert"),
+		)
+	})
 })
