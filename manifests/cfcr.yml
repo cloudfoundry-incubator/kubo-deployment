@@ -12,9 +12,9 @@ releases:
   url: https://github.com/cloudfoundry-community/docker-boshrelease/releases/download/v30.1.4/docker-30.1.4.tgz
   sha1: f79a70452b3ddae52f5ac78dd37ff8d9e6ec19e2
 - name: bosh-dns
-  sha1: e38d3e5edd16ce2dca778440b636ab1ea61f892f
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=0.0.11
-  version: 0.0.11
+  sha1: 9231b7c7d2f6aa85e0cb77fdeef7add54fdb3f1a
+  url: https://github.com/cloudfoundry/bosh-dns-release/releases/tag/v0.2.0
+  version: 0.2.0
 
 stemcells:
 - alias: trusty
