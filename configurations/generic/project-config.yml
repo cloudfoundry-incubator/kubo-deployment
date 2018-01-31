@@ -10,12 +10,6 @@ kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest
 
 worker_count: 3
 
-# IaaS routing mode settings
-# Comment this section when using CF routing mode
-routing_mode: iaas
-kubernetes_master_host: # IP address that can be used to reach the Kubernetes API, usually the address of a load balancer or static IP
-master_target_pool: # target pool that master nodes will be a part of
-
 authorization_mode: rbac # RBAC or ABAC authorization modes for the K8s cluster.
 
 # Kubernetes OIDC settings

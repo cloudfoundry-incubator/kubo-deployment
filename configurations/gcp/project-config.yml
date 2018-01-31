@@ -10,3 +10,9 @@ service_account_worker: # service account to be set on Kubo Worker VMs
 
 # gcp_service_key_master: # service key to be deployed to Kubo Master VMs. This is ignored if service_account_master is set
 # gcp_service_key_worker: # service key to be deployed to Kubo Worker VMs. This is ignored if service_account_worker is set
+
+# IaaS routing mode settings
+# Comment out this section when using CF routing mode
+routing_mode: iaas
+kubernetes_master_host: # IP address that can be used to reach the Kubernetes API, usually the address of a load balancer or static IP
+master_target_pool: # target pool that master nodes will be a part of
