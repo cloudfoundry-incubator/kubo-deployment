@@ -13,7 +13,7 @@ releases:
   sha1: f79a70452b3ddae52f5ac78dd37ff8d9e6ec19e2
 - name: bosh-dns
   sha1: 9231b7c7d2f6aa85e0cb77fdeef7add54fdb3f1a
-  url: https://github.com/cloudfoundry/bosh-dns-release/releases/tag/v0.2.0
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=0.2.0
   version: 0.2.0
 
 stemcells:
