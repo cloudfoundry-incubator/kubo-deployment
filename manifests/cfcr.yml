@@ -86,18 +86,14 @@ instance_groups:
       api-token: ((kube-scheduler-password))
       tls:
         kubernetes: ((tls-kubernetes))
-  - name: kubernetes-system-specs
+  - name: kubernetes-roles
     release: kubo
     properties:
-      api-token: ((kubelet-password))
       admin-username: admin
       admin-password: ((kubo-admin-password))
       authorization-mode: rbac
       tls:
         kubernetes: ((tls-kubernetes))
-        heapster: ((tls-heapster))
-        influxdb: ((tls-influxdb))
-        kubernetes-dashboard: ((tls-kubernetes-dashboard))
   - name: etcd
     release: kubo-etcd
     properties:
