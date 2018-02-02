@@ -137,6 +137,7 @@ instance_groups:
       iptables: false
       ip_masq: false
       log_level: error
+      log_options: [ "max-size=128m", "max-file=2" ]
       store_dir: /var/vcap/data
       storage_driver: overlay
       default_ulimits: [ "nofile=65536" ]
