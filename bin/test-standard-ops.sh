@@ -41,7 +41,8 @@ test_standard_ops() {
       check_interpolation "add-no-proxy.yml" "-v no_proxy=localhost,127.0.0.1"
 
       # Kubernetes
-      check_interpolation "addons-spec.yml" "-v addons-spec={}"
+      check_interpolation "system-specs.yml" "-l example-vars-files/system-specs.yml"
+      check_interpolation "name:addons-spec.yml" "system-specs.yml" "-o addons-spec.yml" "-v addons-spec={}" "-l example-vars-files/system-specs.yml"
       check_interpolation "allow-privileged-containers.yml"
       check_interpolation "add-oidc-endpoint.yml" "-l example-vars-files/misc/oidc.yml"
 
