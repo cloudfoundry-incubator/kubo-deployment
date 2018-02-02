@@ -1,0 +1,26 @@
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: apply-addons
+    instances: 1
+    networks:
+    - name: default
+    azs: [z1]
+    lifecycle: errand
+    jobs:
+    - name: apply-specs
+      release: kubo
+      properties:
+        api-token: ((kubelet-password))
+        admin-username: admin
+        admin-password: ((kubo-admin-password))
+        authorization-mode: ((authorization_mode))
+        tls:
+          kubernetes: ((tls-kubernetes))
+          heapster: ((tls-heapster))
+          influxdb: ((tls-influxdb))
+          kubernetes-dashboard: ((tls-kubernetes-dashboard))
+      consumes:
+          cloud-provider: {from: master}
+    stemcell: trusty
+    vm_type: minimal
