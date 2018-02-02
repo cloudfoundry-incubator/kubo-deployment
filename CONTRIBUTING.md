@@ -1,41 +1,48 @@
-# Contributing to Kubo
+# Contributing to Kubo Deployment
+
+As a potential contributor, your changes and ideas are always welcome. Please do not hesitate to ask a question using GitHub issues or send a pull request to contribute changes.
 
 ## Contributor License Agreement
-If you have not previously done so, please fill out and submit an [Individual Contributor License Agreement](https://www.cloudfoundry.org/governance/cff_individual_cla/) or a [Corporate Contributor License Agreement](https://www.cloudfoundry.org/governance/cff_corporate_cla/). 
+If you have not previously done so, please fill out and submit an [Individual Contributor License Agreement](https://www.cloudfoundry.org/governance/cff_individual_cla/) or a [Corporate Contributor License Agreement](https://www.cloudfoundry.org/governance/cff_corporate_cla/).
 
-## Prerequisites
-Review the following to understand Kubernetes
- 1. https://docs.cloudfoundry.org/concepts/architecture/
- 1. https://thenewstack.io/kubernetes-an-overview/
- 1. https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture.md
+## Contributor Workflow
+We encourage contributors to have discussion around design and implmentation with team members before making significant changes to the project through [GitHub Issues](https://github.com/cloudfoundry-incubator/kubo-deployment/issues). The project manager will prioritize where the feature will fit into the project's road map.
 
-## Developer Workflow
 1. Fork the project on [GitHub](https://github.com/cloudfoundry-incubator/kubo-deployment)
 1. Create a feature branch.
 1. Make your feature addition or bug fix. Please make sure there is appropriate test coverage.
-1. Run tests.
-1. Rebase on top of master.
-1. Send a pull request.
+1. Run integration [tests](#running-integration-tests).
+1. Ensure your feature branch is up to date with `master` branch.
+1. Submit a pull request with clear description of intended change.
+1. The team will triage the pull request and assign it to a team member.
+1. A team member will approve the pull request or make suggestions for changes.
 
-Before making significant changes it's best to communicate with the maintainers of the project through [GitHub Issues](https://github.com/cloudfoundry-incubator/kubo-deployment/issues).
+## Writing the tests
 
-## Running Integration Tests
+Unit Testing is the responsibility of all contributors.
+
+### Shell script tests
+
+If the PR incudes any change to bash script consider adding appropriate shell tests. Shell tests are located under `./src/kubo-deployment-tests` directory.
+
+## Running Tests
+### Pre-requisites
+
+1. Install [Go](https://golang.org/doc/install)
+1. Install [Ginkgo](https://onsi.github.io/ginkgo/)
 
 Please make sure to run all tests before submitting a pull request.
 
 ### Shell script tests
 
-This repo provides a test runner for running integration tests against the shell scripts. It requires [`ginkgo`](https://github.com/onsi/ginkgo) binary to be installed locally. To run the tests, execute `bin/run_tests` from the repository directory.
+This repository provides a test runner for running integration tests against the shell scripts. To run the tests, execute `./bin/run_tests` from the repository directory.
 
-### Deployment tests
+### Smoke test
 
-The sequence to run deployment tests includes the following steps:
+Follow the steps below to deploy and test kubernetes BOSH deployment. This test verifies the basic functionality is not broken.
 
->  1. (re-)deploy KuBOSH
->  1. deploy a kubernetes cluster on the new KuBOSH
->  1. deploy a workload on the cluster and make sure it is working
+1. (Re-)deploy a BOSH director using `bin/deploy_bosh`.
+1. Deploy a Kubernetes cluster using `bin/deploy_k8s`.
+1. [Deploy a workload](https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/) on the cluster.
 
-Optionally, it is possible to tear down the service by running `bosh -e <KUBO_ENV> -d <CLUSTER_DEPLOYMENT_NAME> delete-deployment` followed by the `bin/destroy_bosh` command.
-
-## Additional BOSH configuration
-We support only basic BOSH configuration. If you have some additional ops-file that will be useful for community, add them to https://github.com/cloudfoundry/bosh-deployment We have included this repo as a subtree and update it periodically.
+If you want to start fresh, it is possible to tear down the service by running `bosh -e <KUBO_ENV> -d <CLUSTER_DEPLOYMENT_NAME> delete-deployment`. You can then destroy the BOSH director using the `bin/destroy_bosh` command.

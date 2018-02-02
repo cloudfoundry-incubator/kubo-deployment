@@ -28,6 +28,7 @@ See the [complete pipeline](https://ci.kubo.sh/pipelines/kubo-deployment) for mo
 - [Glossary](#glossary)
 - [Installation Guides](#installation)
 - [Troubleshooting](#troubleshooting)
+- [Documentation](#documentation)
 - [Contribution](#contributing)
 
 ## Design
@@ -69,6 +70,13 @@ Please follow the [install guide](https://docs-cfcr.cfapps.io/installing/) for i
 ## Troubleshooting
 
 Please refer to the [troubleshooting guide](https://docs-cfcr.cfapps.io/managing/troubleshooting/) to look for solutions to the most common issues.
+
+## Documentation
+Review the following documentation to get a better understanding of Cloud Foundry and Kubernetes architectures.
+
+* [Cloud Foundry docs](https://docs.cloudfoundry.org/concepts/architecture/)
+* [Kubernetes Overview](https://thenewstack.io/kubernetes-an-overview/)
+* [Kubernetes architecture docs](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture.md)
 
 ## Contributing
 
