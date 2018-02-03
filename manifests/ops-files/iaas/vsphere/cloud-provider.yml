@@ -21,6 +21,11 @@
       cloud-provider: {from: worker}
 
 - type: replace
+  path: /instance_groups/name=master/jobs/name=kubernetes-roles/consumes?
+  value:
+    cloud-provider: {from: master}
+
+- type: replace
   path: /instance_groups/name=worker/jobs/-
   value:
     name: cloud-provider
