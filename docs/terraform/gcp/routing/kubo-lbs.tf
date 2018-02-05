@@ -28,26 +28,26 @@ provider "google" {
 }
 
 // Static IP address for HTTP forwarding rule
-resource "google_compute_address" "kubo-tcp" {
-  name = "${var.prefix}kubo"
+resource "google_compute_address" "cfcr-tcp" {
+  name = "${var.prefix}cfcr"
 }
 
 // TCP Load Balancer
-resource "google_compute_target_pool" "kubo-tcp-public" {
+resource "google_compute_target_pool" "cfcr-tcp-public" {
     region = "${var.region}"
-    name = "${var.prefix}kubo-tcp-public"
+    name = "${var.prefix}cfcr-tcp-public"
 }
 
-resource "google_compute_forwarding_rule" "kubo-tcp" {
-  name        = "${var.prefix}kubo-tcp"
-  target      = "${google_compute_target_pool.kubo-tcp-public.self_link}"
+resource "google_compute_forwarding_rule" "cfcr-tcp" {
+  name        = "${var.prefix}cfcr-tcp"
+  target      = "${google_compute_target_pool.cfcr-tcp-public.self_link}"
   port_range  = "8443"
   ip_protocol = "TCP"
-  ip_address  = "${google_compute_address.kubo-tcp.address}"
+  ip_address  = "${google_compute_address.cfcr-tcp.address}"
 }
 
-resource "google_compute_firewall" "kubo-tcp-public" {
-  name    = "${var.prefix}kubo-tcp-public"
+resource "google_compute_firewall" "cfcr-tcp-public" {
+  name    = "${var.prefix}cfcr-tcp-public"
   network       = "${var.network}"
 
   allow {
@@ -58,10 +58,10 @@ resource "google_compute_firewall" "kubo-tcp-public" {
   target_tags = ["master"]
 }
 
-output "kubo_master_target_pool" {
-   value = "${google_compute_target_pool.kubo-tcp-public.name}"
+output "cfcr_master_target_pool" {
+   value = "${google_compute_target_pool.cfcr-tcp-public.name}"
 }
 
 output "master_lb_ip_address" {
-  value = "${google_compute_address.kubo-tcp.address}"
+  value = "${google_compute_address.cfcr-tcp.address}"
 }

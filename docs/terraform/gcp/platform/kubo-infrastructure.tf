@@ -44,13 +44,13 @@ provider "google" {
 }
 
 resource "google_service_account" "master" {
-  account_id   = "${var.prefix}kubo-master"
-  display_name = "${var.prefix} kubo-master"
+  account_id   = "${var.prefix}cfcr-master"
+  display_name = "${var.prefix} cfcr-master"
 }
 
 resource "google_service_account" "worker" {
-  account_id   = "${var.prefix}kubo-worker"
-  display_name = "${var.prefix} kubo-worker"
+  account_id   = "${var.prefix}cfcr-worker"
+  display_name = "${var.prefix} cfcr-worker"
 }
 
 resource "google_project_iam_policy" "policy" {
@@ -119,9 +119,9 @@ resource "google_compute_route" "nat-primary" {
   tags = ["no-ip"]
 }
 
-// Subnet for Kubo
-resource "google_compute_subnetwork" "kubo-subnet" {
-  name          = "${var.prefix}kubo-${var.region}"
+// Subnet for cfcr
+resource "google_compute_subnetwork" "cfcr-subnet" {
+  name          = "${var.prefix}cfcr-${var.region}"
   region        = "${var.region}"
   ip_cidr_range = "${var.subnet_ip_prefix}.0/24"
   network       = "https://www.googleapis.com/compute/v1/projects/${var.projectid}/global/networks/${var.network}"
@@ -181,7 +181,7 @@ resource "google_compute_instance" "bosh-bastion" {
   }
 
   network_interface {
-    subnetwork = "${google_compute_subnetwork.kubo-subnet.name}"
+    subnetwork = "${google_compute_subnetwork.cfcr-subnet.name}"
     access_config {
       // Ephemeral IP
     }
@@ -218,7 +218,7 @@ export prefix=${var.prefix}
 export ssh_key_path=$HOME/.ssh/bosh
 
 # Vars from Terraform
-export subnetwork=${google_compute_subnetwork.kubo-subnet.name}
+export subnetwork=${google_compute_subnetwork.cfcr-subnet.name}
 export network=${var.network}
 export subnet_ip_prefix=${var.subnet_ip_prefix}
 export service_account_email=${var.service_account_email}
@@ -242,7 +242,7 @@ fi
 # GCP specific updates
 sed -i -e 's/^\(project_id:\).*\(#.*\)/\1 ${var.projectid} \2/' "$1"
 sed -i -e 's/^\(network:\).*\(#.*\)/\1 ${var.network} \2/' "$1"
-sed -i -e 's/^\(subnetwork:\).*\(#.*\)/\1 ${google_compute_subnetwork.kubo-subnet.name} \2/' "$1"
+sed -i -e 's/^\(subnetwork:\).*\(#.*\)/\1 ${google_compute_subnetwork.cfcr-subnet.name} \2/' "$1"
 sed -i -e 's/^\(zone:\).*\(#.*\)/\1 ${var.zone} \2/' "$1"
 sed -i -e 's/^\(service_account_master:\).*\(#.*\)/\1 ${google_service_account.master.email} \2/' "$1"
 sed -i -e 's/^\(service_account_worker:\).*\(#.*\)/\1 ${google_service_account.worker.email} \2/' "$1"
@@ -317,7 +317,7 @@ resource "google_compute_instance" "nat-instance-private-with-nat-primary" {
   }
 
   network_interface {
-    subnetwork = "${google_compute_subnetwork.kubo-subnet.name}"
+    subnetwork = "${google_compute_subnetwork.cfcr-subnet.name}"
     access_config {
       // Ephemeral IP
     }
@@ -332,6 +332,6 @@ iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 EOT
 }
 
-output "kubo_subnet" {
-   value = "${google_compute_subnetwork.kubo-subnet.name}"
+output "cfcr_subnet" {
+   value = "${google_compute_subnetwork.cfcr-subnet.name}"
 }
