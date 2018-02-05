@@ -29,17 +29,17 @@ provider "google" {
 
 // Static IP address for HTTP forwarding rule
 resource "google_compute_address" "cfcr-tcp" {
-  name = "${var.prefix}cfcr"
+  name = "${var.prefix}-cfcr"
 }
 
 // TCP Load Balancer
 resource "google_compute_target_pool" "cfcr-tcp-public" {
     region = "${var.region}"
-    name = "${var.prefix}cfcr-tcp-public"
+    name = "${var.prefix}-cfcr-tcp-public"
 }
 
 resource "google_compute_forwarding_rule" "cfcr-tcp" {
-  name        = "${var.prefix}cfcr-tcp"
+  name        = "${var.prefix}-cfcr-tcp"
   target      = "${google_compute_target_pool.cfcr-tcp-public.self_link}"
   port_range  = "8443"
   ip_protocol = "TCP"
@@ -47,7 +47,7 @@ resource "google_compute_forwarding_rule" "cfcr-tcp" {
 }
 
 resource "google_compute_firewall" "cfcr-tcp-public" {
-  name    = "${var.prefix}cfcr-tcp-public"
+  name    = "${var.prefix}-cfcr-tcp-public"
   network       = "${var.network}"
 
   allow {

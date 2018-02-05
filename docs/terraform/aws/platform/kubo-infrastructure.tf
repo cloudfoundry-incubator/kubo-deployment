@@ -51,7 +51,7 @@ resource "aws_subnet" "public" {
     availability_zone = "${var.zone}"
 
     tags {
-      Name = "${var.prefix}cfcr-public"
+      Name = "${var.prefix}-cfcr-public"
       KubernetesCluster = "${random_id.kubernetes-cluster-tag.b64}"
     }
 }
@@ -60,7 +60,7 @@ resource "aws_route_table" "public" {
     vpc_id = "${var.vpc_id}"
 
     tags {
-      Name = "${var.prefix}public-route-table"
+      Name = "${var.prefix}-public-route-table"
     }
 
     route {
@@ -89,7 +89,7 @@ resource "aws_subnet" "private" {
     availability_zone = "${var.zone}"
 
     tags {
-      Name = "${var.prefix}cfcr-private"
+      Name = "${var.prefix}-cfcr-private"
       KubernetesCluster = "${random_id.kubernetes-cluster-tag.b64}"
     }
 }
@@ -98,7 +98,7 @@ resource "aws_route_table" "private" {
     vpc_id = "${var.vpc_id}"
 
     tags {
-      Name = "${var.prefix}private-route-table"
+      Name = "${var.prefix}-private-route-table"
     }
 
     route {
@@ -113,7 +113,7 @@ resource "aws_route_table_association" "private" {
 }
 
 resource "aws_security_group" "nodes" {
-    name        = "${var.prefix}node-access"
+    name        = "${var.prefix}-node-access"
     vpc_id      = "${var.vpc_id}"
 }
 
@@ -174,7 +174,7 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_iam_role_policy" "cfcr-master" {
-    name = "${var.prefix}cfcr-master"
+    name = "${var.prefix}-cfcr-master"
     role = "${aws_iam_role.cfcr-master.id}"
 
     policy = <<EOF
@@ -261,12 +261,12 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "cfcr-master" {
-    name = "${var.prefix}cfcr-master"
+    name = "${var.prefix}-cfcr-master"
     role = "${aws_iam_role.cfcr-master.name}"
 }
 
 resource "aws_iam_role" "cfcr-master" {
-    name = "${var.prefix}cfcr-master"
+    name = "${var.prefix}-cfcr-master"
     assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -285,7 +285,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "cfcr-worker" {
-    name = "${var.prefix}cfcr-worker"
+    name = "${var.prefix}-cfcr-worker"
     role = "${aws_iam_role.cfcr-worker.id}"
 
     policy = <<EOF
@@ -308,12 +308,12 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "cfcr-worker" {
-    name = "${var.prefix}cfcr-worker"
+    name = "${var.prefix}-cfcr-worker"
     role = "${aws_iam_role.cfcr-worker.name}"
 }
 
 resource "aws_iam_role" "cfcr-worker" {
-    name = "${var.prefix}cfcr-worker"
+    name = "${var.prefix}-cfcr-worker"
     assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -341,7 +341,7 @@ resource "aws_instance" "bastion" {
     associate_public_ip_address = true
 
     tags {
-      Name = "${var.prefix}bosh-bastion"
+      Name = "${var.prefix}-bosh-bastion"
     }
 
     provisioner "file" {

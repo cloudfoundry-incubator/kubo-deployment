@@ -44,13 +44,13 @@ provider "google" {
 }
 
 resource "google_service_account" "master" {
-  account_id   = "${var.prefix}cfcr-master"
-  display_name = "${var.prefix} cfcr-master"
+  account_id   = "${var.prefix}-cfcr-master"
+  display_name = "${var.prefix}-cfcr-master"
 }
 
 resource "google_service_account" "worker" {
-  account_id   = "${var.prefix}cfcr-worker"
-  display_name = "${var.prefix} cfcr-worker"
+  account_id   = "${var.prefix}-cfcr-worker"
+  display_name = "${var.prefix}-cfcr-worker"
 }
 
 resource "google_project_iam_policy" "policy" {
@@ -110,7 +110,7 @@ data "google_iam_policy" "admin" {
 }
 
 resource "google_compute_route" "nat-primary" {
-  name        = "${var.prefix}nat-primary"
+  name        = "${var.prefix}-nat-primary"
   dest_range  = "0.0.0.0/0"
   network       = "${var.network}"
   next_hop_instance = "${google_compute_instance.nat-instance-private-with-nat-primary.name}"
@@ -121,7 +121,7 @@ resource "google_compute_route" "nat-primary" {
 
 // Subnet for cfcr
 resource "google_compute_subnetwork" "cfcr-subnet" {
-  name          = "${var.prefix}cfcr-${var.region}"
+  name          = "${var.prefix}-cfcr-${var.region}"
   region        = "${var.region}"
   ip_cidr_range = "${var.subnet_ip_prefix}.0/24"
   network       = "https://www.googleapis.com/compute/v1/projects/${var.projectid}/global/networks/${var.network}"
@@ -129,7 +129,7 @@ resource "google_compute_subnetwork" "cfcr-subnet" {
 
 // Allow SSH to BOSH bastion
 resource "google_compute_firewall" "bosh-bastion" {
-  name    = "${var.prefix}bosh-bastion"
+  name    = "${var.prefix}-bosh-bastion"
   network = "${var.network}"
 
   allow {
@@ -146,7 +146,7 @@ resource "google_compute_firewall" "bosh-bastion" {
 
 // Allow all traffic within subnet
 resource "google_compute_firewall" "intra-subnet-open" {
-  name    = "${var.prefix}intra-subnet-open"
+  name    = "${var.prefix}-intra-subnet-open"
   network = "${var.network}"
 
   allow {
@@ -168,7 +168,7 @@ resource "google_compute_firewall" "intra-subnet-open" {
 
 // BOSH bastion host
 resource "google_compute_instance" "bosh-bastion" {
-  name         = "${var.prefix}bosh-bastion"
+  name         = "${var.prefix}-bosh-bastion"
   machine_type = "n1-standard-1"
   zone         = "${var.zone}"
 
@@ -251,7 +251,7 @@ sed -i -e 's/^\(service_account_worker:\).*\(#.*\)/\1 ${google_service_account.w
 sed -i -e 's/^\(internal_ip:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.252 \2/' "$1"
 sed -i -e 's=^\(internal_cidr:\).*\(#.*\)=\1 ${var.subnet_ip_prefix}.0/24 \2=' "$1"
 sed -i -e 's/^\(internal_gw:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.1 \2/' "$1"
-sed -i -e 's/^\(director_name:\).*\(#.*\)/\1 ${var.prefix}bosh \2/' "$1"
+sed -i -e 's/^\(director_name:\).*\(#.*\)/\1 ${var.prefix}-bosh \2/' "$1"
 sed -i -e 's/^\(dns_recursor_ip:\).*\(#.*\)/\1 ${var.subnet_ip_prefix}.1 \2/' "$1"
 
 EOF
@@ -304,7 +304,7 @@ EOT
 
 // NAT server (primary)
 resource "google_compute_instance" "nat-instance-private-with-nat-primary" {
-  name         = "${var.prefix}nat-instance-primary"
+  name         = "${var.prefix}-nat-instance-primary"
   machine_type = "n1-standard-1"
   zone         = "${var.zone}"
 
