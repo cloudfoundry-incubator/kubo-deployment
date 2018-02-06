@@ -12,8 +12,6 @@
           worker-node-tag: ((director_name))-((deployment_name))-worker
     provides:
       cloud-provider: {as: master}
-    consumes:
-      cloud-provider: {from: worker}
 
 - type: replace
   path: /instance_groups/name=master/jobs/name=kubernetes-roles/consumes?
@@ -32,7 +30,3 @@
           project-id: ((project_id))
           network-name: ((network))
           worker-node-tag: ((director_name))-((deployment_name))-worker
-    provides:
-      cloud-provider: {as: worker}
-    consumes:
-      cloud-provider: {from: worker}
