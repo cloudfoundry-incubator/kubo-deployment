@@ -25,7 +25,7 @@ variable "network" {
 
 variable "prefix" {
     type = "string"
-    default = ""
+    default = "cfcr"
 }
 
 variable "service_account_email" {

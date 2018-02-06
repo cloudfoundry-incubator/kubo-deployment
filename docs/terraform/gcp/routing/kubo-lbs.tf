@@ -18,7 +18,7 @@ variable "network" {
 
 variable "prefix" {
     type = "string"
-    default = ""
+    default = "cfcr"
 }
 
 provider "google" {
