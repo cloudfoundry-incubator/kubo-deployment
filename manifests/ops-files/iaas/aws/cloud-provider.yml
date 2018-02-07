@@ -8,8 +8,6 @@
         type: aws
     provides:
       cloud-provider: {as: master}
-    consumes:
-      cloud-provider: {from: worker}
 
 - type: replace
   path: /instance_groups/name=master/jobs/name=kubernetes-roles/consumes?
@@ -24,7 +22,3 @@
     properties:
       cloud-provider:
         type: aws
-    provides:
-      cloud-provider: {as: worker}
-    consumes:
-      cloud-provider: {from: worker}

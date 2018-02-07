@@ -14,8 +14,6 @@
           domain-name: ((openstack_domain))
     provides:
       cloud-provider: {as: master}
-    consumes:
-      cloud-provider: {from: worker}
 
 - type: replace
   path: /instance_groups/name=master/jobs/name=kubernetes-roles/consumes?
@@ -36,7 +34,3 @@
           password: ((openstack_password))
           tenant-id: ((openstack_project_id))
           domain-name: ((openstack_domain))
-    provides:
-      cloud-provider: {as: worker}
-    consumes:
-      cloud-provider: {from: worker}
