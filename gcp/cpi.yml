@@ -1,0 +1,69 @@
+---
+- type: replace
+  path: /releases/-
+  value:
+    name: bosh-google-cpi
+    version: "26.0.0"
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-google-cpi-release?v=26.0.0
+    sha1: 96a59530bba6dd4d3f6f04d12c37b99c4377064c
+
+- type: replace
+  path: /resource_pools/name=vms/stemcell?
+  value:
+    url: https://bosh.io/d/stemcells/bosh-google-kvm-ubuntu-trusty-go_agent?v=3468.21
+    sha1: 242b39fd71da44a352e19ced355736d6f313aab4
+
+# Configure sizes
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties?
+  value:
+    zone: ((zone))
+    machine_type: n1-standard-1
+    root_disk_size_gb: 40
+    root_disk_type: pd-standard
+
+- type: replace
+  path: /disk_pools/name=disks/cloud_properties?
+  value: {type: pd-standard}
+
+- type: replace
+  path: /networks/name=default/subnets/0/cloud_properties?
+  value:
+    network_name: ((network))
+    subnetwork_name: ((subnetwork))
+    ephemeral_external_ip: false
+    tags: ((tags))
+
+# Add CPI job
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value: &cpi_job
+    name: google_cpi
+    release: bosh-google-cpi
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/cpi_job?
+  value: google_cpi
+
+- type: replace
+  path: /cloud_provider/template?
+  value: *cpi_job
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/google?
+  value: &cpi_conf
+    project: ((project_id))
+    json_key: ((gcp_credentials_json))
+
+- type: replace
+  path: /cloud_provider/properties/google?
+  value: *cpi_conf
+
+# Use GCP NTP
+- type: replace
+  path: /instance_groups/name=bosh/properties/ntp
+  value: &ntp [169.254.169.254]
+
+- type: replace
+  path: /cloud_provider/properties/ntp
+  value: *ntp

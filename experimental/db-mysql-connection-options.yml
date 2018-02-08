@@ -1,0 +1,10 @@
+---
+# This is an optional ops-file.
+# read_timeout, write_timeout, connect_timeout are in seconds
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/db/connection_options?
+  value:
+    read_timeout: ((mysql_db_read_timeout))
+    write_timeout: ((mysql_db_write_timeout))
+    connect_timeout: ((mysql_db_connect_timeout))

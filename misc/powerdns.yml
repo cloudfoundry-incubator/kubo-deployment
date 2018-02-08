@@ -1,0 +1,25 @@
+- type: replace
+  path: /instance_groups/name=bosh/properties/postgres/additional_databases?/-
+  value: powerdns
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: powerdns
+    release: bosh
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/dns?
+  value:
+    address: ((internal_ip))
+    db:
+      database: powerdns
+      host: 127.0.0.1
+      user: postgres
+      password: ((postgres_password))
+    recursor: ((dns_recursor_ip))
+
+- type: replace
+  path: /networks/name=default/subnets/0/dns
+  value:
+    - ((dns_recursor_ip))

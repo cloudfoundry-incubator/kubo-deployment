@@ -1,0 +1,29 @@
+- type: replace
+  path: /networks/name=default/subnets/0/dns
+  value:
+  - "2001:4860:4860:0000:0000:0000:0000:8888"
+  - "2001:4860:4860:0000:0000:0000:0000:8844"
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/ipv6_listen?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/blobstore/ipv6_listen?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/nats/listen_address?
+  value: "::"
+
+- type: replace
+  path: /cloud_provider/mbus
+  value: "https://mbus:((mbus_bootstrap_password))@[((internal_ip))]:6868"
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/agent/mbus
+  value: "nats://nats:((nats_password))@[((internal_ip))]:4222"
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/blobstore/address
+  value: "[((internal_ip))]"

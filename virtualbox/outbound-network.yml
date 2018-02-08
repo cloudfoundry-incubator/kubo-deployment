@@ -1,0 +1,17 @@
+- type: replace
+  path: /networks/-
+  value:
+    name: outbound
+    type: dynamic
+    cloud_properties:
+      type: natnetwork
+      name: ((outbound_network_name))
+
+- type: replace
+  path: /instance_groups/name=bosh/networks/name=default/default?
+  value: [dns, gateway]
+
+- type: replace
+  path: /instance_groups/name=bosh/networks/-
+  value:
+    name: outbound

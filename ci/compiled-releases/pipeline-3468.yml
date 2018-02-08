@@ -1,0 +1,229 @@
+---
+resources:
+  - name: bosh-deployment
+    type: git
+    source:
+      uri: https://github.com/cloudfoundry/bosh-deployment.git
+      branch: {{branch}}
+
+  # releases
+
+  - name: bosh-release
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/bosh
+
+  - name: uaa-release
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/uaa-release
+
+  - name: credhub-release
+    type: bosh-io-release
+    source:
+      repository: pivotal-cf/credhub-release
+
+  - name: backup-and-restore-sdk-release
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry-incubator/backup-and-restore-sdk-release
+
+  - name: warden-cpi
+    type: bosh-io-release
+    source:
+      repository: cppforlife/bosh-warden-cpi-release
+
+  - name: garden-linux
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/garden-linux-release
+
+  - name: garden-runc
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/garden-runc-release
+
+  - name: grootfs
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry/grootfs-release
+
+  # stemcells
+
+  - name: ubuntu-trusty-stemcell
+    type: bosh-io-stemcell
+    source:
+      name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+
+  # outputs
+
+  - name: compiled-releases
+    type: s3
+    source:
+      bucket: "bosh-compiled-release-tarballs"
+      access_key_id: {{aws_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      regexp: ".*-(\\d+).tgz"
+
+jobs:
+  - name: compile-bosh-release-264
+    plan:
+      - aggregate:
+        - get: bosh-deployment
+        - get: bosh-release
+          version:
+            version: "264.7.0"
+        - get: ubuntu-trusty-stemcell
+          version:
+            version: "3468.21"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-stemcell
+          release: bosh-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-uaa-release-52
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: uaa-release
+            version:
+              version: "52.7"
+          - get: ubuntu-trusty-stemcell
+            version:
+              version: "3468.21"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-stemcell
+          release: uaa-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-credhub-release-1.6
+    plan:
+      - aggregate:
+        - get: bosh-deployment
+        - get: credhub-release
+          version:
+            version: "1.6.5"
+        - get: ubuntu-trusty-stemcell
+          version:
+            version: "3468.21"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-stemcell
+          release: credhub-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-bbr-sdk-release-1.2
+    plan:
+      - aggregate:
+        - get: bosh-deployment
+        - get: backup-and-restore-sdk-release
+          version:
+            version: "1.2.1"
+        - get: ubuntu-trusty-stemcell
+          version:
+            version: "3468.21"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-stemcell
+          release: backup-and-restore-sdk-release
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  # bosh-lite related
+
+  - name: compile-warden-cpi
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: warden-cpi
+            version:
+              version: "37"
+          - get: ubuntu-trusty-stemcell
+            version:
+              version: "3468.21"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-stemcell
+          release: warden-cpi
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-garden-linux
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: garden-linux
+            version:
+              version: "0.342.0"
+          - get: ubuntu-trusty-stemcell
+            version:
+              version: "3468.21"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-stemcell
+          release: garden-linux
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-garden-runc-1-9
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: garden-runc
+            version:
+              version: "1.9.4"
+          - get: ubuntu-trusty-stemcell
+            version:
+              version: "3468.21"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-stemcell
+          release: garden-runc
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"
+
+  - name: compile-grootfs
+    plan:
+      - aggregate:
+          - get: bosh-deployment
+          - get: grootfs
+            version:
+              version: "0.24.0"
+          - get: ubuntu-trusty-stemcell
+            version:
+              version: "3468.21"
+      - task: export-release
+        file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
+        privileged: true
+        input_mapping:
+          stemcell: ubuntu-trusty-stemcell
+          release: grootfs
+      - put: compiled-releases
+        params:
+          file: "compiled-release/*.tgz"

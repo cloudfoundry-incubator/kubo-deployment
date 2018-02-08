@@ -1,0 +1,101 @@
+---
+- type: replace
+  path: /releases/-
+  value:
+    name: bosh-softlayer-cpi
+    version: "23"
+    url: https://bosh.io/d/github.com/cloudfoundry/bosh-softlayer-cpi-release?v=23
+    sha1: 960f6068c7823bc3822c5e7ec6c855060c5582d0
+
+- type: replace
+  path: /resource_pools/name=vms/stemcell?
+  value:
+    url: https://bosh.io/d/stemcells/bosh-softlayer-xen-ubuntu-trusty-go_agent?v=3468.20
+    sha1: 3e0945585eecc49183a8f4fcd8c6a97e3809040c
+
+- type: replace
+  path: /resource_pools/name=vms/env/bosh/keep_root_password?
+  value: true
+
+# Configure sizes
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties?
+  value:
+    domain: ((sl_vm_domain))
+    vmNamePrefix: ((sl_vm_name_prefix))
+    ephemeralDiskSize: 100
+    startCpus: 4
+    maxMemory: 8192
+    deployedByBoshcli: true
+    datacenter:
+      name: ((sl_datacenter))
+    hourlyBillingFlag: true
+    networkComponents:
+    - maxSpeed: 100
+
+- type: replace
+  path: /disk_pools/name=disks/disk_size
+  value: 20_000
+
+- type: replace
+  path: /networks/name=default/subnets/0/dns
+  value: [8.8.8.8, 10.0.80.11, 10.0.80.12]
+
+- type: replace
+  path: /networks/-
+  value:
+    name: dynamic
+    type: dynamic
+    dns: [8.8.8.8, 10.0.80.11, 10.0.80.12]
+    cloud_properties:
+      PrimaryNetworkComponent:
+        NetworkVlan:
+          Id: ((sl_vlan_public))
+      PrimaryBackendNetworkComponent:
+        NetworkVlan:
+          Id: ((sl_vlan_private))
+
+- type: remove
+  path: /networks/name=default
+
+- type: replace
+  path: /resource_pools/name=vms/network
+  value: dynamic
+
+# Add CPI job
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value: &cpi_job
+    name: softlayer_cpi
+    release: bosh-softlayer-cpi
+
+- type: replace
+  path: /instance_groups/name=bosh/networks/-
+  value:
+    name: dynamic
+    default: [gateway, dns]
+
+- type: remove
+  path: /instance_groups/name=bosh/networks/name=default
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/cpi_job?
+  value: softlayer_cpi
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/enable_virtual_delete_vms?
+  value: true
+
+- type: replace
+  path: /cloud_provider/template?
+  value: *cpi_job
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/softlayer?
+  value: &softlayer
+    username: ((sl_username))
+    apiKey: ((sl_api_key))
+
+- type: replace
+  path: /cloud_provider/properties/softlayer?
+  value: *softlayer

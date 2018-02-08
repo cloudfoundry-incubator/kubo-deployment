@@ -1,0 +1,30 @@
+---
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=virtualbox_cpi/properties/host?
+  value: ((vbox_host))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=virtualbox_cpi/properties/username?
+  value: ((vbox_username))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=virtualbox_cpi/properties/private_key?
+  value: ((vbox_ssh.private_key))
+
+- type: replace
+  path: /cloud_provider/properties/host?
+  value: ((vbox_host))
+
+- type: replace
+  path: /cloud_provider/properties/username?
+  value: ((vbox_username))
+
+- type: replace
+  path: /cloud_provider/properties/private_key?
+  value: ((vbox_ssh.private_key))
+
+- type: replace
+  path: /variables/-
+  value:
+    name: vbox_ssh
+    type: ssh

@@ -1,0 +1,4 @@
+- type: replace
+  path: /networks/name=second/subnets/0/cloud_properties?
+  value:
+    name: ((second_network_name))

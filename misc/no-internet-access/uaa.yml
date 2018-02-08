@@ -1,0 +1,12 @@
+# Use local UAA release
+
+- type: replace
+  path: /releases/name=uaa/url
+  value: file://((local_uaa_release))
+
+- type: remove
+  path: /releases/name=uaa/sha1
+
+- type: replace
+  path: /releases/name=uaa/version
+  value: latest

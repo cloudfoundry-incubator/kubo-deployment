@@ -1,0 +1,19 @@
+- type: replace
+  path: /networks/-
+  value:
+    name: second
+    type: manual
+    subnets:
+    - range: ((second_internal_cidr))
+      gateway: ((second_internal_gw))
+      static: [((second_internal_ip))]
+
+- type: replace
+  path: /instance_groups/name=bosh/networks/-
+  value:
+    name: second
+    static_ips: [((second_internal_ip))]
+
+- type: replace
+  path: /instance_groups/name=bosh/networks/0/default?
+  value: [dns, gateway]

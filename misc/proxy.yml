@@ -1,0 +1,10 @@
+- type: replace
+  path: /instance_groups/name=bosh/properties/env?
+  value: &env
+    http_proxy: ((http_proxy))
+    https_proxy: ((https_proxy))
+    no_proxy: ((no_proxy))
+
+- type: replace
+  path: /cloud_provider/properties/env?
+  value: *env
