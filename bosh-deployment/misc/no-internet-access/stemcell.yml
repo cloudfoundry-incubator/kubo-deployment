@@ -1,0 +1,8 @@
+# Use local stemcell
+
+- type: replace
+  path: /resource_pools/name=vms/stemcell/url
+  value: file://((local_stemcell))
+
+- type: remove
+  path: /resource_pools/name=vms/stemcell/sha1

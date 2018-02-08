@@ -1,0 +1,76 @@
+- type: replace
+  path: /releases/-
+  value:
+    name: config-server
+    version: 0.0.1
+    url: https://bosh.io/d/github.com/cloudfoundry/config-server-release?v=0.0.1
+    sha1: 6372fd76e6e9da5a292de47c300fe33a85f970bf
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: config_server
+    release: config-server
+    properties:
+      port: 8080
+      store: database
+      jwt:
+        verification_key: ((uaa_jwt_signing_key.public_key))
+      ca: ((config_server_root_ca))
+      ssl: ((config_server_ssl))
+      db:
+        user: postgres
+        password: ((postgres_password))
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/postgres/additional_databases?/-
+  value: config_server
+
+# Configure Director
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/config_server?
+  value:
+    enabled: true
+    url: "https://((internal_ip)):8080"
+    ca_cert: ((config_server_ssl.ca))
+    uaa:
+      url: "https://((internal_ip)):8443"
+      ca_cert: ((uaa_ssl.ca))
+      client_id: director_config_server
+      client_secret: ((director_config_server_client_secret))
+
+# Configure UAA
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/director_config_server?
+  value:
+    override: true
+    authorized-grant-types: client_credentials
+    scope: ""
+    authorities: config_server.admin
+    secret: ((director_config_server_client_secret))
+
+# Variables
+- type: replace
+  path: /variables/-
+  value:
+    name: config_server_ssl
+    type: certificate
+    options:
+      ca: default_ca
+      common_name: ((internal_ip))
+      alternative_names: [((internal_ip))]
+
+- type: replace
+  path: /variables/-
+  value:
+    name: config_server_root_ca
+    type: certificate
+    options:
+      is_ca: true
+      common_name: config_server_ca
+
+- type: replace
+  path: /variables/-
+  value:
+    name: director_config_server_client_secret
+    type: password

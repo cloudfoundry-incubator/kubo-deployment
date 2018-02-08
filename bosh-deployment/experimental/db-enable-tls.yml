@@ -1,0 +1,7 @@
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/db/tls?
+  value:
+    enabled: true
+    cert:
+      ca: ((db_ca))

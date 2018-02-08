@@ -1,0 +1,41 @@
+azs:
+- name: z1
+- name: z2
+- name: z3
+
+vm_types:
+- name: default
+  cloud_properties:
+    instance_type: Standard_D1_v2
+- name: large
+  cloud_properties:
+    instance_type: Standard_D3_v2
+
+disk_types:
+- name: default
+  disk_size: 3000
+- name: large
+  disk_size: 50_000
+
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: ((internal_cidr))
+    gateway: ((internal_gw))
+    azs: [z1, z2, z3]
+    dns: [168.63.129.16]
+    reserved: [((internal_gw))/30]
+    cloud_properties:
+      virtual_network_name: ((vnet_name))
+      subnet_name: ((subnet_name))
+      security_group: ((security_group))
+- name: vip
+  type: vip
+
+compilation:
+  workers: 5
+  reuse_compilation_vms: true
+  az: z1
+  vm_type: default
+  network: default

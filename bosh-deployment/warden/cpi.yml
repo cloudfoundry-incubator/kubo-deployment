@@ -1,0 +1,46 @@
+---
+- type: replace
+  path: /releases/name=bosh-warden-cpi
+  value:
+    name: bosh-warden-cpi
+    version: "35"
+    url: https://bosh.io/d/github.com/cppforlife/bosh-warden-cpi-release?v=35
+    sha1: d1c79c61c5a1c3664e5456cc6cbce34f2111f2d7
+
+- type: replace
+  path: /resource_pools/name=vms/stemcell?
+  value:
+    url: https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=3468.21
+    sha1: 72ff179da486fc4a5578740d33f0a1915b7c68f0
+
+# Configure VM size
+- type: replace
+  path: /resource_pools/name=vms/cloud_properties?
+  value:
+    ports:
+      - host: 22 # todo jumpboxing?
+      - host: 6868 # bootstrap agent
+      - host: 25555 # director
+      - host: 4222 # nats
+      - host: 25250 # blobstore
+      - host: 8443 # uaa
+      - host: 8080 # cfg serv
+
+- type: replace
+  path: /cloud_provider/template?
+  value: &cpi_job
+    name: warden_cpi
+    release: bosh-warden-cpi
+
+- type: replace
+  path: /cloud_provider/properties/warden_cpi?
+  value:
+    warden:
+      connect_address: ((garden_host)):7777
+      connect_network: tcp
+    agent: # todo remove
+      mbus: "https://mbus:((mbus_bootstrap_password))@0.0.0.0:6868"
+      blobstore:
+        provider: local
+        options:
+          blobstore_path: /var/vcap/micro_bosh/data/cache

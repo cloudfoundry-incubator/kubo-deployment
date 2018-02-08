@@ -1,0 +1,62 @@
+azs:
+- name: z1
+  cloud_properties:
+    datacenter: { name: ((sl_datacenter)) }
+- name: z2
+  cloud_properties:
+    datacenter: { name: ((sl_datacenter)) }
+- name: z3
+  cloud_properties:
+    datacenter: { name: ((sl_datacenter)) }
+
+vm_types:
+- name: default
+  cloud_properties:
+    bosh_ip: ((internal_ip))
+    startCpus:  4
+    maxMemory:  8192
+    ephemeralDiskSize: 100
+    hourlyBillingFlag: true
+    vmNamePrefix: ((sl_vm_name_prefix))
+    domain: ((sl_vm_domain))
+    datacenter:
+      name: ((sl_datacenter))
+
+disk_types:
+- name: default
+  disk_size: 100_000
+- name: small
+  disk_size: 20_000
+- name: large
+  disk_size: 250_000
+
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: ((internal_cidr))
+    gateway: ((internal_gw))
+    azs: [z1, z2, z3]
+    dns: [((internal_ip)), 8.8.8.8, 10.0.80.11, 10.0.80.12]
+    static: ((internal_static_ips))
+    reserved: ((internal_reserved_ips))
+
+- name: dynamic
+  type: dynamic
+  subnets:
+  - dns: [((internal_ip)), 8.8.8.8, 10.0.80.11, 10.0.80.12]
+    azs: [z1, z2, z3]
+    cloud_properties:
+      PrimaryNetworkComponent:
+        NetworkVlan:
+          Id: ((sl_vlan_public))
+      PrimaryBackendNetworkComponent:
+        NetworkVlan:
+          Id: ((sl_vlan_private))
+
+compilation:
+  workers: 5
+  reuse_compilation_vms: true
+  vm_type: default
+  network: dynamic
+  az: z1
