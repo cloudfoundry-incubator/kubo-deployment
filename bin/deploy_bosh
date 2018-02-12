@@ -103,7 +103,7 @@ generate_manifest_openstack() {
   generate_manifest_generic "$bosh_env" \
     --vars-file "${bosh_env}/director-secrets.yml"  \
     --ops-file "$(repo_directory)/bosh-deployment/openstack/cpi.yml" \
-    --ops-file "$(repo_directory)/configurations/openstack/human-readable-vm-names-false.yml" \
+    --ops-file "$(repo_directory)/bosh-deployment/openstack/disable-readable-vm-names.yml" \
     --var-file private_key="${key_filename}"
 }
 
