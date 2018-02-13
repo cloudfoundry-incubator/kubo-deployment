@@ -36,8 +36,6 @@
     - name: default
     azs: [z1]
     jobs:
-    - name: bpm
-      release: bpm
     - name: route-sync
       release: kubo
       properties:
