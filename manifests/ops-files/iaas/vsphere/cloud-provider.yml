@@ -16,12 +16,22 @@
           vms: ((vcenter_vms))
           working-dir: /((vcenter_dc))/vm/((vcenter_vms))/((director_uuid))
     provides:
-      cloud-provider: {as: master}
+      cloud-provider: {as: master-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/consumes?
+  value:
+    cloud-provider: {from: master-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-controller-manager/consumes?
+  value:
+    cloud-provider: {from: master-cloud-provider}
 
 - type: replace
   path: /instance_groups/name=master/jobs/name=kubernetes-roles/consumes?
   value:
-    cloud-provider: {from: master}
+    cloud-provider: {from: master-cloud-provider}
 
 - type: replace
   path: /instance_groups/name=worker/jobs/-
@@ -40,3 +50,10 @@
           datastore: ((vcenter_ds))
           vms: ((vcenter_vms))
           working-dir: /((vcenter_dc))/vm/((vcenter_vms))/((director_uuid))
+    provides:
+      cloud-provider: {as: worker-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kubelet/consumes?
+  value:
+    cloud-provider: {from: worker-cloud-provider}

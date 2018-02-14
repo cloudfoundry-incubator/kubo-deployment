@@ -21,6 +21,6 @@
           influxdb: ((tls-influxdb))
           kubernetes-dashboard: ((tls-kubernetes-dashboard))
       consumes:
-          cloud-provider: {from: master}
+          cloud-provider: {from: master-cloud-provider}
     stemcell: trusty
     vm_type: minimal
