@@ -157,7 +157,6 @@ instance_groups:
       api-token: ((kubelet-password))
       tls:
         kubernetes: ((tls-kubernetes))
-        kubelet: ((tls-kubelet))
   - name: kube-proxy
     release: kubo
     properties:
@@ -192,13 +191,6 @@ variables:
   options:
     is_ca: true
     common_name: ca
-- name: tls-kubelet
-  type: certificate
-  options:
-    ca: kubo_ca
-    organization: "system:nodes"
-    common_name: kubelet.cfcr.internal
-    alternative_names: []
 - name: tls-kubernetes
   type: certificate
   options:

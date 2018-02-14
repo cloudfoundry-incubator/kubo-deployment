@@ -1,4 +1,2 @@
 - type: remove
-  path: /variables/name=tls-kubelet/options/organization
-- type: remove
   path: /variables/name=tls-kubernetes/options/organization

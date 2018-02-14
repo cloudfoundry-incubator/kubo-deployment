@@ -65,7 +65,7 @@ instance_groups:
     properties:
       admin-username: admin
       admin-password: ((kubo-admin-password))
-      kubelet-password: ((kubelet-password))
+      kubelet-bootstrap-token: ((kubelet-bootstrap-token))
       kube-proxy-password: ((kube-proxy-password))
       kube-controller-manager-password: ((kube-controller-manager-password))
       kube-scheduler-password: ((kube-scheduler-password))
@@ -86,7 +86,7 @@ instance_groups:
       api-token: ((kube-controller-manager-password))
       service-account-private-key: ((service-account-key.private_key))
       tls:
-        kubernetes: ((tls-kubernetes))
+        kubo-ca: ((kubo_ca))
   - name: kube-scheduler
     release: kubo
     properties:
@@ -150,11 +150,11 @@ instance_groups:
   - name: kubelet
     release: kubo
     properties:
-      api-token: ((kubelet-password))
+      admin-password: ((kubo-admin-password))
+      bootstrap-token: ((kubelet-bootstrap-token))
       drain-api-token: ((kubelet-drain-password))
       tls:
         kubernetes: ((tls-kubernetes))
-        kubelet: ((tls-kubelet))
   - name: kube-proxy
     release: kubo
     properties:
@@ -174,7 +174,7 @@ update:
 variables:
 - name: kubo-admin-password
   type: password
-- name: kubelet-password
+- name: kubelet-bootstrap-token
   type: password
 - name: kubelet-drain-password
   type: password
@@ -192,14 +192,6 @@ variables:
   options:
     is_ca: true
     common_name: ca
-
-- name: tls-kubelet
-  type: certificate
-  options:
-    ca: kubo_ca
-    organization: "system:nodes"
-    common_name: kubelet.cfcr.internal
-    alternative_names: []
 
 - name: tls-kubernetes
   type: certificate
