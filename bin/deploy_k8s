@@ -73,7 +73,7 @@ main() {
   BOSH_ENV="$bosh_env" source "$(repo_directory)/bin/set_bosh_environment"
 
   export_bosh_environment "${bosh_env}"
-  set_cloud_config
+  #set_cloud_config
 
   if [[ "${release_source}" != "skip" ]]; then
     upload_artefacts "${bosh_env}" "${release_source}"

@@ -21,8 +21,14 @@ repo_directory() {
   echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)"
 }
 
+get_deps() {
+  source "$(repo_directory)/bin/lib/deploy_utils"
+}
 
 main() {
+  get_deps
+  PATH=$(repo_directory)/bin:$PATH
+
   local bosh_env extra_filename iaas bosh_manifest
 
   if [ ! -d "${1}" ]; then
@@ -58,6 +64,9 @@ main() {
 
   BOSH_ENV="$bosh_env" source "$(repo_directory)/bin/set_bosh_environment"
   bosh update-runtime-config -n "$(repo_directory)/bosh-deployment/runtime-configs/dns.yml"
+
+  export_bosh_environment "${bosh_env}"
+  set_cloud_config
 }
 
 deploy_bosh() {
