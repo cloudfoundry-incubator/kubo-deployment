@@ -70,6 +70,7 @@ instance_groups:
       kube-controller-manager-password: ((kube-controller-manager-password))
       kube-scheduler-password: ((kube-scheduler-password))
       route-sync-password: ((route-sync-password))
+      kubelet-drain-password: ((kubelet-drain-password))
       backend_port: 8443 # Bosh links hack
       port: 8443
       authorization-mode: rbac
@@ -150,6 +151,7 @@ instance_groups:
     release: kubo
     properties:
       api-token: ((kubelet-password))
+      drain-api-token: ((kubelet-drain-password))
       tls:
         kubernetes: ((tls-kubernetes))
         kubelet: ((tls-kubelet))
@@ -173,6 +175,8 @@ variables:
 - name: kubo-admin-password
   type: password
 - name: kubelet-password
+  type: password
+- name: kubelet-drain-password
   type: password
 - name: kube-proxy-password
   type: password
