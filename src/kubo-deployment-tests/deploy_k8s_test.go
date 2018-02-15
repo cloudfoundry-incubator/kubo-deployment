@@ -67,7 +67,7 @@ var _ = Describe("Deploy K8s", func() {
 
 	})
 
-	It("Should export bosh env, set cloud config and deploy", func() {
+	It("Should export bosh env and deploy", func() {
 		cloudConfigMock := Mock("set_cloud_config", "echo")
 		exportBoshEnvironmentMock := Mock("export_bosh_environment", "echo")
 		deployToBoshMock := Mock("deploy_to_bosh", "echo")
@@ -80,7 +80,6 @@ var _ = Describe("Deploy K8s", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Expect(code).To(Equal(0))
 		Expect(stderr).To(gbytes.Say("export_bosh_environment"))
-		Expect(stderr).To(gbytes.Say("set_cloud_config"))
 		Expect(stderr).To(gbytes.Say("deploy_to_bosh"))
 	})
 
