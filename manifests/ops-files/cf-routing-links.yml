@@ -36,7 +36,6 @@
     - name: kubeconfig
       release: kubo
       properties:
-        kubelet-password: ((kubelet-password))
         kube-proxy-password: ((kube-proxy-password))
         kube-scheduler-password: ((kube-scheduler-password))
         route-sync-password: ((route-sync-password))

@@ -57,7 +57,6 @@ var _ = Describe("Generate manifest", func() {
 			Entry("CF UAA URL", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_url", "cf.uaa.url"),
 			Entry("CF Client ID", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_client_id", "cf.client.id"),
 			Entry("CF Client Secret", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_client_secret", "test-routing-cf-client-secret"),
-			Entry("Auto-generated kubelet password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/kubelet-password", "((kubelet-password))"),
 			Entry("Auto-generated admin password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/admin-password", "((kubo-admin-password))"),
 		)
 
@@ -72,7 +71,6 @@ var _ = Describe("Generate manifest", func() {
 		},
 			Entry("deployment name", "/name", "grinder"),
 			Entry("network name", "/instance_groups/name=master/networks/0/name", "default"),
-			Entry("Auto-generated kubelet password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/kubelet-password", "((kubelet-password))"),
 			Entry("Auto-generated admin password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/admin-password", "((kubo-admin-password))"),
 			Entry("worker node tag", "/instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider/gce/worker-node-tag", "TheDirector-grinder-worker"),
 		)
@@ -211,7 +209,7 @@ var _ = Describe("Generate manifest", func() {
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
-			Expect(stdout).To(gbytes.Say("\n      kubelet-password: Shields up, ancient life!\n"))
+			Expect(stdout).To(gbytes.Say("\n      admin-password: Shields up, ancient life!\n"))
 		})
 
 		It("should not embed addons-specs if not specified in the director", func() {
