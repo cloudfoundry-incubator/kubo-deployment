@@ -8,10 +8,11 @@
         type: openstack
         openstack:
           auth-url: ((auth_url))
-          username: ((openstack_username))
-          password: ((openstack_password))
-          tenant-id: ((openstack_project_id))
           domain-name: ((openstack_domain))
+          password: ((openstack_password))
+          region: ((region))
+          tenant-id: ((openstack_project_id))
+          username: ((openstack_username))
     provides:
       cloud-provider: {as: master-cloud-provider}
 
@@ -40,10 +41,11 @@
         type: openstack
         openstack:
           auth-url: ((auth_url))
-          username: ((openstack_username))
-          password: ((openstack_password))
-          tenant-id: ((openstack_project_id))
           domain-name: ((openstack_domain))
+          password: ((openstack_password))
+          region: ((region))
+          tenant-id: ((openstack_project_id))
+          username: ((openstack_username))
     provides:
       cloud-provider: {as: worker-cloud-provider}
 
