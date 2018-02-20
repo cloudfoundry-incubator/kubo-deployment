@@ -34,6 +34,9 @@ var _ = Describe("Deploy BOSH", func() {
 		DescribeTable("when wrong number of arguments is used", func(params []string) {
 			script := pathToScript("deploy_bosh")
 			bash.Source(script, nil)
+			depsMock := Mock("get_deps", "echo")
+			ApplyMocks(bash, []Gob{depsMock})
+
 			code, err := bash.Run("main", params)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).NotTo(Equal(0))
@@ -117,6 +120,20 @@ var _ = Describe("Deploy BOSH", func() {
 				Expect(stderr).To(gbytes.Say(fmt.Sprintf("update-runtime-config -n %s", pathFromRoot("bosh-deployment/runtime-configs/dns.yml"))))
 			})
 
+		})
+
+		It("Should export bosh env and set cloud config", func() {
+			cloudConfigMock := Mock("set_cloud_config", "echo")
+			exportBoshEnvironmentMock := Mock("export_bosh_environment", "echo")
+			ApplyMocks(bash, []Gob{cloudConfigMock, exportBoshEnvironmentMock})
+			depsMock := Mock("get_deps", "echo")
+			ApplyMocks(bash, []Gob{depsMock})
+
+			code, err := bash.Run("main", []string{validGcpEnvironment, mockKeyFile})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(code).To(Equal(0))
+			Expect(stderr).To(gbytes.Say("export_bosh_environment"))
+			Expect(stderr).To(gbytes.Say("set_cloud_config"))
 		})
 	})
 

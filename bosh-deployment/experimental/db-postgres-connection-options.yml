@@ -1,0 +1,10 @@
+---
+# This is an optional ops-file.
+# pool_timeout, statement_timeout, connect_timeout are in seconds
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/db/connection_options?
+  value:
+    pool_timeout: ((postgres_db_pool_timeout))
+    statement_timeout: ((postgres_db_statement_timeout))
+    connect_timeout: ((postgres_db_connect_timeout))

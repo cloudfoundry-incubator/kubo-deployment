@@ -73,7 +73,6 @@ main() {
   BOSH_ENV="$bosh_env" source "$(repo_directory)/bin/set_bosh_environment"
 
   export_bosh_environment "${bosh_env}"
-  set_cloud_config
 
   if [[ "${release_source}" != "skip" ]]; then
     upload_artefacts "${bosh_env}" "${release_source}"
@@ -83,9 +82,7 @@ main() {
 
   deploy_to_bosh "${manifest}" "${deployment_name}"
 
-  if bosh int <(echo -n "${manifest}") --path /instance_groups/name=apply-addons &>/dev/null; then
-    bosh -d "${deployment_name}" run-errand apply-specs
-  fi
+  bosh -d "${deployment_name}" run-errand apply-specs
 }
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"

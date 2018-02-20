@@ -3,15 +3,15 @@
   path: /releases/-
   value:
     name: bosh-aws-cpi
-    version: 67
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=67
-    sha1: cfcbc98affa9cad674087ab6b8bd4b1188b18439
+    version: "69"
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=69
+    sha1: 8abe70219244896ea6f7208fc01f2eac56179170
 
 - type: replace
   path: /resource_pools/name=vms/stemcell?
   value:
-    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3468.1
-    sha1: 741c71747118200c9251545883e184c43c059da9
+    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3468.21
+    sha1: d4975f4610e0856c4f2e4a37f973a5ddd4263860
 
 # Configure AWS sizes
 - type: replace

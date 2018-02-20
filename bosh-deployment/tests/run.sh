@@ -15,9 +15,11 @@ bosh create-env bosh.yml \
   -o virtualbox/outbound-network.yml \
   -o bosh-lite.yml \
   -o bosh-lite-runc.yml \
+  -o uaa.yml \
+  -o credhub.yml \
   -o jumpbox-user.yml \
   --vars-store $tests_dir/creds.yml \
-  -v director_name="Bosh Lite Director" \
+  -v director_name=bosh-lite \
   -v internal_ip=192.168.50.10 \
   -v internal_gw=192.168.50.1 \
   -v internal_cidr=192.168.50.0/24 \
@@ -32,14 +34,18 @@ echo "-----> `date`: Update cloud config"
 bosh -n update-cloud-config warden/cloud-config.yml
 
 echo "-----> `date`: Upload stemcell"
-bosh -n upload-stemcell "https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=3468.1" \
-  --sha1 69bbf7a8c4683a8130eaf22b3270f8d737037884
+bosh -n upload-stemcell "https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=3468.21" \
+  --sha1 72ff179da486fc4a5578740d33f0a1915b7c68f0
 
 echo "-----> `date`: Deploy"
-bosh -n -d zookeeper deploy <(wget -O- https://raw.githubusercontent.com/cppforlife/zookeeper-release/master/manifests/zookeeper.yml)
+bosh -n -d zookeeper deploy <(wget -O- https://raw.githubusercontent.com/cppforlife/zookeeper-release/master/manifests/zookeeper.yml) \
+  -o tests/cred-test.yml
 
 echo "-----> `date`: Exercise deployment"
 bosh -n -d zookeeper run-errand smoke-tests
+
+echo "-----> `date`: Exercise deployment"
+bosh -n -d zookeeper recreate
 
 echo "-----> `date`: Clean up disks, etc."
 bosh -n -d zookeeper clean-up --all
@@ -53,7 +59,7 @@ bosh delete-env bosh.yml \
   -o bosh-lite-runc.yml \
   -o jumpbox-user.yml \
   --vars-store $tests_dir/creds.yml \
-  -v director_name="Bosh Lite Director" \
+  -v director_name=bosh-lite \
   -v internal_ip=192.168.50.10 \
   -v internal_gw=192.168.50.1 \
   -v internal_cidr=192.168.50.0/24 \

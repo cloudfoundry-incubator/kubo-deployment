@@ -15,11 +15,15 @@ releases:
   sha1: 9231b7c7d2f6aa85e0cb77fdeef7add54fdb3f1a
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=0.2.0
   version: 0.2.0
+- name: bpm
+  sha1: f2bd126b17b3591160f501d88d79ccf0aba1ae54
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.2.0
+  version: 0.2.0
 
 stemcells:
 - alias: trusty
   os: ubuntu-trusty
-  version: "3468.21"
+  version: "3541.4"
 
 addons:
 - name: bosh-dns
@@ -50,6 +54,8 @@ instance_groups:
   - name: default
   azs: [z1,z2,z3]
   jobs:
+  - name: bpm
+    release: bpm
   - name: secure-var-vcap
     release: kubo
   - name: flanneld
@@ -64,6 +70,7 @@ instance_groups:
       kube-controller-manager-password: ((kube-controller-manager-password))
       kube-scheduler-password: ((kube-scheduler-password))
       route-sync-password: ((route-sync-password))
+      kubelet-drain-password: ((kubelet-drain-password))
       backend_port: 8443 # Bosh links hack
       port: 8443
       authorization-mode: rbac
@@ -86,18 +93,14 @@ instance_groups:
       api-token: ((kube-scheduler-password))
       tls:
         kubernetes: ((tls-kubernetes))
-  - name: kubernetes-system-specs
+  - name: kubernetes-roles
     release: kubo
     properties:
-      api-token: ((kubelet-password))
       admin-username: admin
       admin-password: ((kubo-admin-password))
       authorization-mode: rbac
       tls:
         kubernetes: ((tls-kubernetes))
-        heapster: ((tls-heapster))
-        influxdb: ((tls-influxdb))
-        kubernetes-dashboard: ((tls-kubernetes-dashboard))
   - name: etcd
     release: kubo-etcd
     properties:
@@ -149,6 +152,7 @@ instance_groups:
     release: kubo
     properties:
       api-token: ((kubelet-password))
+      drain-api-token: ((kubelet-drain-password))
       tls:
         kubernetes: ((tls-kubernetes))
         kubelet: ((tls-kubelet))
@@ -172,6 +176,8 @@ variables:
 - name: kubo-admin-password
   type: password
 - name: kubelet-password
+  type: password
+- name: kubelet-drain-password
   type: password
 - name: kube-proxy-password
   type: password

@@ -23,7 +23,7 @@ provider "aws" {
 }
 
 resource "aws_security_group" "api" {
-    name        = "${var.prefix}api-access"
+    name        = "${var.prefix}-api-access"
     vpc_id = "${var.vpc_id}"
 
     ingress {
@@ -42,7 +42,7 @@ resource "aws_security_group" "api" {
 }
 
 resource "aws_elb" "api" {
-    name               = "${var.prefix}kubo-api"
+    name               = "${var.prefix}-cfcr-api"
     subnets = ["${var.public_subnet_id}"]
     security_groups = ["${aws_security_group.api.id}"]
 
@@ -62,7 +62,7 @@ resource "aws_elb" "api" {
     }
 }
 
-output "kubo_master_target_pool" {
+output "cfcr_master_target_pool" {
    value = "${aws_elb.api.name}"
 }
 

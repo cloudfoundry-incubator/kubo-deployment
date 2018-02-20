@@ -1,5 +1,11 @@
 ---
 resources:
+  - name: bosh-src
+    type: git
+    source:
+      uri: https://github.com/cloudfoundry/bosh
+      branch: master
+
   - name: bosh-deployment
     type: git
     source:
@@ -10,12 +16,6 @@ resources:
     type: bosh-io-stemcell
     source:
       name: bosh-warden-boshlite-ubuntu-trusty-go_agent
-
-  - name: bosh-candidate-release-tarballs
-    type: s3
-    source:
-      bucket: bosh-candidate-release-tarballs
-      versioned_file: "bosh-dev-release.tgz"
 
   - name: bosh-alpha-compiled-releases
     type: s3
@@ -30,17 +30,19 @@ jobs:
     plan:
       - aggregate:
         - get: bosh-deployment
-        - get: bosh-candidate-release-tarballs
+        - get: bosh-src
           trigger: true
         - get: ubuntu-trusty-stemcell
           version:
-            version: "3468.1"
+            version: "3468.13"
+      - task: build-release
+        file: bosh-deployment/ci/bosh-alpha-compiled-releases/tasks/build-release.yml
       - task: export-release
         file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
         privileged: true
         input_mapping:
           stemcell: ubuntu-trusty-stemcell
-          release: bosh-candidate-release-tarballs
+          release: source-release
       - put: bosh-alpha-compiled-releases
         params:
           file: "compiled-release/*.tgz"

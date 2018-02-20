@@ -3,16 +3,16 @@
   value:
     name: bosh-warden-cpi
     version: "37"
-    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-warden-cpi-37-ubuntu-trusty-3468.1-20171027-221318-743840517-20171027221323.tgz?versionId=9fGZxRNJb_GwqMeSeUrbMuptdOaeAAyZ
-    sha1: e74a4931e44e478ad70470643647aa9ab34a61dc
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-warden-cpi-37-ubuntu-trusty-3468.21-20180125-031924-498857068-20180125031928.tgz?versionId=aH2ugBoIsLJ0YwluCO8GB9KJzJ7IkQS.
+    sha1: 3ff9b922e620a89c6fc098f08eba84f1c56b93f6
 
 - type: replace
   path: /releases/-
   value:
     name: garden-linux
     version: "0.342.0"
-    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/garden-linux-0.342.0-ubuntu-trusty-3468.1-20171027-221553-580311474-20171027221558.tgz?versionId=2i9F.5XTtlmQYjtz1C1Qg882ddMjfOAn
-    sha1: 227c2ff42e5eeda8a516cdf38fc018e9686ece3c
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/garden-linux-0.342.0-ubuntu-trusty-3468.21-20180125-031714-495392008-20180125031719.tgz?versionId=nWnYXOboNPqBGgi6WJUYN5Lnsnd8RsF.
+    sha1: 750b550d79e1cb44a917b7e696e29537e5328bbb
 
 - type: replace
   path: /releases/name=os-conf?
@@ -81,10 +81,6 @@
     destroy_containers_on_start: true # avoids snapshots
     default_container_grace_time: 0
     graph_cleanup_threshold_in_mb: 0
-
-- type: replace
-  path: /disk_pools/name=disks/disk_size
-  value: 65_536
 
 - type: replace
   path: /variables/name=nats_server_tls/options/alternative_names?/-

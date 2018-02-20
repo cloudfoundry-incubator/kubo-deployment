@@ -3,9 +3,9 @@ name: bosh
 
 releases:
 - name: bosh
-  version: "264.1"
-  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-264.1-ubuntu-trusty-3468.1-20171109-004207-628092428-20171109004211.tgz?versionId=46RkXfd52MvTfE_IXpC.P9x1Tfv09qkB
-  sha1: f262d1c35f3646a3f0394132f2705719c9d2bb6a
+  version: "264.7.0"
+  url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-264.7.0-ubuntu-trusty-3468.21-20180125-031202-579399892-20180125031207.tgz?versionId=gnR.RVKDRH_Vk63jxsGBOhcHOZ9p8qCJ
+  sha1: 3850c68124bf5bce3cfb1433cce52e2d67741d94
 
 resource_pools:
 - name: vms
@@ -18,7 +18,7 @@ resource_pools:
 
 disk_pools:
 - name: disks
-  disk_size: 32_768
+  disk_size: 65_536
 
 networks:
 - name: default
@@ -89,6 +89,8 @@ instance_groups:
       enable_dedicated_status_worker: true
       enable_nats_delivered_templates: true
       workers: 4
+      local_dns:
+        enabled: true
       events:
         record_events: true
       ssl:

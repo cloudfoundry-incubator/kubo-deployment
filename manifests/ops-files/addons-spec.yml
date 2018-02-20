@@ -1,16 +1,3 @@
 - type: replace
-  path: /instance_groups/-
-  value:
-    name: apply-addons
-    instances: 1
-    networks:
-    - name: default
-    azs: [z1]
-    lifecycle: errand
-    jobs:
-    - name: apply-specs
-      release: kubo
-      properties:
-        addons-spec: ((addons-spec))
-    stemcell: trusty
-    vm_type: minimal
+  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/properties/addons-spec?
+  value: ((addons-spec))

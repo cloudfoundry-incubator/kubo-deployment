@@ -1,0 +1,7 @@
+# Tests UAA/Credhub integration with BOSH
+
+- type: replace
+  path: /variables?/-
+  value:
+    name: useless_cred
+    type: password

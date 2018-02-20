@@ -1,8 +1,8 @@
 releases:
 - name: bosh-dns
-  version: 0.0.11
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=0.0.11
-  sha1: e38d3e5edd16ce2dca778440b636ab1ea61f892f
+  version: 0.2.0
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=0.2.0
+  sha1: 9231b7c7d2f6aa85e0cb77fdeef7add54fdb3f1a
 
 addons:
 - name: bosh-dns
@@ -19,8 +19,24 @@ addons:
         client:
           tls: ((/dns_healthcheck_client_tls))
   include:
-    stemcells:
+    stemcell:
     - os: ubuntu-trusty
+- name: bosh-dns-windows
+  jobs:
+  - name: bosh-dns-windows
+    release: bosh-dns
+    properties:
+      cache:
+        enabled: true
+      health:
+        enabled: true
+        server:
+          tls: ((/dns_healthcheck_server_tls))
+        client:
+          tls: ((/dns_healthcheck_client_tls))
+  include:
+    stemcell:
+    - os: windows2012R2
 
 variables:
 - name: /dns_healthcheck_tls_ca

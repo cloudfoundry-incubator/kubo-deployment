@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: credhub
-    version: "1.6.1"
-    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/credhub-1.6.1-ubuntu-trusty-3468.1-20171027-223445-89551422-20171027223451.tgz?versionId=VZ3.604W9Rq1R7OrJc_WqUeJPPpupZqa
-    sha1: 0fe7019e68137af0452185f5f61a70c4cbb48d51
+    version: "1.6.5"
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/credhub-1.6.5-ubuntu-trusty-3468.21-20180125-030538-607642349-20180125030546.tgz?versionId=gziq7vXd9d1itJRNqeIn0kFlWHVhTyjL
+    sha1: b8500dad276022ebfc4186f34c24e3337f9dbc41
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
@@ -77,13 +77,14 @@
     secret: ""
 
 - type: replace
-  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/scim/users?/-
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/clients/credhub-admin?
   value:
-    name: credhub-cli
-    password: ((credhub_cli_password))
-    groups:
-    - credhub.read
-    - credhub.write
+    override: true
+    authorized-grant-types: client_credentials
+    scope: ""
+    authorities: credhub.read,credhub.write
+    access-token-validity: 3600
+    secret: ((credhub_admin_client_secret))
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/jwt/revocable?
@@ -124,5 +125,5 @@
 - type: replace
   path: /variables/-
   value:
-    name: credhub_cli_password
+    name: credhub_admin_client_secret
     type: password
