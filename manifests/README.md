@@ -211,6 +211,8 @@ kubectl get all
 | **AWS** | | |
 | [`ops-files/iaas/aws/cloud-provider.yml`](ops-files/iaas/aws/cloud-provider.yml) | Enable Cloud Provider for AWS | Requires AWS Instance Profiles (not API keys) to grant Kubernetes access to AWS |
 | [`ops-files/iaas/aws/lb.yml`](ops-files/iaas/aws/lb.yml) | Enable instance tagging for AWS |  |
+| [`ops-files/iaas/aws/add-master-credentials.yml`](ops-files/iaas/aws/add-master-credentials.yml) | Set AWS credentials for the Kube API and Kube Controller Manager |  |
+| [`ops-files/iaas/aws/add-worker-credentials.yml`](ops-files/iaas/aws/add-worker-credentials.yml) | Set AWS credentials for the Kubelet |  |
 | **OpenStack** | | |
 | [`ops-files/iaas/openstack/cloud-provider.yml`](ops-files/iaas/openstack/cloud-provider.yml) | Enable Cloud Provider for OpenStack | Enable Cloud Provider for OpenStack |
 | **GCP** | | |
