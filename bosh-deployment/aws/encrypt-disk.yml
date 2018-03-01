@@ -1,0 +1,8 @@
+---
+- type: replace
+  path: /cloud_provider/properties/aws/encrypted?
+  value: true
+
+- type: replace
+  path: /cloud_provider/properties/aws/kms_key_arn?
+  value: ((encrypt_key))

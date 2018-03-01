@@ -18,3 +18,13 @@
 - type: replace
   path: /instance_groups/name=bosh/properties/aws/credentials_source?
   value: env_or_profile
+
+- type: remove
+  path: /cloud_provider/properties/aws/access_key_id
+
+- type: remove
+  path: /cloud_provider/properties/aws/secret_access_key
+
+- type: replace
+  path: /cloud_provider/properties/aws/credentials_source?
+  value: env_or_profile
