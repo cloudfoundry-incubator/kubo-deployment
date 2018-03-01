@@ -8,9 +8,9 @@ releases:
 - name: kubo
   version: latest
 - name: docker
-  version: 30.1.4
-  url: https://github.com/cloudfoundry-community/docker-boshrelease/releases/download/v30.1.4/docker-30.1.4.tgz
-  sha1: f79a70452b3ddae52f5ac78dd37ff8d9e6ec19e2
+  version: 31.0.1
+  url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v31.0.1/docker-31.0.1.tgz
+  sha1: 550ab08cb6dcd113ab5182d84fbcb09d966a612a
 - name: bosh-dns
   sha1: 9231b7c7d2f6aa85e0cb77fdeef7add54fdb3f1a
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=0.2.0
