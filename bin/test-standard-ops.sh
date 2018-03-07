@@ -38,9 +38,7 @@ test_standard_ops() {
       check_interpolation "cf-routing-links.yml" "-l example-vars-files/cf-routing-links.yml"
 
       # HTTP proxy options
-      check_interpolation "add-http-proxy.yml" "-v http_proxy=10.10.10.10:8000"
-      check_interpolation "add-https-proxy.yml" "-v https_proxy=10.10.10.10:8000"
-      check_interpolation "add-no-proxy.yml" "-v no_proxy=localhost,127.0.0.1"
+      check_interpolation "add-proxy.yml" "-v http_proxy=10.10.10.10:8000 -v https_proxy=10.10.10.10:8000 -v no_proxy=localhost,127.0.0.1"
 
       # Kubernetes
       check_interpolation "system-specs.yml" "-l example-vars-files/system-specs.yml"

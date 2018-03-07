@@ -92,14 +92,16 @@ upload_release() {
   restore_debug_output
 }
 
-set_ops_file_if_path_exists() {
+set_ops_file_if_one_path_exists() {
   local variables_file="$1"
-  local variable_yaml_path="$2"
-  local ops_file_path="$3"
+  local ops_file_path="$2"
 
-  if bosh int "$variables_file" --path="$variable_yaml_path" &>/dev/null; then
-    echo " --ops-file=\"$ops_file_path\""
-  fi
+  for variable_yaml_path in "${@:3}"; do
+    if bosh int "$variables_file" --path="$variable_yaml_path" &>/dev/null; then
+      echo " --ops-file=\"$ops_file_path\""
+      return
+    fi
+  done
 }
 
 set_ops_file_if_true() {
@@ -130,6 +132,7 @@ set_vars_file_if_file_exists() {
   fi
 
 }
+
 set_default_var_if_path_does_not_exist() {
   local variables_file="$1"
   local variable_yaml_path="$2"
@@ -160,7 +163,15 @@ generate_manifest() {
   local routing_mode="$(bosh int "${director_path}" --path='/routing_mode')"
   local iaas="$(bosh int "${director_path}" --path='/iaas')"
   local existing_deployment=$(check_for_existing_deployment "${deployment_name}" 2>/dev/null)
-  local interpolate_arguments="$(set_ops_file_if_true \
+  local interpolate_arguments="$(set_ops_file_if_one_path_exists \
+    "${director_path}" \
+    "${ops_dir}/add-proxy.yml" \
+    "/http_proxy" \
+    "/https_proxy" \
+    "/no_proxy" \
+  )"
+
+  interpolate_arguments+="$(set_ops_file_if_true \
     "${director_path}" \
     "/allow_privileged_containers" \
     "${ops_dir}/allow-privileged-containers.yml" \
@@ -196,24 +207,6 @@ generate_manifest() {
   if [[ "${routing_mode}" == "cf" ]]; then
     interpolate_arguments+=" --ops-file=\"${ops_dir}/cf-routing.yml\""
   fi
-
-  interpolate_arguments+="$(set_ops_file_if_path_exists \
-    "${director_path}" \
-    "/http_proxy" \
-    "${ops_dir}/add-http-proxy.yml" \
-  )"
-
-  interpolate_arguments+="$(set_ops_file_if_path_exists \
-    "${director_path}" \
-    "/https_proxy" \
-    "${ops_dir}/add-https-proxy.yml" \
-  )"
-
-  interpolate_arguments+="$(set_ops_file_if_path_exists \
-    "${director_path}" \
-    "/no_proxy" \
-    "${ops_dir}/add-no-proxy.yml" \
-  )"
 
   if [[ "aws" == "${iaas}" ]]; then
     interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/aws/lb.yml\""

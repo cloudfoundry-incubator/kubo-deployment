@@ -226,9 +226,7 @@ kubectl get all
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
-| [`ops-files/add-http-proxy.yml`](ops-files/add-http-proxy.yml) | Configure HTTP proxy for containers | Docker passes `http_proxy` environment variable to all containers |
-| [`ops-files/add-https-proxy.yml`](ops-files/add-https-proxy.yml) | Configure HTTP proxy for containers | Docker passes `https_proxy` environment variable to all containers |
-| [`ops-files/add-no-proxy.yml`](ops-files/add-no-proxy.yml) | Configure HTTP proxy for containers | Docker passes `no_proxy` environment variable to all containers |
+| [`ops-files/add-proxy.yml`](ops-files/add-proxy.yml) | Configure HTTP_PROXY, HTTPS_PROXY, and NO_PROXY for Kubernetes components | All Kubernetes components are configured with the `http_proxy`, `https_proxy`, and `no_proxy` environment variables |
 
 ### Kubernetes
 

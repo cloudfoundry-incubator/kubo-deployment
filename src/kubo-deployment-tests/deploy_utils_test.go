@@ -334,7 +334,7 @@ var _ = Describe("DeployUtils", func() {
 		})
 	})
 
-	Describe("set_ops_file_if_path_exists", func() {
+	Describe("set_ops_file_if_one_path_exists", func() {
 		Context("when the variable path exists", func() {
 			It("returns an ops-file argument", func() {
 				bash.Source(pathToScript("lib/deploy_utils"), nil)
@@ -342,11 +342,11 @@ var _ = Describe("DeployUtils", func() {
 				boshMock := Mock("bosh", `return 0`)
 				ApplyMocks(bash, []Gob{boshMock})
 
-				code, err := bash.Run("set_ops_file_if_path_exists",
+				code, err := bash.Run("set_ops_file_if_one_path_exists",
 					[]string{
 						"director.yml",
-						"/some_variable",
 						"some-ops-file.yml",
+						"/some_variable",
 					})
 				Expect(err).NotTo(HaveOccurred())
 				Expect(code).To(Equal(0))
@@ -361,15 +361,80 @@ var _ = Describe("DeployUtils", func() {
 				boshMock := Mock("bosh", `return 1`)
 				ApplyMocks(bash, []Gob{boshMock})
 
-				code, err := bash.Run("set_ops_file_if_path_exists",
+				code, err := bash.Run("set_ops_file_if_one_path_exists",
 					[]string{
 						"director.yml",
-						"/some_variable",
 						"some-ops-file.yml",
+						"/some_variable",
 					})
 				Expect(err).NotTo(HaveOccurred())
 				Expect(code).To(Equal(0))
 				Expect(stdout).NotTo(gbytes.Say("some-ops-file.yml"))
+			})
+		})
+
+		Context("when multiple variable paths are provided", func() {
+			Context("and all paths exist", func() {
+				It("returns an ops-file argument", func() {
+					bash.Source(pathToScript("lib/deploy_utils"), nil)
+
+					boshMock := Mock("bosh", `return 0`)
+					ApplyMocks(bash, []Gob{boshMock})
+
+					code, err := bash.Run("set_ops_file_if_one_path_exists",
+						[]string{
+							"director.yml",
+							"some-ops-file.yml",
+							"/some_variable",
+							"/some_other_variable",
+						})
+
+					Expect(err).NotTo(HaveOccurred())
+					Expect(code).To(Equal(0))
+					Expect(stdout).To(gbytes.Say("some-ops-file.yml"))
+					Expect(stdout).NotTo(gbytes.Say("some-ops-file.yml"))
+				})
+			})
+
+			Context("and one exists", func() {
+				It("returns an ops-file argument", func() {
+					bash.Source(pathToScript("lib/deploy_utils"), nil)
+
+					boshMock := Mock("bosh", `echo "$@" | grep "path=/some_other_variable"`)
+					ApplyMocks(bash, []Gob{boshMock})
+
+					code, err := bash.Run("set_ops_file_if_one_path_exists",
+						[]string{
+							"director.yml",
+							"some-ops-file.yml",
+							"/some_variable",
+							"/some_other_variable",
+						})
+
+					Expect(err).NotTo(HaveOccurred())
+					Expect(code).To(Equal(0))
+					Expect(stdout).To(gbytes.Say("some-ops-file.yml"))
+				})
+			})
+
+			Context("and none exist", func() {
+				It("returns an empty string", func() {
+					bash.Source(pathToScript("lib/deploy_utils"), nil)
+
+					boshMock := Mock("bosh", `return 1`)
+					ApplyMocks(bash, []Gob{boshMock})
+
+					code, err := bash.Run("set_ops_file_if_one_path_exists",
+						[]string{
+							"director.yml",
+							"some-ops-file.yml",
+							"/some_variable",
+							"/some_other_variable",
+						})
+					Expect(err).NotTo(HaveOccurred())
+					Expect(code).To(Equal(0))
+					Expect(stdout).NotTo(gbytes.Say("some-ops-file.yml"))
+				})
 			})
 		})
 	})
@@ -491,8 +556,8 @@ var _ = Describe("DeployUtils", func() {
 			else
 				echo
 			fi`)
-			setOpsFileIfPathExistsMock := Mock("set_ops_file_if_path_exists",
-				`echo --ops-file="$3"`)
+			setOpsFileIfPathExistsMock := Mock("set_ops_file_if_one_path_exists",
+				`echo --ops-file="$2"`)
 			setOpsFileIfTrueMock := Mock("set_ops_file_if_true",
 				`echo --ops-file="$3"`)
 			setOpsFileIfFileExistsMock := Mock("set_ops_file_if_file_exists",
@@ -521,23 +586,13 @@ var _ = Describe("DeployUtils", func() {
 			Expect(stderr).To(gbytes.Say("routing_mode"))
 			Expect(stderr).To(gbytes.Say("iaas"))
 
-			Expect(stderr).To(gbytes.Say(fmt.Sprintf("%s %s %s %s",
-				"set_ops_file_if_path_exists",
+			Expect(stderr).To(gbytes.Say(fmt.Sprintf("%s %s %s %s %s %s",
+				"set_ops_file_if_one_path_exists",
 				path.Join(testEnvironmentPath, "with_ops_and_vars_and_creds/director.yml"),
+				pathFromRoot("manifests/ops-files/add-proxy.yml"),
 				"/http_proxy",
-				pathFromRoot("manifests/ops-files/add-http-proxy.yml"),
-			)))
-			Expect(stderr).To(gbytes.Say(fmt.Sprintf("%s %s %s %s",
-				"set_ops_file_if_path_exists",
-				path.Join(testEnvironmentPath, "with_ops_and_vars_and_creds/director.yml"),
 				"/https_proxy",
-				pathFromRoot("manifests/ops-files/add-https-proxy.yml"),
-			)))
-			Expect(stderr).To(gbytes.Say(fmt.Sprintf("%s %s %s %s",
-				"set_ops_file_if_path_exists",
-				path.Join(testEnvironmentPath, "with_ops_and_vars_and_creds/director.yml"),
 				"/no_proxy",
-				pathFromRoot("manifests/ops-files/add-no-proxy.yml"),
 			)))
 			Expect(stderr).To(gbytes.Say(fmt.Sprintf("%s %s",
 				"set_ops_file_if_file_exists",
@@ -578,9 +633,7 @@ var _ = Describe("DeployUtils", func() {
 			Expect(stderr).To(gbytes.Say("director.yml"))
 			Expect(stderr).To(gbytes.Say("--var deployment_name=name"))
 			Expect(stderr).To(gbytes.Say("--var director_uuid=director-uuid"))
-			Expect(stderr).To(gbytes.Say("add-http-proxy.yml"))
-			Expect(stderr).To(gbytes.Say("add-https-proxy.yml"))
-			Expect(stderr).To(gbytes.Say("add-no-proxy.yml"))
+			Expect(stderr).To(gbytes.Say("add-proxy.yml"))
 			Expect(stderr).To(gbytes.Say("allow-privileged-containers.yml"))
 			Expect(stderr).To(gbytes.Say("cloud-provider.yml"))
 			Expect(stderr).To(gbytes.Say("name.yml"))
