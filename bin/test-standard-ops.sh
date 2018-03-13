@@ -46,6 +46,9 @@ test_standard_ops() {
       check_interpolation "allow-privileged-containers.yml"
       check_interpolation "add-oidc-endpoint.yml" "-l example-vars-files/misc/oidc.yml"
 
+      # Dev
+      check_interpolation "kubo-local-release.yml"
+
     popd > /dev/null # operations
   popd > /dev/null
   exit $exit_code
