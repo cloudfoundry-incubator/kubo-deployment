@@ -21,6 +21,11 @@ variable "prefix" {
     default = "cfcr"
 }
 
+variable "kubernetes_master_port" {
+	type = "string"
+	default = "8443"
+}
+
 provider "google" {
     credentials = ""
     project = "${var.projectid}"
@@ -41,7 +46,7 @@ resource "google_compute_target_pool" "cfcr-tcp-public" {
 resource "google_compute_forwarding_rule" "cfcr-tcp" {
   name        = "${var.prefix}-cfcr-tcp"
   target      = "${google_compute_target_pool.cfcr-tcp-public.self_link}"
-  port_range  = "8443"
+  port_range  = "${var.kubernetes_master_port}"
   ip_protocol = "TCP"
   ip_address  = "${google_compute_address.cfcr-tcp.address}"
 }
@@ -52,7 +57,7 @@ resource "google_compute_firewall" "cfcr-tcp-public" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8443"]
+    ports    = ["${var.kubernetes_master_port}"]
   }
 
   target_tags = ["master"]
