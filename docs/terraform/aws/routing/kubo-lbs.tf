@@ -18,6 +18,12 @@ variable "prefix" {
     type = "string"
 }
 
+
+variable "kubernetes_master_port" {
+    type = "string"
+    default = "8443"
+}
+
 provider "aws" {
     region = "${var.region}"
 }
@@ -27,8 +33,8 @@ resource "aws_security_group" "api" {
     vpc_id = "${var.vpc_id}"
 
     ingress {
-      from_port   = 8443
-      to_port     = 8443
+      from_port   = ${var.kubernetes_master_port}
+      to_port     = ${var.kubernetes_master_port}
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     }
@@ -47,9 +53,9 @@ resource "aws_elb" "api" {
     security_groups = ["${aws_security_group.api.id}"]
 
     listener {
-      instance_port      = 8443
+      instance_port      = ${var.kubernetes_master_port}
       instance_protocol  = "tcp"
-      lb_port            = 8443
+      lb_port            = ${var.kubernetes_master_port}
       lb_protocol        = "tcp"
     }
 
@@ -57,7 +63,7 @@ resource "aws_elb" "api" {
       healthy_threshold   = 2
       unhealthy_threshold = 2
       timeout             = 2
-      target              = "TCP:8443"
+      target              = "TCP:${var.kubernetes_master_port}"
       interval            = 5
     }
 }
