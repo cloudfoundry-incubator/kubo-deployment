@@ -33,8 +33,8 @@ resource "aws_security_group" "api" {
     vpc_id = "${var.vpc_id}"
 
     ingress {
-      from_port   = ${var.kubernetes_master_port}
-      to_port     = ${var.kubernetes_master_port}
+      from_port   = "${var.kubernetes_master_port}"
+      to_port     = "${var.kubernetes_master_port}"
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     }
@@ -53,9 +53,9 @@ resource "aws_elb" "api" {
     security_groups = ["${aws_security_group.api.id}"]
 
     listener {
-      instance_port      = ${var.kubernetes_master_port}
+      instance_port      = "${var.kubernetes_master_port}"
       instance_protocol  = "tcp"
-      lb_port            = ${var.kubernetes_master_port}
+      lb_port            = "${var.kubernetes_master_port}"
       lb_protocol        = "tcp"
     }
 
