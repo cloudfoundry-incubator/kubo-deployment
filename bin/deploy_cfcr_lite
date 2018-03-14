@@ -1,25 +1,24 @@
 #!/bin/bash
 set -euo pipefail
 
+bosh upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
+
+bosh -n update-cloud-config configurations/virtualbox/cloud-config.yml
+
 bosh -n -d cfcr deploy --no-redact \
   -v authorization_mode=rbac \
+  -o manifests/ops-files/kubo-local-release.yml \
   -o manifests/ops-files/system-specs.yml \
   "$@" \
   manifests/cfcr.yml
 
-
-deployment_dir="${HOME}/bosh-lite/deployments/kubo" && mkdir -p "$deployment_dir"
-export KUBECONFIG="$deployment_dir/kuboconfig"
+kubeconfig_dir="${HOME}/.kube-cfcr" && mkdir -p "$kubeconfig_dir"
+export KUBECONFIG="$kubeconfig_dir/kuboconfig"
 credhub login
-bosh int <(credhub get -n "/lite/cfcr/tls-kubernetes" ) --path=/value/ca > "$deployment_dir/kubernetes.crt"
-KUBERNETES_PWD=$(bosh int <(credhub get -n "/lite/cfcr/kubo-admin-password" --output-json) --path=/value)
-kubectl config set-cluster kubo --server https://kubernetes:8443 --embed-certs=true --certificate-authority="$deployment_dir/kubernetes.crt"
+bosh int <(credhub get -n "/${BOSH_DIRECTOR_NAME:-lite}/cfcr/tls-kubernetes" ) --path=/value/ca > "$kubeconfig_dir/kubernetes.crt"
+KUBERNETES_PWD=$(bosh int <(credhub get -n "/${BOSH_DIRECTOR_NAME:-lite}/cfcr/kubo-admin-password" --output-json) --path=/value)
+kubectl config set-cluster kubo --server https://kubernetes:8443 --embed-certs=true --certificate-authority="$kubeconfig_dir/kubernetes.crt"
 kubectl config set-credentials "kubo-admin" --token=${KUBERNETES_PWD}
 kubectl config set-context kubo --cluster=kubo --user=kubo-admin
 kubectl config use-context kubo
-echo export KUBECONFIG="$deployment_dir/kuboconfig"
-
-cat <<EOF >${deployment_dir}/.envrc
-export BOSH_DEPLOYMENT=cfcr" > $deployment_dir/.envrc
-export KUBECONFIG="$deployment_dir/kuboconfig"
-EOF
+echo export KUBECONFIG="$kubeconfig_dir/kuboconfig"
