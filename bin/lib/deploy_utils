@@ -243,7 +243,7 @@ generate_manifest() {
     interpolate_arguments+=" --ops-file=\"${ops_dir}/addons-spec.yml\" --var-file=\"addons-spec=${addon_path}\""
   fi
 
-  if bosh-cli int "${director_path}" --path='/oidc_issuer_url' &> /dev/null; then
+  if bosh int "${director_path}" --path='/oidc_issuer_url' &> /dev/null; then
     interpolate_arguments+=" --ops-file=\"${ops_dir}/add-oidc-endpoint.yml\""
   fi
 
