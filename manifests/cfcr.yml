@@ -2,9 +2,9 @@ name: cfcr
 
 releases:
 - name: kubo-etcd
-  version: 8
-  url: https://github.com/pivotal-cf-experimental/kubo-etcd/releases/download/v8/kubo-etcd.8.tgz
-  sha1: 267bf72c9f4680b6e1cf542283c653abc74469e2
+  version: 9
+  url: https://github.com/pivotal-cf-experimental/kubo-etcd/releases/download/v9/kubo-etcd.9.tgz
+  sha1: ec113e6c6918e83486444bf2a513a0176ddeb074
 - name: kubo
   version: latest
 - name: docker
