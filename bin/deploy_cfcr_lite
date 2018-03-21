@@ -6,9 +6,7 @@ bosh upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-tru
 bosh -n update-cloud-config configurations/virtualbox/cloud-config.yml
 
 bosh -n -d cfcr deploy --no-redact \
-  -v authorization_mode=rbac \
   -o manifests/ops-files/kubo-local-release.yml \
-  -o manifests/ops-files/system-specs.yml \
   "$@" \
   manifests/cfcr.yml
 
