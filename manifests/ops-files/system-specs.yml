@@ -1,7 +1,7 @@
 - type: replace
   path: /instance_groups/-
   value:
-    name: apply-addons
+    name: apply-specs
     instances: 1
     networks:
     - name: default
