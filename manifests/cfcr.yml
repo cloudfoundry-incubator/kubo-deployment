@@ -48,6 +48,27 @@ addons:
     release: kubo
 
 instance_groups:
+- name: apply-addons
+  instances: 1
+  networks:
+  - name: default
+  azs: [z1]
+  lifecycle: errand
+  jobs:
+  - name: apply-specs
+    release: kubo
+    properties:
+      api-token: ((kubelet-password))
+      admin-username: admin
+      admin-password: ((kubo-admin-password))
+      authorization-mode: rbac
+      tls:
+        kubernetes: ((tls-kubernetes))
+        heapster: ((tls-heapster))
+        influxdb: ((tls-influxdb))
+        kubernetes-dashboard: ((tls-kubernetes-dashboard))
+  stemcell: trusty
+  vm_type: minimal
 - name: master
   instances: 1
   networks:
