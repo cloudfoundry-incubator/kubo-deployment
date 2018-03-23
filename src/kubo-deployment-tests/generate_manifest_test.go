@@ -50,7 +50,7 @@ var _ = Describe("Generate manifest", func() {
 		},
 			Entry("deployment name", "/name", "klingon"),
 			Entry("network name", "/instance_groups/name=master/networks/0/name", "default"),
-			Entry("Master node has the etcd job", "/instance_groups/name=master/jobs/name=etcd/release", "kubo-etcd"),
+			Entry("Master node has the etcd job", "/instance_groups/name=master/jobs/name=etcd/release", "cfcr-etcd"),
 			Entry("There is only one master node", "/instance_groups/name=master/instances", "1"),
 			Entry("kubernetes external port", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/external_kubo_port", "101928"),
 			Entry("CF API URL", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/api_url", "cf.api.url"),

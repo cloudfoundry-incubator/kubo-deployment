@@ -3,3 +3,5 @@ kubernetes_master_host: cfcr-bootstrap.com
 kubernetes_master_port: 8445
 authorization_mode: rbac
 worker_count: 1
+etcd_cert_cn: cfcr-bootstrap.com
+etcd_cert_san: '*.cfcr-bootstrap.com'
