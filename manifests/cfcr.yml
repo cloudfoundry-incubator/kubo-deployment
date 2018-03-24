@@ -169,6 +169,8 @@ instance_groups:
       tls_cert:  ((tls-docker.certificate))
       tls_key: ((tls-docker.private_key))
       env: {}
+  - name: kubernetes-dependencies
+    release: kubo
   - name: kubelet
     release: kubo
     properties:
