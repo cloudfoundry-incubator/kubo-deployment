@@ -3,7 +3,7 @@
 The base manifest "just works" and will deploy a running cluster of Kubernetes:
 
 ```
-bosh deploy kubo-deployment/manifests/cfcr.yml
+bosh -d cfcr deploy kubo-deployment/manifests/cfcr.yml
 ```
 
 ## Dependencies
