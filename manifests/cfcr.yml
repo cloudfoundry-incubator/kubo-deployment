@@ -23,7 +23,7 @@ releases:
 stemcells:
 - alias: trusty
   os: ubuntu-trusty
-  version: "3541.9"
+  version: "3541.10"
 
 addons:
 - name: bosh-dns
