@@ -252,6 +252,7 @@ generate_manifest() {
   set +x
   local manifest=$(bosh int <(echo "${manifest}") --ops-file="${ops_dir}/misc/dev.yml" \
     --ops-file="${ops_dir}/misc/bootstrap.yml" \
+    --ops-file="${ops_dir}/misc/single-master.yml" \
     --ops-file="${ops_dir}/use-runtime-config-bosh-dns.yml" \
     --vars-file="${director_path}" \
     --var deployment_name="${deployment_name}" \

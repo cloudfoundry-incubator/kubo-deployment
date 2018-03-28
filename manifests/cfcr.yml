@@ -70,7 +70,7 @@ instance_groups:
   stemcell: trusty
   vm_type: minimal
 - name: master
-  instances: 1
+  instances: 3
   networks:
   - name: default
   azs: [z1,z2,z3]
