@@ -13,7 +13,7 @@ The only dependencies are that your BOSH environment has:
 * Credhub/UAA
 * Cloud Config with `vm_types` named `minimal`, `small`, and `small-highmem` as per similar requirements of [cf-deployment](https://github.com/cloudfoundry/cf-deployment)
 * Cloud Config has a network named `default`as per similar requirements of [cf-deployment](https://github.com/cloudfoundry/cf-deployment)
-* Not a bosh-lite
+* If using bosh-lite see [Deploy CFCR in bosh-lite](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/CONTRIBUTING.md#deploy-cfcr-in-bosh-lite)
 * Ubuntu Trusty stemcell `3468` is uploaded (it's up to you to keep up to date with latest `3468.X` versions and update your BOSH deployments)
 
 ## Getting Started
