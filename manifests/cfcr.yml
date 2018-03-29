@@ -1,16 +1,16 @@
 name: cfcr
 
 releases:
-- name: kubo-etcd
-  version: 9
-  url: https://github.com/pivotal-cf-experimental/kubo-etcd/releases/download/v9/kubo-etcd.9.tgz
-  sha1: ec113e6c6918e83486444bf2a513a0176ddeb074
 - name: kubo
   version: latest
+- name: cfcr-etcd
+  url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.0/cfcr-etcd-release-1.0.tgz
+  sha1: 81dbcc40a27cbf731bfc71b7c46c495b510f85a4
+  version: '1.0'
 - name: docker
-  version: 31.0.1
   url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v31.0.1/docker-31.0.1.tgz
   sha1: 550ab08cb6dcd113ab5182d84fbcb09d966a612a
+  version: 31.0.1
 - name: bosh-dns
   sha1: 9231b7c7d2f6aa85e0cb77fdeef7add54fdb3f1a
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=0.2.0
@@ -23,7 +23,7 @@ releases:
 stemcells:
 - alias: trusty
   os: ubuntu-trusty
-  version: "3541.9"
+  version: "3541.10"
 
 addons:
 - name: bosh-dns
@@ -70,7 +70,7 @@ instance_groups:
   stemcell: trusty
   vm_type: minimal
 - name: master
-  instances: 1
+  instances: 3
   networks:
   - name: default
   azs: [z1,z2,z3]
@@ -123,22 +123,21 @@ instance_groups:
       tls:
         kubernetes: ((tls-kubernetes))
   - name: etcd
-    release: kubo-etcd
+    release: cfcr-etcd
     properties:
-      etcd:
-        dns_health_check_host: 169.254.0.2 # this is the default BOSH DNS nameserver
-        advertise_urls_dns_suffix: etcd.cfcr.internal
-        require_ssl: true
-        peer_require_ssl: true
-        delete_data_dir_on_stop: false
-        ca_cert: ((tls-etcd-server.ca))
-        server_cert: ((tls-etcd-server.certificate))
-        server_key: ((tls-etcd-server.private_key))
-        client_cert: ((tls-etcd-client.certificate))
-        client_key: ((tls-etcd-client.private_key))
-        peer_ca_cert: ((tls-etcd-peer.ca))
-        peer_cert: ((tls-etcd-peer.certificate))
-        peer_key: ((tls-etcd-peer.private_key))
+      tls:
+        etcd:
+          ca: ((tls-etcd.ca))
+          certificate: ((tls-etcd.certificate))
+          private_key: ((tls-etcd.private_key))
+        etcdctl:
+          ca: ((tls-etcdctl.ca))
+          certificate: ((tls-etcdctl.certificate))
+          private_key: ((tls-etcdctl.private_key))
+        peer:
+          ca: ((tls-etcd.ca))
+          certificate: ((tls-etcd.certificate))
+          private_key: ((tls-etcd.private_key))
   stemcell: trusty
   vm_type: small
   persistent_disk: 5120
@@ -248,25 +247,25 @@ variables:
     ca: kubo_ca
     common_name: docker.cfcr.internal
 
-- name: tls-etcd-server
+- name: tls-etcd
   type: certificate
   options:
     ca: kubo_ca
-    common_name: etcd.cfcr.internal
+    common_name: "master.default.cfcr.bosh"
     alternative_names:
-    - "*.etcd.cfcr.internal"
+    - "master.default.cfcr.bosh"
+    - "*.master.default.cfcr.bosh"
+    extended_key_usage:
+    - client_auth
+    - server_auth
 
-- name: tls-etcd-client
+- name: tls-etcdctl
   type: certificate
   options:
     ca: kubo_ca
     common_name: etcdClient
-
-- name: tls-etcd-peer
-  type: certificate
-  options:
-    ca: kubo_ca
-    common_name: "*.etcd.cfcr.internal"
+    extended_key_usage:
+    - client_auth
 
 - name: tls-heapster
   type: certificate
