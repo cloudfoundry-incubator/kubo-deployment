@@ -55,8 +55,8 @@ main() {
     exit 1
   fi
 
-  bosh_manifest=$("generate_manifest_$iaas" "${bosh_env}" "${extra_filename}")
   set +x
+  bosh_manifest=$("generate_manifest_$iaas" "${bosh_env}" "${extra_filename}")
   deploy_bosh "${bosh_env}" "${bosh_manifest}"
   [[ -z "${DEBUG:-}" ]] || set -x
 

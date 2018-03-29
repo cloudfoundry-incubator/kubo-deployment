@@ -1,0 +1,22 @@
+#!/bin/bash
+set -euo pipefail
+
+bosh upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
+
+bosh -n update-cloud-config configurations/virtualbox/cloud-config.yml
+
+bosh -n -d cfcr deploy --no-redact \
+  -o manifests/ops-files/kubo-local-release.yml \
+  "$@" \
+  manifests/cfcr.yml
+
+kubeconfig_dir="${HOME}/.kube-cfcr" && mkdir -p "$kubeconfig_dir"
+export KUBECONFIG="$kubeconfig_dir/kuboconfig"
+credhub login
+bosh int <(credhub get -n "/${BOSH_DIRECTOR_NAME:-lite}/cfcr/tls-kubernetes" ) --path=/value/ca > "$kubeconfig_dir/kubernetes.crt"
+KUBERNETES_PWD=$(bosh int <(credhub get -n "/${BOSH_DIRECTOR_NAME:-lite}/cfcr/kubo-admin-password" --output-json) --path=/value)
+kubectl config set-cluster kubo --server https://kubernetes:8443 --embed-certs=true --certificate-authority="$kubeconfig_dir/kubernetes.crt"
+kubectl config set-credentials "kubo-admin" --token=${KUBERNETES_PWD}
+kubectl config set-context kubo --cluster=kubo --user=kubo-admin
+kubectl config use-context kubo
+echo export KUBECONFIG="$kubeconfig_dir/kuboconfig"

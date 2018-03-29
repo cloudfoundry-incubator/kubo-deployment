@@ -15,4 +15,5 @@ service_account_worker: # service account to be set on Kubo Worker VMs
 # Comment out this section when using CF routing mode
 routing_mode: iaas
 kubernetes_master_host: # IP address that can be used to reach the Kubernetes API, usually the address of a load balancer or static IP
+kubernetes_master_port: # Port number on the kubernetes_master_host IP address that can be used to reach the Kubernetes API
 master_target_pool: # target pool that master nodes will be a part of

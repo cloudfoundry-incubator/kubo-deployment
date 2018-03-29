@@ -3,7 +3,7 @@
 The base manifest "just works" and will deploy a running cluster of Kubernetes:
 
 ```
-bosh deploy kubo-deployment/manifests/cfcr.yml
+bosh -d cfcr deploy kubo-deployment/manifests/cfcr.yml
 ```
 
 ## Dependencies
@@ -13,7 +13,7 @@ The only dependencies are that your BOSH environment has:
 * Credhub/UAA
 * Cloud Config with `vm_types` named `minimal`, `small`, and `small-highmem` as per similar requirements of [cf-deployment](https://github.com/cloudfoundry/cf-deployment)
 * Cloud Config has a network named `default`as per similar requirements of [cf-deployment](https://github.com/cloudfoundry/cf-deployment)
-* Not a bosh-lite
+* If using bosh-lite see [Deploy CFCR in bosh-lite](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/CONTRIBUTING.md#deploy-cfcr-in-bosh-lite)
 * Ubuntu Trusty stemcell `3468` is uploaded (it's up to you to keep up to date with latest `3468.X` versions and update your BOSH deployments)
 
 ## Getting Started
@@ -210,6 +210,8 @@ kubectl get all
 | **AWS** | | |
 | [`ops-files/iaas/aws/cloud-provider.yml`](ops-files/iaas/aws/cloud-provider.yml) | Enable Cloud Provider for AWS | Requires AWS Instance Profiles (not API keys) to grant Kubernetes access to AWS |
 | [`ops-files/iaas/aws/lb.yml`](ops-files/iaas/aws/lb.yml) | Enable instance tagging for AWS |  |
+| [`ops-files/iaas/aws/add-master-credentials.yml`](ops-files/iaas/aws/add-master-credentials.yml) | Set AWS credentials for the Kube API and Kube Controller Manager |  |
+| [`ops-files/iaas/aws/add-worker-credentials.yml`](ops-files/iaas/aws/add-worker-credentials.yml) | Set AWS credentials for the Kubelet |  |
 | **OpenStack** | | |
 | [`ops-files/iaas/openstack/cloud-provider.yml`](ops-files/iaas/openstack/cloud-provider.yml) | Enable Cloud Provider for OpenStack | Enable Cloud Provider for OpenStack |
 | **GCP** | | |
@@ -223,15 +225,20 @@ kubectl get all
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
-| [`ops-files/add-http-proxy.yml`](ops-files/add-http-proxy.yml) | Configure HTTP proxy for containers | Docker passes `http_proxy` environment variable to all containers |
-| [`ops-files/add-https-proxy.yml`](ops-files/add-https-proxy.yml) | Configure HTTP proxy for containers | Docker passes `https_proxy` environment variable to all containers |
-| [`ops-files/add-no-proxy.yml`](ops-files/add-no-proxy.yml) | Configure HTTP proxy for containers | Docker passes `no_proxy` environment variable to all containers |
+| [`ops-files/add-proxy.yml`](ops-files/add-proxy.yml) | Configure HTTP_PROXY, HTTPS_PROXY, and NO_PROXY for Kubernetes components | All Kubernetes components are configured with the `http_proxy`, `https_proxy`, and `no_proxy` environment variables |
 
 ### Kubernetes
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
-| [`ops-files/system-specs.yml`](ops-files/system-specs.yml) | System Addons to be deployed to the Kubernetes cluster | - |
 | [`ops-files/addons-spec.yml`](ops-files/addons-spec.yml) | Addons to be deployed into the Kubernetes cluster | - |
 | [`ops-files/allow-privileged-containers.yml`](ops-files/allow-privileged-containers.yml) | Allows privileged containers for the Kubernetes cluster | - |
 | [`ops-files/add-oidc-endpoint.yml`](ops-files/add-oidc-endpoint.yml) | Enable OIDC authentication for the Kubernetes cluster | - |
+
+### Dev
+
+| Name | Purpose | Notes |
+|:---  |:---     |:---   |
+| [`ops-files/kubo-local-release.yml`](ops-files/kubo-local-release.yml) | Deploy a local kubo release located in `../kubo-release` | -  |
+
+

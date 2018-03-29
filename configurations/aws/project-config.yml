@@ -11,4 +11,5 @@ kubernetes_cluster_tag: # Tag to match public ELB subnet, Kubo workers subnet an
 # Comment out this section when using CF routing mode
 routing_mode: iaas
 kubernetes_master_host: # IP address that can be used to reach the Kubernetes API, usually the address of a load balancer or static IP
+kubernetes_master_port: # Port on kubernetes_master_host that can be used to reach the Kubernetes API
 master_target_pool: # target pool that master nodes will be a part of

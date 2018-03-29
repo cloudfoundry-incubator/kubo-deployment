@@ -82,7 +82,9 @@ main() {
 
   deploy_to_bosh "${manifest}" "${deployment_name}"
 
-  bosh -d "${deployment_name}" run-errand apply-specs
+  if [ -z $SKIP_ERRANDS ]; then
+    bosh -d "${deployment_name}" run-errand apply-specs
+  fi
 }
 
 [[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"

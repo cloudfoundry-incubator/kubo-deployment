@@ -269,8 +269,8 @@ sed -i -e 's/^#* *\(routing_mode:.*\)$/# \1/' "$1"
 sed -i -e 's/^#* *\(routing_mode:\) *\(iaas\).*$/\1 \2/' "$1"
 
 sed -i -e "s/^\(kubernetes_master_host:\).*\(#.*\)/\1 $${kubernetes_master_host} \2/" "$1"
+sed -i -e "s/^\(kubernetes_master_port:\).*\(#.*\)/\1 $${kubernetes_master_port:-8443} \2/" "$1"
 sed -i -e "s/^\(master_target_pool:\).*\(#.*\).*$/\1 $${master_target_pool} \2/" "$1"
-
 EOF
 chmod a+x /usr/bin/set_iaas_routing
 

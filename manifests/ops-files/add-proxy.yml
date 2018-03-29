@@ -1,0 +1,47 @@
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=docker/properties/env/http_proxy?
+  value: ((http_proxy))
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/http_proxy?
+  value: ((http_proxy))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/http_proxy?
+  value: ((http_proxy))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-controller-manager/properties/http_proxy?
+  value: ((http_proxy))
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=docker/properties/env/https_proxy?
+  value: ((https_proxy))
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/https_proxy?
+  value: ((https_proxy))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/https_proxy?
+  value: ((https_proxy))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-controller-manager/properties/https_proxy?
+  value: ((https_proxy))
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=docker/properties/env/no_proxy?
+  value: ((no_proxy))
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/no_proxy?
+  value: ((no_proxy))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/no_proxy?
+  value: ((no_proxy))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-controller-manager/properties/no_proxy?
+  value: ((no_proxy))

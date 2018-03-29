@@ -1,0 +1,6 @@
+- type: replace
+  path: /releases/name=kubo
+  value:
+   name: kubo
+   version: create
+   url: file://../kubo-release
