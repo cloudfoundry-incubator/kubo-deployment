@@ -1,4 +1,3 @@
-kubelet-password: password
 kubo-admin-password: admin-password
 authorization_mode: rbac
 tls-kubernetes:

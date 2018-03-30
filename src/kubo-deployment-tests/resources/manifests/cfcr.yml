@@ -64,7 +64,6 @@ instance_groups:
     properties:
       admin-username: admin
       admin-password: ((kubo-admin-password))
-      kubelet-password: ((kubelet-password))
       kube-proxy-password: ((kube-proxy-password))
       kube-controller-manager-password: ((kube-controller-manager-password))
       kube-scheduler-password: ((kube-scheduler-password))
@@ -92,7 +91,6 @@ instance_groups:
   - name: kubernetes-system-specs
     release: kubo
     properties:
-      api-token: ((kubelet-password))
       admin-username: admin
       admin-password: ((kubo-admin-password))
       authorization-mode: rbac
@@ -154,7 +152,6 @@ instance_groups:
   - name: kubelet
     release: kubo
     properties:
-      api-token: ((kubelet-password))
       tls:
         kubernetes: ((tls-kubernetes))
   - name: kube-proxy
@@ -175,8 +172,6 @@ update:
 
 variables:
 - name: kubo-admin-password
-  type: password
-- name: kubelet-password
   type: password
 - name: kube-proxy-password
   type: password

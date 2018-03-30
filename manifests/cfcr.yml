@@ -58,7 +58,6 @@ instance_groups:
   - name: apply-specs
     release: kubo
     properties:
-      api-token: ((kubelet-password))
       admin-username: admin
       admin-password: ((kubo-admin-password))
       authorization-mode: rbac
