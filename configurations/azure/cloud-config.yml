@@ -44,7 +44,7 @@ networks:
     gateway: ((internal_gw))
     azs: [z1, z2, z3]
     dns: [((dns_recursor_ip))]
-    reserved: [((internal_gw))/30]
+    reserved: [((internal_gw))/29]
     cloud_properties:
       resource_group: ((vnet_resource_group_name))
       virtual_network_name: ((vnet_name))

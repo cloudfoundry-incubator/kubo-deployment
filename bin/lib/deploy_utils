@@ -210,8 +210,6 @@ generate_manifest() {
 
   if [[ "aws" == "${iaas}" ]]; then
     interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/aws/lb.yml\""
-  elif [[ "azure" == "${iaas}" ]]; then
-    interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/azure/lb.yml\""
   elif [[ "gcp" == "${iaas}" ]]; then
     if ! bosh int "${director_path}" --path='/service_account_worker' &>/dev/null; then
       interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/gcp/add-service-key-worker.yml\""

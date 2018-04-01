@@ -21,8 +21,22 @@
           availability-set: ((prefix))-worker
 
     provides:
-      cloud-provider: {as: master-cloud-prvoider}
+      cloud-provider: {as: master-cloud-provider}
 
+- type: replace
+  path: /addons/-
+  value:
+    name: node-dns-aliases
+    jobs:
+    - name: node-dns-aliases
+      release: kubo
+      properties:
+        api-token: ((kube-controller-manager-password))
+        tls:
+          kubernetes:
+            ca: ((tls-kubernetes.ca))
+            certificate: ((tls-kubernetes.certificate))
+            private_key: ((tls-kubernetes.private_key))
 
 - type: replace
   path: /instance_groups/name=master/jobs/name=kube-apiserver/consumes?
@@ -62,7 +76,7 @@
           availability-set: ((prefix))-worker
 
     provides:
-      cloud-provider: {as: worker-cloud-prvoider}
+      cloud-provider: {as: worker-cloud-provider}
 
 - type: replace
   path: /instance_groups/name=worker/jobs/name=kubelet/consumes?
