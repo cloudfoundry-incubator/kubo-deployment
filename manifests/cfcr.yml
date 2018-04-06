@@ -8,9 +8,9 @@ releases:
   sha1: 81dbcc40a27cbf731bfc71b7c46c495b510f85a4
   version: '1.0'
 - name: docker
-  url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v31.0.1/docker-31.0.1.tgz
-  sha1: 550ab08cb6dcd113ab5182d84fbcb09d966a612a
-  version: 31.0.1
+  url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v31.1.0/docker-31.1.0.tgz
+  sha1: 129e20c9c749e3f1cbdb1f17d52de562f3fef3ad
+  version: 31.1.0
 - name: bosh-dns
   sha1: 9231b7c7d2f6aa85e0cb77fdeef7add54fdb3f1a
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=0.2.0
