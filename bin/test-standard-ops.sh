@@ -43,6 +43,7 @@ test_standard_ops() {
       # Kubernetes
       check_interpolation "addons-spec.yml" "-v addons-spec={}"
       check_interpolation "allow-privileged-containers.yml"
+      check_interpolation "disable-deny-escalating-exec.yml"
       check_interpolation "add-oidc-endpoint.yml" "-l example-vars-files/misc/oidc.yml"
 
       # Dev

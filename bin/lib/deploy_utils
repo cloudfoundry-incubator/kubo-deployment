@@ -182,7 +182,7 @@ generate_manifest() {
   interpolate_arguments+="$(set_ops_file_if_true \
     "${director_path}" \
     "/disable_deny_escalating_exec" \
-    "${ops_dir}/disable_deny_escalating_exec.yml" \
+    "${ops_dir}/disable-deny-escalating-exec.yml" \
   )"
 
   interpolate_arguments+="$(set_ops_file_if_file_exists \
