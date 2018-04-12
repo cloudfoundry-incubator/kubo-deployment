@@ -3,21 +3,14 @@ azs:
   cloud_properties:
     availability_zone: ((az))
 
+vm_extensions:
+- name: cfcr-master-network-properties
+
 vm_types:
 - name: minimal
   cloud_properties:
     instance_type: m1.small
     root_disk_size_gb: 20
-
-- name: master
-  cloud_properties:
-    instance_type: m1.small
-    root_disk_size_gb: 20
-
-- name: worker
-  cloud_properties:
-    instance_type: m1.large
-    root_disk_size_gb: 100
 
 networks:
 - name: default

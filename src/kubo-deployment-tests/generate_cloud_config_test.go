@@ -38,13 +38,13 @@ var _ = Describe("Generate cloud config", func() {
 	It("Does not include load balancer config for cf-based environment", func() {
 		bash.Run("main", []string{filepath.Join(testEnvironmentPath, "test_vsphere")})
 
-		Expect(stdout).NotTo(gbytes.Say("    target_pool: \\(\\(master_target_pool\\)\\)"))
+		Expect(stdout).NotTo(gbytes.Say("    target_pool: \\(\\(cfcr_master_target_pool\\)\\)"))
 	})
 
 	It("includes load balancer configuration for iaas-based environment", func() {
 		bash.Run("main", []string{kuboEnv})
 
-		Expect(stdout).To(gbytes.Say("    target_pool: \\(\\(master_target_pool\\)\\)"))
+		Expect(stdout).To(gbytes.Say("    target_pool: \\(\\(cfcr_master_target_pool\\)\\)"))
 	})
 
 	It("fails with no arguments", func() {
@@ -109,11 +109,11 @@ var _ = Describe("Generate cloud config", func() {
 					command.Dir = pathToScript("")
 					Expect(command.Run()).To(Succeed())
 
-					masterServiceAccount, err := propertyFromYaml("/vm_types/name=master/cloud_properties/service_account", stdout.Contents())
+					masterServiceAccount, err := propertyFromYaml("/vm_extensions/name=cfcr-master-iam-properties/cloud_properties/service_account", stdout.Contents())
 					Expect(err).ToNot(HaveOccurred())
 					Expect(masterServiceAccount).To(Equal("master-service-account@google.com"))
 
-					workerServiceAccount, err := propertyFromYaml("/vm_types/name=worker/cloud_properties/service_account", stdout.Contents())
+					workerServiceAccount, err := propertyFromYaml("/vm_extensions/name=cfcr-worker-iam-properties/cloud_properties/service_account", stdout.Contents())
 					Expect(err).ToNot(HaveOccurred())
 					Expect(workerServiceAccount).To(Equal("worker-service-account@google.com"))
 				})
@@ -143,11 +143,11 @@ var _ = Describe("Generate cloud config", func() {
 					command.Dir = pathToScript("")
 					Expect(command.Run()).To(Succeed())
 
-					masterServiceAccount, err := propertyFromYaml("/vm_types/name=master/cloud_properties/service_account", stdout.Contents())
+					masterServiceAccount, err := propertyFromYaml("/vm_extensions/name=cfcr-master-iam-properties/cloud_properties/service_account", stdout.Contents())
 					Expect(err).ToNot(HaveOccurred())
 					Expect(masterServiceAccount).To(Equal("master-service-account@google.com"))
 
-					workerServiceAccount, err := propertyFromYaml("/vm_types/name=worker/cloud_properties/service_account", stdout.Contents())
+					workerServiceAccount, err := propertyFromYaml("/vm_extensions/name=cfcr-worker-iam-properties/cloud_properties/service_account", stdout.Contents())
 					Expect(err).ToNot(HaveOccurred())
 					Expect(workerServiceAccount).To(Equal("worker-service-account@google.com"))
 				})

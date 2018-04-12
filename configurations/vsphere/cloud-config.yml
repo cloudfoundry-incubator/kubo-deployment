@@ -5,6 +5,9 @@ azs:
     datacenters:
     - clusters: [((vcenter_cluster)): { resource_pool: ((vcenter_rp))}]
 
+vm_extensions:
+- name: cfcr-master-network-properties
+
 networks:
 - name: default
   type: manual
@@ -24,18 +27,6 @@ vm_types:
     ram: 4096
     cpu: 1
     disk: 20480
-
-- name: master
-  cloud_properties:
-    ram: 4096
-    cpu: 1
-    disk: 20480
-
-- name: worker
-  cloud_properties:
-    ram: 8192
-    cpu: 4
-    disk: 102400
 
 compilation:
   workers: 4

@@ -70,6 +70,8 @@ instance_groups:
   stemcell: trusty
   vm_type: minimal
 - name: master
+  vm_extensions:
+  - cfcr-master-network-properties
   instances: 3
   networks:
   - name: default

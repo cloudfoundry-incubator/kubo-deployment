@@ -9,21 +9,14 @@ azs:
   cloud_properties:
     availability_zone: ((az))
 
+vm_extensions:
+- name: cfcr-master-network-properties
+
 vm_types:
 - name: minimal
   cloud_properties:
     instance_type: t2.small
     ephemeral_disk: {size: 25_000}
-- name: master
-  cloud_properties:
-    instance_type: t2.small
-    ephemeral_disk: {size: 25_000}
-    iam_instance_profile: ((master_iam_instance_profile))
-- name: worker
-  cloud_properties:
-    instance_type: m4.xlarge
-    ephemeral_disk: {size: 100_000}
-    iam_instance_profile: ((worker_iam_instance_profile))
 
 networks:
 - name: default
