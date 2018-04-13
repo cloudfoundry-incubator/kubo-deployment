@@ -155,7 +155,7 @@ instance_groups:
   - name: docker
     release: docker
     properties:
-      bip: 172.17.0.1/24
+      bridge: cni0
       flannel: true
       iptables: false
       ip_masq: false
