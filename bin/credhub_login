@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+set -o pipefail -e
+
+[[ -z "${DEBUG:-}" ]] || set -x
+
+print_usage() {
+  echo "Usage: $(basename "${0}") [KUBO_ENV]"
+  echo ""
+  echo "KUBO_ENV is the path to your BOSH environment"
+
+}
+
+repo_directory() {
+  echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)" 
+}
+
+credhublogin() {
+  if [ $# -ne 1 ]; then
+    print_usage
+    exit 1
+  fi
+
+  local bosh_env credhub_admin_secret credhub_api_url
+
+  bosh_env=$(cd "${1}"; pwd -P)
+
+  if [[ -z "$(bosh int "${bosh_env}/director.yml" --path /iaas)" ]]; then
+    echo "${bosh_env} is not a valid BOSH environment."
+    print_usage
+    exit 1
+  fi
+
+  # shellcheck disable=SC1090
+  source "$(repo_directory)/bin/lib/deploy_utils"
+  export_bosh_environment "${bosh_env}"
+
+  set +x
+  credhub_admin_secret=$(get_setting "creds.yml" "/credhub_admin_client_secret")
+  restore_debug_output
+
+  credhub_api_url="https://$(get_setting "director.yml" "/internal_ip"):8844"
+
+  tmp_uaa_ca_file="$(mktemp)"
+  tmp_credhub_ca_file="$(mktemp)"
+
+  trap 'rm "${tmp_uaa_ca_file}" "${tmp_credhub_ca_file}"' EXIT
+
+  bosh int "${bosh_env}/creds.yml" --path="/uaa_ssl/ca" > "${tmp_uaa_ca_file}"
+  bosh int "${bosh_env}/creds.yml" --path="/credhub_tls/ca" > "${tmp_credhub_ca_file}"
+
+  set +x
+  credhub login --client-name credhub-admin --client-secret "${credhub_admin_secret}" -s "${credhub_api_url}" --ca-cert "${tmp_credhub_ca_file}" --ca-cert "${tmp_uaa_ca_file}"
+  restore_debug_output
+}
+
+[[ "${0}" == "${BASH_SOURCE[0]}" ]] && credhublogin "$@"
