@@ -3,7 +3,7 @@ package kubo_deployment_tests_test
 import (
 	boshtpl "github.com/cloudfoundry/bosh-cli/director/template"
 	"github.com/cppforlife/go-patch/patch"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 func propertyFromYaml(path string, yamlContents []byte) (string, error) {
