@@ -256,6 +256,7 @@ variables:
     alternative_names:
     - "master.default.cfcr.bosh"
     - "*.master.default.cfcr.bosh"
+    - "127.0.0.1"
     extended_key_usage:
     - client_auth
     - server_auth
