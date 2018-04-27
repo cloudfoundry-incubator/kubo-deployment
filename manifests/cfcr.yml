@@ -4,9 +4,9 @@ releases:
 - name: kubo
   version: latest
 - name: cfcr-etcd
-  url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.0/cfcr-etcd-release-1.0.tgz
-  sha1: 81dbcc40a27cbf731bfc71b7c46c495b510f85a4
-  version: '1.0'
+  url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.1/cfcr-etcd-release-1.1.tgz
+  sha1: 349dbf1e1cafee1393ad1b12b311a0cf79750d40
+  version: '1.1'
 - name: docker
   url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v32.0.0/docker-32.0.0.tgz
   sha1: f192296243e68150ae66656fc9134a2b2a023184
@@ -34,6 +34,11 @@ addons:
   - name: bosh-dns
     release: bosh-dns
     properties:
+      api:
+        server:
+          tls: ((/dns_api_server_tls))
+        client:
+          tls: ((/dns_api_client_tls))
       cache:
         enabled: true
       health:
@@ -126,19 +131,21 @@ instance_groups:
   - name: etcd
     release: cfcr-etcd
     properties:
+      etcd:
+        dns_suffix: etcd.cfcr.internal
       tls:
         etcd:
-          ca: ((tls-etcd.ca))
-          certificate: ((tls-etcd.certificate))
-          private_key: ((tls-etcd.private_key))
+          ca: ((tls-etcd-v0-17-0.ca))
+          certificate: ((tls-etcd-v0-17-0.certificate))
+          private_key: ((tls-etcd-v0-17-0.private_key))
         etcdctl:
           ca: ((tls-etcdctl.ca))
           certificate: ((tls-etcdctl.certificate))
           private_key: ((tls-etcdctl.private_key))
         peer:
-          ca: ((tls-etcd.ca))
-          certificate: ((tls-etcd.certificate))
-          private_key: ((tls-etcd.private_key))
+          ca: ((tls-etcd-v0-17-0.ca))
+          certificate: ((tls-etcd-v0-17-0.certificate))
+          private_key: ((tls-etcd-v0-17-0.private_key))
   stemcell: trusty
   vm_type: small
   persistent_disk: 5120
@@ -248,14 +255,11 @@ variables:
     ca: kubo_ca
     common_name: docker.cfcr.internal
 
-- name: tls-etcd
+- name: tls-etcd-v0-17-0
   type: certificate
   options:
     ca: kubo_ca
-    common_name: "master.default.cfcr.bosh"
-    alternative_names:
-    - "master.default.cfcr.bosh"
-    - "*.master.default.cfcr.bosh"
+    common_name: "*.etcd.cfcr.internal"
     extended_key_usage:
     - client_auth
     - server_auth
@@ -318,6 +322,31 @@ variables:
   options:
     ca: /dns_healthcheck_tls_ca
     common_name: health.bosh-dns
+    extended_key_usage:
+    - client_auth
+
+- name: /dns_api_tls_ca
+  opsname: global_dns_api_tls_ca
+  type: certificate
+  options:
+    is_ca: true
+    common_name: dns-api-tls-ca
+
+- name: /dns_api_server_tls
+  opsname: global_dns_api_server_tls
+  type: certificate
+  options:
+    ca: /dns_api_tls_ca
+    common_name: api.bosh-dns
+    extended_key_usage:
+    - server_auth
+
+- name: /dns_api_client_tls
+  opsname: global_dns_api_client_tls
+  type: certificate
+  options:
+    ca: /dns_api_tls_ca
+    common_name: api.bosh-dns
     extended_key_usage:
     - client_auth
 
