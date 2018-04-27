@@ -47,13 +47,13 @@
   value: ((kubernetes_master_host))
 
 - type: replace
-  path: /variables/name=tls-etcd/options/common_name
+  path: /variables/name=tls-etcd-v0-17-0/options/common_name
   value: ((etcd_cert_cn))
 
 - type: replace
-  path: /variables/name=tls-etcd/options/alternative_names/-
+  path: /variables/name=tls-etcd-v0-17-0/options/alternative_names/-
   value: ((etcd_cert_cn))
 
 - type: replace
-  path: /variables/name=tls-etcd/options/alternative_names/-
+  path: /variables/name=tls-etcd-v0-17-0/options/alternative_names/-
   value: ((etcd_cert_san))
