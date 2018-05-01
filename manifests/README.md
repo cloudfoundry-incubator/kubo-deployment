@@ -3,7 +3,7 @@
 The base manifest "just works" and will deploy a running cluster of Kubernetes:
 
 ```
-bosh deploy kubo-deployment/manifests/cfcr.yml
+bosh -d cfcr deploy kubo-deployment/manifests/cfcr.yml
 ```
 
 ## Dependencies
@@ -13,7 +13,7 @@ The only dependencies are that your BOSH environment has:
 * Credhub/UAA
 * Cloud Config with `vm_types` named `minimal`, `small`, and `small-highmem` as per similar requirements of [cf-deployment](https://github.com/cloudfoundry/cf-deployment)
 * Cloud Config has a network named `default`as per similar requirements of [cf-deployment](https://github.com/cloudfoundry/cf-deployment)
-* Not a bosh-lite
+* If using bosh-lite see [Deploy CFCR in bosh-lite](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/CONTRIBUTING.md#deploy-cfcr-in-bosh-lite)
 * Ubuntu Trusty stemcell `3468` is uploaded (it's up to you to keep up to date with latest `3468.X` versions and update your BOSH deployments)
 
 ## Getting Started
@@ -188,6 +188,7 @@ kubectl get all
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
 | [`ops-files/use-runtime-config-bosh-dns.yml`](ops-files/use-runtime-config-bosh-dns.yml) | Delegate `bosh-dns` addon to BOSH runtime config | Apply this operator file if your BOSH environment has a runtime config that adds the `bosh-dns` job to all instances. By default, `cfcr.yml` will add `bosh-dns` to deployment instances. |
+| [`ops-files/rename.yml`](ops-files/rename.yml) | Specify the deployment name | The deployment name is also used for etcd certificates. |
 | [`ops-files/vm-types.yml`](ops-files/vm-types.yml) | Specify the `vm_type` for `master` and `worker` instances | By default, `master` and `worker` instances assume `vm_type: small` and `vm_type: small-highmem`, respectively (`vm_types` that are also assumed to exists by https://github.com/cloudfoundry/cf-deployment manifests). You may want to use bespoke `vm_types` so as to scale them, tag them, or apply unique `cloud_properties` independently of other deployments in the same BOSH environment. |
 
 ### Routing options
@@ -234,6 +235,7 @@ kubectl get all
 |:---  |:---     |:---   |
 | [`ops-files/addons-spec.yml`](ops-files/addons-spec.yml) | Addons to be deployed into the Kubernetes cluster | - |
 | [`ops-files/allow-privileged-containers.yml`](ops-files/allow-privileged-containers.yml) | Allows privileged containers for the Kubernetes cluster | - |
+| [`ops-files/disable-deny-escalating-exec.yml`](ops-files/disable-deny-escalating-exec.yml) | Disable `DenyEscalatingExec` in API server admission control | - |
 | [`ops-files/add-oidc-endpoint.yml`](ops-files/add-oidc-endpoint.yml) | Enable OIDC authentication for the Kubernetes cluster | - |
 
 ### Dev

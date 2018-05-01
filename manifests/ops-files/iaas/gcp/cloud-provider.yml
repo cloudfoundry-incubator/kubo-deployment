@@ -49,6 +49,11 @@
     cloud-provider: {from: worker-cloud-provider}
 
 - type: replace
+  path: /instance_groups/name=worker/jobs/name=kube-proxy/consumes?
+  value:
+    cloud-provider: {from: worker-cloud-provider}
+
+- type: replace
   path: /instance_groups/name=apply-addons/jobs/name=apply-specs/consumes?
   value:
     cloud-provider: {from: master-cloud-provider}
