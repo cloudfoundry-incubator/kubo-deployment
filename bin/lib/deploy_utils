@@ -163,8 +163,6 @@ generate_manifest() {
   local routing_mode="$(bosh int "${director_path}" --path='/routing_mode')"
   local iaas="$(bosh int "${director_path}" --path='/iaas')"
   local existing_deployment=$(check_for_existing_deployment "${deployment_name}" 2>/dev/null)
-  local etcd_cert_cn="master.default.${deployment_name}.bosh"
-  local etcd_cert_san="'*.${etcd_cert_cn}'"
   local interpolate_arguments="$(set_ops_file_if_one_path_exists \
     "${director_path}" \
     "${ops_dir}/add-proxy.yml" \
@@ -177,6 +175,12 @@ generate_manifest() {
     "${director_path}" \
     "/allow_privileged_containers" \
     "${ops_dir}/allow-privileged-containers.yml" \
+  )"
+
+  interpolate_arguments+="$(set_ops_file_if_true \
+    "${director_path}" \
+    "/disable_deny_escalating_exec" \
+    "${ops_dir}/disable-deny-escalating-exec.yml" \
   )"
 
   interpolate_arguments+="$(set_ops_file_if_file_exists \
@@ -257,8 +261,6 @@ generate_manifest() {
     --vars-file="${director_path}" \
     --var deployment_name="${deployment_name}" \
     --var director_uuid="${director_uuid}" \
-    --var etcd_cert_cn="${etcd_cert_cn}" \
-    --var etcd_cert_san="${etcd_cert_san}" \
     ${interpolate_arguments})
   restore_debug_output
 
