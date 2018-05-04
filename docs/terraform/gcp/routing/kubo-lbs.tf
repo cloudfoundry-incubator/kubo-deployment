@@ -7,11 +7,6 @@ variable "region" {
 	default = "us-west1"
 }
 
-variable "ip_cidr_range" {
-    type = "string"
-    default = "10.0.1.0/24"
-}
-
 variable "network" {
     type = "string"
 }

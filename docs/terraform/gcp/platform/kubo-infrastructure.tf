@@ -107,6 +107,14 @@ data "google_iam_policy" "admin" {
       "serviceAccount:${google_service_account.worker.email}",
     ]
   }
+
+  binding {
+    role = "roles/storage.objectViewer"
+
+    members = [
+      "serviceAccount:${google_service_account.worker.email}",
+    ]
+  }
 }
 
 resource "google_compute_route" "nat-primary" {
