@@ -12,13 +12,13 @@ releases:
   sha1: f192296243e68150ae66656fc9134a2b2a023184
   version: 32.0.0
 - name: bosh-dns
-  sha1: 9231b7c7d2f6aa85e0cb77fdeef7add54fdb3f1a
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=0.2.0
-  version: 0.2.0
+  sha1: 66e74bb601b691ea4836f859c556de8a5c6c1264
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=1.5.0
+  version: 1.5.0
 - name: bpm
-  sha1: 5a03b988c725c6b5a1aed247c8c23c2bff9d421b
-  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.4.0
-  version: 0.4.0
+  sha1: 4f0f239abdc801d71de9063625aa56e3c42634b5
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.6.0
+  version: 0.6.0
 
 stemcells:
 - alias: trusty
