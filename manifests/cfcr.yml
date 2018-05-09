@@ -146,6 +146,8 @@ instance_groups:
           ca: ((tls-etcd-v0-17-0.ca))
           certificate: ((tls-etcd-v0-17-0.certificate))
           private_key: ((tls-etcd-v0-17-0.private_key))
+  - name: smoke-tests
+    release: kubo
   stemcell: trusty
   vm_type: small
   persistent_disk: 5120
