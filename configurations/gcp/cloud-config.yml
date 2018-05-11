@@ -41,6 +41,10 @@ vm_types:
     root_disk_type: pd-ssd
     service_account: ((service_account_worker))
     tags: ((tags))
+    guest_accelerators:
+    - accelerator_type: nvidia-tesla-k80
+      accelerator_count: 1
+    on_host_maintenance: "TERMINATE"
 
 compilation:
   workers: 4
