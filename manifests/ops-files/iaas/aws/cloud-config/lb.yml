@@ -1,3 +1,5 @@
 - type: replace
-  path: /vm_types/name=master/cloud_properties/elbs?
-  value: [((master_target_pool))]
+  path: /vm_extensions/name=cfcr-master-network-properties?/cloud_properties
+  value:
+    elbs:
+    - ((master_target_pool))

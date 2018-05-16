@@ -4,6 +4,9 @@ azs:
   cloud_properties:
     zone: ((zone))
 
+vm_extensions:
+- name: cfcr-master-network-properties
+
 networks:
 - name: default
   type: dynamic
@@ -24,22 +27,6 @@ vm_types:
     machine_type: n1-standard-1
     root_disk_size_gb: 20
     root_disk_type: pd-ssd
-    tags: ((tags))
-
-- name: master
-  cloud_properties:
-    machine_type: n1-standard-1
-    root_disk_size_gb: 20
-    root_disk_type: pd-ssd
-    service_account: ((service_account_master))
-    tags: ((tags))
-
-- name: worker
-  cloud_properties:
-    machine_type: n1-standard-2
-    root_disk_size_gb: 100
-    root_disk_type: pd-ssd
-    service_account: ((service_account_worker))
     tags: ((tags))
 
 compilation:

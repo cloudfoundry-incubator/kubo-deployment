@@ -3,6 +3,9 @@ azs:
 - name: z2
 - name: z3
 
+vm_extensions:
+- name: cfcr-master-network-properties
+
 vm_types:
 - name: default
 - name: small

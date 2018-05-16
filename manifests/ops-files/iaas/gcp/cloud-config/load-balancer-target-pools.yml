@@ -1,3 +1,7 @@
 - type: replace
-  path: /vm_types/name=master/cloud_properties/target_pool?
-  value: ((master_target_pool))
+  path: /vm_extensions/name=cfcr-master-cloud-properties?/cloud_properties/target_pool
+  value: ((cfcr_master_target_pool))
+
+- type: replace
+  path: /vm_extensions/name=cfcr-master-cloud-properties?/cloud_properties/tags/-
+  value: ((cfcr_master_target_pool))
