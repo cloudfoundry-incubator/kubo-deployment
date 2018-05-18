@@ -22,14 +22,14 @@ releases:
 
 stemcells:
 - alias: trusty
-  os: ubuntu-trusty
-  version: "3586.7"
+  os: ubuntu-xenial
+  version: latest
 
 addons:
 - name: bosh-dns
   include:
     stemcells:
-    - os: ubuntu-trusty
+    - os: ubuntu-xenial
   jobs:
   - name: bosh-dns
     release: bosh-dns
