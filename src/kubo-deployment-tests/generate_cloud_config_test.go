@@ -38,13 +38,13 @@ var _ = Describe("Generate cloud config", func() {
 	It("Does not include load balancer config for cf-based environment", func() {
 		bash.Run("main", []string{filepath.Join(testEnvironmentPath, "test_vsphere")})
 
-		Expect(stdout).NotTo(gbytes.Say("    target_pool: \\(\\(master_target_pool\\)\\)"))
+		Expect(stdout).NotTo(gbytes.Say("    backend_service: \\(\\(master_target_pool\\)\\)"))
 	})
 
 	It("includes load balancer configuration for iaas-based environment", func() {
 		bash.Run("main", []string{kuboEnv})
 
-		Expect(stdout).To(gbytes.Say("    target_pool: \\(\\(master_target_pool\\)\\)"))
+		Expect(stdout).To(gbytes.Say("    backend_service: \\(\\(master_target_pool\\)\\)"))
 	})
 
 	It("fails with no arguments", func() {
