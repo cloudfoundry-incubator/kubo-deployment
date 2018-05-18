@@ -1,10 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-# bosh upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
-#
-# bosh -n update-cloud-config configurations/virtualbox/cloud-config.yml
-#
+bosh upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
+
+bosh -n update-cloud-config configurations/virtualbox/cloud-config.yml
+
 bosh -n -d cfcr deploy --no-redact \
   -o manifests/ops-files/kubo-local-release.yml \
   "$@" \
