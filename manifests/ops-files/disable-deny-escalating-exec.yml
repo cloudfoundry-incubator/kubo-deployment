@@ -1,4 +1,3 @@
 ---
-- type: replace
-  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/deny_escalating_exec?
-  value: false
+- type: remove
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/admission-plugins/DenyEscalatingExec

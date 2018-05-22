@@ -89,17 +89,27 @@ instance_groups:
   - name: kube-apiserver
     release: kubo
     properties:
-      admin-username: admin
       admin-password: ((kubo-admin-password))
-      kubelet-password: ((kubelet-password))
-      kube-proxy-password: ((kube-proxy-password))
-      kube-controller-manager-password: ((kube-controller-manager-password))
-      kube-scheduler-password: ((kube-scheduler-password))
-      route-sync-password: ((route-sync-password))
-      kubelet-drain-password: ((kubelet-drain-password))
-      backend_port: 8443 # Bosh links hack
-      port: 8443
+      admin-username: admin
+      admission-plugins:
+        DefaultStorageClass: true
+        DenyEscalatingExec: true
+        LimitRanger: true
+        MutatingAdmissionWebhook: true
+        NamespaceExists: true
+        NamespaceLifecycle: true
+        ResourceQuota: true
+        SecurityContextDeny: true
+        ServiceAccount: true
       authorization-mode: rbac
+      backend_port: 8443 # Bosh links hack
+      kube-controller-manager-password: ((kube-controller-manager-password))
+      kube-proxy-password: ((kube-proxy-password))
+      kube-scheduler-password: ((kube-scheduler-password))
+      kubelet-drain-password: ((kubelet-drain-password))
+      kubelet-password: ((kubelet-password))
+      port: 8443
+      route-sync-password: ((route-sync-password))
       service-account-public-key: ((service-account-key.public_key))
       tls:
         kubernetes:
