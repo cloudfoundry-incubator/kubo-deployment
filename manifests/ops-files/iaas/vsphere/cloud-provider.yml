@@ -34,31 +34,6 @@
     cloud-provider: {from: master-cloud-provider}
 
 - type: replace
-  path: /instance_groups/name=worker/jobs/-
-  value:
-    name: cloud-provider
-    release: kubo
-    properties:
-      cloud-provider:
-        type: vsphere
-        vsphere:
-          user: ((vcenter_worker_user))
-          password: ((vcenter_worker_password))
-          server: ((vcenter_ip))
-          insecure-flag: 1
-          datacenter: ((vcenter_dc))
-          datastore: ((vcenter_ds))
-          vms: ((vcenter_vms))
-          working-dir: /((vcenter_dc))/vm/((vcenter_vms))/((director_uuid))
-    provides:
-      cloud-provider: {as: worker-cloud-provider}
-
-- type: replace
-  path: /instance_groups/name=worker/jobs/name=kubelet/consumes?
-  value:
-    cloud-provider: {from: worker-cloud-provider}
-
-- type: replace
   path: /instance_groups/name=worker/jobs/name=kubelet/properties/cloud-provider?
   value: vsphere
 
