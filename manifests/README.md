@@ -221,6 +221,8 @@ kubectl get all
 | **vSphere** | | |
 | [`ops-files/iaas/vsphere/cloud-provider.yml`](ops-files/iaas/vsphere/cloud-provider.yml) | Enable Cloud Provider for vSphere | - |
 | [`ops-files/iaas/vsphere/set-working-dir-no-rp.yml`](ops-files/iaas/vsphere/set-working-dir-no-rp.yml) | Configure vSphere cloud provider's working dir if there is no resource pool | - |
+| [`ops-files/iaas/vsphere/master-static-ip.yml`](ops-files/iaas/vsphere/master-static-ip.yml) | Attach static IPs from the default network to the kubernetes master node(s) | - |
+| [`ops-files/iaas/vsphere/cloud-config/add-static-ips.yml`](ops-files/iaas/vsphere/cloud-config/add-static-ips.yml) | Configure cloud-configs's default network to reserve static ip(s) | - |
 
 
 ### Proxy
