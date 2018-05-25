@@ -415,11 +415,6 @@ var _ = Describe("Generate manifest", func() {
 				stdout.Contents())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(value).To(Equal("/big_data_center/vm/big_vms"))
-
-			value, err = propertyFromYaml("/instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider/vsphere/working-dir",
-				stdout.Contents())
-			Expect(err).NotTo(HaveOccurred())
-			Expect(value).To(Equal("/big_data_center/vm/big_vms"))
 		})
 	})
 
@@ -434,11 +429,6 @@ var _ = Describe("Generate manifest", func() {
 			Expect(command.Run()).To(Succeed())
 
 			value, err := propertyFromYaml("/instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider/vsphere/working-dir",
-				stdout.Contents())
-			Expect(err).NotTo(HaveOccurred())
-			Expect(value).To(Equal("/big_data_center/vm/big_vms/director_uuid"))
-
-			value, err = propertyFromYaml("/instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider/vsphere/working-dir",
 				stdout.Contents())
 			Expect(err).NotTo(HaveOccurred())
 			Expect(value).To(Equal("/big_data_center/vm/big_vms/director_uuid"))
