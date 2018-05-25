@@ -99,6 +99,9 @@ upload_stemcell() {
   "openstack")
     bosh upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/openstack/bosh-stemcell-${stemcell_version}-openstack-kvm-ubuntu-trusty-go_agent.tgz"
     ;;
+   "azure")
+    bosh upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/azure/bosh-stemcell-${stemcell_version}-azure-hyperv-ubuntu-trusty-go_agent.tgz"
+    ;;
    "aws")
     bosh upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/aws/bosh-stemcell-${stemcell_version}-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"
     ;;
