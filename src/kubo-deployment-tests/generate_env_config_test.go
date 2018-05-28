@@ -157,15 +157,6 @@ var _ = Describe("generate_env_config", func() {
 			})
 		})
 
-		It("sets default authorization mode to rbac", func() {
-			status, _ := bash.Run("main", []string{tmpDir, "b00t", "gcp"})
-			Expect(status).To(Equal(0))
-
-			config, err := ioutil.ReadFile(filepath.Join(tmpDir, "b00t/director.yml"))
-			Expect(err).NotTo(HaveOccurred())
-
-			expectPathContent("/authorization_mode", config, "rbac")
-		})
 	})
 
 	It("gracefully concatenates the templates", func() {
