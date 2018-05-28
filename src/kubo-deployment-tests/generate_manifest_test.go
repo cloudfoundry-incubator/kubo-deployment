@@ -109,32 +109,6 @@ var _ = Describe("Generate manifest", func() {
 			Expect(stdout).To(gbytes.Say("master.cfcr.internal"))
 		})
 
-		It("should default the authorization mode property to RBAC", func() {
-			status, err := bash.Run("main", []string{kuboEnv, "cucumber", "director_uuid"})
-			Expect(err).NotTo(HaveOccurred())
-			Expect(status).To(Equal(0))
-
-			Expect(stdout).To(gbytes.Say("authorization-mode: rbac"))
-		})
-
-		It("should use the abac authorization mode set in the kubo environment", func() {
-			abacEnv := filepath.Join(testEnvironmentPath, "test_gcp_abac")
-			status, err := bash.Run("main", []string{abacEnv, "cucumber", "director_uuid"})
-			Expect(err).NotTo(HaveOccurred())
-			Expect(status).To(Equal(0))
-
-			Expect(stdout).To(gbytes.Say("authorization-mode: abac"))
-		})
-
-		It("should use the rbac authorization mode set in the kubo environment", func() {
-			rbacEnv := filepath.Join(testEnvironmentPath, "test_gcp_rbac")
-			status, err := bash.Run("main", []string{rbacEnv, "cucumber", "director_uuid"})
-			Expect(err).NotTo(HaveOccurred())
-			Expect(status).To(Equal(0))
-
-			Expect(stdout).To(gbytes.Say("authorization-mode: rbac"))
-		})
-
 		It("should reproduce the same manifest on the second run", func() {
 			bash.Run("main", []string{kuboEnv, "fort", "director_uuid"})
 

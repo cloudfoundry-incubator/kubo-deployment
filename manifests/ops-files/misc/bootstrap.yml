@@ -23,18 +23,6 @@
   value: ((kubernetes_master_port))
 
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/authorization-mode
-  value: ((authorization_mode))
-
-- type: replace
-  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/properties/authorization-mode
-  value: ((authorization_mode))
-
-- type: replace
-  path: /instance_groups/name=master/jobs/name=kubernetes-roles/properties/authorization-mode
-  value: ((authorization_mode))
-
-- type: replace
   path: /instance_groups/name=worker/instances
   value: ((worker_count))
 
