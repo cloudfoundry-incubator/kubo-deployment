@@ -65,7 +65,6 @@ instance_groups:
     properties:
       admin-username: admin
       admin-password: ((kubo-admin-password))
-      authorization-mode: rbac
       tls:
         kubernetes: ((tls-kubernetes))
         heapster: ((tls-heapster))
@@ -98,7 +97,6 @@ instance_groups:
       kubelet-drain-password: ((kubelet-drain-password))
       backend_port: 8443 # Bosh links hack
       port: 8443
-      authorization-mode: rbac
       service-account-public-key: ((service-account-key.public_key))
       tls:
         kubernetes:
@@ -124,7 +122,6 @@ instance_groups:
     properties:
       admin-username: admin
       admin-password: ((kubo-admin-password))
-      authorization-mode: rbac
       tls:
         kubernetes: ((tls-kubernetes))
   - name: etcd

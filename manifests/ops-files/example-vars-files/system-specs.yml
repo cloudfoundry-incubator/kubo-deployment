@@ -1,5 +1,4 @@
 kubo-admin-password: admin-password
-authorization_mode: rbac
 tls-kubernetes:
   ca: ca
   certificate: cert
