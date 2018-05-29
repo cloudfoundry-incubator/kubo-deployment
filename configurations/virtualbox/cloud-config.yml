@@ -17,6 +17,7 @@ disk_types:
 
 networks:
 - name: default
+  type: manual
   subnets:
   - azs: [z1, z2, z3]
     cloud_properties:

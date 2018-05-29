@@ -1,0 +1,29 @@
+- type: replace
+  path: /variables/name=tls-kubernetes/options/alternative_names/-
+  value: ((apiserver_dns))
+
+- type: replace
+  path: /instance_groups/name=master/networks
+  value:
+  - name: default
+    static_ips: [10.244.0.50]
+
+- type: replace
+  path: /instance_groups/name=master/instances
+  value: 1
+
+- type: replace
+  path: /instance_groups/name=master/azs
+  value: [ z1 ]
+
+- type: replace
+  path: /instance_groups/name=worker/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=worker/azs
+  value: [ z1 ]
+
+- type: replace
+  path: /instance_groups/name=worker/update?/max_in_flight
+  value: 100%
