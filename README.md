@@ -67,6 +67,31 @@ The Cloud Foundry subnet must be able to route traffic directly to the Kubo subn
 
 Please follow the [install guide](https://docs-cfcr.cfapps.io/installing/) for installation instructions.
 
+## Accessing your kubernetes cluster
+After deploying the cluster, perform the following steps:
+
+Execute the `./bin/set_kubeconfig` script to configure kubectl, the Kubernetes command line interface. Specify your KUBO_ENV and the name of your new cluster. For example:
+
+```
+$ ./bin/set_kubeconfig <director_name>/<deployment_name> https://**kubernetes_master_host**:**kubernetes_master_port**
+```
+>Note: You can currently find your kubernetes_master_host by running `terraform output -state=${kubo_terraform_state} master_lb_ip_address`
+Verify that the settings have been applied correctly by listing the Kubernetes pods in the kubo-system namespace. Enter the following command:
+
+```
+$ kubectl get pods --namespace=kube-system
+```
+
+If you have successfully configured kubectl, the output resembles the following:
+```
+NAME                                    READY     STATUS    RESTARTS   AGE
+heapster-2736291043-9rw42               1/1       Running   0          2d
+kube-dns-3329716278-dpdj0               3/3       Running   0          2d
+kubernetes-dashboard-1367211859-jq9mw   1/1       Running   0          2d
+monitoring-influxdb-564852376-67fdd     1/1       Running   0          2d
+```
+
+
 ## Troubleshooting
 
 Please refer to the [troubleshooting guide](https://docs-cfcr.cfapps.io/managing/troubleshooting/) to look for solutions to the most common issues.
