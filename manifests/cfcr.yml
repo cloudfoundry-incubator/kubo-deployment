@@ -89,7 +89,7 @@ instance_groups:
     properties:
       admin-username: admin
       admin-password: ((kubo-admin-password))
-      kubelet-bootstrap-token: ((kubelet-bootstrap-token))
+      kubelet-bootstrap-token: ((kubelet-bootstrap-token-id)).((kubelet-bootstrap-token-secret))
       kube-proxy-password: ((kube-proxy-password))
       kube-controller-manager-password: ((kube-controller-manager-password))
       kube-scheduler-password: ((kube-scheduler-password))
@@ -180,7 +180,7 @@ instance_groups:
     release: kubo
     properties:
       admin-password: ((kubo-admin-password))
-      bootstrap-token: ((kubelet-bootstrap-token))
+      bootstrap-token: ((kubelet-bootstrap-token-id)).((kubelet-bootstrap-token-secret))
       drain-api-token: ((kubelet-drain-password))
       tls:
         kubernetes: ((tls-kubernetes))
@@ -203,8 +203,16 @@ update:
 variables:
 - name: kubo-admin-password
   type: password
-- name: kubelet-bootstrap-token
+- name: kubelet-bootstrap-token-id
   type: password
+  options:
+    length: 6
+    exclude_upper: true
+- name: kubelet-bootstrap-token-secret
+  type: password
+  options:
+    length: 16
+    exclude_upper: true
 - name: kubelet-drain-password
   type: password
 - name: kube-proxy-password
