@@ -5,14 +5,6 @@
     version: latest
 
 - type: replace
-  path: /variables/name=tls-kubelet/options/common_name
-  value: ((kubernetes_master_host))
-
-- type: replace
-  path: /variables/name=tls-kubelet/options/alternative_names
-  value: [((kubernetes_master_host))]
-
-- type: replace
   path: /variables/name=tls-kubernetes/options/common_name
   value: ((kubernetes_master_host))
 
@@ -44,7 +36,6 @@
     - name: kubeconfig
       release: kubo
       properties:
-        kubelet-password: ((kubelet-password))
         kube-proxy-password: ((kube-proxy-password))
         kube-scheduler-password: ((kube-scheduler-password))
         route-sync-password: ((route-sync-password))

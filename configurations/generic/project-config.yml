@@ -10,8 +10,6 @@ kubo_release_url: https://storage.googleapis.com/kubo-public/kubo-release-latest
 
 worker_count: 3
 
-authorization_mode: rbac # RBAC or ABAC authorization modes for the K8s cluster.
-
 # Kubernetes OIDC settings
 # https://kubernetes.io/docs/admin/authentication/#configuring-the-api-server
 # oidc_issuer_url:
