@@ -10,7 +10,7 @@
           cloud: ((azure_cloud_name))
           subscription-id: ((subscription_id))
           tenant-id: ((tenant_id))
-          service-principal-id: ((client_id)) 
+          service-principal-id: ((client_id))
           service-principal-secret: ((client_secret))
           location: ((location))
           resource-group-name: ((resource_group_name))
@@ -22,21 +22,6 @@
 
     provides:
       cloud-provider: {as: master-cloud-provider}
-
-- type: replace
-  path: /addons/-
-  value:
-    name: node-dns-aliases
-    jobs:
-    - name: node-dns-aliases
-      release: kubo
-      properties:
-        api-token: ((kube-controller-manager-password))
-        tls:
-          kubernetes:
-            ca: ((tls-kubernetes.ca))
-            certificate: ((tls-kubernetes.certificate))
-            private_key: ((tls-kubernetes.private_key))
 
 - type: replace
   path: /instance_groups/name=master/jobs/name=kube-apiserver/consumes?
@@ -54,6 +39,11 @@
     cloud-provider: {from: master-cloud-provider}
 
 - type: replace
+  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/consumes?
+  value:
+    cloud-provider: {from: master-cloud-provider}
+
+- type: replace
   path: /instance_groups/name=worker/jobs/-
   value:
     name: cloud-provider
@@ -65,7 +55,7 @@
           cloud: ((azure_cloud_name))
           subscription-id: ((subscription_id))
           tenant-id: ((tenant_id))
-          service-principal-id: ((client_id)) 
+          service-principal-id: ((client_id))
           service-principal-secret: ((client_secret))
           location: ((location))
           resource-group-name: ((resource_group_name))
@@ -82,3 +72,17 @@
   path: /instance_groups/name=worker/jobs/name=kubelet/consumes?
   value:
     cloud-provider: {from: worker-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/cloud-provider?
+  value: azure
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kube-proxy/properties/cloud-provider?
+  value: azure
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/-
+  value:
+    name: cifs-utils
+    release: kubo
