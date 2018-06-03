@@ -255,7 +255,8 @@ generate_manifest() {
     --vars-file="${director_path}" \
     --var deployment_name="${deployment_name}" \
     --var director_uuid="${director_uuid}" \
-    ${interpolate_arguments})
+    ${interpolate_arguments} \
+    ${KUBO_EXTRA_OPS})
   restore_debug_output
 
   printf "%s" "${manifest}"
