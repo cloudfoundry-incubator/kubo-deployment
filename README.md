@@ -26,7 +26,7 @@ See the [complete pipeline](https://ci.kubo.sh/pipelines/kubo-deployment) for mo
 
 - [Design](#design)
 - [Glossary](#glossary)
-- [Installation Guides](#installation)
+- [Load Balancers](#configuring-load-balancers)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
 - [Contribution](#contributing)
@@ -63,9 +63,9 @@ The Cloud Foundry subnet must be able to route traffic directly to the Kubo subn
 - Service - stands for [K8s service](https://kubernetes.io/docs/user-guide/services), which represents a logical collection 
   of Kubernetes pods and a way to access them without needing information about the specific pods
 
-## Installation
+## Configuring Load Balancers
 
-Please follow the [install guide](https://docs-cfcr.cfapps.io/installing/) for installation instructions.
+If deploying CFCR with multiple masters, we recommend creating a TCP Load Balancer with healthchecks on port 8443. 
 
 ## Accessing your kubernetes cluster
 After deploying the cluster, perform the following steps:
