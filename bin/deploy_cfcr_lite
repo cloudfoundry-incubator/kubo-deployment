@@ -14,6 +14,8 @@ bosh -n -d cfcr deploy --no-redact \
   "$@" \
   manifests/cfcr.yml
 
+bosh -d cfcr run-errand apply-specs
+
 kubeconfig_dir="${HOME}/.kube-cfcr" && mkdir -p "$kubeconfig_dir"
 export KUBECONFIG="$kubeconfig_dir/kuboconfig"
 credhub login
