@@ -90,6 +90,7 @@ instance_groups:
       admin-username: admin
       admin-password: ((kubo-admin-password))
       kubelet-bootstrap-token: ((kubelet-bootstrap-token-id)).((kubelet-bootstrap-token-secret))
+      kubelet-password: ((kubelet-password))
       kube-proxy-password: ((kube-proxy-password))
       kube-controller-manager-password: ((kube-controller-manager-password))
       kube-scheduler-password: ((kube-scheduler-password))
@@ -213,6 +214,8 @@ variables:
   options:
     length: 16
     exclude_upper: true
+- name: kubelet-password
+  type: password
 - name: kubelet-drain-password
   type: password
 - name: kube-proxy-password
