@@ -237,6 +237,7 @@ kubectl get all
 | [`ops-files/disable-anonymous-auth.yml`](ops-files/disable-anonymous-auth.yml) | Disable `anonymous-auth` on the API server | - |
 | [`ops-files/disable-deny-escalating-exec.yml`](ops-files/disable-deny-escalating-exec.yml) | Disable `DenyEscalatingExec` in API server admission control | - |
 | [`ops-files/add-oidc-endpoint.yml`](ops-files/add-oidc-endpoint.yml) | Enable OIDC authentication for the Kubernetes cluster | - |
+| [`ops-files/delete-heapster.yml`](ops-files/delete-heapster.yml) | Deploy Heapster and Influxdb. Heapster is in the process of being deprecated and this will become a default ops once done. | - |
 
 ### Dev
 
