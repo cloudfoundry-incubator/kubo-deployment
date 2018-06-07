@@ -67,8 +67,7 @@ instance_groups:
       admin-password: ((kubo-admin-password))
       tls:
         kubernetes: ((tls-kubernetes))
-        heapster: ((tls-heapster))
-        influxdb: ((tls-influxdb))
+        metrics: ((tls-metrics))
         kubernetes-dashboard: ((tls-kubernetes-dashboard))
   stemcell: trusty
   vm_type: minimal
@@ -270,20 +269,14 @@ variables:
     extended_key_usage:
     - client_auth
 
-- name: tls-heapster
+- name: tls-metrics
   type: certificate
   options:
     ca: kubo_ca
-    common_name: heapster
+    common_name: metrics-service.kube-system.svc
     alternative_names:
-    - "heapster.kube-system.svc.cluster.local"
-
-- name: tls-influxdb
-  type: certificate
-  options:
-    ca: kubo_ca
-    common_name: monitoring-influxdb
-    alternative_names: []
+    - "metrics-server.kube-system.svc"
+    - "localhost"
 
 - name: kubernetes-dashboard-ca
   type: certificate
