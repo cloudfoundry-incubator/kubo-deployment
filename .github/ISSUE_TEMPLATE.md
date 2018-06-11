@@ -23,6 +23,7 @@ and the [troubleshooting guide](https://kubernetes.io/docs/tasks/debug-applicati
 **Anything else we need to know?**:
 
 **Environment**:
-- CFCR version:
-- Kubernetes version (use `kubectl version`):
+- Deployment Info (`bosh -d <deployment> deployment`):
+- Environment Info (`bosh -e <environment> environment`):
+- Kubernetes version (`kubectl version`):
 - Cloud provider (e.g. `aws`, `gcp`, `vsphere`):
