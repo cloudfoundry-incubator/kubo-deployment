@@ -200,6 +200,12 @@ generate_manifest() {
 
   interpolate_arguments+="$(set_default_var_if_path_does_not_exist \
     "${director_path}" \
+    "/authorization_mode" \
+    "rbac" \
+  )"
+
+  interpolate_arguments+="$(set_default_var_if_path_does_not_exist \
+    "${director_path}" \
     "/worker_count" \
     "3" \
   )"

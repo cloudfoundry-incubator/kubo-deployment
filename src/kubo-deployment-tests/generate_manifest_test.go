@@ -57,6 +57,7 @@ var _ = Describe("Generate manifest", func() {
 			Entry("CF UAA URL", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_url", "cf.uaa.url"),
 			Entry("CF Client ID", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_client_id", "cf.client.id"),
 			Entry("CF Client Secret", "/instance_groups/name=master/jobs/name=kubernetes-api-route-registrar/properties/cloud_foundry/uaa_client_secret", "test-routing-cf-client-secret"),
+			Entry("Auto-generated kubelet password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/kubelet-password", "((kubelet-password))"),
 			Entry("Auto-generated admin password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/admin-password", "((kubo-admin-password))"),
 		)
 
@@ -71,6 +72,7 @@ var _ = Describe("Generate manifest", func() {
 		},
 			Entry("deployment name", "/name", "grinder"),
 			Entry("network name", "/instance_groups/name=master/networks/0/name", "default"),
+			Entry("Auto-generated kubelet password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/kubelet-password", "((kubelet-password))"),
 			Entry("Auto-generated admin password", "/instance_groups/name=master/jobs/name=kube-apiserver/properties/admin-password", "((kubo-admin-password))"),
 			Entry("worker node tag", "/instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider/gce/worker-node-tag", "TheDirector-grinder-worker"),
 		)
@@ -86,6 +88,16 @@ var _ = Describe("Generate manifest", func() {
 			Expect(pathValue).To(Equal("true"))
 		})
 
+		It("should include a variable section with tls-kubelet, tls-kubernetes", func() {
+			status, err := bash.Run("main", []string{kuboEnv, "cucumber", "director_uuid"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+
+			Expect(stdout).To(gbytes.Say("variables:"))
+			Expect(stdout).To(gbytes.Say("tls-kubelet"))
+			Expect(stdout).To(gbytes.Say("tls-kubernetes"))
+		})
+
 		It("should include an alternative name with master.cfcr.internal for the tls-kubernetes variable", func() {
 			status, err := bash.Run("main", []string{kuboEnv, "cucumber", "director_uuid"})
 			Expect(err).NotTo(HaveOccurred())
@@ -95,6 +107,32 @@ var _ = Describe("Generate manifest", func() {
 			Expect(stdout).To(gbytes.Say("tls-kubernetes"))
 			Expect(stdout).To(gbytes.Say("alternative_names:"))
 			Expect(stdout).To(gbytes.Say("master.cfcr.internal"))
+		})
+
+		It("should default the authorization mode property to RBAC", func() {
+			status, err := bash.Run("main", []string{kuboEnv, "cucumber", "director_uuid"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+
+			Expect(stdout).To(gbytes.Say("authorization-mode: rbac"))
+		})
+
+		It("should use the abac authorization mode set in the kubo environment", func() {
+			abacEnv := filepath.Join(testEnvironmentPath, "test_gcp_abac")
+			status, err := bash.Run("main", []string{abacEnv, "cucumber", "director_uuid"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+
+			Expect(stdout).To(gbytes.Say("authorization-mode: abac"))
+		})
+
+		It("should use the rbac authorization mode set in the kubo environment", func() {
+			rbacEnv := filepath.Join(testEnvironmentPath, "test_gcp_rbac")
+			status, err := bash.Run("main", []string{rbacEnv, "cucumber", "director_uuid"})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(status).To(Equal(0))
+
+			Expect(stdout).To(gbytes.Say("authorization-mode: rbac"))
 		})
 
 		It("should reproduce the same manifest on the second run", func() {
@@ -183,7 +221,7 @@ var _ = Describe("Generate manifest", func() {
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
-			Expect(stdout).To(gbytes.Say("\n      admin-password: Shields up, ancient life!\n"))
+			Expect(stdout).To(gbytes.Say("\n      kubelet-password: Shields up, ancient life!\n"))
 		})
 
 		It("should not embed addons-specs if not specified in the director", func() {

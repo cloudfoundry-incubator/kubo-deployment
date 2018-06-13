@@ -90,6 +90,7 @@ So we need need to have some certificates regenerated to include the new hostnam
 export BOSH_ENVIRONMENT=<bosh-name>
 export BOSH_DEPLOYMENT=cfcr
 credhub delete -n /$BOSH_ENVIRONMENT/$BOSH_DEPLOYMENT/tls-kubernetes
+credhub delete -n /$BOSH_ENVIRONMENT/$BOSH_DEPLOYMENT/tls-kubelet
 ```
 
 Next, we need to document information about your Cloud Foundry and how CFCR will be allowed to register TCP routes.

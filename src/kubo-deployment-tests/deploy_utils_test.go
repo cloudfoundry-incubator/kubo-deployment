@@ -617,6 +617,12 @@ var _ = Describe("DeployUtils", func() {
 			Expect(stderr).To(gbytes.Say(fmt.Sprintf("%s %s %s %s",
 				"set_default_var_if_path_does_not_exist",
 				path.Join(testEnvironmentPath, "with_ops_and_vars_and_creds/director.yml"),
+				"/authorization_mode",
+				"rbac",
+			)))
+			Expect(stderr).To(gbytes.Say(fmt.Sprintf("%s %s %s %s",
+				"set_default_var_if_path_does_not_exist",
+				path.Join(testEnvironmentPath, "with_ops_and_vars_and_creds/director.yml"),
 				"/worker_count",
 				"3",
 			)))
@@ -634,6 +640,7 @@ var _ = Describe("DeployUtils", func() {
 			Expect(stderr).To(gbytes.Say("name-vars.yml"))
 			Expect(stderr).To(gbytes.Say("creds.yml"))
 			Expect(stderr).To(gbytes.Say("director-secrets.yml"))
+			Expect(stderr).To(gbytes.Say("--var authorization_mode=rbac"))
 			Expect(stderr).To(gbytes.Say("--var worker_count=3"))
 		})
 
