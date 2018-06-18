@@ -88,13 +88,12 @@ var _ = Describe("Generate manifest", func() {
 			Expect(pathValue).To(Equal("true"))
 		})
 
-		It("should include a variable section with tls-kubelet, tls-kubernetes", func() {
+		It("should include a variable section with tls-kubernetes", func() {
 			status, err := bash.Run("main", []string{kuboEnv, "cucumber", "director_uuid"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(status).To(Equal(0))
 
 			Expect(stdout).To(gbytes.Say("variables:"))
-			Expect(stdout).To(gbytes.Say("tls-kubelet"))
 			Expect(stdout).To(gbytes.Say("tls-kubernetes"))
 		})
 
