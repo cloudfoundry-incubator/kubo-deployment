@@ -5,6 +5,14 @@
     version: latest
 
 - type: replace
+  path: /variables/name=tls-kubelet/options/common_name
+  value: ((kubernetes_master_host))
+
+- type: replace
+  path: /variables/name=tls-kubelet/options/alternative_names
+  value: [((kubernetes_master_host))]
+
+- type: replace
   path: /variables/name=tls-kubernetes/options/common_name
   value: ((kubernetes_master_host))
 
