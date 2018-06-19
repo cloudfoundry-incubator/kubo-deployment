@@ -144,6 +144,12 @@ instance_groups:
           ca: ((tls-etcd-v0-17-0.ca))
           certificate: ((tls-etcd-v0-17-0.certificate))
           private_key: ((tls-etcd-v0-17-0.private_key))
+  - name: node-dns-aliases
+    release: kubo
+    properties:
+      tls:
+        kubernetes: ((tls-kubernetes))
+      api-token: ((kube-scheduler-password))
   - name: smoke-tests
     release: kubo
   stemcell: trusty
@@ -192,6 +198,12 @@ instance_groups:
       tls:
         kubernetes: ((tls-kubernetes))
       api-token: ((kube-proxy-password))
+  - name: node-dns-aliases
+    release: kubo
+    properties:
+      tls:
+        kubernetes: ((tls-kubernetes))
+      api-token: ((kube-scheduler-password))
   stemcell: trusty
   vm_type: small-highmem
   persistent_disk: 10240

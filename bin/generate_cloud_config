@@ -59,6 +59,8 @@ main() {
        cloud_args=$(echo -n "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/iaas/gcp/cloud-config/load-balancer-target-pools.yml")
     elif [ "${bosh_iaas}" == "aws" ]; then
        cloud_args=$(echo -n "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/iaas/aws/cloud-config/lb.yml")
+    elif [ "${bosh_iaas}" == "azure" ]; then
+       cloud_args=$(echo -n "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml --ops-file="$(repo_directory)/manifests/ops-files/iaas/azure/cloud-config/lb.yml")
     else
        cloud_args=$(echo -n "$(repo_directory)/configurations/${bosh_iaas}/cloud-config.yml" --vars-file ${bosh_env}/director.yml)
     fi
