@@ -70,6 +70,7 @@ instance_groups:
         kubernetes: ((tls-kubernetes))
         heapster: ((tls-heapster))
         influxdb: ((tls-influxdb))
+        metrics: ((tls-metrics))
         kubernetes-dashboard: ((tls-kubernetes-dashboard))
   stemcell: trusty
   vm_type: minimal
@@ -295,6 +296,15 @@ variables:
     ca: kubo_ca
     common_name: monitoring-influxdb
     alternative_names: []
+
+- name: tls-metrics
+  type: certificate
+  options:
+    ca: kubo_ca
+    common_name: metrics-service.kube-system.svc
+    alternative_names:
+    - "metrics-server.kube-system.svc"
+    - "localhost"
 
 - name: kubernetes-dashboard-ca
   type: certificate
