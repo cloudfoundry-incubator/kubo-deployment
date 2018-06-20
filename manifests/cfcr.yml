@@ -23,7 +23,7 @@ releases:
 stemcells:
 - alias: trusty
   os: ubuntu-trusty
-  version: "3586.23"
+  version: "3586.24"
 
 addons:
 - name: bosh-dns
@@ -104,6 +104,7 @@ instance_groups:
           ca: ((tls-kubernetes.ca))
           certificate: ((tls-kubernetes.certificate))
           private_key: ((tls-kubernetes.private_key))
+        kubelet-client: ((tls-kubelet-client))
   - name: kube-controller-manager
     release: kubo
     properties:
@@ -229,6 +230,15 @@ variables:
     organization: "system:nodes"
     common_name: kubelet.cfcr.internal
     alternative_names: []
+
+- name: tls-kubelet-client
+  type: certificate
+  options:
+    ca: kubo_ca
+    common_name: kube-apiserver.cfcr.internal
+    organization: "system:masters"
+    extended_key_usage:
+    - client_auth
 
 - name: tls-kubernetes
   type: certificate
