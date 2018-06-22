@@ -47,22 +47,3 @@ Follow the steps below to deploy and test kubernetes BOSH deployment. This test 
 
 If you want to start fresh, it is possible to tear down the service by running `bosh -e <KUBO_ENV> -d <CLUSTER_DEPLOYMENT_NAME> delete-deployment`. You can then destroy the BOSH director using the `bin/destroy_bosh` command.
 
-
-
-## Deploy CFCR in bosh-lite
-
-Given a bosh-lite director [link](https://bosh.io/docs/bosh-lite) deployed with credhub and bosh-dns,
-you can deploy CFCR using these instructions.
-
-Make sure that `bosh env` and `credhub login` work before going through the following steps.
-
-```
-git clone https://github.com/cloudfoundry-incubator/kubo-release.git
-git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git
-cd kubo-deployment
-./bin/deploy_cfcr_lite
-bosh run-errand -d cfcr apply-specs
-```
-
-Make sure in the etc hosts you have the entry `10.244.0.128 kubernetes`
-where the IP is the master node IP.

@@ -116,7 +116,7 @@ main() {
   echo
   echo -e "${LIGHT_GREEN} ***** Begin affirmative readme operations tests ***** ${NOCOLOR}"
   local ops_files;
-  ops_files=$(ls ${home}/manifests/ops-files/*.yml ${home}/manifests/ops-files/iaas/{aws,gcp,openstack,vsphere}/*.yml)
+  ops_files=$(ls ${home}/manifests/ops-files/*.yml ${home}/manifests/ops-files/iaas/{aws,gcp,openstack,vsphere,virtualbox}/*.yml)
   ensure_opsfiles_in_readme "$home/manifests/README.md" "$ops_files"
 
   echo

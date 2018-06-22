@@ -221,7 +221,8 @@ kubectl get all
 | **vSphere** | | |
 | [`ops-files/iaas/vsphere/cloud-provider.yml`](ops-files/iaas/vsphere/cloud-provider.yml) | Enable Cloud Provider for vSphere | - |
 | [`ops-files/iaas/vsphere/set-working-dir-no-rp.yml`](ops-files/iaas/vsphere/set-working-dir-no-rp.yml) | Configure vSphere cloud provider's working dir if there is no resource pool | - |
-
+| **virtualbox** | | |
+| [`ops-files/iaas/virtualbox/bosh-lite.yml`](ops-files/iaas/virtualbox/bosh-lite.yml) | Enables CFCR to run on a virtualbox bosh-lite environment | Deploys 1 master and 3 workers. Master is deployed to a static ip: 10.244.0.34 |
 
 ### Proxy
 
