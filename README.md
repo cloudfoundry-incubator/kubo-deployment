@@ -25,7 +25,6 @@ See the [complete pipeline](https://ci.kubo.sh/pipelines/kubo-deployment) for mo
 ## Deploy CFCR 
 
 ### Prerequisites
-Clone CFCR Repos:
 These steps assume you have a [BOSH](http://bosh.io/) Director with a [cloud config](https://bosh.io/docs/cloud-config/) 
 and [stemcell](http://bosh.io/stemcells) deployed to it.
 
