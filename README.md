@@ -22,43 +22,36 @@ Build Kubo Release status [![Build Kubo Release Badge](https://ci.kubo.sh/api/v1
 
 See the [complete pipeline](https://ci.kubo.sh/pipelines/kubo-deployment) for more details. The CI pipeline definitions are stored in the [kubo-ci](https://github.com/pivotal-cf-experimental/kubo-ci) repository.
 
-## Table of Contents
+## Deploy CFCR 
 
-- [Deploy CFCR on BOSH Lite](#deploy-cfcr-on-bosh-lite)
-- [Load Balancers](#configuring-load-balancers)
-- [Accessing CFCR Cluster](#accessing-cfcr-cluster)
-- [Documentation](#documentation)
-- [Contribution](#contributing)
-- [Troubleshooting](#troubleshooting)
-- [Design](#design)
-- [Glossary](#glossary)
+### Prerequisites
+Clone CFCR Repos:
+These steps assume you have a [BOSH](http://bosh.io/) Director with a [cloud config](https://bosh.io/docs/cloud-config/) 
+and [stemcell](http://bosh.io/stemcells) deployed to it.
 
-## Deploy CFCR on BOSH Lite
-These steps assume you have a [BOSH lite](https://bosh.io/docs/bosh-lite/) director running and will deploy a single master CFCR cluster. The kubernetes master host is deployed to a static IP: `10.244.0.34`.
+### Instructions
+1. Refer to the [latest release](https://github.com/cloudfoundry-incubator/kubo-release/releases/latest) version number, and replace 0.17.0 in the following instructions with the appropriate version number.
+1. `git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git && cd kubo-deployment && git checkout v0.17.0`
+1. `wget https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.17.0/kubo-release-0.17.0.tgz`
+1. `bosh upload-release kubo-release-0.17.0.tgz`
+1. `bosh deploy -d cfcr manifests/cfcr.yml`
+1. `bosh -d cfcr run-errand apply-specs`
+1. `bosh -d cfcr run-errand smoke-tests`
+1. [Accessing CFCR cluster](#accessing-cfcr-cluster)
 
-1. Clone CFCR Repos:
-```
-git clone https://github.com/cloudfoundry-incubator/kubo-release.git
-git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git
-```
-2. Run bosh-lite deploy script
-```
-cd kubo-deployment
-./bin/deploy_cfcr_lite
-```
+### Deploy development version of CFCR on [BOSH Lite](http://bosh.io/docs/bosh-lite/)
+This will deploy a single master CFCR cluster. Assuming you have uploaded the [default cloud config](https://github.com/cloudfoundry/bosh-deployment/blob/master/warden/cloud-config.yml)
+to the BOSH Lite director, the kubernetes master host is deployed to a static
+IP: `10.244.0.34`.
 
-3. Configure `kubectl`. Make sure you have logged into BOSH Lite Credhub.
-```
-./bin/set_kubeconfig lite/cfcr https://10.244.0.34:8443
-```
-
-## Configuring Load Balancers
-
-If deploying CFCR with multiple masters, we recommend creating a TCP Load Balancer with healthchecks on port 8443. 
+1. `cd kubo-deployment`
+1. `git clone https://github.com/cloudfoundry-incubator/kubo-release.git ../kubo-release`
+1. Run bosh-lite deploy script `./bin/deploy_cfcr_lite`
 
 ## Accessing CFCR Cluster
 After deploying the cluster, perform the following steps:
 
+1. Create a load balancer for your IaaS that points to the kube-apiserver. If deploying CFCR with multiple masters, we recommend creating a TCP Load Balancer with healthchecks on port 8443. 
 1. Login to the Credhub Server that stores the cluster's credentials:
 ```
 credhub login 

@@ -19,4 +19,5 @@ bosh -d cfcr run-errand apply-specs
 echo ""
 echo "============= Finished Deploying CFCR =================="
 echo "Configure kubectl by running:"
+echo "credhub login"
 echo "./bin/set_kubeconfig lite/cfcr https://10.244.0.34:8443"
