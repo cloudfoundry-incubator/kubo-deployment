@@ -67,7 +67,7 @@ instance_groups:
       admin-username: admin
       admin-password: ((kubo-admin-password))
       tls:
-        kubernetes: ((tls-kubernetes))
+        kubernetes: ((tls-kubernetes-server))
         heapster: ((tls-heapster))
         influxdb: ((tls-influxdb))
         kubernetes-dashboard: ((tls-kubernetes-dashboard))
@@ -100,11 +100,8 @@ instance_groups:
       port: 8443
       service-account-public-key: ((service-account-key.public_key))
       tls:
-        kubernetes:
-          ca: ((tls-kubernetes.ca))
-          certificate: ((tls-kubernetes.certificate))
-          private_key: ((tls-kubernetes.private_key))
-        kubelet-client: ((tls-kubelet-client))
+        kubernetes-server: ((tls-kubernetes-server))
+        kubernetes-client: ((tls-kubernetes-client))
   - name: kube-controller-manager
     release: kubo
     properties:
@@ -112,20 +109,20 @@ instance_groups:
       cluster-signing: ((kubo_ca))
       service-account-private-key: ((service-account-key.private_key))
       tls:
-        kubernetes: ((tls-kubernetes))
+        kubernetes: ((tls-kubernetes-server))
   - name: kube-scheduler
     release: kubo
     properties:
       api-token: ((kube-scheduler-password))
       tls:
-        kubernetes: ((tls-kubernetes))
+        kubernetes: ((tls-kubernetes-server))
   - name: kubernetes-roles
     release: kubo
     properties:
       admin-username: admin
       admin-password: ((kubo-admin-password))
       tls:
-        kubernetes: ((tls-kubernetes))
+        kubernetes: ((tls-kubernetes-server))
   - name: etcd
     release: cfcr-etcd
     properties:
@@ -184,13 +181,14 @@ instance_groups:
       api-token: ((kubelet-password))
       drain-api-token: ((kubelet-drain-password))
       tls:
-        kubernetes: ((tls-kubernetes))
+        kubernetes: ((tls-kubernetes-server))
         kubelet: ((tls-kubelet))
+        client-ca: ((kubo_ca))
   - name: kube-proxy
     release: kubo
     properties:
       tls:
-        kubernetes: ((tls-kubernetes))
+        kubernetes: ((tls-kubernetes-server))
       api-token: ((kube-proxy-password))
   stemcell: trusty
   vm_type: small-highmem
@@ -232,7 +230,7 @@ variables:
     common_name: kubelet.cfcr.internal
     alternative_names: []
 
-- name: tls-kubelet-client
+- name: tls-kubernetes-client
   type: certificate
   options:
     ca: kubo_ca
@@ -241,7 +239,7 @@ variables:
     extended_key_usage:
     - client_auth
 
-- name: tls-kubernetes
+- name: tls-kubernetes-server
   type: certificate
   options:
     ca: kubo_ca
