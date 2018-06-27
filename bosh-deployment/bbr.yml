@@ -1,0 +1,14 @@
+- type: replace
+  path: /releases/-
+  value:
+    name: backup-and-restore-sdk
+    version: "1.7.0"
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/backup-and-restore-sdk-release?v=1.7.0
+    sha1: 5eca6d5b7942947ca7e6eaf84ebff79eb3f46a0e
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: database-backup-restorer
+    release: backup-and-restore-sdk
+    properties: {}

@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: uaa
-    version: "52.7"
-    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/uaa-52.7-ubuntu-trusty-3468.21-20180125-030551-413458231-20180125030557.tgz?versionId=9l0RRpWwtsIr7m2Im43Mr9pFl4zEa4tl
-    sha1: 75637c9d60773472ce0111743c7c16e43c6db997
+    version: "59"
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/uaa-59-ubuntu-trusty-3586.16-20180605-222612-468773014-20180605222623.tgz?versionId=B1Ex1AVvXDtBc6TvtzTmHOx0qnlnfhUW
+    sha1: c5b9c9c59ec383989daa4134494e78623544dd8c
 
 # Switch Director to use UAA
 - type: replace
@@ -29,6 +29,11 @@
     name: uaa
     release: uaa
     properties:
+      encryption:
+        encryption_keys:
+        - label: uaa-encryption-key-1
+          passphrase: ((uaa_encryption_key_1))
+        active_key_label: uaa-encryption-key-1
       uaa:
         url: "https://((internal_ip)):8443"
         port: -1
@@ -117,6 +122,12 @@
   path: /variables/-
   value:
     name: uaa_login_client_secret
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_encryption_key_1
     type: password
 
 - type: replace

@@ -1,0 +1,3 @@
+- type: replace
+  path: /instance_groups/name=bosh/properties/agent/env/bosh/blobstores/provider=dav/options/endpoint
+  value: https://((internal_ip)):25250

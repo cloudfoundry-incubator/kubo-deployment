@@ -2,15 +2,15 @@
   path: /releases/-
   value:
     name: bosh-docker-cpi
-    version: 0.0.3
-    url: https://bosh.io/d/github.com/cppforlife/bosh-docker-cpi-release?v=0.0.3
-    sha1: 9eb1457a5f268a8e3a21765d151366e28f7d5ea3
+    version: "0.0.5"
+    url: https://bosh.io/d/github.com/cppforlife/bosh-docker-cpi-release?v=0.0.5
+    sha1: 075bc0264d2548173da55a40127757ae962a25b1
 
 - type: replace
   path: /releases/-
   value:
     name: docker
-    version: 0.0.2
+    version: "0.0.2"
     url: https://bosh.io/d/github.com/cppforlife/docker-release?v=0.0.2
     sha1: dc08a8ed5e4865fd7846c4d40649a6e9fe43a6b9
 
@@ -96,4 +96,8 @@
 
 - type: replace
   path: /variables/name=nats_server_tls/options/alternative_names?/-
+  value: "10.254.50.4"
+
+- type: replace
+  path: /variables/name=blobstore_server_tls/options/alternative_names/-
   value: "10.254.50.4"

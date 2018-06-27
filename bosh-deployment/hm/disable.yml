@@ -1,0 +1,5 @@
+- type: remove
+  path: /instance_groups/name=bosh/jobs/name=health_monitor
+
+- type: remove
+  path: /instance_groups/name=bosh/properties/hm

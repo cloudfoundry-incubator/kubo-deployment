@@ -1,0 +1,16 @@
+---
+- type: replace
+  path: /releases/name=bosh?
+  value:
+    name: "bosh"
+    version: "266.2.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/bosh?v=266.2.0"
+    sha1: "e181568c96858139391abf56fe068d56b10140cf"
+
+- type: replace
+  path: /releases/name=bpm?
+  value:
+    name: "bpm"
+    version: "0.6.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.6.0"
+    sha1: "4f0f239abdc801d71de9063625aa56e3c42634b5"

@@ -34,10 +34,6 @@
     - maxSpeed: 100
 
 - type: replace
-  path: /disk_pools/name=disks/disk_size
-  value: 20_000
-
-- type: replace
   path: /networks/name=default/subnets/0/dns
   value: [8.8.8.8, 10.0.80.11, 10.0.80.12]
 
@@ -99,3 +95,11 @@
 - type: replace
   path: /cloud_provider/properties/softlayer?
   value: *softlayer
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/blobstore/address?
+  value: 127.0.0.1
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/nats/address?
+  value: 127.0.0.1

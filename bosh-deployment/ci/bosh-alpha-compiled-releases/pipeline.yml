@@ -26,7 +26,7 @@ resources:
       regexp: ".*-(\\d+).tgz"
 
 jobs:
-  - name: compile-bosh-release-ubuntu-trusty-3468
+  - name: compile-bosh-release-ubuntu-trusty-3586
     plan:
       - aggregate:
         - get: bosh-deployment
@@ -34,7 +34,7 @@ jobs:
           trigger: true
         - get: ubuntu-trusty-stemcell
           version:
-            version: "3468.13"
+            version: "3586.7"
       - task: build-release
         file: bosh-deployment/ci/bosh-alpha-compiled-releases/tasks/build-release.yml
       - task: export-release

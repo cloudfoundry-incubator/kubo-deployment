@@ -1,0 +1,29 @@
+---
+- type: replace
+  path: /releases/-
+  value:
+    name: bosh-openstack-cpi
+    version: "38"
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-openstack-cpi-release?v=38
+    sha1: 9e149e64612f8a705eb9c069fd4ebf268af5ae46
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: openstack_cpi
+    release: bosh-openstack-cpi
+
+# unused values should be overwritten via Director's cpi config
+- type: replace
+  path: /instance_groups/name=bosh/properties/openstack?
+  value:
+    # todo eventually cpi does not take defaults (takes config only via cpi configs)
+    auth_url: unused
+    username: unused
+    api_key: unused
+    domain: unused
+    project: unused
+    region: unused
+    default_key_name: unused
+    default_security_groups: unused
+    human_readable_vm_names: true

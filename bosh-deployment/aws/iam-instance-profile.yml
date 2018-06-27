@@ -1,10 +1,4 @@
 ---
-- type: remove
-  path: /resource_pools/name=vms/cloud_properties/access_key_id?
-
-- type: remove
-  path: /resource_pools/name=vms/cloud_properties/secret_access_key?
-
 - type: replace
   path: /resource_pools/name=vms/cloud_properties/iam_instance_profile?
   value: ((iam_instance_profile))

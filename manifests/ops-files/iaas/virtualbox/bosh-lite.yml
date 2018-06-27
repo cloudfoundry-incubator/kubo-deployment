@@ -9,17 +9,3 @@
 - type: replace
   path: /instance_groups/name=worker/vm_type
   value: default
-
-- type: replace
-  path: /instance_groups/name=worker/update?/max_in_flight
-  value: 100%
-
-- type: replace
-  path: /instance_groups/name=master/networks
-  value:
-  - name: default
-    static_ips: [10.244.0.34]
-
-- type: replace
-  path: /variables/name=tls-kubernetes/options/alternative_names/-
-  value: 10.244.0.34

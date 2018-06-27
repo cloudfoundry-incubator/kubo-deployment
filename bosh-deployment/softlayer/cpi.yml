@@ -34,10 +34,6 @@
     - maxSpeed: 100
 
 - type: replace
-  path: /disk_pools/name=disks/disk_size
-  value: 20_000
-
-- type: replace
   path: /networks/name=default/subnets/0/dns
   value: [8.8.8.8, 10.0.80.11, 10.0.80.12]
 

@@ -1,0 +1,30 @@
+---
+- type: replace
+  path: /releases/-
+  value:
+    name: bosh-azure-cpi
+    version: "35.2.0"
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-azure-cpi-release?v=35.2.0
+    sha1: d581c4181d31846e05e59054a15e09621f1e90b1
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/-
+  value:
+    name: azure_cpi
+    release: bosh-azure-cpi
+
+# unused values should be overwritten via Director's cpi config
+- type: replace
+  path: /instance_groups/name=bosh/properties/azure?
+  value:
+    # todo eventually cpi does not take defaults (takes config only via cpi configs)
+    environment: unused
+    subscription_id: unused
+    tenant_id: unused
+    client_id: unused
+    client_secret: unused
+    resource_group_name: unused
+    storage_account_name: unused
+    default_security_group: unused
+    ssh_user: unused
+    ssh_public_key: unused

@@ -1,0 +1,6 @@
+- type: replace
+  path: /releases/name=cfcr-etcd
+  value:
+   name: cfcr-etcd
+   version: create
+   url: file://../cfcr-etcd-release

@@ -1,0 +1,22 @@
+instances:
+- name: master
+  index: "1"
+  artifacts:
+  - name: bbr-cfcr-etcd-db
+    checksums:
+      ./snapshotdb: 84be5cfd4f5a5ab87ba6749e534613526df527a7f684af439e00c9740a2444b6
+- name: master
+  index: "0"
+  artifacts:
+  - name: bbr-cfcr-etcd-db
+    checksums:
+      ./snapshotdb: 08f834ae8797db0cfabd580d832d042dc60b9538a3821a8dfa66ab49cc14bd2d
+- name: master
+  index: "2"
+  artifacts:
+  - name: bbr-cfcr-etcd-db
+    checksums:
+      ./snapshotdb: 1d27927875c6ca93ca1cb5c5cc7020386115a8171fb7bee359d862f5042ab41d
+backup_activity:
+  start_time: 2018/06/26 15:35:52 IST
+  finish_time: 2018/06/26 15:39:32 IST

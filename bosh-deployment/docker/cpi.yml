@@ -3,15 +3,15 @@
   path: /releases/-
   value:
     name: bosh-docker-cpi
-    version: "0.0.3"
-    url: https://bosh.io/d/github.com/cppforlife/bosh-docker-cpi-release?v=0.0.3
-    sha1: 9eb1457a5f268a8e3a21765d151366e28f7d5ea3
+    version: "0.0.5"
+    url: https://bosh.io/d/github.com/cppforlife/bosh-docker-cpi-release?v=0.0.5
+    sha1: 075bc0264d2548173da55a40127757ae962a25b1
 
 - type: replace
   path: /resource_pools/name=vms/stemcell?
   value:
-    url: https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=3468.21
-    sha1: 72ff179da486fc4a5578740d33f0a1915b7c68f0
+    url: https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=3586.16
+    sha1: 7b4b314abf3a8f06973f3533162be13d57ebed28
 
 - type: replace
   path: /networks/name=default/subnets/0/cloud_properties?

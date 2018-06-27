@@ -1,0 +1,7 @@
+- type: replace
+  path: /instance_groups/name=bosh/properties/docker_cpi/agent/mbus
+  value: "nats://nats:((nats_password))@[((internal_ip))]:4222"
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/docker_cpi/agent/blobstore/options/endpoint
+  value: "http://[((internal_ip))]:25250"

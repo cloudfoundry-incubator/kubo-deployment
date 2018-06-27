@@ -2,17 +2,17 @@
   path: /releases/-
   value:
     name: bosh-warden-cpi
-    version: "37"
-    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-warden-cpi-37-ubuntu-trusty-3468.21-20180125-031924-498857068-20180125031928.tgz?versionId=aH2ugBoIsLJ0YwluCO8GB9KJzJ7IkQS.
-    sha1: 3ff9b922e620a89c6fc098f08eba84f1c56b93f6
+    version: "40"
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/bosh-warden-cpi-40-ubuntu-trusty-3586.16-20180601-214504-519912201-20180601214509.tgz?versionId=aH6LTVIbJ16.zsCsDXKUt63sZxnKR65A
+    sha1: 7ee1b1993eb8e90c5c50b1d071babc21ac422c78
 
 - type: replace
   path: /releases/-
   value:
     name: garden-linux
     version: "0.342.0"
-    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/garden-linux-0.342.0-ubuntu-trusty-3468.21-20180125-031714-495392008-20180125031719.tgz?versionId=nWnYXOboNPqBGgi6WJUYN5Lnsnd8RsF.
-    sha1: 750b550d79e1cb44a917b7e696e29537e5328bbb
+    url: https://s3.amazonaws.com/bosh-compiled-release-tarballs/garden-linux-0.342.0-ubuntu-trusty-3586.16-20180601-214625-742846372-20180601214630.tgz?versionId=2B8P.23OP9watvE_pMushEbdsAWZ4iVR
+    sha1: 32effc5aa9cf9304a47874c7d113b4db7b57e16d
 
 - type: replace
   path: /releases/name=os-conf?
@@ -85,3 +85,11 @@
 - type: replace
   path: /variables/name=nats_server_tls/options/alternative_names?/-
   value: "10.254.50.4"
+
+- type: replace
+  path: /variables/name=blobstore_server_tls/options/alternative_names/-
+  value: "10.254.50.4"
+
+# Remove by virtualbox cpi to avoid compilation
+- type: remove
+  path: /instance_groups/name=bosh/jobs/name=virtualbox_cpi?

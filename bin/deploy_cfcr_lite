@@ -4,17 +4,17 @@ set -euo pipefail
 KUBO_DEPLOYMENT_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../kubo-deployment" && pwd)
 STEMCELL_VERSION=$(bosh int ${KUBO_DEPLOYMENT_PATH}/manifests/cfcr.yml --path=/stemcells/alias=trusty/version)
 
-bosh upload-stemcell \
-  "https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=${STEMCELL_VERSION}"
+# bosh upload-stemcell \
+#   "https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=${STEMCELL_VERSION}"
 
 bosh -n -d cfcr deploy --no-redact \
   manifests/cfcr.yml \
   -o manifests/ops-files/kubo-local-release.yml \
-  -o manifests/ops-files/misc/single-master.yml \
+  -o manifests/ops-files/cfcr-etcd-local-release.yml \
   -o manifests/ops-files/iaas/virtualbox/bosh-lite.yml \
   "$@"
 
-bosh -d cfcr run-errand apply-specs
+# bosh -d cfcr run-errand apply-specs
 
 echo ""
 echo "============= Finished Deploying CFCR =================="

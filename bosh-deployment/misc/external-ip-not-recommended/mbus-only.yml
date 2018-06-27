@@ -1,0 +1,13 @@
+# WARNING: We do not recommend to expose Director and any other services over public addresses.
+
+- type: replace
+  path: /cloud_provider/mbus
+  value: https://mbus:((mbus_bootstrap_password))@((external_ip)):6868
+
+- type: replace
+  path: /variables/name=mbus_bootstrap_ssl/options/alternative_names/-
+  value: ((external_ip))
+
+- type: replace
+  path: /variables/name=director_ssl/options/alternative_names/-
+  value: ((external_ip))

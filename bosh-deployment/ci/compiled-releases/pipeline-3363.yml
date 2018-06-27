@@ -4,7 +4,7 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/bosh-deployment.git
-      branch: {{branch}}
+      branch: ((branch))
 
   # releases
 
@@ -31,8 +31,8 @@ resources:
     type: s3
     source:
       bucket: "bosh-compiled-release-tarballs"
-      access_key_id: {{aws_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
+      access_key_id: ((aws_key_id))
+      secret_access_key: ((aws_secret_access_key))
       regexp: ".*-(\\d+).tgz"
 
 jobs:
@@ -45,7 +45,7 @@ jobs:
             version: "260.8"
         - get: ubuntu-trusty-stemcell
           version:
-            version: "3363.48"
+            version: "3363.63"
       - task: export-release
         file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
         privileged: true
@@ -62,10 +62,10 @@ jobs:
         - get: bosh-deployment
         - get: bosh-release
           version:
-            version: "261.5"
+            version: "261.6.0"
         - get: ubuntu-trusty-stemcell
           version:
-            version: "3363.48"
+            version: "3363.63"
       - task: export-release
         file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
         privileged: true
@@ -85,7 +85,7 @@ jobs:
               version: "24.14"
           - get: ubuntu-trusty-stemcell
             version:
-              version: "3363.48"
+              version: "3363.63"
       - task: export-release
         file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
         privileged: true
@@ -105,7 +105,7 @@ jobs:
               version: "30.9"
           - get: ubuntu-trusty-stemcell
             version:
-              version: "3363.48"
+              version: "3363.63"
       - task: export-release
         file: bosh-deployment/ci/compiled-releases/tasks/export-release.yml
         privileged: true
