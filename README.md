@@ -5,7 +5,7 @@ Kubo is a [BOSH](https://bosh.io/) release for Kubernetes. It provides a solutio
 This repository contains the documentation and manifests for deploying [kubo-release](https://github.com/cloudfoundry-incubator/kubo-release) with BOSH.
 
 
-**Slack**: #kubo on https://slack.cloudfoundry.org
+**Slack**: #cfcr on https://slack.cloudfoundry.org
 **Pivotal Tracker**: https://www.pivotaltracker.com/n/projects/2093412
 
 ## CI Status
