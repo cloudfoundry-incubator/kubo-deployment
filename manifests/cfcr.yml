@@ -186,6 +186,8 @@ instance_groups:
       tls:
         kubernetes: ((tls-kubernetes))
         kubelet: ((tls-kubelet))
+        kubelet-client-ca:
+          certificate: ((tls-kubelet-client.ca))
   - name: kube-proxy
     release: kubo
     properties:
