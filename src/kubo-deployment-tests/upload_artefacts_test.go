@@ -73,7 +73,7 @@ var _ = Describe("upload_artefacts", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
 
-			Expect(stderr).To(gbytes.Say("bosh upload-stemcell https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-3124.12-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"))
+			Expect(stderr).To(gbytes.Say("bosh upload-stemcell https://s3.amazonaws.com/bosh-core-stemcells/aws/bosh-stemcell-3124.12-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"))
 		})
 	})
 
@@ -153,7 +153,8 @@ var _ = Describe("upload_stemcell", func() {
 			code, err := bash.Run("upload_stemcell", []string{"aws"})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(code).To(Equal(0))
-			Expect(stderr).To(gbytes.Say("bosh-aws-light-stemcells"))
+
+			Expect(stderr).To(gbytes.Say("bosh-core-stemcells"))
 			Expect(stderr).To(gbytes.Say("aws-xen-hvm-ubuntu-trusty-go_agent"))
 		})
 	})
