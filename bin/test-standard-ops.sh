@@ -48,7 +48,6 @@ test_standard_ops() {
       check_interpolation "disable-anonymous-auth.yml"
       check_interpolation "disable-deny-escalating-exec.yml"
       check_interpolation "add-oidc-endpoint.yml" "-l example-vars-files/misc/oidc.yml"
-      check_interpolation "use-separate-master-ca.yml"
 
       # Dev
       check_interpolation "kubo-local-release.yml"

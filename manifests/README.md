@@ -239,7 +239,6 @@ kubectl get all
 | [`ops-files/disable-anonymous-auth.yml`](ops-files/disable-anonymous-auth.yml) | Disable `anonymous-auth` on the API server | - |
 | [`ops-files/disable-deny-escalating-exec.yml`](ops-files/disable-deny-escalating-exec.yml) | Disable `DenyEscalatingExec` in API server admission control | - |
 | [`ops-files/add-oidc-endpoint.yml`](ops-files/add-oidc-endpoint.yml) | Enable OIDC authentication for the Kubernetes cluster | - |
-| [`ops-files/use-separate-master-ca.yml`](ops-files/use-separate-master-ca.yml) | Configure master to use a different CA | *This is currently an experimental ops-file.* This may not work with all Certificate Signing Requests. |
 
 ### Dev
 
