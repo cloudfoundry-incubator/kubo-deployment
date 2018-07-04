@@ -22,62 +22,6 @@ Build Kubo Release status [![Build Kubo Release Badge](https://ci.kubo.sh/api/v1
 
 See the [complete pipeline](https://ci.kubo.sh/pipelines/kubo-deployment) for more details. The CI pipeline definitions are stored in the [kubo-ci](https://github.com/pivotal-cf-experimental/kubo-ci) repository.
 
-## Deploy CFCR 
-
-### Prerequisites
-These steps assume you have a [BOSH](http://bosh.io/) Director with a [cloud config](https://bosh.io/docs/cloud-config/) 
-and [stemcell](http://bosh.io/stemcells) deployed to it.
-
-### Instructions
-1. Refer to the [latest release](https://github.com/cloudfoundry-incubator/kubo-release/releases/latest) version number, and replace 0.17.0 in the following instructions with the appropriate version number.
-1. `git clone https://github.com/cloudfoundry-incubator/kubo-deployment.git && cd kubo-deployment && git checkout v0.17.0`
-1. `wget https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.17.0/kubo-release-0.17.0.tgz`
-1. `bosh upload-release kubo-release-0.17.0.tgz`
-1. `bosh deploy -d cfcr manifests/cfcr.yml`
-1. `bosh -d cfcr run-errand apply-specs`
-1. `bosh -d cfcr run-errand smoke-tests`
-1. [Accessing CFCR cluster](#accessing-cfcr-cluster)
-
-### Deploy development version of CFCR on [BOSH Lite](http://bosh.io/docs/bosh-lite/)
-This will deploy a single master CFCR cluster. Assuming you have uploaded the [default cloud config](https://github.com/cloudfoundry/bosh-deployment/blob/master/warden/cloud-config.yml)
-to the BOSH Lite director, the kubernetes master host is deployed to a static
-IP: `10.244.0.34`.
-
-1. `cd kubo-deployment`
-1. `git clone https://github.com/cloudfoundry-incubator/kubo-release.git ../kubo-release`
-1. Run bosh-lite deploy script `./bin/deploy_cfcr_lite`
-
-## Accessing CFCR Cluster
-After deploying the cluster, perform the following steps:
-
-1. Create a load balancer for your IaaS that points to the kube-apiserver. If deploying CFCR with multiple masters, we recommend creating a TCP Load Balancer with healthchecks on port 8443. 
-1. Login to the Credhub Server that stores the cluster's credentials:
-```
-credhub login 
-```
-
-2. Execute the `./bin/set_kubeconfig` script to configure `kubectl`, the Kubernetes command line interface:
-
-```
-$ ./bin/set_kubeconfig <director_name>/<deployment_name> https://**kubernetes_master_host**:**kubernetes_master_port**
-```
-
->Note: You can currently find your kubernetes_master_host by running `terraform output -state=${kubo_terraform_state} master_lb_ip_address`
-
-3. Verify that the settings have been applied correctly by listing the Kubernetes pods in the kubo-system namespace:
-```
-$ kubectl get pods --namespace=kube-system
-```
-
-If you have successfully configured kubectl, the output resembles the following:
-```
-NAME                                    READY     STATUS    RESTARTS   AGE
-heapster-2736291043-9rw42               1/1       Running   0          2d
-kube-dns-3329716278-dpdj0               3/3       Running   0          2d
-kubernetes-dashboard-1367211859-jq9mw   1/1       Running   0          2d
-monitoring-influxdb-564852376-67fdd     1/1       Running   0          2d
-```
-
 ## Documentation
 Review the following documentation to get a better understanding of Cloud Foundry and Kubernetes architectures.
 
