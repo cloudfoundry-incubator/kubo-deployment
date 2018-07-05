@@ -170,7 +170,7 @@ instance_groups:
       log_level: error
       log_options: [ "max-size=128m", "max-file=2" ]
       store_dir: /var/vcap/data
-      storage_driver: overlay
+      storage_driver: overlay2
       default_ulimits: [ "nofile=65536" ]
       tls_cacert: ((tls-docker.ca))
       tls_cert:  ((tls-docker.certificate))
