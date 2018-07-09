@@ -23,11 +23,7 @@ Build Kubo Release status [![Build Kubo Release Badge](https://ci.kubo.sh/api/v1
 See the [complete pipeline](https://ci.kubo.sh/pipelines/kubo-deployment) for more details. The CI pipeline definitions are stored in the [kubo-ci](https://github.com/pivotal-cf-experimental/kubo-ci) repository.
 
 ## Documentation
-Review the following documentation to get a better understanding of Cloud Foundry and Kubernetes architectures.
-
-* [Cloud Foundry docs](https://docs.cloudfoundry.org/concepts/architecture/)
-* [Kubernetes Overview](https://thenewstack.io/kubernetes-an-overview/)
-* [Kubernetes architecture docs](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture.md)
+To deploy CFCR go [here](https://github.com/cloudfoundry-incubator/kubo-release/#deploying-cfcr)
 
 ## Contributing
 
@@ -58,13 +54,3 @@ Kubernetes services can be exposed using a second IaaS specific load balancer wh
 The nodes that run the Kubernetes API (master nodes) register themselves with the Cloud Foundry TCP router. The TCP Router acts as both public and internal endpoint for the Kubernetes API to route traffic to the master nodes of a Kubo instance. All traffic to the API goes through the Cloud Foundry TCP router and then to a healthy node. 
 
 The Cloud Foundry subnet must be able to route traffic directly to the Kubo subnet. It is recommended to keep them in separate subnets when possible to avoid the BOSH directors from trying to provision the same addresses. This diagram specifies CIDR ranges for demonstration purposes as well as a public router in front of the Cloud Foundry gorouter and tcp-router which is typical.
-
-## Glossary
-
-- Kubo - Kubernetes on BOSH
-- [Bastion](https://en.wikipedia.org/wiki/Jump_server) - A server within the kubo network that provides secure access to kubo.
-- Kubo environment Configuration - Folder that contains all configuration files needed to deploy BOSH and Kubo, as well as all 
-  configuration files that are generated during deployment. Also called `<KUBO_ENV>`
-- Creds - Credentials that are generated during BOSH deployment process and stored in `<KUBO_ENV>/creds.yml`
-- Service - stands for [K8s service](https://kubernetes.io/docs/user-guide/services), which represents a logical collection 
-  of Kubernetes pods and a way to access them without needing information about the specific pods
