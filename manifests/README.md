@@ -104,7 +104,7 @@ routing_cf_api_url: https://api.system.mycompany.com
 routing_cf_uaa_url: https://uaa.system.mycompany.com
 routing_cf_app_domain_name: apps.mycompany.com
 routing_cf_client_id: routing_api_client
-routing_cf_client-secret: <<credhub get -n my-bosh/cf/uaa_clients_routing_api_client_secret>>
+routing_cf_client_secret: <<credhub get -n my-bosh/cf/uaa_clients_routing_api_client_secret>>
 routing_cf_nats_internal_ips: [10.10.1.6,10.10.1.7,10.10.1.8]
 routing_cf_nats_port: 4222
 routing_cf_nats_username: nats
