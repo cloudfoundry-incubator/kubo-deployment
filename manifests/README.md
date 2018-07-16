@@ -239,7 +239,7 @@ kubectl get all
 | [`ops-files/disable-anonymous-auth.yml`](ops-files/disable-anonymous-auth.yml) | Disable `anonymous-auth` on the API server | - |
 | [`ops-files/disable-deny-escalating-exec.yml`](ops-files/disable-deny-escalating-exec.yml) | Disable `DenyEscalatingExec` in API server admission control | - |
 | [`ops-files/add-oidc-endpoint.yml`](ops-files/add-oidc-endpoint.yml) | Enable OIDC authentication for the Kubernetes cluster | - |
-| [`ops-files/change-cidrs.yml`](ops-files/change-cidrs.yml) | Change POD CIDR and Service Cluster CIDR | Extra Vars Required:<br>- **first_ip_of_service_cluster_cidr:** Required for TLS certificate of apiserver<br>- **kubedns_svc_ip**: Required for kube dns IP address, needs to be part of service_cluster_cidr |
+| [`ops-files/change-cidrs.yml`](ops-files/change-cidrs.yml) | Change POD CIDR and Service Cluster CIDR | Extra Vars Required:<br>- **first_ip_of_service_cluster_cidr:** Required for TLS certificate of apiserver<br>- **kubedns_service_ip**: Required for kube dns IP address, needs to be part of service_cluster_cidr |
 
 ### Dev
 
