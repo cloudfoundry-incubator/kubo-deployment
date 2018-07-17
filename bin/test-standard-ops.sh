@@ -20,6 +20,7 @@ test_standard_ops() {
       check_interpolation "use-runtime-config-bosh-dns.yml"
       check_interpolation "rename.yml" "-v deployment_name=fubar"
       check_interpolation "vm-types.yml" "-v master_vm_type=master" "-v worker_vm_type=worker"
+      check_interpolation "use-xenial-stemcell.yml"
 
       # Infrastructure
       check_interpolation "iaas/aws/cloud-provider.yml"

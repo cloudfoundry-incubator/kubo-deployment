@@ -21,7 +21,7 @@ releases:
   version: 0.6.0
 
 stemcells:
-- alias: trusty
+- alias: default
   os: ubuntu-trusty
   version: "3586.26"
 
@@ -71,7 +71,7 @@ instance_groups:
         heapster: ((tls-heapster))
         influxdb: ((tls-influxdb))
         kubernetes-dashboard: ((tls-kubernetes-dashboard))
-  stemcell: trusty
+  stemcell: default
   vm_type: minimal
 - name: master
   instances: 3
@@ -144,7 +144,7 @@ instance_groups:
           private_key: ((tls-etcd-v0-17-0.private_key))
   - name: smoke-tests
     release: kubo
-  stemcell: trusty
+  stemcell: default
   vm_type: small
   persistent_disk: 5120
 
@@ -190,7 +190,7 @@ instance_groups:
       tls:
         kubernetes: ((tls-kubernetes))
       api-token: ((kube-proxy-password))
-  stemcell: trusty
+  stemcell: default
   vm_type: small-highmem
 
 update:
