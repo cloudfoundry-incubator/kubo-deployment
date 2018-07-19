@@ -2,7 +2,7 @@
 set -euo pipefail
 
 KUBO_DEPLOYMENT_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../kubo-deployment" && pwd)
-STEMCELL_VERSION=$(bosh int ${KUBO_DEPLOYMENT_PATH}/manifests/cfcr.yml --path=/stemcells/alias=trusty/version)
+STEMCELL_VERSION=$(bosh int ${KUBO_DEPLOYMENT_PATH}/manifests/cfcr.yml --path=/stemcells/alias=default/version)
 
 bosh upload-stemcell \
   "https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=${STEMCELL_VERSION}"
