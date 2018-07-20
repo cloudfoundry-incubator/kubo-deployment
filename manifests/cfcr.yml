@@ -30,6 +30,7 @@ addons:
   include:
     stemcells:
     - os: ubuntu-trusty
+    - os: ubuntu-xenial
   jobs:
   - name: bosh-dns
     release: bosh-dns

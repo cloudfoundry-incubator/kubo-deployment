@@ -26,6 +26,7 @@ addons:
   include:
     stemcell:
     - os: ubuntu-trusty
+    - os: ubuntu-xenial
 - name: bosh-dns-windows
   jobs:
   - name: bosh-dns-windows
