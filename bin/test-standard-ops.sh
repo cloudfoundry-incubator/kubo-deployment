@@ -51,6 +51,9 @@ test_standard_ops() {
       check_interpolation "add-oidc-endpoint.yml" "-l example-vars-files/misc/oidc.yml"
       check_interpolation "change-cidrs.yml" "-l example-vars-files/new-cidrs.yml"
 
+      # BBR
+      check_interpolation "enable-bbr.yml"
+
       # Dev
       check_interpolation "kubo-local-release.yml"
 

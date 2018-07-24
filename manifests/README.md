@@ -242,6 +242,12 @@ kubectl get all
 | [`ops-files/add-oidc-endpoint.yml`](ops-files/add-oidc-endpoint.yml) | Enable OIDC authentication for the Kubernetes cluster | - |
 | [`ops-files/change-cidrs.yml`](ops-files/change-cidrs.yml) | Change POD CIDR and Service Cluster CIDR. This should only be applied to a new cluster, please do not apply to an existing cluster. | Extra Vars Required:<br>- **first_ip_of_service_cluster_cidr:** Required for TLS certificate of apiserver<br>- **kubedns_service_ip**: Required for kube dns IP address, needs to be part of service_cluster_cidr |
 
+### BOSH Backup & Restore (Experimental)
+
+| Name | Purpose | Notes|
+|:--- |:--- |:--- |
+| [`ops-files/enable-bbr.yml`](ops-files/enable-bbr.yml) | Deploy jobs required to enable BBR | - |
+
 ### Dev
 
 | Name | Purpose | Notes |
