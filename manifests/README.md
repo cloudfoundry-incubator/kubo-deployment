@@ -246,7 +246,7 @@ kubectl get all
 
 | Name | Purpose | Notes|
 |:--- |:--- |:--- |
-| [`ops-files/enable-bbr.yml`](ops-files/enable-bbr.yml) | Deploy jobs required to enable BBR | - |
+| [`ops-files/enable-bbr.yml`](ops-files/enable-bbr.yml) | Deploy jobs required to enable BBR. | Only tested with single master. |
 
 ### Dev
 
