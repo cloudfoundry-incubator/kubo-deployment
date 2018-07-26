@@ -1,9 +1,6 @@
 - path: /stemcells/alias=default/os
   type: replace
   value: ubuntu-xenial
-- path: /stemcells/alias=default/version
-  type: replace
-  value: "87.3"
 - path: /addons/name=bosh-dns/include/stemcells/os=ubuntu-trusty
   type: replace
   value:
