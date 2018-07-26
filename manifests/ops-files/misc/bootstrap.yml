@@ -3,16 +3,8 @@
   value: ((deployment_name))
 
 - type: replace
-  path: /instance_groups/name=master/azs
-  value: [z1]
-
-- type: replace
   path: /instance_groups/name=master/vm_type
   value: master
-
-- type: replace
-  path: /instance_groups/name=worker/azs
-  value: [z1]
 
 - type: replace
   path: /instance_groups/name=worker/vm_type
