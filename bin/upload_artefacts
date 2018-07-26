@@ -91,16 +91,16 @@ upload_stemcell() {
 
   case ${iaas} in
   "gcp")
-    bosh upload-stemcell "https://s3.amazonaws.com/bosh-gce-light-stemcells/light-bosh-stemcell-${stemcell_version}-google-kvm-ubuntu-trusty-go_agent.tgz"
+    bosh upload-stemcell "https://bosh.io/d/stemcells/bosh-google-kvm-ubuntu-trusty-go_agent"
     ;;
   "vsphere")
-    bosh upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/vsphere/bosh-stemcell-${stemcell_version}-vsphere-esxi-ubuntu-trusty-go_agent.tgz"
+    bosh upload-stemcell "https://bosh.io/d/stemcells/bosh-vsphere-esxi-ubuntu-trusty-go_agent"
     ;;
   "openstack")
-    bosh upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/openstack/bosh-stemcell-${stemcell_version}-openstack-kvm-ubuntu-trusty-go_agent.tgz"
+    bosh upload-stemcell "https://bosh.io/d/stemcells/bosh-openstack-kvm-ubuntu-trusty-go_agent"
     ;;
    "aws")
-    bosh upload-stemcell "https://s3.amazonaws.com/bosh-core-stemcells/aws/bosh-stemcell-${stemcell_version}-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"
+    bosh upload-stemcell "https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent"
     ;;
   esac
 }
