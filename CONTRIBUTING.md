@@ -47,3 +47,16 @@ Follow the steps below to deploy and test kubernetes BOSH deployment. This test 
 
 If you want to start fresh, it is possible to tear down the service by running `bosh -e <KUBO_ENV> -d <CLUSTER_DEPLOYMENT_NAME> delete-deployment`. You can then destroy the BOSH director using the `bin/destroy_bosh` command.
 
+### Conformance tests
+
+Follow the steps below to test your cluster against the [certified Kubernetes](https://github.com/cncf/k8s-conformance) conformance tests.  The instructions differ from the official kubernetes instructions and allow the tests to be run in parallel.  In order to submit to the Certified Kubernetes programme, you will have to follow the official instructions.
+
+#### Prerequisites
+
+Ensure you have a CFCR cluster and a Kubeconfig file.  The following instructions assume your Kubeconfig file is located at `${HOME}/.kube/config`.
+
+#### Running the conformance tests
+
+1. `docker run -it --rm --mount type=bind,source="${HOME}/.kube/config",target="/kubeconfig" pcfkubo/conformance:stable /bin/bash`
+1. `ginkgo -p -progress -focus  "\[Conformance\]" -skip "\[Serial\]" /e2e.test`
+1. `ginkgo -focus="\[Serial\].*\[Conformance\]" /e2e.test`
