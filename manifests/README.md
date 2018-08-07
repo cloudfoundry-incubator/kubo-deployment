@@ -160,6 +160,14 @@ svc/kubernetes   ClusterIP   10.100.200.1   <none>        443/TCP   2h
 |:--- |:--- |:--- |
 | [`ops-files/enable-bbr.yml`](ops-files/enable-bbr.yml) | Deploy jobs required to enable BBR. | Only tested with single master. |
 
+### Syslog
+
+| Name | Purpose | Notes |
+|:---  |:---     |:---   |
+| [`ops-files/add-syslog.yml`](ops-files/add-syslog.yml) | Enables forwarding local syslog events in RFC5424 format to a remote syslog endpoint.  |
+| [`ops-files/add-syslog-tls.yml`](ops-files/add-syslog-tls.yml) | Requires `add-syslog.yml`. Configure TLS for syslog fowarding. |
+
+
 ### Dev
 
 | Name | Purpose | Notes |
