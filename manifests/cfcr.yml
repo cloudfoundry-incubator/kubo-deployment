@@ -3,6 +3,8 @@ name: cfcr
 releases:
 - name: kubo
   version: latest
+- name: k8s-engine
+  version: latest
 - name: cfcr-etcd
   url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.4.0/cfcr-etcd-release-1.4.0.tgz
   sha1: f753236e370547e2d3aac9a37905f9c14e04acf8
@@ -85,10 +87,11 @@ instance_groups:
   - name: flanneld
     release: kubo
   - name: kube-apiserver
-    release: kubo
+    release: k8s-engine
     properties:
       admin-username: admin
       admin-password: ((kubo-admin-password))
+      admission_controllers: LimitRanger,DefaultTolerationSeconds,ValidatingAdmissionWebhook,NamespaceLifecycle,ResourceQuota,ServiceAccount,DefaultStorageClass,MutatingAdmissionWebhook,PodSecurityPolicy
       kubelet-password: ((kubelet-password))
       kube-proxy-password: ((kube-proxy-password))
       kube-controller-manager-password: ((kube-controller-manager-password))
@@ -105,7 +108,7 @@ instance_groups:
           private_key: ((tls-kubernetes.private_key))
         kubelet-client: ((tls-kubelet-client))
   - name: kube-controller-manager
-    release: kubo
+    release: k8s-engine
     properties:
       api-token: ((kube-controller-manager-password))
       cluster-signing: ((kubo_ca))
@@ -113,13 +116,13 @@ instance_groups:
       tls:
         kubernetes: ((tls-kubernetes))
   - name: kube-scheduler
-    release: kubo
+    release: k8s-engine
     properties:
       api-token: ((kube-scheduler-password))
       tls:
         kubernetes: ((tls-kubernetes))
   - name: kubernetes-roles
-    release: kubo
+    release: k8s-engine
     properties:
       admin-username: admin
       admin-password: ((kubo-admin-password))
