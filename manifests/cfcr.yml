@@ -53,7 +53,7 @@ addons:
 - name: bosh-dns-aliases
   jobs:
   - name: kubo-dns-aliases
-    release: kubo
+    release: k8s-engine
 
 instance_groups:
 - name: apply-addons
