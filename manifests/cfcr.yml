@@ -1,7 +1,7 @@
 name: cfcr
 
 releases:
-- name: kubo
+- name: cfcr
   version: latest
 - name: k8s-engine
   version: latest
@@ -64,7 +64,7 @@ instance_groups:
   lifecycle: errand
   jobs:
   - name: apply-specs
-    release: kubo
+    release: cfcr
     properties:
       api-token: ((kubelet-password))
       admin-username: admin
@@ -85,7 +85,7 @@ instance_groups:
   - name: bpm
     release: bpm
   - name: flanneld
-    release: kubo
+    release: cfcr
   - name: kube-apiserver
     release: k8s-engine
     properties:
@@ -147,7 +147,7 @@ instance_groups:
           certificate: ((tls-etcd-v0-17-0.certificate))
           private_key: ((tls-etcd-v0-17-0.private_key))
   - name: smoke-tests
-    release: kubo
+    release: cfcr
   stemcell: default
   vm_type: small
   persistent_disk: 5120
@@ -159,7 +159,7 @@ instance_groups:
   azs: [z1,z2,z3]
   jobs:
   - name: flanneld
-    release: kubo
+    release: cfcr
   - name: docker
     release: docker
     properties:
@@ -177,9 +177,9 @@ instance_groups:
       tls_key: ((tls-docker.private_key))
       env: {}
   - name: kubernetes-dependencies
-    release: kubo
+    release: cfcr
   - name: kubelet
-    release: kubo
+    release: k8s-engine
     properties:
       api-token: ((kubelet-password))
       drain-api-token: ((kubelet-drain-password))
@@ -189,7 +189,7 @@ instance_groups:
         kubelet-client-ca:
           certificate: ((tls-kubelet-client.ca))
   - name: kube-proxy
-    release: kubo
+    release: cfcr
     properties:
       tls:
         kubernetes: ((tls-kubernetes))
