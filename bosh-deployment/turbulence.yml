@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: turbulence
-    version: 0.8
-    url: https://bosh.io/d/github.com/cppforlife/turbulence-release?v=0.8
-    sha1: f9e20d7cc421bf5e71c74e397a690b1e660e15c5
+    url: "https://storage.googleapis.com/kubo-pipeline-store/turbulence-release-0.10.0%2Bdev.1.tgz"
+    sha1: "0321099d5399da2c002459c4d5817a273c6ae3c7"
+    version: "0.10.0+dev.1"
 
 - type: replace
   path: /instance_groups/name=bosh/jobs/-
