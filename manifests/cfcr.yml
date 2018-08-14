@@ -194,9 +194,9 @@ releases:
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=1.8.0
   version: 1.8.0
 - name: bpm
-  sha1: 0cb3242063c95271c95b62de3a6d07072aff0b29
-  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.9.0
-  version: 0.9.0
+  sha1: f6140862d763ba397e7d8675fbb56020d4148081
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.10.0
+  version: 0.10.0
 stemcells:
 - alias: default
   os: ubuntu-xenial
