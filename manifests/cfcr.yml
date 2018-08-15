@@ -82,6 +82,8 @@ instance_groups:
   - name: default
   azs: [z1,z2,z3]
   jobs:
+  - name: add-scripts
+    release: cfcr
   - name: bpm
     release: bpm
   - name: flanneld
@@ -89,9 +91,68 @@ instance_groups:
   - name: kube-apiserver
     release: k8s-engine
     properties:
+      args:
+      - flag: anonymous-auth
+        value: true
+      - flag: allow-privileged
+        value: false
+      - flag: bind-address
+        value: "0.0.0.0"
+      - flag: disable-admission-plugins
+        value: PersistentVolumeLabel
+      - flag: enable-admission-plugins
+        value:
+        - LimitRanger
+        - DefaultTolerationSeconds
+        - ValidatingAdmissionWebhook
+        - NamespaceLifecycle
+        - ResourceQuota
+        - ServiceAccount
+        - DefaultStorageClass
+        - MutatingAdmissionWebhook
+        - PodSecurityPolicy
+      - flag: secure-port
+        value: 8443
+      - flag: enable-bootstrap-token-auth
+      - flag: enable-swagger-ui
+      - flag: kubelet-https
+      - flag: service-account-lookup
+      - flag: service-cluster-ip-range
+        value: "10.100.200.0/24"
+      - flag: service-node-port-range
+        value: "30000-32767"
+      - flag: storage-media-type
+        value: application/json
+      - flag: enable-aggregator-routing
+      - flag: v
+        value: 4
+      - flag: authorization-mode
+        value: RBAC
+      - flag: runtime-config
+        value: api/v1,rbac.authorization.k8s.io/v1alpha1
+      - flag: requestheader-allowed-names
+        value: aggregator
+      - flag: requestheader-extra-headers-prefix
+        value: X-Remote-Extra-
+      - flag: requestheader-group-headers
+        value: X-Remote-Group
+      - flag: requestheader-username-headers
+        value: X-Remote-User
+      - flag: audit-log-path
+        value: /var/vcap/sys/log/kube-apiserver/audit.log
+      - flag: audit-log-maxage
+        value: 0
+      - flag: audit-log-maxsize
+        value: 0
+      - flag: audit-log-maxbackup
+        value: 0
+      - flag: audit-policy-file
+        value: /var/vcap/jobs/kube-apiserver/config/audit_policy.yml
+      pre-start-scripts:
+      - /var/vcap/jobs/add-scripts/bin/first-script
+      - /var/vcap/jobs/add-scripts/bin/second-script
       admin-username: admin
       admin-password: ((kubo-admin-password))
-      admission_controllers: LimitRanger,DefaultTolerationSeconds,ValidatingAdmissionWebhook,NamespaceLifecycle,ResourceQuota,ServiceAccount,DefaultStorageClass,MutatingAdmissionWebhook,PodSecurityPolicy
       kubelet-password: ((kubelet-password))
       kube-proxy-password: ((kube-proxy-password))
       kube-controller-manager-password: ((kube-controller-manager-password))
