@@ -50,6 +50,7 @@ test_standard_ops() {
       check_interpolation "disable-deny-escalating-exec.yml"
       check_interpolation "add-oidc-endpoint.yml" "-l example-vars-files/misc/oidc.yml"
       check_interpolation "change-cidrs.yml" "-l example-vars-files/new-cidrs.yml"
+      check_interpolation "add-hostname-to-master-certificate.yml" "-v api-hostname=example.com"
 
       # BBR
       check_interpolation "enable-bbr.yml"
