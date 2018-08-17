@@ -34,7 +34,11 @@ instance_groups:
   jobs:
   - name: apply-specs
     properties:
-      addons: ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"]
+      addons:
+      - kube-dns
+      - metrics-server
+      - heapster
+      - kubernetes-dashboard
       admin-password: ((kubo-admin-password))
       admin-username: admin
       api-token: ((kubelet-password))
@@ -195,9 +199,9 @@ releases:
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=1.8.0
   version: 1.8.0
 - name: bpm
-  sha1: f6140862d763ba397e7d8675fbb56020d4148081
-  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.10.0
-  version: 0.10.0
+  sha1: c9a0887a9dd02ae8d2dbab6f17db3c6a6bac5aad
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.11.0
+  version: 0.11.0
 stemcells:
 - alias: default
   os: ubuntu-xenial
