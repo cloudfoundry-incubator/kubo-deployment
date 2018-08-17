@@ -34,6 +34,7 @@ instance_groups:
   jobs:
   - name: apply-specs
     properties:
+      addons: ["kube-dns", "metrics-server", "heapster", "kubernetes-dashboard"]
       admin-password: ((kubo-admin-password))
       admin-username: admin
       api-token: ((kubelet-password))
