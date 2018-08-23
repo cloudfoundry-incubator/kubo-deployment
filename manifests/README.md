@@ -192,6 +192,16 @@ kubectl get all
 | [`ops-files/rename.yml`](ops-files/rename.yml) | Specify the deployment name | The deployment name is also used for etcd certificates. |
 | [`ops-files/vm-types.yml`](ops-files/vm-types.yml) | Specify the `vm_type` for `master` and `worker` instances | By default, `master` and `worker` instances assume `vm_type: small` and `vm_type: small-highmem`, respectively (`vm_types` that are also assumed to exists by https://github.com/cloudfoundry/cf-deployment manifests). You may want to use bespoke `vm_types` so as to scale them, tag them, or apply unique `cloud_properties` independently of other deployments in the same BOSH environment. |
 | [`ops-files/add-vm-extensions-to-master.yml`](ops-files/add-vm-extensions-to-master.yml) | Add VM Extensions for loadbalancers to master | |
+| [`ops-files/use-vm-extensions.yml`](ops-files/use-vm-extensions.yml) | Configure the `master` and `worker` instance groups to consume their respective `vm_extensions` | Only works when used in tandem with the BOSH cloud-configs outlined below |
+
+### BOSH Cloud Config
+
+| Name | Purpose | Notes |
+|:---  |:---     |:---   |
+| **AWS**
+| [`cloud-config/iaas/aws/use-vm-extensions.yml`](cloud-config/iaas/aws/use-vm-extensions.yml) | Configure the cloud-config to control the AWS Cloud Provider using `vm_extensions`  | |
+| **GCP**
+| [`cloud-config/iaas/gcp/use-vm-extensions.yml`](cloud-config/iaas/gcp/use-vm-extensions.yml) | Configure the cloud-config to control the GCP Cloud Provider using `vm_extensions` | |
 
 ### Routing options
 
