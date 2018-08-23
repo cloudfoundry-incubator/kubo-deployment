@@ -1,0 +1,9 @@
+vm_extensions:
+- cloud_properties:
+    iam_instance_profile: ((master_iam_instance_profile))
+    elbs:
+      - ((cfcr_master_target_pool))
+  name: ((deployment_name))-master-cloud-properties
+- cloud_properties:
+    iam_instance_profile: ((worker_iam_instance_profile))
+  name: ((deployment_name))-worker-cloud-properties
