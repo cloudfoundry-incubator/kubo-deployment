@@ -1,10 +1,8 @@
 name: cfcr
 
 releases:
-- name: cfcr
-  version: latest
-- name: k8s-engine
-  version: latest
+- name: kubo
+  version: 0.20.0+dev.1
 - name: cfcr-etcd
   url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.4.0/cfcr-etcd-release-1.4.0.tgz
   sha1: f753236e370547e2d3aac9a37905f9c14e04acf8
@@ -53,18 +51,18 @@ addons:
 - name: bosh-dns-aliases
   jobs:
   - name: kubo-dns-aliases
-    release: k8s-engine
+    release: kubo
 
 instance_groups:
 - name: apply-addons
   instances: 1
   networks:
   - name: default
-  azs: [z1]
+  azs: [default]
   lifecycle: errand
   jobs:
   - name: apply-specs
-    release: cfcr
+    release: kubo
     properties:
       api-token: ((kubelet-password))
       admin-username: admin
@@ -75,21 +73,19 @@ instance_groups:
         influxdb: ((tls-influxdb))
         kubernetes-dashboard: ((tls-kubernetes-dashboard))
   stemcell: default
-  vm_type: minimal
+  vm_type: medium
 - name: master
   instances: 3
   networks:
   - name: default
-  azs: [z1,z2,z3]
+  azs: [default]
   jobs:
-  - name: add-scripts
-    release: cfcr
   - name: bpm
     release: bpm
   - name: flanneld
-    release: cfcr
+    release: kubo
   - name: kube-apiserver
-    release: k8s-engine
+    release: kubo
     properties:
       args:
       - flag: anonymous-auth
@@ -110,7 +106,6 @@ instance_groups:
         - ServiceAccount
         - DefaultStorageClass
         - MutatingAdmissionWebhook
-        - PodSecurityPolicy
       - flag: secure-port
         value: 8443
       - flag: enable-bootstrap-token-auth
@@ -169,7 +164,7 @@ instance_groups:
           private_key: ((tls-kubernetes.private_key))
         kubelet-client: ((tls-kubelet-client))
   - name: kube-controller-manager
-    release: k8s-engine
+    release: kubo
     properties:
       api-token: ((kube-controller-manager-password))
       cluster-signing: ((kubo_ca))
@@ -177,13 +172,13 @@ instance_groups:
       tls:
         kubernetes: ((tls-kubernetes))
   - name: kube-scheduler
-    release: k8s-engine
+    release: kubo
     properties:
       api-token: ((kube-scheduler-password))
       tls:
         kubernetes: ((tls-kubernetes))
   - name: kubernetes-roles
-    release: k8s-engine
+    release: kubo
     properties:
       admin-username: admin
       admin-password: ((kubo-admin-password))
@@ -208,7 +203,7 @@ instance_groups:
           certificate: ((tls-etcd-v0-17-0.certificate))
           private_key: ((tls-etcd-v0-17-0.private_key))
   - name: smoke-tests
-    release: cfcr
+    release: kubo
   stemcell: default
   vm_type: small
   persistent_disk: 5120
@@ -217,10 +212,10 @@ instance_groups:
   instances: 3
   networks:
   - name: default
-  azs: [z1,z2,z3]
+  azs: [default]
   jobs:
   - name: flanneld
-    release: cfcr
+    release: kubo
   - name: docker
     release: docker
     properties:
@@ -238,9 +233,9 @@ instance_groups:
       tls_key: ((tls-docker.private_key))
       env: {}
   - name: kubernetes-dependencies
-    release: cfcr
+    release: kubo
   - name: kubelet
-    release: k8s-engine
+    release: kubo
     properties:
       api-token: ((kubelet-password))
       drain-api-token: ((kubelet-drain-password))
@@ -250,7 +245,7 @@ instance_groups:
         kubelet-client-ca:
           certificate: ((tls-kubelet-client.ca))
   - name: kube-proxy
-    release: cfcr
+    release: kubo
     properties:
       tls:
         kubernetes: ((tls-kubernetes))
