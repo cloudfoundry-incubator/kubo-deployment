@@ -128,6 +128,7 @@ svc/kubernetes   ClusterIP   10.100.200.1   <none>        443/TCP   2h
 | [`ops-files/iaas/openstack/cloud-provider.yml`](ops-files/iaas/openstack/cloud-provider.yml) | Enable Cloud Provider for OpenStack | Enable Cloud Provider for OpenStack |
 | **GCP** | | |
 | [`ops-files/iaas/gcp/cloud-provider.yml`](ops-files/iaas/gcp/cloud-provider.yml) | Enable Cloud Provider for GCP | - |
+| [`ops-files/iaas/gcp/add-subnetwork-for-internal-load-balancer.yml`](ops-files/iaas/gcp/add-subnetwork-for-internal-load-balancer.yml) | Specify subnetwork for GCP | Cloud Provider has to be enabled first |
 | **vSphere** | | |
 | [`ops-files/iaas/vsphere/cloud-provider.yml`](ops-files/iaas/vsphere/cloud-provider.yml) | Enable Cloud Provider for vSphere | - |
 | [`ops-files/iaas/vsphere/set-working-dir-no-rp.yml`](ops-files/iaas/vsphere/set-working-dir-no-rp.yml) | Configure vSphere cloud provider's working dir if there is no resource pool | - |

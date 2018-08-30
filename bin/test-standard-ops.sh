@@ -30,6 +30,7 @@ test_standard_ops() {
       check_interpolation "name:iaas/aws/add-master-credentials.yml" "iaas/aws/cloud-provider.yml" "-o iaas/aws/add-master-credentials.yml" "-v aws_access_key_id_master=access-key-id" "-v aws_secret_access_key_master=secret-access-key"
       check_interpolation "name:iaas/aws/add-worker-credentials.yml" "iaas/aws/cloud-provider.yml" "-o iaas/aws/add-worker-credentials.yml" "-v aws_access_key_id_worker=access-key-id" "-v aws_secret_access_key_worker=secret-access-key"
       check_interpolation "iaas/gcp/cloud-provider.yml" "-l example-vars-files/iaas/gcp/cloud-provider.yml"
+      check_interpolation "name:iaas/gcp/add-subnetwork-for-internal-load-balancer.yml" "iaas/gcp/cloud-provider.yml" "-o iaas/gcp/add-subnetwork-for-internal-load-balancer.yml" "-v subnetwork=foo" "-l example-vars-files/iaas/gcp/cloud-provider.yml"
       check_interpolation "name:iaas/gcp/add-service-key-master.yml" "iaas/gcp/cloud-provider.yml" "-o iaas/gcp/add-service-key-master.yml" "-v service_key_master=foo" "-l example-vars-files/iaas/gcp/cloud-provider.yml"
       check_interpolation "name:iaas/gcp/add-service-key-worker.yml" "iaas/gcp/cloud-provider.yml" "-o iaas/gcp/add-service-key-worker.yml" "-v service_key_worker=foo" "-l example-vars-files/iaas/gcp/cloud-provider.yml"
       check_interpolation "iaas/openstack/master-static-ip.yml" "-v kubernetes_master_host=10.11.12.13"
