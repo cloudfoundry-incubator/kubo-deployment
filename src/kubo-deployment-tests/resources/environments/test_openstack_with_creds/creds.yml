@@ -1,4 +1,0 @@
-credhub_user_password: test-credhub-user-password
-bosh_admin_client_secret: test-bosh-admin-client-secret
-default_ca:
-  ca: I-am-a-bosh-ca-cert

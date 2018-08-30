@@ -1,7 +1,0 @@
----
-name: sample-pkg
-
-dependencies: []
-
-files:
-- sample-pkg/**/*

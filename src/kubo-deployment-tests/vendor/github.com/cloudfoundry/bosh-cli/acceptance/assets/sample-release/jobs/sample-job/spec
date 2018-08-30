@@ -1,6 +1,0 @@
----
-name: sample-job
-templates:
-  ctl.erb: bin/ctl
-packages:
-- sample-pkg

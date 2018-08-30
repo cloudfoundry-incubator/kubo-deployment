@@ -1,3 +1,0 @@
-- type: replace
-  path: /vm_types/name=worker/cloud_properties/tags
-  value: supertest

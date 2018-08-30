@@ -1,8 +1,0 @@
-.DS_Store
-.vagrant/
-/out/*
-tmp/
-**/*.test
-.idea/
-*.iml
-

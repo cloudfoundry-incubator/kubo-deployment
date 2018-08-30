@@ -1,8 +1,0 @@
-#!/bin/bash
-
-set -e
-
-bin=$(dirname $0)
-
-echo -e "\n Cleaning..."
-$bin/env go clean -r github.com/cloudfoundry/bosh-cli/
