@@ -337,6 +337,11 @@ resource "google_compute_instance" "nat-instance-private-with-nat-primary" {
 #!/bin/bash
 sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+# make the above settings persist across reboots
+echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf > /dev/null
+echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo debconf-set-selections
+echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections
+apt-get -y install iptables-persistent
 EOT
 }
 
