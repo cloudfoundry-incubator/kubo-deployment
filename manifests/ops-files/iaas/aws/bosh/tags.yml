@@ -1,4 +1,0 @@
-- type: replace
-  path: /tags?
-  value:
-    director_name: ((director_name))
