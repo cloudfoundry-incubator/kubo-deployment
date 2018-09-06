@@ -1,0 +1,12 @@
+syslog_permitted_peer: "*.example.com"
+syslog_ca_cert: |
+  -----BEGIN CERTIFICATE-----
+  MIIFdDCCBFygAwIBAgIQJ2buVutJ846r13Ci/ITeIjANBgkqhkiG9w0BAQwFADBv
+  ...
+  pu/xO28QOG8=
+  -----END CERTIFICATE-----
+  -----BEGIN CERTIFICATE-----
+  MIIENjCCAx6gAwIBAgIBATANBgkqhkiG9w0BAQUFADBvMQswCQYDVQQGEwJTRTEU
+  ...
+  mnkPIAou1Z5jJh5VkpTYghdae9C8x49OhgQ=
+  -----END CERTIFICATE-----
