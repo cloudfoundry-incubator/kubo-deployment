@@ -47,6 +47,9 @@ test_standard_ops() {
       # HTTP proxy options
       check_interpolation "add-proxy.yml" "-v http_proxy=10.10.10.10:8000 -v https_proxy=10.10.10.10:8000 -v no_proxy=localhost,127.0.0.1"
 
+      # Syslog
+      check_interpolation "add-syslog.yml" "add-syslog-tls.yml" "-l example-vars-files/add-syslog.yml" "-l example-vars-files/add-syslog-tls.yml"  
+
       # Kubernetes
       check_interpolation "addons-spec.yml" "-v addons-spec={}"
       check_interpolation "allow-privileged-containers.yml"
