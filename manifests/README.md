@@ -154,7 +154,7 @@ svc/kubernetes   ClusterIP   10.100.200.1   <none>        443/TCP   2h
 | [`ops-files/add-hostname-to-master-certificate.yml`](ops-files/add-hostname-to-master-certificate.yml) | Add hostname to master certificate | Extra Vars Required:<br>- **api-hostname:** Required for TLS certificate of apiserver |
 | [`ops-files/use-coredns.yml`](ops-files/use-coredns.yml) | Add CoreDNS to the list of addons deployed by the apply-specs errand | - |
 
-### BOSH Backup & Restore (Experimental)
+### BOSH Backup & Restore
 
 | Name | Purpose | Notes|
 |:--- |:--- |:--- |
