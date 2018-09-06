@@ -170,6 +170,29 @@ instance_groups:
         kubelet-client-ca:
           certificate: ((tls-kubelet-client.ca))
         kubernetes: ((tls-kubernetes))
+      args:
+      - flag: allow-privileged
+        value: "false"
+      - flag: cni-bin-dir
+        value: /var/vcap/jobs/kubelet/packages/cni/bin
+      - flag: config
+        value: /var/vcap/jobs/kubelet/config/kubeletconfig.yml
+      - flag: container-runtime
+        value: docker
+      - flag: docker-endpoint
+        value: "${DOCKER_SOCKET}"
+      - flag: docker
+        value: "${DOCKER_SOCKET}"
+      - flag: hostname-override
+        value: "$(get_hostname_override)"
+      - flag: keep-terminated-pod-volumes
+        value: "false"
+      - flag: kubeconfig
+        value: /var/vcap/jobs/kubelet/config/kubeconfig
+      - flag: network-plugin
+        value: cni
+      - flag: v
+        value: "2"
     release: kubo
   - name: kube-proxy
     properties:

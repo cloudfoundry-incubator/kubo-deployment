@@ -4,8 +4,8 @@
   value: true
 
 - type: replace
-  path: /instance_groups/name=worker/jobs/name=kubelet/properties/allow_privileged?
-  value: true
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/args/flag=allow-privileged?/value
+  value: "true"
 
 - type: replace
   path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/security-context-deny?
