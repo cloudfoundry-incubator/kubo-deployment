@@ -1,3 +1,4 @@
+kubelet-password: password
 kubo-admin-password: admin-password
 tls-kubernetes:
   ca: ca

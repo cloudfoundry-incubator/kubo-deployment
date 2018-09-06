@@ -1,0 +1,4 @@
+service_cluster_cidr: 192.168.20.0/24
+kubedns_service_ip: 192.168.20.50
+first_ip_of_service_cluster_cidr: 192.168.20.1
+pod_network_cidr: 192.168.22.0/24

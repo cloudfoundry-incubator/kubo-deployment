@@ -26,7 +26,7 @@ main() {
 
   current_version=$(bosh int "$(manifest_file)" --path=/stemcells/0/version)
   if [[ $new_version != $current_version ]]; then
-    $(gnused) -i ':a;$!{N;ba};s|\(stemcells:\n- alias: trusty\n  os: ubuntu-trusty\n  version:\)[^\n]*\n|\1 "'"$new_version"'"\n|' "$(manifest_file)"
+    $(gnused) -i ':a;$!{N;ba};s|\(stemcells:\n- alias: default\n  os: ubuntu-trusty\n  version:\)[^\n]*\n|\1 "'"$new_version"'"\n|' "$(manifest_file)"
   fi
 }
 

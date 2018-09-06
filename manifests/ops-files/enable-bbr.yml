@@ -1,0 +1,11 @@
+- type: replace
+  path: /instance_groups/name=master/jobs/-
+  value:
+    name: bbr-etcd
+    release: cfcr-etcd
+
+- type: replace
+  path: /instance_groups/name=master/jobs/-
+  value:
+    name: bbr-kube-apiserver
+    release: kubo

@@ -1,0 +1,7 @@
+vm_extensions:
+- cloud_properties:
+    service_account: ((cfcr_master_service_account_address))
+  name: ((deployment_name))-master-cloud-properties
+- cloud_properties:
+    service_account: ((cfcr_worker_service_account_address))
+  name: ((deployment_name))-worker-cloud-properties

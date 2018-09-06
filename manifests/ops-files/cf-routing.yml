@@ -1,4 +1,12 @@
 - type: replace
+  path: /variables/name=tls-kubelet/options/common_name
+  value: ((kubernetes_master_host))
+
+- type: replace
+  path: /variables/name=tls-kubelet/options/alternative_names
+  value: [((kubernetes_master_host))]
+
+- type: replace
   path: /variables/name=tls-kubernetes/options/common_name
   value: ((kubernetes_master_host))
 
@@ -48,5 +56,5 @@
           port: ((routing_cf_nats_port))
           user: ((routing_cf_nats_username))
           password: ((routing_cf_nats_password))
-    stemcell: trusty
+    stemcell: default
     vm_type: minimal

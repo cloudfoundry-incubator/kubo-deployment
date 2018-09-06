@@ -13,3 +13,12 @@
 
 - type: remove
   path: /variables/opsname=global_dns_healthcheck_client_tls
+
+- type: remove
+  path: /variables/opsname=global_dns_api_server_tls
+  
+- type: remove
+  path: /variables/opsname=global_dns_api_client_tls
+  
+- type: remove
+  path: /variables/opsname=global_dns_api_tls_ca

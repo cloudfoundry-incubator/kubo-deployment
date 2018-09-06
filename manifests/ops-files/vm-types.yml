@@ -5,3 +5,7 @@
 - type: replace
   path: /instance_groups/name=worker/vm_type
   value: ((worker_vm_type))
+
+- type: replace
+  path: /instance_groups/name=apply-addons/vm_type
+  value: ((apply_addons_vm_type))

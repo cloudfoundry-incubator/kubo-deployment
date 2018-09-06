@@ -1,0 +1,26 @@
+---
+- type: replace
+  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/properties/kubedns-service-ip?
+  value: ((kubedns_service_ip))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/service-cluster-cidr?
+  value: ((service_cluster_cidr))
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/kubedns-service-ip?
+  value: ((kubedns_service_ip))
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=flanneld/properties?
+  value:
+    pod-network-cidr: ((pod_network_cidr))
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kube-proxy/properties/pod-network-cidr?
+  value: ((pod_network_cidr))
+
+# NOTE: This is required for the default kubernetes service which always runs on first IP address of the service CIDR
+- type: replace
+  path: /variables/name=tls-kubernetes/options/alternative_names/0
+  value: ((first_ip_of_service_cluster_cidr))
