@@ -49,11 +49,13 @@
     cloud-provider: {from: worker-cloud-provider}
 
 - type: replace
-  path: /instance_groups/name=worker/jobs/name=kubelet/properties/cloud-provider?
-  value: gce
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/args/flag=cloud-provider?
+  value:
+    flag: cloud-provider
+    value: gce
 
 - type: replace
-  path: /instance_groups/name=worker/jobs/name=kube-proxy/properties/cloud-provider?
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/cloud-provider?
   value: gce
 
 - type: replace
