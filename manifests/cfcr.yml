@@ -67,6 +67,57 @@ instance_groups:
     release: kubo
   - name: kube-apiserver
     properties:
+      args:
+      - flag: allow-privileged
+        value: "false"
+      - flag: disable-admission-plugins
+        value: "PersistentVolumeLabel"
+      - flag: enable-bootstrap-token-auth
+      - flag: enable-swagger-ui
+      - flag: kubelet-https
+      - flag: secure-port
+        value: "8443"
+      - flag: service-account-lookup
+      - flag: storage-media-type
+        value: application/json
+      - flag: enable-aggregator-routing
+      - flag: v
+        value: "2"
+      - flag: authorization-mode
+        value: RBAC
+      - flag: runtime-config
+        value: api/v1
+      - flag: requestheader-allowed-names
+        value: aggregator
+      - flag: requestheader-extra-headers-prefix
+        value: X-Remote-Extra-
+      - flag: requestheader-group-headers
+        value: X-Remote-Group
+      - flag: requestheader-username-headers
+        value: X-Remote-User
+      - flag: service-cluster-ip-range
+        value: "10.100.200.0/24"
+      - flag: audit-log-path
+        value: /var/vcap/sys/log/kube-apiserver/audit.log
+      - flag: audit-log-maxage
+        value: "0"
+      - flag: audit-log-maxsize
+        value: "0"
+      - flag: audit-log-maxbackup
+        value: "0"
+      - flag: audit-policy-file
+        value: /var/vcap/jobs/kube-apiserver/config/audit_policy.yml
+      - flag: enable-admission-plugins
+        value:
+        - LimitRanger
+        - DefaultTolerationSeconds
+        - ValidatingAdmissionWebhook
+        - NamespaceLifecycle
+        - ResourceQuota
+        - ServiceAccount
+        - DefaultStorageClass
+        - MutatingAdmissionWebhook
+        - DenyEscalatingExec
       admin-password: ((kubo-admin-password))
       admin-username: admin
       backend_port: 8443
