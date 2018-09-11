@@ -1,0 +1,5 @@
+vm_extensions:
+- cloud_properties:
+    vmx_options:
+      disk.enableUUID: "1"
+  name: enable-disk-UUID
