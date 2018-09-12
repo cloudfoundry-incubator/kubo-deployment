@@ -38,6 +38,7 @@ test_standard_ops() {
       check_interpolation "iaas/vsphere/cloud-provider.yml" "-l example-vars-files/iaas/vsphere/cloud-provider.yml"
       check_interpolation "name:iaas/vsphere/set-working-dir-no-rp.yml" "iaas/vsphere/cloud-provider.yml" "-o iaas/vsphere/set-working-dir-no-rp.yml" "-l example-vars-files/iaas/vsphere/set-working-dir-no-rp.yml"
       check_interpolation "iaas/vsphere/master-static-ip.yml" "-v kubernetes_master_host=10.11.12.13"
+      check_interpolation "iaas/vsphere/use-vm-extensions.yml"
       check_interpolation "iaas/virtualbox/bosh-lite.yml"
 
       # Routing Variations
