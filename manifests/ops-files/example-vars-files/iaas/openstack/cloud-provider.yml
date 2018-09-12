@@ -1,0 +1,6 @@
+auth_url: # OpenStack authentication URL
+openstack_domain: # OpenStack domain (optional)
+openstack_project_id: # Openstack project name
+region: # OpenStack region (optional)
+openstack_username: # OpenStack admin username
+openstack_password: # admin user password for OpenStack

@@ -1,3 +1,0 @@
-- type: replace
-  path: /networks/name=default/subnets/0/dns
-  value: ((internal_dns))

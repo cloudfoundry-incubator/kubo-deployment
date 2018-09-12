@@ -1,0 +1,3 @@
+syslog_address: logs.example.com
+syslog_port: 514
+syslog_transport: tcp

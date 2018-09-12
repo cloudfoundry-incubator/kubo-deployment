@@ -6,77 +6,7 @@ The base manifest "just works" and will deploy a running cluster of Kubernetes:
 bosh -d cfcr deploy kubo-deployment/manifests/cfcr.yml
 ```
 
-## Dependencies
-
-The only dependencies are that your BOSH environment has:
-
-* Credhub/UAA
-* Cloud Config with `vm_types` named `minimal`, `small`, and `small-highmem` as per similar requirements of [cf-deployment](https://github.com/cloudfoundry/cf-deployment)
-* Cloud Config has a network named `default`as per similar requirements of [cf-deployment](https://github.com/cloudfoundry/cf-deployment)
-* If using bosh-lite see [Deploy CFCR in bosh-lite](https://github.com/cloudfoundry-incubator/kubo-deployment/blob/master/CONTRIBUTING.md#deploy-cfcr-in-bosh-lite)
-* Ubuntu Trusty stemcell `3468` is uploaded (it's up to you to keep up to date with latest `3468.X` versions and update your BOSH deployments)
-
-## Getting Started
-
-You can get started with one `bosh deploy` command. It will download and deploy everything for you.
-
-```
-export BOSH_ENVIRONMENT=<bosh-name>
-export BOSH_DEPLOYMENT=cfcr
-git clone https://github.com/cloudfoundry-incubator/kubo-deployment
-bosh deploy kubo-deployment/manifests/cfcr.yml
-```
-
-To see the running cluster:
-
-```
-$ bosh instances
-
-Deployment 'cfcr'
-
-Instance                                     Process State  AZ  IPs
-master/bde7bc5a-a9fd-4bcc-9ba7-b66752fad159  running        z1  10.10.1.20
-worker/4518c694-3328-4538-bc08-dedf8a3bf400  running        z1  10.10.1.22
-worker/49d317d0-dff2-44a3-b00c-0406ce8a010e  running        z1  10.10.1.23
-worker/e00ac851-fadb-4b7d-94c4-8917042ba6cb  running        z1  10.10.1.21
-```
-
-Once the deployment is running, you can setup your `kubectl` CLI to connect and authenticate you.
-
-First, get the randomly generated Kubernetes API admin password from Credhub:
-
-```
-admin_password=$(bosh int <(credhub get -n "${BOSH_ENVIRONMENT}/${BOSH_DEPLOYMENT}/kubo-admin-password" --output-json) --path=/value)
-```
-
-Next, get the dynamically assigned IP address of the `master/0` instance:
-
-```
-master_host=$(bosh int <(bosh instances --json) --path /Tables/0/Rows/0/ips)
-```
-
-Finally, setup your local `kubectl` configuration:
-
-```
-cluster_name="cfcr:${BOSH_ENVIRONMENT}:${BOSH_DEPLOYMENT}"
-user_name="cfcr:${BOSH_ENVIRONMENT}:${BOSH_DEPLOYMENT}-admin"
-context_name="cfcr:${BOSH_ENVIRONMENT}:${BOSH_DEPLOYMENT}"
-
-kubectl config set-cluster "${cluster_name}" \
-  --server="https://${master_host}:8443" \
-  --insecure-skip-tls-verify=true
-kubectl config set-credentials "${user_name}" --token="${admin_password}"
-kubectl config set-context "${context_name}" --cluster="${cluster_name}" --user="${user_name}"
-kubectl config use-context "${context_name}"
-```
-
-To confirm that you are connected and configured to your Kubernetes cluster:
-
-```
-$ kubectl get all
-NAME             TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
-svc/kubernetes   ClusterIP   10.100.200.1   <none>        443/TCP   2h
-```
+For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundry-incubator/kubo-release/#deploying-cfcr).
 
 
 ## Operator files
@@ -147,7 +77,7 @@ svc/kubernetes   ClusterIP   10.100.200.1   <none>        443/TCP   2h
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
 | [`ops-files/addons-spec.yml`](ops-files/addons-spec.yml) | Addons to be deployed into the Kubernetes cluster | - |
-| [`ops-files/allow-privileged-containers.yml`](ops-files/allow-privileged-containers.yml) | Allows privileged containers for the Kubernetes cluster | - |
+| [`ops-files/allow-privileged-containers.yml`](ops-files/allow-privileged-containers.yml) | Allows privileged containers for the Kubernetes cluster | This ops-file also sets the SecurityContextDeny admission controller |
 | [`ops-files/disable-anonymous-auth.yml`](ops-files/disable-anonymous-auth.yml) | Disable `anonymous-auth` on the API server | - |
 | [`ops-files/disable-deny-escalating-exec.yml`](ops-files/disable-deny-escalating-exec.yml) | Disable `DenyEscalatingExec` in API server admission control | - |
 | [`ops-files/add-oidc-endpoint.yml`](ops-files/add-oidc-endpoint.yml) | Enable OIDC authentication for the Kubernetes cluster | - |
@@ -155,11 +85,19 @@ svc/kubernetes   ClusterIP   10.100.200.1   <none>        443/TCP   2h
 | [`ops-files/add-hostname-to-master-certificate.yml`](ops-files/add-hostname-to-master-certificate.yml) | Add hostname to master certificate | Extra Vars Required:<br>- **api-hostname:** Required for TLS certificate of apiserver |
 | [`ops-files/use-coredns.yml`](ops-files/use-coredns.yml) | Add CoreDNS to the list of addons deployed by the apply-specs errand | - |
 
-### BOSH Backup & Restore (Experimental)
+### BOSH Backup & Restore
 
 | Name | Purpose | Notes|
 |:--- |:--- |:--- |
 | [`ops-files/enable-bbr.yml`](ops-files/enable-bbr.yml) | Deploy jobs required to enable BBR. | Only tested with single master. |
+
+### Syslog
+
+| Name | Purpose | Notes |
+|:---  |:---     |:---   |
+| [`ops-files/add-syslog.yml`](ops-files/add-syslog.yml) | Enables forwarding local syslog events in RFC5424 format to a remote syslog endpoint.  |
+| [`ops-files/add-syslog-tls.yml`](ops-files/add-syslog-tls.yml) | Requires `add-syslog.yml`. Configure TLS for syslog fowarding. |
+
 
 ### Dev
 
