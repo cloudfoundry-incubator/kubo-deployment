@@ -187,9 +187,9 @@ releases:
 - name: kubo
   version: latest
 - name: cfcr-etcd
-  sha1: f753236e370547e2d3aac9a37905f9c14e04acf8
-  url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.4.0/cfcr-etcd-release-1.4.0.tgz
-  version: 1.4.0
+  sha1: 728839a7ddd44757e31ef0fdbcd131c2be23ab0e
+  url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.5.0/cfcr-etcd-release-1.5.0.tgz
+  version: 1.5.0
 - name: docker
   sha1: f192296243e68150ae66656fc9134a2b2a023184
   url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v32.0.0/docker-32.0.0.tgz
