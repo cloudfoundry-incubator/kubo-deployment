@@ -21,7 +21,8 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | [`ops-files/rename-network.yml`](ops-files/rename-network.yml) | Specify the network name | |
 | [`ops-files/vm-types.yml`](ops-files/vm-types.yml) | Specify the `vm_type` for `master`, `worker` and `apply-addons` instances | By default, `master`, `worker` and `apply-addons` instances assume `vm_type: small`, `vm_type: small-highmem` and `vm_type: minimal`, respectively (`vm_types` that are also assumed to exists by https://github.com/cloudfoundry/cf-deployment manifests). You may want to use bespoke `vm_types` so as to scale them, tag them, or apply unique `cloud_properties` independently of other deployments in the same BOSH environment. |
 | [`ops-files/add-vm-extensions-to-master.yml`](ops-files/add-vm-extensions-to-master.yml) | Add VM Extensions for loadbalancers to master | |
-| [`ops-files/use-vm-extensions.yml`](ops-files/use-vm-extensions.yml) | Configure the `master` and `worker` instance groups to consume their respective `vm_extensions` | Only works when used in tandem with the BOSH cloud-configs outlined below |
+| [`ops-files/use-vm-extensions.yml`](ops-files/use-vm-extensions.yml) | Configure the `master` and `worker` instance groups on AWS and GCP to consume their respective `vm_extensions` | Only works when used in tandem with the BOSH cloud-configs for AWS or GCP outlined below |
+| [`ops-files/iaas/vsphere/use-vm-extensions.yml`](ops-files/iaas/vsphere/use-vm-extensions.yml) | Configure vSphere `worker` instance groups to consume their respective `vm_extensions` | Only works when used in tandem with the BOSH cloud-config for vSphere outlined below |
 
 ### BOSH Cloud Config
 
@@ -31,6 +32,8 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | [`cloud-config/iaas/aws/use-vm-extensions.yml`](cloud-config/iaas/aws/use-vm-extensions.yml) | Configure the cloud-config to control the AWS Cloud Provider using `vm_extensions`  | |
 | **GCP**
 | [`cloud-config/iaas/gcp/use-vm-extensions.yml`](cloud-config/iaas/gcp/use-vm-extensions.yml) | Configure the cloud-config to control the GCP Cloud Provider using `vm_extensions` | |
+| **vSphere**
+| [`cloud-config/iaas/vsphere/use-vm-extensions.yml`](cloud-config/iaas/vsphere/use-vm-extensions.yml) | Configure the cloud-config to control the vSphere Cloud Provider using `vm_extensions` | |
 
 ### Routing options
 
