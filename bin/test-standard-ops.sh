@@ -62,6 +62,9 @@ test_standard_ops() {
       check_interpolation "add-hostname-to-master-certificate.yml" "-v api-hostname=example.com"
       check_interpolation "use-coredns.yml"
 
+      # Etcd
+      check_interpolation "change-etcd-metrics-url.yml" "-v etcd_metrics_protocol=http -v etcd_metrics_port=2378"
+
       # BBR
       check_interpolation "enable-bbr.yml"
 

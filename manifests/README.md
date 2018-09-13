@@ -87,6 +87,13 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | [`ops-files/add-hostname-to-master-certificate.yml`](ops-files/add-hostname-to-master-certificate.yml) | Add hostname to master certificate | Extra Vars Required:<br>- **api-hostname:** Required for TLS certificate of apiserver |
 | [`ops-files/use-coredns.yml`](ops-files/use-coredns.yml) | Add CoreDNS to the list of addons deployed by the apply-specs errand | - |
 
+### Etcd
+
+| Name | Purpose | Notes|
+|:--- |:--- |:--- |
+| [`ops-files/change-etcd-metrics-url.yml`](ops-files/change-etcd-metrics-url.yml) | Change procotol and port of the etcd's metrics endpoint | - |
+
+
 ### BOSH Backup & Restore
 
 | Name | Purpose | Notes|
