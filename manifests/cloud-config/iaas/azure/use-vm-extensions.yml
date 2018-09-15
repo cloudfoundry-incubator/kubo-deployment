@@ -1,0 +1,9 @@
+vm_extensions:
+- cloud_properties:
+    resource_group_name: ((resource_group_name))
+    load_balancer: ((master_load_balancer_name))
+    security_group: ((master_security_group))
+  name: ((deployment_name))-master-cloud-properties
+- cloud_properties:
+    resource_group_name: ((resource_group_name))
+  name: ((deployment_name))-worker-cloud-properties
