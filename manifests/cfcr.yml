@@ -140,8 +140,6 @@ instance_groups:
   jobs:
   - name: flanneld
     release: kubo
-  - name: cifs-utils
-    release: kubo
   - name: docker
     properties:
       bridge: cni0

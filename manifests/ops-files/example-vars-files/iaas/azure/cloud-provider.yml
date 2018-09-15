@@ -1,0 +1,12 @@
+azure_cloud_name: AzurePublicCloud
+subscription_id: <your subscription id>
+tenant_id: <your tenant id>
+client_id: <your client id>
+client_secret: <your client secret>
+location: southeastasia
+resource_group_name: sample-cfcr-bosh
+vnet_resource_group_name: sample-cfcr-bosh
+vnet_name: sample-cfcr-bosh-vn
+subnet_name: sample-cfcr-cfcr-sn
+default_security_group: sample-cfcr-cfcr-master-sg
+primary_availability_set: bosh-sample-cfcr-azurecfcr-worker

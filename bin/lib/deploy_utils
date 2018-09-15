@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 #@IgnoreInspection BashAddShebang
 # vim: set ft=sh
 
@@ -187,8 +189,6 @@ generate_manifest() {
 
   if [[ "aws" == "${iaas}" ]]; then
     interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/aws/lb.yml\""
-  elif [[ "azure" == "${iaas}" ]]; then
-    interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/azure/lb.yml\""
   elif [[ "gcp" == "${iaas}" ]]; then
     if ! bosh int "${director_path}" --path='/service_account_worker' &>/dev/null; then
       interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/gcp/add-service-key-worker.yml\""
@@ -201,6 +201,8 @@ generate_manifest() {
     if ! bosh int "${director_path}" --path='/vcenter_rp' &>/dev/null; then
       interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/vsphere/set-working-dir-no-rp.yml\""
     fi
+  elif [[ "azure" == "${iaas}" ]]; then
+    interpolate_arguments+=" --ops-file=\"${ops_dir}/vm-types.yml\""
   fi
 
   if [[ -z "$existing_deployment" ]]; then
@@ -226,15 +228,19 @@ generate_manifest() {
     interpolate_arguments+=" --ops-file=\"${ops_dir}/add-oidc-endpoint.yml\""
   fi
 
+  if [[ ! "azure" == "${iaas}" ]]; then
+    interpolate_arguments+=" --ops-file=\"${ops_dir}/use-runtime-config-bosh-dns.yml\""
+  fi
+
   set +x
   local manifest=$(bosh int <(echo "${manifest}") --ops-file="${ops_dir}/misc/dev.yml" \
     --ops-file="${ops_dir}/misc/bootstrap.yml" \
     --ops-file="${ops_dir}/misc/single-master.yml" \
-    --ops-file="${ops_dir}/use-runtime-config-bosh-dns.yml" \
     --vars-file="${director_path}" \
     --var deployment_name="${deployment_name}" \
     --var director_uuid="${director_uuid}" \
-    ${interpolate_arguments})
+    ${interpolate_arguments} \
+    ${KUBO_EXTRA_OPS})
   restore_debug_output
 
   printf "%s" "${manifest}"

@@ -10,7 +10,7 @@
           cloud: ((azure_cloud_name))
           subscription-id: ((subscription_id))
           tenant-id: ((tenant_id))
-          service-principal-id: ((client_id)) 
+          service-principal-id: ((client_id))
           service-principal-secret: ((client_secret))
           location: ((location))
           resource-group-name: ((resource_group_name))
@@ -18,11 +18,10 @@
           vnet-name: ((vnet_name))
           subnet-name: ((subnet_name))
           network-security-group-name: ((default_security_group))
-          availability-set: ((prefix))-worker
+          availability-set: ((primary_availability_set))
 
     provides:
-      cloud-provider: {as: master-cloud-prvoider}
-
+      cloud-provider: {as: master-cloud-provider}
 
 - type: replace
   path: /instance_groups/name=master/jobs/name=kube-apiserver/consumes?
@@ -40,6 +39,11 @@
     cloud-provider: {from: master-cloud-provider}
 
 - type: replace
+  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/consumes?
+  value:
+    cloud-provider: {from: master-cloud-provider}
+
+- type: replace
   path: /instance_groups/name=worker/jobs/-
   value:
     name: cloud-provider
@@ -51,7 +55,7 @@
           cloud: ((azure_cloud_name))
           subscription-id: ((subscription_id))
           tenant-id: ((tenant_id))
-          service-principal-id: ((client_id)) 
+          service-principal-id: ((client_id))
           service-principal-secret: ((client_secret))
           location: ((location))
           resource-group-name: ((resource_group_name))
@@ -59,12 +63,19 @@
           vnet-name: ((vnet_name))
           subnet-name: ((subnet_name))
           network-security-group-name: ((default_security_group))
-          availability-set: ((prefix))-worker
-
+          availability-set: ((primary_availability_set))
     provides:
-      cloud-provider: {as: worker-cloud-prvoider}
+      cloud-provider: {as: worker-cloud-provider}
 
 - type: replace
   path: /instance_groups/name=worker/jobs/name=kubelet/consumes?
   value:
     cloud-provider: {from: worker-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/cloud-provider?
+  value: azure
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kube-proxy/properties/cloud-provider?
+  value: azure

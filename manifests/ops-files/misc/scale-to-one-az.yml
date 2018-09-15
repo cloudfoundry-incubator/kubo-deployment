@@ -1,0 +1,23 @@
+---
+# Default kubo-deployment deploys a (mostly) HA configuration.
+# Use this override to only deploy single instance of each job,
+# in a single Availability Zone.
+- type: replace
+  path: /instance_groups/name=master/instances
+  value: 1
+- type: replace
+  path: /instance_groups/name=worker/instances
+  value: 1
+- type: replace
+  path: /instance_groups/name=apply-addons/instances
+  value: 1
+
+- type: replace
+  path: /instance_groups/name=master/azs
+  value: [ z1 ]
+- type: replace
+  path: /instance_groups/name=worker/azs
+  value: [ z1 ]
+- type: replace
+  path: /instance_groups/name=apply-addons/azs
+  value: [ z1 ]
