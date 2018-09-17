@@ -79,7 +79,7 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
 | [`ops-files/addons-spec.yml`](ops-files/addons-spec.yml) | Addons to be deployed into the Kubernetes cluster | - |
-| [`ops-files/allow-privileged-containers.yml`](ops-files/allow-privileged-containers.yml) | Allows privileged containers for the Kubernetes cluster | This ops-file also sets the SecurityContextDeny admission controller |
+| [`ops-files/allow-privileged-containers.yml`](ops-files/allow-privileged-containers.yml) | Allows privileged containers for the Kubernetes cluster. | It is not recommended to use privileged containers however some workloads require it. Container privileges can be limited with the SecurityContextDeny admission plugin (set by default in CFCR). See kubernetes documentation for more information |
 | [`ops-files/disable-anonymous-auth.yml`](ops-files/disable-anonymous-auth.yml) | Disable `anonymous-auth` on the API server | - |
 | [`ops-files/disable-deny-escalating-exec.yml`](ops-files/disable-deny-escalating-exec.yml) | Disable `DenyEscalatingExec` in API server admission control | - |
 | [`ops-files/add-oidc-endpoint.yml`](ops-files/add-oidc-endpoint.yml) | Enable OIDC authentication for the Kubernetes cluster | - |
