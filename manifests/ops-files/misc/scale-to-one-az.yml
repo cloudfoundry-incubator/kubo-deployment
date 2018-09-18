@@ -1,0 +1,29 @@
+- type: replace
+  path: /instance_groups/name=master/instances
+  value: 1
+- type: replace
+  path: /instance_groups/name=worker/instances
+  value: 1
+- type: replace
+  path: /instance_groups/name=apply-addons/instances
+  value: 1
+
+- type: replace
+  path: /instance_groups/name=master/vm_type
+  value: minimal
+- type: replace
+  path: /instance_groups/name=worker/vm_type
+  value: minimal
+- type: replace
+  path: /instance_groups/name=apply-addons/vm_type
+  value: minimal
+
+- type: replace
+  path: /instance_groups/name=master/azs
+  value: [ z1 ]
+- type: replace
+  path: /instance_groups/name=worker/azs
+  value: [ z1 ]
+- type: replace
+  path: /instance_groups/name=apply-addons/azs
+  value: [ z1 ]
