@@ -1,0 +1,11 @@
+- type: replace
+  path: /instance_groups/name=master/networks/name=default/name
+  value: ((network_name))
+
+- type: replace
+  path: /instance_groups/name=worker/networks/name=default/name
+  value: ((network_name))
+
+- type: replace
+  path: /instance_groups/name=apply-addons/networks/name=default/name
+  value: ((network_name))
