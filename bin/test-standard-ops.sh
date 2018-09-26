@@ -53,13 +53,14 @@ test_standard_ops() {
       check_interpolation "name:add-syslog-tls.yml" "add-syslog.yml" "-o add-syslog-tls.yml" "-l example-vars-files/add-syslog.yml" "-l example-vars-files/add-syslog-tls.yml"
 
       # Kubernetes
+      check_interpolation "add-hostname-to-master-certificate.yml" "-v api-hostname=example.com"
+      check_interpolation "add-oidc-endpoint.yml" "-l example-vars-files/misc/oidc.yml"
       check_interpolation "addons-spec.yml" "-v addons-spec={}"
       check_interpolation "allow-privileged-containers.yml"
+      check_interpolation "change-cidrs.yml" "-l example-vars-files/new-cidrs.yml"
       check_interpolation "disable-anonymous-auth.yml"
       check_interpolation "disable-deny-escalating-exec.yml"
-      check_interpolation "add-oidc-endpoint.yml" "-l example-vars-files/misc/oidc.yml"
-      check_interpolation "change-cidrs.yml" "-l example-vars-files/new-cidrs.yml"
-      check_interpolation "add-hostname-to-master-certificate.yml" "-v api-hostname=example.com"
+      check_interpolation "disable-security-context-deny.yml"
       check_interpolation "use-coredns.yml"
 
       # Etcd
