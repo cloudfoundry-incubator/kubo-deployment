@@ -44,9 +44,6 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | [`ops-files/iaas/openstack/master-static-ip.yml`](ops-files/iaas/openstack/master-static-ip.yml) | Attach floating IP to Kube API | Assign allocated floating IP to `master` instance. IP included in TLS certificates. |
 | **vSphere** | | |
 | [`ops-files/iaas/vsphere/master-static-ip.yml`](ops-files/iaas/vsphere/master-static-ip.yml) | Assign static IP to Kube API | Assign static IP to `master` instance. IP included in TLS certificates. |
-| **gcp** | | |
-| [`ops-files/iaas/gcp/add-service-key-master.yml`](ops-files/iaas/gcp/add-service-key-master.yml) | Allow user to specify GCP key instead of service account |  |
-| [`ops-files/iaas/gcp/add-service-key-worker.yml`](ops-files/iaas/gcp/add-service-key-worker.yml) | Allow user to specify GCP key instead of service account |  |
 
 ### Infrastructure
 
@@ -55,8 +52,6 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | **AWS** | | |
 | [`ops-files/iaas/aws/cloud-provider.yml`](ops-files/iaas/aws/cloud-provider.yml) | Enable Cloud Provider for AWS | Requires AWS Instance Profiles (not API keys) to grant Kubernetes access to AWS |
 | [`ops-files/iaas/aws/lb.yml`](ops-files/iaas/aws/lb.yml) | Enable instance tagging for AWS |  |
-| [`ops-files/iaas/aws/add-master-credentials.yml`](ops-files/iaas/aws/add-master-credentials.yml) | Set AWS credentials for the Kube API and Kube Controller Manager |  |
-| [`ops-files/iaas/aws/add-worker-credentials.yml`](ops-files/iaas/aws/add-worker-credentials.yml) | Set AWS credentials for the Kubelet |  |
 | **OpenStack** | | |
 | [`ops-files/iaas/openstack/cloud-provider.yml`](ops-files/iaas/openstack/cloud-provider.yml) | Enable Cloud Provider for OpenStack | Enable Cloud Provider for OpenStack |
 | **GCP** | | |
