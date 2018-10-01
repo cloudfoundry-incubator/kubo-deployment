@@ -32,9 +32,9 @@ credhublogin() {
   fi
 
   set +x
-  credhub_admin_secret=$(bosh int "creds.yml" --path="/credhub_admin_client_secret")
+  credhub_admin_secret=$(bosh int "${bosh_env}/creds.yml" --path="/credhub_admin_client_secret")
 
-  credhub_api_url="https://$(bosh int "director.yml" --path="/internal_ip"):8844"
+  credhub_api_url="https://$(bosh int "${bosh_env}/director.yml" --path="/internal_ip"):8844"
 
   tmp_uaa_ca_file="$(mktemp)"
   tmp_credhub_ca_file="$(mktemp)"
