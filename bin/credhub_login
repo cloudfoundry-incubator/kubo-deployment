@@ -31,15 +31,10 @@ credhublogin() {
     exit 1
   fi
 
-  # shellcheck disable=SC1090
-  source "$(repo_directory)/bin/lib/deploy_utils"
-  export_bosh_environment "${bosh_env}"
-
   set +x
-  credhub_admin_secret=$(get_setting "creds.yml" "/credhub_admin_client_secret")
-  restore_debug_output
+  credhub_admin_secret=$(bosh int "creds.yml" --path="/credhub_admin_client_secret")
 
-  credhub_api_url="https://$(get_setting "director.yml" "/internal_ip"):8844"
+  credhub_api_url="https://$(bosh int "director.yml" --path="/internal_ip"):8844"
 
   tmp_uaa_ca_file="$(mktemp)"
   tmp_credhub_ca_file="$(mktemp)"
@@ -51,7 +46,6 @@ credhublogin() {
 
   set +x
   credhub login --client-name credhub-admin --client-secret "${credhub_admin_secret}" -s "${credhub_api_url}" --ca-cert "${tmp_credhub_ca_file}" --ca-cert "${tmp_uaa_ca_file}"
-  restore_debug_output
 }
 
 [[ "${0}" == "${BASH_SOURCE[0]}" ]] && credhublogin "$@"

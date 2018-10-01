@@ -38,8 +38,6 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
-| [`ops-files/cf-routing.yml`](ops-files/cf-routing.yml) | Combine CFCR with Cloud Foundry routing | (Deprecated) Kube API and labeled services advertised to Cloud Foundry routing mesh. Kube API hostname is included in TLS certificates. |
-| [`ops-files/cf-routing-links.yml`](ops-files/cf-routing-links.yml) | As above, using BOSH links | (Deprecated) Simpler method of integration with Cloud Foundry running on same BOSH [in development] |
 | **OpenStack** | | |
 | [`ops-files/iaas/openstack/master-static-ip.yml`](ops-files/iaas/openstack/master-static-ip.yml) | Attach floating IP to Kube API | Assign allocated floating IP to `master` instance. IP included in TLS certificates. |
 | **vSphere** | | |

@@ -1,3 +1,0 @@
-kubernetes_master_host: tcp.18-216-123-123.sslip.io
-kubernetes_master_port: 8443
-routing_cf_app_domain_name: 18-220-96-96.sslip.io
