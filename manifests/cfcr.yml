@@ -76,7 +76,6 @@ instance_groups:
       kubelet-drain-password: ((kubelet-drain-password))
       kubelet-password: ((kubelet-password))
       port: 8443
-      route-sync-password: ((route-sync-password))
       service-account-public-key: ((service-account-key.public_key))
       tls:
         kubelet-client: ((tls-kubelet-client))
@@ -225,8 +224,6 @@ variables:
 - name: kube-controller-manager-password
   type: password
 - name: kube-scheduler-password
-  type: password
-- name: route-sync-password
   type: password
 - name: kubo_ca
   options:
