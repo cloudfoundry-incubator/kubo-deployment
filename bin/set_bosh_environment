@@ -1,6 +1,0 @@
-export BOSH_CLIENT=bosh_admin
-set +x
-export BOSH_CLIENT_SECRET=$(bosh int "$BOSH_ENV"/creds.yml --path=/bosh_admin_client_secret)
-[[ -z "${DEBUG:-}" ]] || set -x
-export BOSH_CA_CERT=$(bosh int "$BOSH_ENV"/creds.yml --path=/default_ca/ca)
-export BOSH_ENVIRONMENT=$(bosh int "$BOSH_ENV"/director.yml --path=/internal_ip)
