@@ -1,5 +1,6 @@
 vm_extensions:
 - cloud_properties:
+    backend_service: ((cfcr_backend_service))
     service_account: ((cfcr_master_service_account_address))
   name: ((deployment_name))-master-cloud-properties
 - cloud_properties:
