@@ -1,0 +1,100 @@
+- type: replace
+  path: /stemcells/-
+  value:
+    alias: windows
+    os: windows1803
+    version: latest
+
+- type: replace
+  path: /releases/-
+  value:
+    name: windows-utilities
+    version: latest
+
+- type: replace
+  path: /releases/-
+  value:
+    name: sysctl
+    version: latest
+
+- type: replace
+  path: /addons/-
+  value:
+    name: make-linux-nodes-not-crash
+    jobs:
+    - name: sysctl
+      properties:
+        sysctl_conf: |
+          net.ipv4.neigh.default.gc_thresh3 = 8192
+          net.ipv4.neigh.default.gc_thresh2 = 4096
+          net.ipv4.neigh.default.gc_thresh1 = 2048
+      release: sysctl
+    include:
+      stemcell:
+      - os: ubuntu-trusty
+      - os: ubuntu-xenial
+
+- type: replace
+  path: /addons/-
+  value:
+    name: bosh-dns-windows
+    include:
+      stemcell:
+      - os: windows1803
+    jobs:
+    - name: bosh-dns-windows
+      properties:
+        api:
+          client:
+            tls: ((/dns_api_client_tls))
+          server:
+            tls: ((/dns_api_server_tls))
+        cache:
+          enabled: true
+        health:
+          client:
+            tls: ((/dns_healthcheck_client_tls))
+          enabled: true
+          server:
+            tls: ((/dns_healthcheck_server_tls))
+      release: bosh-dns
+    - name: set_password
+      release: windows-utilities
+      properties:
+        set_password:
+          password: ((windows-rdp-password))
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: windows-worker
+    instances: 3
+    azs:
+    - z1
+    - z2
+    - z3
+    networks:
+    - name: default
+    stemcell: windows
+    vm_extensions:
+    - 100GB_ephemeral_disk
+    vm_type: medium
+    jobs:
+    - name: kubelet-windows
+      properties:
+        api-token: ((kubelet-password))
+        drain-api-token: ((kubelet-drain-password))
+        tls:
+          kubelet: ((tls-kubelet))
+          kubelet-client-ca:
+            certificate: ((tls-kubelet-client.ca))
+          kubernetes: ((tls-kubernetes))
+      release: kubo
+    - name: flanneld-windows
+      release: kubo
+    - name: kube-proxy-windows
+      properties:
+        api-token: ((kube-proxy-password))
+        tls:
+          kubernetes: ((tls-kubernetes))
+      release: kubo
