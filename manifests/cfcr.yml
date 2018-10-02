@@ -1,6 +1,6 @@
 addons:
 - include:
-    stemcells:
+    stemcell:
     - os: ubuntu-trusty
     - os: ubuntu-xenial
   jobs:
