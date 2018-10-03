@@ -69,6 +69,23 @@ instance_groups:
     properties:
       admin-password: ((kubo-admin-password))
       admin-username: admin
+      args:
+        disable-admission-plugins:
+        - PersistentVolumeLabel
+        enable-admission-plugins:
+        - LimitRanger
+        - DefaultTolerationSecons
+        - ValidatingAdmissionWebhook
+        - NamespaceLifecycle
+        - ResourceQuota
+        - ServiceAccount
+        - DefaultStorageClass
+        - MutatingAdmissionWebhook
+        - DenyEscalatingExec
+        - SecurityContextDeny
+        enable-bootstrap-token-auth: true
+        kubelet-client-key: /var/vcap/jobs/kube-apiserver/config/kubelet-client-key.pem
+        kubelet-client-certificate: /var/vcap/jobs/kube-apiserver/config/kubelet-client-cert.pem
       backend_port: 8443
       kube-controller-manager-password: ((kube-controller-manager-password))
       kube-proxy-password: ((kube-proxy-password))
