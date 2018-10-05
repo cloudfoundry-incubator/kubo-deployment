@@ -154,9 +154,6 @@ instance_groups:
       - max-file=2
       storage_driver: overlay2
       store_dir: /var/vcap/data
-      tls_cacert: ((tls-docker.ca))
-      tls_cert: ((tls-docker.certificate))
-      tls_key: ((tls-docker.private_key))
     release: docker
   - name: kubernetes-dependencies
     release: kubo
@@ -260,11 +257,6 @@ variables:
   type: certificate
 - name: service-account-key
   type: rsa
-- name: tls-docker
-  options:
-    ca: kubo_ca
-    common_name: docker.cfcr.internal
-  type: certificate
 - name: tls-etcd-v0-17-0
   options:
     ca: kubo_ca
