@@ -74,7 +74,7 @@ instance_groups:
         - PersistentVolumeLabel
         enable-admission-plugins:
         - LimitRanger
-        - DefaultTolerationSecons
+        - DefaultTolerationSeconds
         - ValidatingAdmissionWebhook
         - NamespaceLifecycle
         - ResourceQuota
@@ -84,8 +84,11 @@ instance_groups:
         - DenyEscalatingExec
         - SecurityContextDeny
         enable-bootstrap-token-auth: true
+        enable-swagger-ui: true
         kubelet-client-key: /var/vcap/jobs/kube-apiserver/config/kubelet-client-key.pem
         kubelet-client-certificate: /var/vcap/jobs/kube-apiserver/config/kubelet-client-cert.pem
+        secure-port: 8443
+        service-account-key-file: /var/vcap/jobs/kube-apiserver/config/service-account-public-key.pem
       backend_port: 8443
       kube-controller-manager-password: ((kube-controller-manager-password))
       kube-proxy-password: ((kube-proxy-password))
