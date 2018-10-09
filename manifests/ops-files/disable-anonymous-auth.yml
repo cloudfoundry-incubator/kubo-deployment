@@ -1,4 +1,4 @@
 ---
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/anonymous_auth?
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/args/anonymous-auth?
   value: false
