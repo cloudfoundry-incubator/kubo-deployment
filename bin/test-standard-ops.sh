@@ -55,8 +55,6 @@ test_standard_ops() {
       check_interpolation "allow-privileged-containers.yml"
       check_interpolation "change-cidrs.yml" "-l example-vars-files/new-cidrs.yml"
       check_interpolation "disable-anonymous-auth.yml"
-      check_interpolation "disable-deny-escalating-exec.yml"
-      check_interpolation "disable-security-context-deny.yml"
       check_interpolation "use-coredns.yml"
 
       # Etcd
