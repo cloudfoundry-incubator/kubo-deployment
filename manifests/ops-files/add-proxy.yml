@@ -7,7 +7,7 @@
   value: ((http_proxy))
 
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/http_proxy?
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/bosh-args/http_proxy?
   value: ((http_proxy))
 
 - type: replace
@@ -23,7 +23,7 @@
   value: ((https_proxy))
 
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/https_proxy?
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/bosh-args/https_proxy?
   value: ((https_proxy))
 
 - type: replace
@@ -39,7 +39,7 @@
   value: ((no_proxy))
 
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/no_proxy?
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/bosh-args/no_proxy?
   value: ((no_proxy))
 
 - type: replace

@@ -67,9 +67,7 @@ instance_groups:
     release: kubo
   - name: kube-apiserver
     properties:
-      admin-password: ((kubo-admin-password))
-      admin-username: admin
-      args:
+      k8s-args:
         audit-log-path: /var/vcap/sys/log/kube-apiserver/audit.log
         audit-log-maxage: 0
         audit-log-maxsize: 0
@@ -114,18 +112,21 @@ instance_groups:
         tls-private-key-file: /var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
         token-auth-file: /var/vcap/jobs/kube-apiserver/config/tokens.csv
         v: 2
-      kube-controller-manager-password: ((kube-controller-manager-password))
-      kube-proxy-password: ((kube-proxy-password))
-      kube-scheduler-password: ((kube-scheduler-password))
-      kubelet-drain-password: ((kubelet-drain-password))
-      kubelet-password: ((kubelet-password))
-      service-account-public-key: ((service-account-key.public_key))
-      tls:
-        kubelet-client: ((tls-kubelet-client))
-        kubernetes:
-          ca: ((tls-kubernetes.ca))
-          certificate: ((tls-kubernetes.certificate))
-          private_key: ((tls-kubernetes.private_key))
+      bosh-args:
+        admin-password: ((kubo-admin-password))
+        admin-username: admin
+        kube-controller-manager-password: ((kube-controller-manager-password))
+        kube-proxy-password: ((kube-proxy-password))
+        kube-scheduler-password: ((kube-scheduler-password))
+        kubelet-drain-password: ((kubelet-drain-password))
+        kubelet-password: ((kubelet-password))
+        service-account-public-key: ((service-account-key.public_key))
+        tls:
+          kubelet-client: ((tls-kubelet-client))
+          kubernetes:
+            ca: ((tls-kubernetes.ca))
+            certificate: ((tls-kubernetes.certificate))
+            private_key: ((tls-kubernetes.private_key))
     release: kubo
   - name: kube-controller-manager
     properties:

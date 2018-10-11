@@ -1,5 +1,5 @@
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/args?
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args?
   value:
     oidc-ca: ((oidc_ca))
     oidc-client-id: ((oidc_client_id))

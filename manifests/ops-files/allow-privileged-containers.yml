@@ -1,6 +1,6 @@
 ---
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/args/allow-privileged?
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args/allow-privileged?
   value: true
 
 - type: replace
