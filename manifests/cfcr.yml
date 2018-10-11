@@ -137,6 +137,8 @@ instance_groups:
   - z3
   instances: 3
   jobs:
+  - name: bpm
+    release: bpm
   - name: flanneld
     release: kubo
   - name: docker
