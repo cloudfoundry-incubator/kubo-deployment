@@ -65,6 +65,9 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | [`ops-files/iaas/vsphere/set-working-dir-no-rp.yml`](ops-files/iaas/vsphere/set-working-dir-no-rp.yml) | Configure vSphere cloud provider's working dir if there is no resource pool | - |
 | **virtualbox** | | |
 | [`ops-files/iaas/virtualbox/bosh-lite.yml`](ops-files/iaas/virtualbox/bosh-lite.yml) | Enables CFCR to run on a virtualbox bosh-lite environment | Deploys 1 master and 3 workers. Master is deployed to a static ip: 10.244.0.34 |
+| **Azure** | | |
+| [`ops-files/iaas/azure/cloud-provider.yml`](ops-files/iaas/azure/cloud-provider.yml) | Enable Cloud Provider for Azure | |
+| [`ops-files/iaas/azure/subnet.yml`](ops-files/iaas/azure/subnet.yml) | Changes the subnet | |
 
 ### Proxy
 
