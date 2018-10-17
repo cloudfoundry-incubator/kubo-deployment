@@ -189,9 +189,9 @@ releases:
   url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.5.0/cfcr-etcd-release-1.5.0.tgz
   version: 1.5.0
 - name: docker
-  sha1: f192296243e68150ae66656fc9134a2b2a023184
-  url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v32.0.0/docker-32.0.0.tgz
-  version: 32.0.0
+  sha1: 21ead5b0c3229ffe5678a0d5a96a07a1dda47f09
+  url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v32.1.0/docker-32.1.0.tgz
+  version: 32.1.0
 - name: bosh-dns
   sha1: d1aadbda5d60c44dec4a429cda872cf64f6d8d0b
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=1.10.0
