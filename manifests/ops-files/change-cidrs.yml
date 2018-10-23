@@ -4,7 +4,7 @@
   value: ((kubedns_service_ip))
 
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/service-cluster-cidr?
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args/service-cluster-ip-range?
   value: ((service_cluster_cidr))
 
 - type: replace
