@@ -6,20 +6,21 @@
     properties:
       cloud-provider:
         type: azure
-        azure:
+      cloud-config:
+        Global:
+          aadClientId: ((client_id))
+          aadClientSecret: ((client_secret))
           cloud: ((azure_cloud_name))
-          subscription-id: ((subscription_id))
-          tenant-id: ((tenant_id))
-          service-principal-id: ((client_id))
-          service-principal-secret: ((client_secret))
           location: ((location))
-          resource-group-name: ((resource_group_name))
-          vnet-resource-group-name: ((vnet_resource_group_name))
-          vnet-name: ((vnet_name))
-          subnet-name: ((subnet_name))
-          network-security-group-name: ((default_security_group))
-          availability-set: ((primary_availability_set))
-
+          primaryAvailabilitySetName: ((primary_availability_set))
+          resourceGroup: ((resource_group_name))
+          securityGroupName: ((default_security_group))
+          subnetName: ((subnet_name))
+          subscriptionId: ((subscription_id))
+          tenantId: ((tenant_id))
+          useInstanceMetadata: true
+          vnetName: ((vnet_name))
+          vnetResourceGroup: ((vnet_resource_group_name))
     provides:
       cloud-provider: {as: master-cloud-provider}
 
@@ -51,19 +52,21 @@
     properties:
       cloud-provider:
         type: azure
-        azure:
+      cloud-config:
+        Global:
+          aadClientId: ((client_id))
+          aadClientSecret: ((client_secret))
           cloud: ((azure_cloud_name))
-          subscription-id: ((subscription_id))
-          tenant-id: ((tenant_id))
-          service-principal-id: ((client_id))
-          service-principal-secret: ((client_secret))
           location: ((location))
-          resource-group-name: ((resource_group_name))
-          vnet-resource-group-name: ((vnet_resource_group_name))
-          vnet-name: ((vnet_name))
-          subnet-name: ((subnet_name))
-          network-security-group-name: ((default_security_group))
-          availability-set: ((primary_availability_set))
+          primaryAvailabilitySetName: ((primary_availability_set))
+          resourceGroup: ((resource_group_name))
+          securityGroupName: ((default_security_group))
+          subnetName: ((subnet_name))
+          subscriptionId: ((subscription_id))
+          tenantId: ((tenant_id))
+          useInstanceMetadata: true
+          vnetName: ((vnet_name))
+          vnetResourceGroup: ((vnet_resource_group_name))
     provides:
       cloud-provider: {as: worker-cloud-provider}
 

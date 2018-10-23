@@ -1,7 +1,7 @@
 - type: replace
-  path: /instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-provider/gce/subnetwork-name?
+  path: /instance_groups/name=master/jobs/name=cloud-provider/properties/cloud-config/subnetwork-name?
   value: ((subnetwork))
 
 - type: replace
-  path: /instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-provider/gce/subnetwork-name?
+  path: /instance_groups/name=worker/jobs/name=cloud-provider/properties/cloud-config/subnetwork-name?
   value: ((subnetwork))

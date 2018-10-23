@@ -6,10 +6,11 @@
     properties:
       cloud-provider:
         type: gce
-        gce:
+      cloud-config:
+        Global:
           project-id: ((project_id))
           network-name: ((network))
-          worker-node-tag: ((director_name))-((deployment_name))-worker
+          node-tags: ((director_name))-((deployment_name))-worker
     provides:
       cloud-provider: {as: master-cloud-provider}
 
@@ -36,10 +37,11 @@
     properties:
       cloud-provider:
         type: gce
-        gce:
+      cloud-config:
+        Global:
           project-id: ((project_id))
           network-name: ((network))
-          worker-node-tag: ((director_name))-((deployment_name))-worker
+          node-tags: ((director_name))-((deployment_name))-worker
     provides:
       cloud-provider: {as: worker-cloud-provider}
 
