@@ -4,6 +4,6 @@
   value: true
 
 - type: replace
-  path: /instance_groups/name=worker/jobs/name=kubelet/properties/allow_privileged?
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/k8s-args/allow-privileged?
   value: true
 

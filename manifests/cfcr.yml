@@ -193,7 +193,34 @@ instance_groups:
   - name: kubelet
     properties:
       api-token: ((kubelet-password))
+      kubelet-configuration:
+        kind: KubeletConfiguration
+        apiVersion: kubelet.config.k8s.io/v1beta1
+        authentication:
+          anonymous:
+            enabled: false
+          x509:
+            clientCAFile: /var/vcap/jobs/kubelet/config/kubelet-client-ca.pem
+        authorization:
+          mode: Webhook
+        clusterDNS:
+          - 10.100.200.10
+        clusterDomain: cluster.local
+        failSwapOn: false
+        readOnlyPort: 0
+        serializeImagePulls: false
+        tlsCertFile: /var/vcap/jobs/kubelet/config/kubelet.pem
+        tlsPrivateKeyFile: /var/vcap/jobs/kubelet/config/kubelet-key.pem
       drain-api-token: ((kubelet-drain-password))
+      k8s-args:
+        allow-privileged: false
+        cni-bin-dir: "/var/vcap/jobs/kubelet/packages/cni/bin"
+        container-runtime: docker
+        docker-endpoint: "unix:///var/vcap/sys/run/docker/docker.sock"
+        docker: "unix:///var/vcap/sys/run/docker/docker.sock"
+        keep-terminated-pod-volumes: false
+        kubeconfig: "/var/vcap/jobs/kubelet/config/kubeconfig"
+        network-plugin: cni
       tls:
         kubelet: ((tls-kubelet))
         kubelet-client-ca:
