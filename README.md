@@ -13,7 +13,3 @@ To deploy CFCR go [here](https://github.com/cloudfoundry-incubator/kubo-release/
 ## Contributing
 
 For instructions on contributing to this project, please see [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Troubleshooting
-
-Please refer to the [troubleshooting guide](https://docs-cfcr.cfapps.io/managing/troubleshooting/) to look for solutions to the most common issues/
