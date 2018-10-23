@@ -77,19 +77,8 @@ instance_groups:
         audit-policy-file: /var/vcap/jobs/kube-apiserver/config/audit_policy.yml
         authorization-mode: RBAC
         client-ca-file: /var/vcap/jobs/kube-apiserver/config/kubernetes.pem
-        disable-admission-plugins:
-        - PersistentVolumeLabel
-        enable-admission-plugins:
-        - LimitRanger
-        - DefaultTolerationSeconds
-        - ValidatingAdmissionWebhook
-        - NamespaceLifecycle
-        - ResourceQuota
-        - ServiceAccount
-        - DefaultStorageClass
-        - MutatingAdmissionWebhook
-        - DenyEscalatingExec
-        - SecurityContextDeny
+        disable-admission-plugins: []
+        enable-admission-plugins: []
         enable-aggregator-routing: true
         enable-bootstrap-token-auth: true
         enable-swagger-ui: true
