@@ -1,0 +1,7 @@
+---
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=flanneld-windows/properties?/backend-type
+  value: "win-bridge"
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=kube-proxy-windows/properties?/backend-type
+  value: "win-bridge"

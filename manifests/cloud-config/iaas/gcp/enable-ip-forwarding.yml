@@ -1,0 +1,4 @@
+vm_extensions:
+- cloud_properties:
+    ip_forwarding: true
+  name: ((deployment_name))-ip-forwarding
