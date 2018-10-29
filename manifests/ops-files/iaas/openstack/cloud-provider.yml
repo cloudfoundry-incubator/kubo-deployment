@@ -6,7 +6,8 @@
     properties:
       cloud-provider:
         type: openstack
-        openstack:
+      cloud-config:
+        Global:
           auth-url: ((auth_url))
           domain-name: ((openstack_domain))
           password: ((openstack_password))
@@ -39,7 +40,8 @@
     properties:
       cloud-provider:
         type: openstack
-        openstack:
+      cloud-config:
+        Global:
           auth-url: ((auth_url))
           domain-name: ((openstack_domain))
           password: ((openstack_password))
