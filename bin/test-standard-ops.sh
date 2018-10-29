@@ -57,7 +57,9 @@ test_standard_ops() {
       check_interpolation "allow-privileged-containers.yml"
       check_interpolation "change-cidrs.yml" "-l example-vars-files/new-cidrs.yml"
       check_interpolation "disable-anonymous-auth.yml"
+      check_interpolation "enable-denyescalatingexec.yml"
       check_interpolation "enable-podsecuritypolicy.yml"
+      check_interpolation "enable-securitycontextdeny.yml"
       check_interpolation "use-coredns.yml"
 
       # Etcd
