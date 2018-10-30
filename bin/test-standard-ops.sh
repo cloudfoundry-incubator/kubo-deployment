@@ -71,6 +71,8 @@ test_standard_ops() {
       # Dev
       check_interpolation "kubo-local-release.yml"
 
+      # NFS
+      check_interpolation "enable-nfs.yml"
     popd > /dev/null # operations
   popd > /dev/null
   exit $exit_code
