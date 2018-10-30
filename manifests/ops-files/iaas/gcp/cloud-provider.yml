@@ -11,6 +11,7 @@
           project-id: ((project_id))
           network-name: ((network))
           node-tags: ((director_name))-((deployment_name))-worker
+          multizone: true
     provides:
       cloud-provider: {as: master-cloud-provider}
 
