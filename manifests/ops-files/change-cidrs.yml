@@ -17,7 +17,7 @@
     pod-network-cidr: ((pod_network_cidr))
 
 - type: replace
-  path: /instance_groups/name=worker/jobs/name=kube-proxy/properties/pod-network-cidr?
+  path: /instance_groups/name=worker/jobs/name=kube-proxy/properties/kube-proxy-configuration?/clusterCIDR?
   value: ((pod_network_cidr))
 
 # NOTE: This is required for the default kubernetes service which always runs on first IP address of the service CIDR

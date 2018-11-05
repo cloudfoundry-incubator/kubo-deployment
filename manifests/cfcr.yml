@@ -243,6 +243,19 @@ instance_groups:
       api-token: ((kube-proxy-password))
       tls:
         kubernetes: ((tls-kubernetes))
+      kube-proxy-configuration:
+        apiVersion: kubeproxy.config.k8s.io/v1alpha1
+        kind: KubeProxyConfiguration
+        clusterCIDR: 10.200.0.0/16
+        clientConnection:
+          kubeconfig: /var/vcap/jobs/kube-proxy/config/kubeconfig
+        mode: iptables
+        iptables:
+          masqueradeAll: false
+          masqueradeBit: 14
+          minSyncPeriod: 0s
+          syncPeriod: 30s
+        portRange: ""
     release: kubo
   name: worker
   networks:
