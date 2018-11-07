@@ -124,11 +124,9 @@ instance_groups:
       tls:
         kubernetes: ((tls-kubernetes))
       k8s-args:
-        cluster-name: kubernetes
         cluster-signing-cert-file: /var/vcap/jobs/kube-controller-manager/config/cluster-signing-ca.pem
         cluster-signing-key-file: /var/vcap/jobs/kube-controller-manager/config/cluster-signing-key.pem
         kubeconfig: /var/vcap/jobs/kube-controller-manager/config/kubeconfig
-        leader-elect: true
         root-ca-file: /var/vcap/jobs/kube-controller-manager/config/ca.pem
         service-account-private-key-file: /var/vcap/jobs/kube-controller-manager/config/service-account-private-key.pem
         terminated-pod-gc-threshold: 100
@@ -224,7 +222,6 @@ instance_groups:
           - 10.100.200.10
         clusterDomain: cluster.local
         failSwapOn: false
-        readOnlyPort: 0
         serializeImagePulls: false
         tlsCertFile: /var/vcap/jobs/kubelet/config/kubelet.pem
         tlsPrivateKeyFile: /var/vcap/jobs/kubelet/config/kubelet-key.pem
