@@ -1,0 +1,88 @@
+- type: replace
+  path: /stemcells/-
+  value:
+    alias: windows
+    os: windows1803
+    version: latest
+
+- type: replace
+  path: /releases/-
+  value:
+    name: "windows-tools"
+    version: "32"
+    url: "https://bosh.io/d/github.com/cloudfoundry-incubator/windows-tools-release?v=32"
+    sha1: "95b6dd94a0b12491afc95e62f393c4d519411239"
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: windows-worker
+    instances: 3
+    azs:
+    - z1
+    - z2
+    - z3
+    networks:
+    - name: default
+    stemcell: windows
+    vm_type: worker
+    jobs:
+    - name: kubelet-windows
+      properties:
+        api-token: ((kubelet-password))
+        kubelet-configuration:
+          kind: KubeletConfiguration
+          apiVersion: kubelet.config.k8s.io/v1beta1
+          authentication:
+            anonymous:
+              enabled: false
+            x509:
+              clientCAFile: C:\var\vcap\jobs\kubelet-windows\config\kubelet-client-ca.pem
+          authorization:
+            mode: Webhook
+          clusterDNS:
+            - 10.100.200.10
+          clusterDomain: cluster.local
+          failSwapOn: false
+          readOnlyPort: 0
+          serializeImagePulls: false
+          tlsCertFile: C:\var\vcap\jobs\kubelet-windows\config\kubelet.pem
+          tlsPrivateKeyFile: C:\var\vcap\jobs\kubelet-windows\config\kubelet-key.pem
+          cgroupsPerQOS: false
+          enforceNodeAllocatable: []
+        drain-api-token: ((kubelet-drain-password))
+        k8s-args:
+          allow-privileged: true
+          cni-bin-dir: C:\var\vcap\jobs\kubelet-windows\packages\cni-windows\bin
+          container-runtime: docker
+          image-pull-progress-deadline: 20m
+          keep-terminated-pod-volumes: false
+          kubeconfig: C:\var\vcap\jobs\kubelet-windows\config\kubeconfig
+          network-plugin: cni
+          pod-infra-container-image: kubeletwin/pause
+          register-with-taints: windows=1803:NoSchedule
+          resolv-conf: ""
+        tls:
+          kubelet: ((tls-kubelet))
+          kubelet-client-ca:
+            certificate: ((tls-kubelet-client.ca))
+          kubernetes: ((tls-kubernetes))
+      release: kubo
+    - name: flanneld-windows
+      release: kubo
+    - name: kube-proxy-windows
+      properties:
+        api-token: ((kube-proxy-password))
+        tls:
+          kubernetes: ((tls-kubernetes))
+        kube-proxy-configuration:
+          apiVersion: kubeproxy.config.k8s.io/v1alpha1
+          kind: KubeProxyConfiguration
+          clusterCIDR: 10.200.0.0/16
+          clientConnection:
+            kubeconfig: /var/vcap/jobs/kube-proxy-windows/config/kubeconfig
+          mode: kernelspace
+          portRange: ""
+      release: kubo
+    - name: docker
+      release: windows-tools

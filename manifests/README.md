@@ -95,6 +95,7 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | [`ops-files/add-hostname-to-master-certificate.yml`](ops-files/add-hostname-to-master-certificate.yml) | Add hostname to master certificate | Extra Vars Required:<br>- **api-hostname:** Required for TLS certificate of apiserver |
 | [`ops-files/enable-encryption-config.yml`](ops-files/enable-encryption-config.yml) | Enable data encryption at rest | Extra Vars Required:<br>- **encryption-config:** Encryption configuration as described [here](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#understanding-the-encryption-at-rest-configuration). Var value must be the content of the yaml. Easier to define in a `--vars-file` file |
 | [`ops-files/enable-csi-shared-mounts.yml`](ops-files/enable-csi-shared-mounts.yml) | Enable shared mounts in Docker for CSI volumes | - |
+| [`ops-files/use-hostgw.yml`](ops-files/use-hostgw.yml) | Sets the cluster to use host-gw backend in flannel. Necessary for Windows workers. | - |
 
 ### Etcd
 

@@ -1,0 +1,8 @@
+---
+- type: replace
+  path: /instance_groups/name=master/jobs/name=flanneld/properties?/backend-type
+  value: "host-gw"
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=flanneld/properties?/backend-type
+  value: "host-gw"
+

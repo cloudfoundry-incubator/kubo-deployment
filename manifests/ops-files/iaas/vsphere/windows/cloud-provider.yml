@@ -1,0 +1,13 @@
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=kubelet-windows/properties/cloud-provider?
+  value: vsphere
+
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=kubelet-windows/consumes?
+  value:
+    cloud-provider: {from: worker-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=kube-proxy-windows/properties/cloud-provider?
+  value: vsphere
+
