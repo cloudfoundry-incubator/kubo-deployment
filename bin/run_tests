@@ -123,7 +123,11 @@ ensure_opsfiles_in_tests() {
 main() {
   echo
   echo -e "${LIGHT_GREEN} ***** Begin rspec tests ***** ${NOCOLOR}"
-  bundle exec rspec spec/
+  project_root="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../" && pwd )"
+  pushd "${project_root}" > /dev/null
+    bundle install
+    bundle exec rspec spec/*_spec.rb
+  popd > /dev/null
 
   echo
   echo -e "${LIGHT_GREEN} ***** Begin affirmative readme operations tests ***** ${NOCOLOR}"
