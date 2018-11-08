@@ -35,6 +35,10 @@ pass() {
   echo -e "${GREEN} PASS - ${YELLOW} $suite_name ${GREEN} - ${NOCOLOR} $1"
 }
 
+skip() {
+  echo -e "${YELLOW} SKIP - ${YELLOW} $suite_name ${GREEN} - ${NOCOLOR} $1"
+}
+
 interpolate() {
   local tmp_creds_store
   tmp_creds_store=$(mktemp)
@@ -103,10 +107,14 @@ ensure_opsfiles_in_tests() {
   pushd ${home} > /dev/null
     for x in $@; do
       local basename=$(basename $x)
-      if [ $(grep $basename ${script_home}/$test -c) != "0" ]; then
-        pass "$basename is tested in $test"
+      if [ $basename == "set-certificate-duration.yml" ]; then
+        skip "$basename is ${YELLOW}SKIPPED${NOCOLOR} in $test"
       else
-        fail "$basename is ${RED}NOT${NOCOLOR} tested in $test"
+        if [ $(grep $basename ${script_home}/$test -c) != "0" ]; then
+          pass "$basename is tested in $test"
+        else
+          fail "$basename is ${RED}NOT${NOCOLOR} tested in $test"
+        fi
       fi
     done;
   popd > /dev/null

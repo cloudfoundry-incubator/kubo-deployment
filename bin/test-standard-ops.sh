@@ -66,9 +66,6 @@ test_standard_ops() {
       # Etcd
       check_interpolation "change-etcd-metrics-url.yml" "-v etcd_metrics_protocol=http -v etcd_metrics_port=2378"
 
-      # Certificates
-      check_interpolation "set-certificate-duration.yml" "-v certificate-duration=1460"
-
       # BBR
       check_interpolation "enable-bbr.yml"
 
