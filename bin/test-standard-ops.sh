@@ -23,6 +23,7 @@ test_standard_ops() {
       check_interpolation "use-trusty-stemcell.yml"
       check_interpolation "add-vm-extensions-to-master.yml"
       check_interpolation "use-vm-extensions.yml" "-v deployment_name=cfcr"
+      check_interpolation "worker_count.yml" "-v worker_count=4"
 
       # Infrastructure
       check_interpolation "iaas/aws/cloud-provider.yml"
