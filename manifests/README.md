@@ -97,6 +97,11 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 |:--- |:--- |:--- |
 | [`ops-files/change-etcd-metrics-url.yml`](ops-files/change-etcd-metrics-url.yml) | Change procotol and port of the etcd's metrics endpoint | - |
 
+### Certificates
+
+| Name | Purpose | Notes |
+|:---  |:---     |:---   |
+| [`ops-files/set-certificate-duration.yml`](ops-files/set-certificate-duration.yml) | Set the duration of all generated certificates to a specified duration | Extra Vars Required:<br>- certificate-duration: Duration, specified in days, for all certificates generated in manifest |
 
 ### BOSH Backup & Restore
 
@@ -122,5 +127,4 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
 | [`ops-files/kubo-local-release.yml`](ops-files/kubo-local-release.yml) | Deploy a local kubo release located in `../kubo-release` | -  |
-
 
