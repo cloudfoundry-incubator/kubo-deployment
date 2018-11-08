@@ -115,8 +115,7 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
-| [`ops-files/enable-nfs.yml`](ops-files/enable-nfs.yml) | Enables packages to
-be install on worker vms required for NFS | - |
+| [`ops-files/enable-nfs.yml`](ops-files/enable-nfs.yml) | Enables packages to be install on worker vms required for NFS | - |
 
 ### Dev
 
