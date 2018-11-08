@@ -22,6 +22,7 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | [`ops-files/add-vm-extensions-to-master.yml`](ops-files/add-vm-extensions-to-master.yml) | Add VM Extensions for loadbalancers to master | |
 | [`ops-files/use-vm-extensions.yml`](ops-files/use-vm-extensions.yml) | Configure the `master` and `worker` instance groups on AWS and GCP to consume their respective `vm_extensions` | Only works when used in tandem with the BOSH cloud-configs for AWS or GCP outlined below |
 | [`ops-files/iaas/vsphere/use-vm-extensions.yml`](ops-files/iaas/vsphere/use-vm-extensions.yml) | Configure vSphere `worker` instance groups to consume their respective `vm_extensions` | Only works when used in tandem with the BOSH cloud-config for vSphere outlined below |
+| [`ops-files/worker_count.yml`](ops-files/worker_count.yml) | Specify the count for `worker` instances | By default, 3 `worker` instances. |
 
 ### BOSH Cloud Config
 
