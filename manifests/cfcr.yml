@@ -127,11 +127,14 @@ instance_groups:
         root-ca-file: /var/vcap/jobs/kube-controller-manager/config/ca.pem
         service-account-private-key-file: /var/vcap/jobs/kube-controller-manager/config/service-account-private-key.pem
         terminated-pod-gc-threshold: 100
+        tls-cert-file: /var/vcap/jobs/kube-controller-manager/config/kube-controller-manager-cert.pem
+        tls-private-key-file: /var/vcap/jobs/kube-controller-manager/config/kube-controller-manager-private-key.pem
         use-service-account-credentials: true
         v: 2
       service-account-private-key: ((service-account-key.private_key))
       tls:
         kubernetes: ((tls-kubernetes))
+        kube-controller-manager: ((tls-kube-controller-manager))
     release: kubo
   - name: kube-scheduler
     properties:
@@ -344,6 +347,19 @@ variables:
   type: certificate
 - name: service-account-key
   type: rsa
+- name: tls-kube-controller-manager
+  options:
+    alternative_names:
+    - localhost
+    - 127.0.0.1
+    key_usage:
+    - digital_signature
+    - key_encipherment
+    extended_key_usage:
+    - server_auth
+    ca: kubo_ca
+    common_name: kube-controller-manager
+  type: certificate
 - name: tls-etcd-v0-17-0
   options:
     ca: kubo_ca
