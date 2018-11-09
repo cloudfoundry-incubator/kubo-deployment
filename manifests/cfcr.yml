@@ -70,10 +70,10 @@ instance_groups:
       admin-password: ((kubo-admin-password))
       admin-username: admin
       k8s-args:
-        audit-log-path: /var/vcap/sys/log/kube-apiserver/audit.log
         audit-log-maxage: 0
-        audit-log-maxsize: 0
         audit-log-maxbackup: 0
+        audit-log-maxsize: 0
+        audit-log-path: /var/vcap/sys/log/kube-apiserver/audit.log
         audit-policy-file: /var/vcap/jobs/kube-apiserver/config/audit_policy.yml
         authorization-mode: RBAC
         client-ca-file: /var/vcap/jobs/kube-apiserver/config/kubernetes.pem
@@ -97,7 +97,7 @@ instance_groups:
         runtime-config: api/v1
         secure-port: 8443
         service-account-key-file: /var/vcap/jobs/kube-apiserver/config/service-account-public-key.pem
-        service-cluster-ip-range: "10.100.200.0/24"
+        service-cluster-ip-range: 10.100.200.0/24
         storage-media-type: application/json
         tls-cert-file: /var/vcap/jobs/kube-apiserver/config/kubernetes.pem
         tls-private-key-file: /var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
@@ -120,9 +120,6 @@ instance_groups:
     properties:
       api-token: ((kube-controller-manager-password))
       cluster-signing: ((kubo_ca))
-      service-account-private-key: ((service-account-key.private_key))
-      tls:
-        kubernetes: ((tls-kubernetes))
       k8s-args:
         cluster-name: kubernetes
         cluster-signing-cert-file: /var/vcap/jobs/kube-controller-manager/config/cluster-signing-ca.pem
@@ -134,18 +131,21 @@ instance_groups:
         terminated-pod-gc-threshold: 100
         use-service-account-credentials: true
         v: 2
+      service-account-private-key: ((service-account-key.private_key))
+      tls:
+        kubernetes: ((tls-kubernetes))
     release: kubo
   - name: kube-scheduler
     properties:
       api-token: ((kube-scheduler-password))
-      tls:
-        kubernetes: ((tls-kubernetes))
       kube-scheduler-configuration:
         apiVersion: componentconfig/v1alpha1
-        kind: KubeSchedulerConfiguration
         clientConnection:
           kubeconfig: /var/vcap/jobs/kube-scheduler/config/kubeconfig
         disablePreemption: false
+        kind: KubeSchedulerConfiguration
+      tls:
+        kubernetes: ((tls-kubernetes))
     release: kubo
   - name: kubernetes-roles
     properties:
@@ -210,8 +210,17 @@ instance_groups:
   - name: kubelet
     properties:
       api-token: ((kubelet-password))
+      drain-api-token: ((kubelet-drain-password))
+      k8s-args:
+        allow-privileged: false
+        cni-bin-dir: /var/vcap/jobs/kubelet/packages/cni/bin
+        container-runtime: docker
+        docker: unix:///var/vcap/sys/run/docker/docker.sock
+        docker-endpoint: unix:///var/vcap/sys/run/docker/docker.sock
+        keep-terminated-pod-volumes: false
+        kubeconfig: /var/vcap/jobs/kubelet/config/kubeconfig
+        network-plugin: cni
       kubelet-configuration:
-        kind: KubeletConfiguration
         apiVersion: kubelet.config.k8s.io/v1beta1
         authentication:
           anonymous:
@@ -221,23 +230,14 @@ instance_groups:
         authorization:
           mode: Webhook
         clusterDNS:
-          - 10.100.200.10
+        - 10.100.200.10
         clusterDomain: cluster.local
         failSwapOn: false
+        kind: KubeletConfiguration
         readOnlyPort: 0
         serializeImagePulls: false
         tlsCertFile: /var/vcap/jobs/kubelet/config/kubelet.pem
         tlsPrivateKeyFile: /var/vcap/jobs/kubelet/config/kubelet-key.pem
-      drain-api-token: ((kubelet-drain-password))
-      k8s-args:
-        allow-privileged: false
-        cni-bin-dir: "/var/vcap/jobs/kubelet/packages/cni/bin"
-        container-runtime: docker
-        docker-endpoint: "unix:///var/vcap/sys/run/docker/docker.sock"
-        docker: "unix:///var/vcap/sys/run/docker/docker.sock"
-        keep-terminated-pod-volumes: false
-        kubeconfig: "/var/vcap/jobs/kubelet/config/kubeconfig"
-        network-plugin: cni
       tls:
         kubelet: ((tls-kubelet))
         kubelet-client-ca:
@@ -247,21 +247,21 @@ instance_groups:
   - name: kube-proxy
     properties:
       api-token: ((kube-proxy-password))
-      tls:
-        kubernetes: ((tls-kubernetes))
       kube-proxy-configuration:
         apiVersion: kubeproxy.config.k8s.io/v1alpha1
-        kind: KubeProxyConfiguration
-        clusterCIDR: 10.200.0.0/16
         clientConnection:
           kubeconfig: /var/vcap/jobs/kube-proxy/config/kubeconfig
-        mode: iptables
+        clusterCIDR: 10.200.0.0/16
         iptables:
           masqueradeAll: false
           masqueradeBit: 14
           minSyncPeriod: 0s
           syncPeriod: 30s
+        kind: KubeProxyConfiguration
+        mode: iptables
         portRange: ""
+      tls:
+        kubernetes: ((tls-kubernetes))
     release: kubo
   name: worker
   networks:
@@ -271,9 +271,9 @@ instance_groups:
 name: cfcr
 releases:
 - name: kubo
-  sha1: f9ae87d2def4bf70c2c684711391b405021726c1
-  url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.23.0/kubo-release-0.23.0.tgz
-  version: 0.23.0
+  sha1: d3f72f85fd5d5ebfcf942117f56c7ac2d6f8d81b
+  url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.24.0/kubo-release-0.24.0.tgz
+  version: 0.24.0
 - name: cfcr-etcd
   sha1: 728839a7ddd44757e31ef0fdbcd131c2be23ab0e
   url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.5.0/cfcr-etcd-release-1.5.0.tgz
