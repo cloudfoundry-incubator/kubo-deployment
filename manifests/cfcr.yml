@@ -268,9 +268,9 @@ instance_groups:
 name: cfcr
 releases:
 - name: kubo
-  sha1: f9ae87d2def4bf70c2c684711391b405021726c1
-  url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.23.0/kubo-release-0.23.0.tgz
-  version: 0.23.0
+  sha1: d3f72f85fd5d5ebfcf942117f56c7ac2d6f8d81b
+  url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.24.0/kubo-release-0.24.0.tgz
+  version: 0.24.0
 - name: cfcr-etcd
   sha1: 728839a7ddd44757e31ef0fdbcd131c2be23ab0e
   url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.5.0/cfcr-etcd-release-1.5.0.tgz
