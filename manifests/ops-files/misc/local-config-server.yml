@@ -4,3 +4,5 @@
   path: /variables/name=tls-kubelet-client/options/organization
 - type: remove
   path: /variables/name=tls-kubernetes/options/organization
+- type: remove
+  path: /variables/name=tls-kube-controller-manager/options/key_usage
