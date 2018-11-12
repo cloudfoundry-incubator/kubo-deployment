@@ -1,10 +1,31 @@
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args?
-  value:
-    oidc-ca: ((oidc_ca))
-    oidc-client-id: ((oidc_client_id))
-    oidc-groups-claim: ((oidc_groups_claim))
-    oidc-groups-prefix: ((oidc_groups_prefix))
-    oidc-issuer-url: ((oidc_issuer_url))
-    oidc-username-claim: ((oidc_username_claim))
-    oidc-username-prefix: ((oidc_username_prefix))
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/oidc?/ca?
+  value: ((oidc_ca)
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args?/oidc-ca-file?
+  value: /var/vcap/jobs/kube-apiserver/config/oidc-ca.pem
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args?/oidc-client-id?
+  value: ((oidc_client_id))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args?/oidc-groups-claim?
+  value: ((oidc_groups_claim))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args?/oidc-groups-prefix?
+  value: ((oidc_groups_prefix))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args?/oidc-issuer-url?
+  value: ((oidc_issuer_url))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args?/oidc-username-claim?
+  value: ((oidc_username_claim))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args?/oidc-username-prefix?
+  value: ((oidc_username_prefix))
