@@ -1,6 +1,6 @@
 - type: replace
   path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/oidc?/ca?
-  value: ((oidc_ca)
+  value: ((oidc_ca))
 
 - type: replace
   path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args?/oidc-ca-file?
