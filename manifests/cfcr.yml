@@ -213,12 +213,10 @@ instance_groups:
       api-token: ((kubelet-password))
       drain-api-token: ((kubelet-drain-password))
       k8s-args:
-        allow-privileged: false
         cni-bin-dir: /var/vcap/jobs/kubelet/packages/cni/bin
         container-runtime: docker
         docker: unix:///var/vcap/sys/run/docker/docker.sock
         docker-endpoint: unix:///var/vcap/sys/run/docker/docker.sock
-        keep-terminated-pod-volumes: false
         kubeconfig: /var/vcap/jobs/kubelet/config/kubeconfig
         network-plugin: cni
       kubelet-configuration:
