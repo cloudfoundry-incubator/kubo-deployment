@@ -133,8 +133,8 @@ instance_groups:
         v: 2
       service-account-private-key: ((service-account-key.private_key))
       tls:
-        kubernetes: ((tls-kubernetes))
         kube-controller-manager: ((tls-kube-controller-manager))
+        kubernetes: ((tls-kubernetes))
     release: kubo
   - name: kube-scheduler
     properties:
@@ -273,9 +273,9 @@ releases:
   url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.24.0/kubo-release-0.24.0.tgz
   version: 0.24.0
 - name: cfcr-etcd
-  sha1: 728839a7ddd44757e31ef0fdbcd131c2be23ab0e
-  url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.5.0/cfcr-etcd-release-1.5.0.tgz
-  version: 1.5.0
+  sha1: e8c8f485aed039a8cee6cb8b028697294e7d2fbd
+  url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.8.0/cfcr-etcd-release-1.8.0.tgz
+  version: 1.8.0
 - name: docker
   sha1: 8836ed245406abea5eaa0b3aacb568ea421eb7b3
   url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v33.0.0/docker-33.0.0.tgz
@@ -350,13 +350,13 @@ variables:
     alternative_names:
     - localhost
     - 127.0.0.1
+    ca: kubo_ca
+    common_name: kube-controller-manager
+    extended_key_usage:
+    - server_auth
     key_usage:
     - digital_signature
     - key_encipherment
-    extended_key_usage:
-    - server_auth
-    ca: kubo_ca
-    common_name: kube-controller-manager
   type: certificate
 - name: tls-etcd-v0-17-0
   options:
