@@ -43,6 +43,7 @@ test_standard_ops() {
       check_interpolation "iaas/vsphere/use-vm-extensions.yml"
       check_interpolation "iaas/virtualbox/bosh-lite.yml"
       check_interpolation "iaas/azure/subnet.yml"
+      check_interpolation "iaas/azure/use-cifs.yml"
 
       # HTTP proxy options
       check_interpolation "add-proxy.yml" "-v http_proxy=10.10.10.10:8000 -v https_proxy=10.10.10.10:8000 -v no_proxy=localhost,127.0.0.1"

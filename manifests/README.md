@@ -69,6 +69,7 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | **Azure** | | |
 | [`ops-files/iaas/azure/cloud-provider.yml`](ops-files/iaas/azure/cloud-provider.yml) | Enable Cloud Provider for Azure | |
 | [`ops-files/iaas/azure/subnet.yml`](ops-files/iaas/azure/subnet.yml) | Changes the subnet | |
+| [`ops-files/iaas/azure/use-cifs.yml`](ops-files/iaas/azure/use-cifs.yml) | Installs CIFS utils and allows using azure-file volume | |
 
 ### Proxy
 
