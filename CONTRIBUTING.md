@@ -12,7 +12,7 @@ We encourage contributors to have discussion around design and implmentation wit
 1. Create a feature branch.
 1. Make your feature addition or bug fix. Please make sure there is appropriate test coverage.
 1. Run at least operation file [tests](#running-tests).
-1. Ensure your feature branch is up to date with `master` branch.
+1. Ensure your feature branch is up to date with the `develop` branch.
 1. Submit a pull request with clear description of intended change.
 1. The team will triage the pull request and assign it to a team member.
 1. A team member will approve the pull request or make suggestions for changes.
