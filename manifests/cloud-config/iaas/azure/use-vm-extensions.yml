@@ -1,9 +1,24 @@
 vm_extensions:
 - cloud_properties:
     resource_group_name: ((resource_group_name))
-    load_balancer: ((master_load_balancer_name))
-    security_group: ((master_security_group))
+    load_balancer:
+      name: ((master_load_balancer_name))
+      resource_group_name: ((resource_group_name))
+    security_group:
+      name: ((master_security_group))
+      resource_group_name: ((resource_group_name))
+    managed_identity:
+      type: UserAssigned
+      user_assigned_identity_name: ((master_managed_identity))
   name: ((deployment_name))-master-cloud-properties
+
 - cloud_properties:
     resource_group_name: ((resource_group_name))
+    managed_identity:
+      type: UserAssigned
+      user_assigned_identity_name: ((worker_managed_identity))
   name: ((deployment_name))-worker-cloud-properties
+
+- cloud_properties:
+    resource_group_name: ((resource_group_name))
+  name: ((deployment_name))-apply-addons-cloud-properties

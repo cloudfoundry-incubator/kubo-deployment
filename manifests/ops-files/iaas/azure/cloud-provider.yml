@@ -7,8 +7,7 @@
       cloud-provider:
         type: azure
       cloud-config:
-        aadClientId: ((client_id))
-        aadClientSecret: ((client_secret))
+        useManagedIdentityExtension: true
         cloud: ((azure_cloud_name))
         location: ((location))
         primaryAvailabilitySetName: ((primary_availability_set))
@@ -53,8 +52,7 @@
       cloud-provider:
         type: azure
       cloud-config:
-        aadClientId: ((client_id))
-        aadClientSecret: ((client_secret))
+        useManagedIdentityExtension: true
         cloud: ((azure_cloud_name))
         location: ((location))
         primaryAvailabilitySetName: ((primary_availability_set))

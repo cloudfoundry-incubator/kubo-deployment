@@ -67,9 +67,10 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | **virtualbox** | | |
 | [`ops-files/iaas/virtualbox/bosh-lite.yml`](ops-files/iaas/virtualbox/bosh-lite.yml) | Enables CFCR to run on a virtualbox bosh-lite environment | Deploys 1 master and 3 workers. Master is deployed to a static ip: 10.244.0.34 |
 | **Azure** | | |
-| [`ops-files/iaas/azure/cloud-provider.yml`](ops-files/iaas/azure/cloud-provider.yml) | Enable Cloud Provider for Azure | |
+| [`ops-files/iaas/azure/cloud-provider.yml`](ops-files/iaas/azure/cloud-provider.yml) | Enable Cloud Provider for Azure | Requires Azure CPI >= v35.5.0 |
 | [`ops-files/iaas/azure/subnet.yml`](ops-files/iaas/azure/subnet.yml) | Changes the subnet | |
 | [`ops-files/iaas/azure/use-cifs.yml`](ops-files/iaas/azure/use-cifs.yml) | Installs CIFS utils and allows using azure-file volume | |
+| [`ops-files/iaas/azure/use-credentials.yml`](ops-files/iaas/azure/use-credentials.yml) | Uses AD credentials instead of Managed Identity | |
 
 ### Proxy
 
