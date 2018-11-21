@@ -1,0 +1,3 @@
+audit-log-maxage: 30
+audit-log-maxbackup: 10
+audit-log-maxsize: 100
