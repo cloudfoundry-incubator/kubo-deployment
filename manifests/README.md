@@ -89,6 +89,7 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | [`ops-files/enable-podsecuritypolicy.yml`](ops-files/enable-podsecuritypolicy.yml) | Enables the PodSecurityPolicy admission plugin. | Please ensure that you have applied an appropriate policy before enabling this plugin.  Failure to do so will result in failure of your workloads. |
 | [`ops-files/add-hostname-to-master-certificate.yml`](ops-files/add-hostname-to-master-certificate.yml) | Add hostname to master certificate | Extra Vars Required:<br>- **api-hostname:** Required for TLS certificate of apiserver |
 | [`ops-files/use-coredns.yml`](ops-files/use-coredns.yml) | Add CoreDNS to the list of addons deployed by the apply-specs errand | - |
+| [`ops-files/enable-encryption-config.yml`](ops-files/enable-encryption-config.yml) | Enable data encryption at rest | Extra Vars Required:<br>- **encryption-config:** Encryption configuration as described [here](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#understanding-the-encryption-at-rest-configuration). Must be a file, interpolated with `--var-file`. Example: `--var-file encryption-config=encryption-config.yml`  |
 
 ### Etcd
 
@@ -122,5 +123,3 @@ be install on worker vms required for NFS | - |
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
 | [`ops-files/kubo-local-release.yml`](ops-files/kubo-local-release.yml) | Deploy a local kubo release located in `../kubo-release` | -  |
-
-
