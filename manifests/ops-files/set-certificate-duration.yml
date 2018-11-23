@@ -46,26 +46,3 @@
   path: /variables/name=tls-kubernetes-dashboard/options/duration?
   value: ((certificate-duration))
 
-- type: replace
-  path: /variables/name=~1dns_healthcheck_tls_ca/options/duration?
-  value: ((certificate-duration))
-
-- type: replace
-  path: /variables/name=~1dns_healthcheck_server_tls/options/duration?
-  value: ((certificate-duration))
-
-- type: replace
-  path: /variables/name=~1dns_healthcheck_client_tls/options/duration?
-  value: ((certificate-duration))
-
-- type: replace
-  path: /variables/name=~1dns_api_tls_ca/options/duration?
-  value: ((certificate-duration))
-
-- type: replace
-  path: /variables/name=~1dns_api_server_tls/options/duration?
-  value: ((certificate-duration))
-
-- type: replace
-  path: /variables/name=~1dns_api_client_tls/options/duration?
-  value: ((certificate-duration))
