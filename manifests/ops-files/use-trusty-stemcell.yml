@@ -1,3 +1,0 @@
-- path: /stemcells/alias=default/os
-  type: replace
-  value: ubuntu-trusty
