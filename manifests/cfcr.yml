@@ -258,10 +258,6 @@ releases:
   sha1: 8836ed245406abea5eaa0b3aacb568ea421eb7b3
   url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v33.0.0/docker-33.0.0.tgz
   version: 33.0.0
-- name: bosh-dns
-  sha1: d1aadbda5d60c44dec4a429cda872cf64f6d8d0b
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=1.10.0
-  version: 1.10.0
 - name: bpm
   sha1: 4b6ebfdaa467c04855528172b099e565d679e0f5
   url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.13.0
