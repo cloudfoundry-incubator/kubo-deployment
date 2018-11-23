@@ -1,26 +1,4 @@
 addons:
-- include:
-    stemcell:
-    - os: ubuntu-trusty
-    - os: ubuntu-xenial
-  jobs:
-  - name: bosh-dns
-    properties:
-      api:
-        client:
-          tls: ((/dns_api_client_tls))
-        server:
-          tls: ((/dns_api_server_tls))
-      cache:
-        enabled: true
-      health:
-        client:
-          tls: ((/dns_healthcheck_client_tls))
-        enabled: true
-        server:
-          tls: ((/dns_healthcheck_server_tls))
-    release: bosh-dns
-  name: bosh-dns
 - jobs:
   - name: kubo-dns-aliases
     release: kubo
@@ -403,48 +381,4 @@ variables:
     alternative_names: []
     ca: kubernetes-dashboard-ca
     common_name: kubernetesdashboard.cfcr.internal
-  type: certificate
-- name: /dns_healthcheck_tls_ca
-  opsname: global_dns_healthcheck_tls_ca
-  options:
-    common_name: dns-healthcheck-tls-ca
-    is_ca: true
-  type: certificate
-- name: /dns_healthcheck_server_tls
-  opsname: global_dns_healthcheck_server_tls
-  options:
-    ca: /dns_healthcheck_tls_ca
-    common_name: health.bosh-dns
-    extended_key_usage:
-    - server_auth
-  type: certificate
-- name: /dns_healthcheck_client_tls
-  opsname: global_dns_healthcheck_client_tls
-  options:
-    ca: /dns_healthcheck_tls_ca
-    common_name: health.bosh-dns
-    extended_key_usage:
-    - client_auth
-  type: certificate
-- name: /dns_api_tls_ca
-  opsname: global_dns_api_tls_ca
-  options:
-    common_name: dns-api-tls-ca
-    is_ca: true
-  type: certificate
-- name: /dns_api_server_tls
-  opsname: global_dns_api_server_tls
-  options:
-    ca: /dns_api_tls_ca
-    common_name: api.bosh-dns
-    extended_key_usage:
-    - server_auth
-  type: certificate
-- name: /dns_api_client_tls
-  opsname: global_dns_api_client_tls
-  options:
-    ca: /dns_api_tls_ca
-    common_name: api.bosh-dns
-    extended_key_usage:
-    - client_auth
   type: certificate
