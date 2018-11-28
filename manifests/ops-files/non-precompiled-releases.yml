@@ -1,0 +1,19 @@
+- type: replace
+  path: /releases
+  value:
+  - name: kubo
+    sha1: d3f72f85fd5d5ebfcf942117f56c7ac2d6f8d81b
+    url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.24.0/kubo-release-0.24.0.tgz
+    version: 0.24.0
+  - name: cfcr-etcd
+    sha1: e8c8f485aed039a8cee6cb8b028697294e7d2fbd
+    url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.8.0/cfcr-etcd-release-1.8.0.tgz
+    version: 1.8.0
+  - name: docker
+    sha1: 8836ed245406abea5eaa0b3aacb568ea421eb7b3
+    url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v33.0.0/docker-33.0.0.tgz
+    version: 33.0.0
+  - name: bpm
+    sha1: 4b6ebfdaa467c04855528172b099e565d679e0f5
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.13.0
+    version: 0.13.0

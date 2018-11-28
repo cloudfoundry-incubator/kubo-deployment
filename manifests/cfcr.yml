@@ -1,26 +1,4 @@
 addons:
-- include:
-    stemcell:
-    - os: ubuntu-trusty
-    - os: ubuntu-xenial
-  jobs:
-  - name: bosh-dns
-    properties:
-      api:
-        client:
-          tls: ((/dns_api_client_tls))
-        server:
-          tls: ((/dns_api_server_tls))
-      cache:
-        enabled: true
-      health:
-        client:
-          tls: ((/dns_healthcheck_client_tls))
-        enabled: true
-        server:
-          tls: ((/dns_healthcheck_server_tls))
-    release: bosh-dns
-  name: bosh-dns
 - jobs:
   - name: kubo-dns-aliases
     release: kubo
@@ -121,18 +99,19 @@ instance_groups:
       api-token: ((kube-controller-manager-password))
       cluster-signing: ((kubo_ca))
       k8s-args:
-        cluster-name: kubernetes
         cluster-signing-cert-file: /var/vcap/jobs/kube-controller-manager/config/cluster-signing-ca.pem
         cluster-signing-key-file: /var/vcap/jobs/kube-controller-manager/config/cluster-signing-key.pem
         kubeconfig: /var/vcap/jobs/kube-controller-manager/config/kubeconfig
-        leader-elect: true
         root-ca-file: /var/vcap/jobs/kube-controller-manager/config/ca.pem
         service-account-private-key-file: /var/vcap/jobs/kube-controller-manager/config/service-account-private-key.pem
         terminated-pod-gc-threshold: 100
+        tls-cert-file: /var/vcap/jobs/kube-controller-manager/config/kube-controller-manager-cert.pem
+        tls-private-key-file: /var/vcap/jobs/kube-controller-manager/config/kube-controller-manager-private-key.pem
         use-service-account-credentials: true
         v: 2
       service-account-private-key: ((service-account-key.private_key))
       tls:
+        kube-controller-manager: ((tls-kube-controller-manager))
         kubernetes: ((tls-kubernetes))
     release: kubo
   - name: kube-scheduler
@@ -212,12 +191,10 @@ instance_groups:
       api-token: ((kubelet-password))
       drain-api-token: ((kubelet-drain-password))
       k8s-args:
-        allow-privileged: false
         cni-bin-dir: /var/vcap/jobs/kubelet/packages/cni/bin
         container-runtime: docker
         docker: unix:///var/vcap/sys/run/docker/docker.sock
         docker-endpoint: unix:///var/vcap/sys/run/docker/docker.sock
-        keep-terminated-pod-volumes: false
         kubeconfig: /var/vcap/jobs/kubelet/config/kubeconfig
         network-plugin: cni
       kubelet-configuration:
@@ -234,7 +211,6 @@ instance_groups:
         clusterDomain: cluster.local
         failSwapOn: false
         kind: KubeletConfiguration
-        readOnlyPort: 0
         serializeImagePulls: false
         tlsCertFile: /var/vcap/jobs/kubelet/config/kubelet.pem
         tlsPrivateKeyFile: /var/vcap/jobs/kubelet/config/kubelet-key.pem
@@ -275,17 +251,13 @@ releases:
   url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.24.0/kubo-release-0.24.0.tgz
   version: 0.24.0
 - name: cfcr-etcd
-  sha1: 728839a7ddd44757e31ef0fdbcd131c2be23ab0e
-  url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.5.0/cfcr-etcd-release-1.5.0.tgz
-  version: 1.5.0
+  sha1: e8c8f485aed039a8cee6cb8b028697294e7d2fbd
+  url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.8.0/cfcr-etcd-release-1.8.0.tgz
+  version: 1.8.0
 - name: docker
-  sha1: 21ead5b0c3229ffe5678a0d5a96a07a1dda47f09
-  url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v32.1.0/docker-32.1.0.tgz
-  version: 32.1.0
-- name: bosh-dns
-  sha1: d1aadbda5d60c44dec4a429cda872cf64f6d8d0b
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=1.10.0
-  version: 1.10.0
+  sha1: 8836ed245406abea5eaa0b3aacb568ea421eb7b3
+  url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v33.0.0/docker-33.0.0.tgz
+  version: 33.0.0
 - name: bpm
   sha1: 4b6ebfdaa467c04855528172b099e565d679e0f5
   url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.13.0
@@ -293,7 +265,7 @@ releases:
 stemcells:
 - alias: default
   os: ubuntu-xenial
-  version: latest
+  version: 170.9
 update:
   canaries: 1
   canary_watch_time: 10000-300000
@@ -347,6 +319,19 @@ variables:
   type: certificate
 - name: service-account-key
   type: rsa
+- name: tls-kube-controller-manager
+  options:
+    alternative_names:
+    - localhost
+    - 127.0.0.1
+    ca: kubo_ca
+    common_name: kube-controller-manager
+    extended_key_usage:
+    - server_auth
+    key_usage:
+    - digital_signature
+    - key_encipherment
+  type: certificate
 - name: tls-etcd-v0-17-0
   options:
     ca: kubo_ca
@@ -392,48 +377,4 @@ variables:
     alternative_names: []
     ca: kubernetes-dashboard-ca
     common_name: kubernetesdashboard.cfcr.internal
-  type: certificate
-- name: /dns_healthcheck_tls_ca
-  opsname: global_dns_healthcheck_tls_ca
-  options:
-    common_name: dns-healthcheck-tls-ca
-    is_ca: true
-  type: certificate
-- name: /dns_healthcheck_server_tls
-  opsname: global_dns_healthcheck_server_tls
-  options:
-    ca: /dns_healthcheck_tls_ca
-    common_name: health.bosh-dns
-    extended_key_usage:
-    - server_auth
-  type: certificate
-- name: /dns_healthcheck_client_tls
-  opsname: global_dns_healthcheck_client_tls
-  options:
-    ca: /dns_healthcheck_tls_ca
-    common_name: health.bosh-dns
-    extended_key_usage:
-    - client_auth
-  type: certificate
-- name: /dns_api_tls_ca
-  opsname: global_dns_api_tls_ca
-  options:
-    common_name: dns-api-tls-ca
-    is_ca: true
-  type: certificate
-- name: /dns_api_server_tls
-  opsname: global_dns_api_server_tls
-  options:
-    ca: /dns_api_tls_ca
-    common_name: api.bosh-dns
-    extended_key_usage:
-    - server_auth
-  type: certificate
-- name: /dns_api_client_tls
-  opsname: global_dns_api_client_tls
-  options:
-    ca: /dns_api_tls_ca
-    common_name: api.bosh-dns
-    extended_key_usage:
-    - client_auth
   type: certificate

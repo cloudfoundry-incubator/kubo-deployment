@@ -1,0 +1,48 @@
+- type: replace
+  path: /variables/name=kubo_ca/options/duration?
+  value: ((certificate-duration))
+
+- type: replace
+  path: /variables/name=tls-kubelet/options/duration?
+  value: ((certificate-duration))
+
+- type: replace
+  path: /variables/name=tls-kubelet-client/options/duration?
+  value: ((certificate-duration))
+
+- type: replace
+  path: /variables/name=tls-kubernetes/options/duration?
+  value: ((certificate-duration))
+
+- type: replace
+  path: /variables/name=tls-kube-controller-manager/options/duration?
+  value: ((certificate-duration))
+
+- type: replace
+  path: /variables/name=tls-etcd-v0-17-0/options/duration?
+  value: ((certificate-duration))
+
+- type: replace
+  path: /variables/name=tls-etcdctl/options/duration?
+  value: ((certificate-duration))
+
+- type: replace
+  path: /variables/name=tls-metrics-server/options/duration?
+  value: ((certificate-duration))
+
+- type: replace
+  path: /variables/name=tls-heapster/options/duration?
+  value: ((certificate-duration))
+
+- type: replace
+  path: /variables/name=tls-influxdb/options/duration?
+  value: ((certificate-duration))
+
+- type: replace
+  path: /variables/name=kubernetes-dashboard-ca/options/duration?
+  value: ((certificate-duration))
+
+- type: replace
+  path: /variables/name=tls-kubernetes-dashboard/options/duration?
+  value: ((certificate-duration))
+

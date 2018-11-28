@@ -15,13 +15,14 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
-| [`ops-files/use-trusty-stemcell.yml`](ops-files/use-trusty-stemcell.yml) | (Deprecated) Use trusty stemcell |  |
-| [`ops-files/use-runtime-config-bosh-dns.yml`](ops-files/use-runtime-config-bosh-dns.yml) | Delegate `bosh-dns` addon to BOSH runtime config | Apply this operator file if your BOSH environment has a runtime config that adds the `bosh-dns` job to all instances. By default, `cfcr.yml` will add `bosh-dns` to deployment instances. |
+| [`ops-files/use-runtime-config-bosh-dns.yml`](ops-files/use-runtime-config-bosh-dns.yml) |  | Deprecated, currently empty. To be removed in next release |
 | [`ops-files/rename.yml`](ops-files/rename.yml) | Specify the deployment name | The deployment name is also used for etcd certificates. |
 | [`ops-files/vm-types.yml`](ops-files/vm-types.yml) | Specify the `vm_type` for `master`, `worker` and `apply-addons` instances | By default, `master`, `worker` and `apply-addons` instances assume `vm_type: small`, `vm_type: small-highmem` and `vm_type: minimal`, respectively (`vm_types` that are also assumed to exists by https://github.com/cloudfoundry/cf-deployment manifests). You may want to use bespoke `vm_types` so as to scale them, tag them, or apply unique `cloud_properties` independently of other deployments in the same BOSH environment. |
 | [`ops-files/add-vm-extensions-to-master.yml`](ops-files/add-vm-extensions-to-master.yml) | Add VM Extensions for loadbalancers to master | |
 | [`ops-files/use-vm-extensions.yml`](ops-files/use-vm-extensions.yml) | Configure the `master` and `worker` instance groups on AWS and GCP to consume their respective `vm_extensions` | Only works when used in tandem with the BOSH cloud-configs for AWS or GCP outlined below |
 | [`ops-files/iaas/vsphere/use-vm-extensions.yml`](ops-files/iaas/vsphere/use-vm-extensions.yml) | Configure vSphere `worker` instance groups to consume their respective `vm_extensions` | Only works when used in tandem with the BOSH cloud-config for vSphere outlined below |
+| [`ops-files/worker_count.yml`](ops-files/worker_count.yml) | Specify the count for `worker` instances | By default, 3 `worker` instances. |
+| [`ops-files/non-precompiled-releases.yml`](ops-files/non-precompiled-releases.yml) | Use non-precompiled releases when deploying CFCR. |
 
 ### BOSH Cloud Config
 
@@ -66,8 +67,10 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | **virtualbox** | | |
 | [`ops-files/iaas/virtualbox/bosh-lite.yml`](ops-files/iaas/virtualbox/bosh-lite.yml) | Enables CFCR to run on a virtualbox bosh-lite environment | Deploys 1 master and 3 workers. Master is deployed to a static ip: 10.244.0.34 |
 | **Azure** | | |
-| [`ops-files/iaas/azure/cloud-provider.yml`](ops-files/iaas/azure/cloud-provider.yml) | Enable Cloud Provider for Azure | |
+| [`ops-files/iaas/azure/cloud-provider.yml`](ops-files/iaas/azure/cloud-provider.yml) | Enable Cloud Provider for Azure | Requires Azure CPI >= v35.5.0 |
 | [`ops-files/iaas/azure/subnet.yml`](ops-files/iaas/azure/subnet.yml) | Changes the subnet | |
+| [`ops-files/iaas/azure/use-cifs.yml`](ops-files/iaas/azure/use-cifs.yml) | Installs CIFS utils and allows using azure-file volume | |
+| [`ops-files/iaas/azure/use-credentials.yml`](ops-files/iaas/azure/use-credentials.yml) | Uses AD credentials instead of Managed Identity | |
 
 ### Proxy
 
@@ -97,6 +100,11 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 |:--- |:--- |:--- |
 | [`ops-files/change-etcd-metrics-url.yml`](ops-files/change-etcd-metrics-url.yml) | Change procotol and port of the etcd's metrics endpoint | - |
 
+### Certificates
+
+| Name | Purpose | Notes |
+|:---  |:---     |:---   |
+| [`ops-files/set-certificate-duration.yml`](ops-files/set-certificate-duration.yml) | Set the duration of all generated certificates to a specified duration | Extra Vars Required:<br>- certificate-duration: Duration, specified in days, for all certificates generated in manifest |
 
 ### BOSH Backup & Restore
 
@@ -104,19 +112,11 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 |:--- |:--- |:--- |
 | [`ops-files/enable-bbr.yml`](ops-files/enable-bbr.yml) | Deploy jobs required to enable BBR. | Only tested with single master. |
 
-### Syslog
-
-| Name | Purpose | Notes |
-|:---  |:---     |:---   |
-| [`ops-files/add-syslog.yml`](ops-files/add-syslog.yml) | Enables forwarding local syslog events in RFC5424 format to a remote syslog endpoint.  |
-| [`ops-files/add-syslog-tls.yml`](ops-files/add-syslog-tls.yml) | Requires `add-syslog.yml`. Configure TLS for syslog fowarding. |
-
 ### NFS
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
-| [`ops-files/enable-nfs.yml`](ops-files/enable-nfs.yml) | Enables packages to
-be install on worker vms required for NFS | - |
+| [`ops-files/enable-nfs.yml`](ops-files/enable-nfs.yml) | Enables packages to be install on worker vms required for NFS | - |
 
 ### Dev
 

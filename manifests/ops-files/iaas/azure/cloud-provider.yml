@@ -7,8 +7,7 @@
       cloud-provider:
         type: azure
       cloud-config:
-        aadClientId: ((client_id))
-        aadClientSecret: ((client_secret))
+        useManagedIdentityExtension: true
         cloud: ((azure_cloud_name))
         location: ((location))
         primaryAvailabilitySetName: ((primary_availability_set))
@@ -20,6 +19,7 @@
         useInstanceMetadata: true
         vnetName: ((vnet_name))
         vnetResourceGroup: ((vnet_resource_group_name))
+        loadBalancerSku: standard
     provides:
       cloud-provider: {as: master-cloud-provider}
 
@@ -52,8 +52,7 @@
       cloud-provider:
         type: azure
       cloud-config:
-        aadClientId: ((client_id))
-        aadClientSecret: ((client_secret))
+        useManagedIdentityExtension: true
         cloud: ((azure_cloud_name))
         location: ((location))
         primaryAvailabilitySetName: ((primary_availability_set))
@@ -65,6 +64,7 @@
         useInstanceMetadata: true
         vnetName: ((vnet_name))
         vnetResourceGroup: ((vnet_resource_group_name))
+        loadBalancerSku: standard
     provides:
       cloud-provider: {as: worker-cloud-provider}
 
