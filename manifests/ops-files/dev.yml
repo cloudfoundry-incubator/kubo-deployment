@@ -1,0 +1,4 @@
+---
+- type: replace
+  path: /instance_groups/name=worker?/persistent_disk
+  value: 1024
