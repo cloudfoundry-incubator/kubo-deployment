@@ -255,7 +255,7 @@ releases:
   url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.8.0-ubuntu-xenial-170.9.tgz
   version: 1.8.0
 - name: docker
-  sha1: 81ee7cde64bbd25117239e47eb577cad2c664a05
+  sha1: 68298c3b4b360e9b7f82133b8e46f301d0cd2425
   url: https://storage.googleapis.com/kubo-precompiled-releases/docker-33.0.0-ubuntu-xenial-170.9.tgz
   version: 33.0.0
 - name: bpm
