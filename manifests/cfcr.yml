@@ -251,16 +251,16 @@ releases:
   url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.24.0/kubo-release-0.24.0.tgz
   version: 0.24.0
 - name: cfcr-etcd
-  sha1: e8c8f485aed039a8cee6cb8b028697294e7d2fbd
-  url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.8.0/cfcr-etcd-release-1.8.0.tgz
+  sha1: dd4f637fe93262ae870e3dd5212e4c77b69553c5
+  url: https://storage.cloud.google.com/kubo-precompiled-releases/cfcr-etcd-1.8.0-ubuntu-xenial-170.9.tgz
   version: 1.8.0
 - name: docker
-  sha1: 8836ed245406abea5eaa0b3aacb568ea421eb7b3
-  url: https://github.com/cloudfoundry-incubator/docker-boshrelease/releases/download/v33.0.0/docker-33.0.0.tgz
+  sha1: c076dbf5f597d4bbfb6543875e5b846c4eb6d499
+  url: https://storage.cloud.google.com/kubo-precompiled-releases/docker-33.0.0-ubuntu-xenial-170.9.tgz
   version: 33.0.0
 - name: bpm
-  sha1: 4b6ebfdaa467c04855528172b099e565d679e0f5
-  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.13.0
+  sha1: 42086ef5c066f6cc257aa0e61a4035f795860d73
+  url: https://storage.cloud.google.com/kubo-precompiled-releases/bpm-0.13.0-ubuntu-xenial-170.9.tgz
   version: 0.13.0
 stemcells:
 - alias: default
