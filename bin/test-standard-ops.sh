@@ -52,7 +52,7 @@ test_standard_ops() {
       # Kubernetes
       check_interpolation "add-hostname-to-master-certificate.yml" "-v api-hostname=example.com"
       check_interpolation "add-oidc-endpoint.yml" "-l example-vars-files/misc/oidc.yml"
-      check_interpolation "change-audit-log-flags.yml" "-l example-vars-files/misc/change-audit-log-flags.yml"
+      check_interpolation "change-audit-log-flags.yml" "-l example-vars-files/change-audit-log-flags.yml"
       check_interpolation "addons-spec.yml" "-v addons-spec={}"
       check_interpolation "allow-privileged-containers.yml"
       check_interpolation "change-cidrs.yml" "-l example-vars-files/new-cidrs.yml"

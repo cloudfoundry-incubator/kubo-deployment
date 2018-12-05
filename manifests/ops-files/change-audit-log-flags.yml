@@ -4,10 +4,10 @@
 
 - type: replace
   path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args/audit-log-maxbackup
-  value: ((audit-log-maxbackup)) 
+  value: ((audit-log-maxbackup))
 
 - type: replace
   path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args/audit-log-maxsize
-  value: ((audit-log-maxsize)) 
+  value: ((audit-log-maxsize))
 
 
