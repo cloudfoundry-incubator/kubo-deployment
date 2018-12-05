@@ -87,7 +87,7 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | [`ops-files/enable-denyescalatingexec.yml`](ops-files/enable-denyescalatingexec.yml) | Enables the DenyEscalatingExec admission plugin. | This ops-file is recommended for most clusters. | - |
 | [`ops-files/enable-securitycontextdeny.yml`](ops-files/enable-securitycontextdeny.yml) | Enables the SecurityContextDeny admission plugin. | This ops-file is recommended for most clusters. | - |
 | [`ops-files/enable-podsecuritypolicy.yml`](ops-files/enable-podsecuritypolicy.yml) | Enables the PodSecurityPolicy admission plugin. | Please ensure that you have applied an appropriate policy before enabling this plugin.  Failure to do so will result in failure of your workloads. |
-| [`ops-files/change-audit-log.yml`](ops-files/change-audit-log.yml) | Allow to change the parameters of kubernetes audit log. see https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#log-backend to have more details  | - |
+| [`ops-files/change-audit-log-flags.yml`](ops-files/change-audit-log-flags.yml) | Allow to change the parameters of kubernetes audit log flags. see [here](https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#log-backend) to have more details  | - |
 | [`ops-files/add-hostname-to-master-certificate.yml`](ops-files/add-hostname-to-master-certificate.yml) | Add hostname to master certificate | Extra Vars Required:<br>- **api-hostname:** Required for TLS certificate of apiserver |
 | [`ops-files/use-coredns.yml`](ops-files/use-coredns.yml) | Add CoreDNS to the list of addons deployed by the apply-specs errand | - |
 
