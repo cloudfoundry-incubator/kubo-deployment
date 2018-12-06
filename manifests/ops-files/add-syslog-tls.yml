@@ -1,0 +1,12 @@
+# requires add-syslog.yml
+- type: replace
+  path: /addons/name=syslog_forwarder/jobs/name=syslog_forwarder/properties/syslog/tls_enabled?
+  value: true
+
+- type: replace
+  path: /addons/name=syslog_forwarder/jobs/name=syslog_forwarder/properties/syslog/permitted_peer?
+  value: ((syslog_permitted_peer))
+
+- type: replace
+  path: /addons/name=syslog_forwarder/jobs/name=syslog_forwarder/properties/syslog/ca_cert?
+  value: ((syslog_ca_cert))

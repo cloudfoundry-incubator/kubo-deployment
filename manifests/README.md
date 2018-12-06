@@ -113,6 +113,13 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 |:--- |:--- |:--- |
 | [`ops-files/enable-bbr.yml`](ops-files/enable-bbr.yml) | Deploy jobs required to enable BBR. | Only tested with single master. |
 
+### Syslog
+
+| Name | Purpose | Notes |
+|:---  |:---     |:---   |
+| [`ops-files/add-syslog.yml`](ops-files/add-syslog.yml) | Enables forwarding local syslog events in RFC5424 format to a remote syslog endpoint.  |
+| [`ops-files/add-syslog-tls.yml`](ops-files/add-syslog-tls.yml) | Requires `add-syslog.yml`. Configure TLS for syslog fowarding. |
+
 ### NFS
 
 | Name | Purpose | Notes |
