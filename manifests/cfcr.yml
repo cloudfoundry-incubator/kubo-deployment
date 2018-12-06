@@ -118,7 +118,7 @@ instance_groups:
     properties:
       api-token: ((kube-scheduler-password))
       kube-scheduler-configuration:
-        apiVersion: componentconfig/v1alpha1
+        apiVersion: kubescheduler.config.k8s.io/v1alpha1
         clientConnection:
           kubeconfig: /var/vcap/jobs/kube-scheduler/config/kubeconfig
         disablePreemption: false
