@@ -66,6 +66,7 @@ test_standard_ops() {
       check_interpolation "enable-securitycontextdeny.yml"
       check_interpolation "use-coredns.yml"
       check_interpolation "enable-encryption-config.yml" "-v encryption-config=encryption-config.yml"
+      check_interpolation "enable-csi-shared-mounts.yml"
 
       # Etcd
       check_interpolation "change-etcd-metrics-url.yml" "-v etcd_metrics_protocol=http -v etcd_metrics_port=2378"
