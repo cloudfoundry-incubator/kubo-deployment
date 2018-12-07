@@ -1,0 +1,11 @@
+---
+- type: remove
+  path: /releases/name=bosh-azure-cpi
+
+- type: replace
+  path: /releases/-
+  value:
+    name: bosh-azure-cpi
+    version: v35.4.0-alpha.0
+    url: https://github.com/cloudfoundry/bosh-azure-cpi-release/releases/download/v35.4.0-alpha.0/bosh-azure-cpi-release.tgz
+    sha1: 3f07fa5a5fe7a5cb1d2dd902b955517a2760ca8a
