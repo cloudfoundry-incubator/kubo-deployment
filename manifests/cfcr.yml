@@ -17,9 +17,7 @@ instance_groups:
       - metrics-server
       - heapster
       - kubernetes-dashboard
-      admin-password: ((kubo-admin-password))
       admin-username: admin
-      api-token: ((kubelet-password))
       tls:
         heapster: ((tls-heapster))
         influxdb: ((tls-influxdb))
@@ -45,7 +43,7 @@ instance_groups:
     release: kubo
   - name: kube-apiserver
     properties:
-      admin-password: ((kubo-admin-password))
+      admin-user-credentials: ((admin-user))
       admin-username: admin
       audit-policy:
         apiVersion: audit.k8s.io/v1beta1
@@ -225,7 +223,7 @@ instance_groups:
         kubelet-client-key: /var/vcap/jobs/kube-apiserver/config/kubelet-client-key.pem
         proxy-client-cert-file: /var/vcap/jobs/kube-apiserver/config/kubernetes.pem
         proxy-client-key-file: /var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
-        requestheader-allowed-names: aggregator
+        requestheader-allowed-names: admin,aggregator,kubelet,system:kube-controller-manager,system:kube-scheduler,system:kube-proxy
         requestheader-client-ca-file: /var/vcap/jobs/kube-apiserver/config/kubernetes.pem
         requestheader-extra-headers-prefix: X-Remote-Extra-
         requestheader-group-headers: X-Remote-Group
@@ -239,11 +237,7 @@ instance_groups:
         tls-private-key-file: /var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
         token-auth-file: /var/vcap/jobs/kube-apiserver/config/tokens.csv
         v: 2
-      kube-controller-manager-password: ((kube-controller-manager-password))
-      kube-proxy-password: ((kube-proxy-password))
-      kube-scheduler-password: ((kube-scheduler-password))
       kubelet-drain-password: ((kubelet-drain-password))
-      kubelet-password: ((kubelet-password))
       service-account-public-key: ((service-account-key.public_key))
       tls:
         kubelet-client: ((tls-kubelet-client))
@@ -254,7 +248,6 @@ instance_groups:
     release: kubo
   - name: kube-controller-manager
     properties:
-      api-token: ((kube-controller-manager-password))
       cluster-signing: ((kubo_ca))
       k8s-args:
         cluster-signing-cert-file: /var/vcap/jobs/kube-controller-manager/config/cluster-signing-ca.pem
@@ -267,6 +260,7 @@ instance_groups:
         tls-private-key-file: /var/vcap/jobs/kube-controller-manager/config/kube-controller-manager-private-key.pem
         use-service-account-credentials: true
         v: 2
+      kube-controller-manager-user-credentials: ((kube-controller-manager-user))
       service-account-private-key: ((service-account-key.private_key))
       tls:
         kube-controller-manager: ((tls-kube-controller-manager))
@@ -274,19 +268,18 @@ instance_groups:
     release: kubo
   - name: kube-scheduler
     properties:
-      api-token: ((kube-scheduler-password))
       kube-scheduler-configuration:
         apiVersion: kubescheduler.config.k8s.io/v1alpha1
         clientConnection:
           kubeconfig: /var/vcap/jobs/kube-scheduler/config/kubeconfig
         disablePreemption: false
         kind: KubeSchedulerConfiguration
+      kube-scheduler-user-credentials: ((kube-scheduler-user))
       tls:
         kubernetes: ((tls-kubernetes))
     release: kubo
   - name: kubernetes-roles
     properties:
-      admin-password: ((kubo-admin-password))
       admin-username: admin
       tls:
         kubernetes: ((tls-kubernetes))
@@ -346,8 +339,8 @@ instance_groups:
     release: kubo
   - name: kubelet
     properties:
-      api-token: ((kubelet-password))
       drain-api-token: ((kubelet-drain-password))
+      kubelet-user-credentials: ((kubelet-user))
       k8s-args:
         cni-bin-dir: /var/vcap/jobs/kubelet/packages/cni/bin
         container-runtime: docker
@@ -380,7 +373,7 @@ instance_groups:
     release: kubo
   - name: kube-proxy
     properties:
-      api-token: ((kube-proxy-password))
+      kube-proxy-user-credentials: ((kube-proxy-user))
       kube-proxy-configuration:
         apiVersion: kubeproxy.config.k8s.io/v1alpha1
         clientConnection:
@@ -430,23 +423,73 @@ update:
   max_in_flight: 1
   update_watch_time: 10000-300000
 variables:
-- name: kubo-admin-password
-  type: password
-- name: kubelet-password
-  type: password
-- name: kubelet-drain-password
-  type: password
-- name: kube-proxy-password
-  type: password
-- name: kube-controller-manager-password
-  type: password
-- name: kube-scheduler-password
-  type: password
 - name: kubo_ca
   options:
     common_name: ca
     is_ca: true
   type: certificate
+- name: admin-user
+  options:
+    ca: kubo_ca
+    common_name: admin
+    key_usage:
+    - digital_signature
+    - key_encipherment
+    extended_key_usage:
+    - client_auth
+    - server_auth
+    organization: system:masters
+  type: certificate
+- name: kube-controller-manager-user
+  options:
+    ca: kubo_ca
+    common_name: system:kube-controller-manager
+    key_usage:
+    - digital_signature
+    - key_encipherment
+    extended_key_usage:
+    - client_auth
+    - server_auth
+    organization: system:kube-controller-manager
+  type: certificate
+- name: kubelet-user
+  options:
+    ca: kubo_ca
+    common_name: kubelet
+    key_usage:
+    - digital_signature
+    - key_encipherment
+    extended_key_usage:
+    - client_auth
+    - server_auth
+    organization: system:node
+  type: certificate
+- name: kube-proxy-user
+  options:
+    ca: kubo_ca
+    common_name: system:kube-proxy
+    key_usage:
+    - digital_signature
+    - key_encipherment
+    extended_key_usage:
+    - client_auth
+    - server_auth
+    organization: system:node-proxier
+  type: certificate
+- name: kube-scheduler-user
+  options:
+    ca: kubo_ca
+    common_name: system:kube-scheduler
+    key_usage:
+    - digital_signature
+    - key_encipherment
+    extended_key_usage:
+    - client_auth
+    - server_auth
+    organization: system:kube-scheduler
+  type: certificate
+- name: kubelet-drain-password
+  type: password
 - name: tls-kubelet
   options:
     alternative_names: []

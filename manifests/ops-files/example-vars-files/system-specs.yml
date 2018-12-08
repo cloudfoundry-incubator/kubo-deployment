@@ -1,9 +1,0 @@
-kubelet-password: password
-kubo-admin-password: admin-password
-tls-kubernetes:
-  ca: ca
-  certificate: cert
-  private_key: key
-tls-heapster: tls-heapster
-tls-influxdb: tls-influxdb
-tls-kubernetes-dashboard: tls-kubernetes-dashboard
