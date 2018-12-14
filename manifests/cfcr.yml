@@ -208,7 +208,7 @@ instance_groups:
       k8s-args:
         audit-log-maxage: 0
         audit-log-maxbackup: 0
-        audit-log-maxsize: 0
+        audit-log-maxsize: 10000000 # this is 10TBs which prevents k8s logrotate
         audit-log-path: /var/vcap/sys/log/kube-apiserver/audit.log
         audit-policy-file: /var/vcap/jobs/kube-apiserver/config/audit_policy.yml
         authorization-mode: RBAC
