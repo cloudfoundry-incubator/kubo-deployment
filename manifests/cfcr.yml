@@ -340,6 +340,7 @@ instance_groups:
   - name: kubelet
     properties:
       drain-api-token: ((kubelet-drain-password))
+      kubelet-drain-user-credentials: ((kubelet-drain-user))
       kubelet-user-credentials: ((kubelet-user))
       k8s-args:
         cni-bin-dir: /var/vcap/jobs/kubelet/packages/cni/bin
@@ -487,6 +488,18 @@ variables:
     - client_auth
     - server_auth
     organization: system:kube-scheduler
+  type: certificate
+- name: kubelet-drain-user
+  options:
+    ca: kubo_ca
+    common_name: kubelet-drain
+    key_usage:
+    - digital_signature
+    - key_encipherment
+    extended_key_usage:
+    - client_auth
+    - server_auth
+    organization: system:node
   type: certificate
 - name: kubelet-drain-password
   type: password
