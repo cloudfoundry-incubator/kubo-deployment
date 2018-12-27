@@ -207,8 +207,8 @@ instance_groups:
           - RequestReceived
       k8s-args:
         audit-log-maxage: 0
-        audit-log-maxbackup: 0
-        audit-log-maxsize: 10000000
+        audit-log-maxbackup: 7
+        audit-log-maxsize: 49 # Set a max size of 49 so that we can pre-empt logrotate: kubernetes/kubernetes#52865
         audit-log-path: /var/vcap/sys/log/kube-apiserver/audit.log
         audit-policy-file: /var/vcap/jobs/kube-apiserver/config/audit_policy.yml
         authorization-mode: RBAC
