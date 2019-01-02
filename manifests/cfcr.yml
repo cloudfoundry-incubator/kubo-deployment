@@ -208,7 +208,7 @@ instance_groups:
       k8s-args:
         audit-log-maxage: 0
         audit-log-maxbackup: 7
-        audit-log-maxsize: 49 # Set a max size of 49 so that we can pre-empt logrotate: kubernetes/kubernetes#52865
+        audit-log-maxsize: 49
         audit-log-path: /var/vcap/sys/log/kube-apiserver/audit.log
         audit-policy-file: /var/vcap/jobs/kube-apiserver/config/audit_policy.yml
         authorization-mode: RBAC
@@ -423,7 +423,7 @@ releases:
 stemcells:
 - alias: default
   os: ubuntu-xenial
-  version: 170.15
+  version: 170.16
 update:
   canaries: 1
   canary_watch_time: 10000-300000
