@@ -13,7 +13,7 @@ instance_groups:
   - name: apply-specs
     properties:
       addons:
-      - kube-dns
+      - coredns
       - metrics-server
       - heapster
       - kubernetes-dashboard
