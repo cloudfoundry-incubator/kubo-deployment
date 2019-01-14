@@ -24,6 +24,7 @@ test_standard_ops() {
       check_interpolation "use-vm-extensions.yml" "-v deployment_name=cfcr"
       check_interpolation "worker_count.yml" "-v worker_count=4"
       check_interpolation "non-precompiled-releases.yml"
+      check_interpolation "use-persistent-disk-for-workers.yml" "-v disk_type=1000"
 
       # Infrastructure
       check_interpolation "iaas/aws/cloud-provider.yml"

@@ -1,0 +1,7 @@
+- type: replace
+  path: /instance_groups/name=worker?/persistent_disk
+  value: ((disk_type))
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=docker/properties/store_dir
+  value: /var/vcap/store
+
