@@ -1,0 +1,7 @@
+- type: replace
+  path: /instance_groups/name=worker/env?/bosh?/swap_size?
+  value: 0
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kubelet/properties/kubelet-configuration/failSwapOn
+  value: true

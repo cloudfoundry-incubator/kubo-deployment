@@ -25,6 +25,7 @@ test_standard_ops() {
       check_interpolation "worker_count.yml" "-v worker_count=4"
       check_interpolation "non-precompiled-releases.yml"
       check_interpolation "use-persistent-disk-for-workers.yml" "-v disk_size=1000"
+      check_interpolation "disable-swap.yml"
 
       # Infrastructure
       check_interpolation "iaas/aws/cloud-provider.yml"

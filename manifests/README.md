@@ -24,6 +24,7 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | [`ops-files/worker_count.yml`](ops-files/worker_count.yml) | Specify the count for `worker` instances | By default, 3 `worker` instances. |
 | [`ops-files/non-precompiled-releases.yml`](ops-files/non-precompiled-releases.yml) | Use non-precompiled releases when deploying CFCR. |
 | [`ops-files/use-persistent-disk-for-workers.yml`](ops-files/use-persistent-disk-for-workers.yml) | Enables persistent disk to store docker data |
+| [`ops-files/disable-swap.yml`](ops-files/disable-swap.yml) | Disables swap on worker VMs |
 
 ### BOSH Cloud Config
 
