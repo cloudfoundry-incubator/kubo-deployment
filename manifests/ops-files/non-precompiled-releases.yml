@@ -6,8 +6,8 @@
     url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.26.0/kubo-release-0.26.0.tgz
     version: 0.26.0
   - name: cfcr-etcd
-    sha1: 0fc69164ff96147bef40a5ab720ee915737cbe39
-    url: https://github.com/cloudfoundry-incubator/cfcr-etcd-release/releases/download/v1.9.0/cfcr-etcd-release-1.9.0.tgz
+    sha1: fff1723d48bfb4050b4e69a68896be8fafe8ebf3
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/cfcr-etcd-release?v=1.9.0
     version: 1.9.0
   - name: docker
     sha1: 8836ed245406abea5eaa0b3aacb568ea421eb7b3
