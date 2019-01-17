@@ -15,11 +15,13 @@ instance_groups:
       addons:
       - coredns
       - metrics-server
+      - heapster
       - kubernetes-dashboard
       admin-password: ((kubo-admin-password))
       admin-username: admin
       api-token: ((kubelet-password))
       tls:
+        heapster: ((tls-heapster))
         influxdb: ((tls-influxdb))
         kubernetes: ((tls-kubernetes))
         kubernetes-dashboard: ((tls-kubernetes-dashboard))
@@ -509,6 +511,13 @@ variables:
     - metrics-server.kube-system.svc
     ca: kubo_ca
     common_name: metrics-server
+  type: certificate
+- name: tls-heapster
+  options:
+    alternative_names:
+    - heapster.kube-system.svc.cluster.local
+    ca: kubo_ca
+    common_name: heapster
   type: certificate
 - name: tls-influxdb
   options:
