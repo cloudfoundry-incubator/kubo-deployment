@@ -31,14 +31,6 @@
   value: ((certificate-duration))
 
 - type: replace
-  path: /variables/name=tls-heapster/options/duration?
-  value: ((certificate-duration))
-
-- type: replace
-  path: /variables/name=tls-influxdb/options/duration?
-  value: ((certificate-duration))
-
-- type: replace
   path: /variables/name=kubernetes-dashboard-ca/options/duration?
   value: ((certificate-duration))
 

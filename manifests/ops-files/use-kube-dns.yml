@@ -4,5 +4,4 @@
   value:
     - "kube-dns"
     - "metrics-server"
-    - "heapster"
     - "kubernetes-dashboard"
