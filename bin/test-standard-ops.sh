@@ -14,10 +14,9 @@ test_standard_ops() {
 
       # CI & wrapper scripts
       check_interpolation "misc/bootstrap.yml" "-l example-vars-files/misc/bootstrap.yml"
-      check_interpolation "misc/bootstrap.yml"  "-o misc/dev.yml"  "-o use-runtime-config-bosh-dns.yml" "-l example-vars-files/misc/bootstrap.yml"
+      check_interpolation "misc/bootstrap.yml"  "-o misc/dev.yml"  "-l example-vars-files/misc/bootstrap.yml"
 
       # BOSH
-      check_interpolation "use-runtime-config-bosh-dns.yml"
       check_interpolation "rename.yml" "-v deployment_name=fubar"
       check_interpolation "vm-types.yml" "-v master_vm_type=master" "-v worker_vm_type=worker" "-v apply_addons_vm_type=addons"
       check_interpolation "add-vm-extensions-to-master.yml"
