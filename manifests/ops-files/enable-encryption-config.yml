@@ -3,5 +3,5 @@
   path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/encryption-config?
   value: ((encryption-config))
 - type: replace
-  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args/experimental-encryption-provider-config?
+  path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args/encryption-provider-config?
   value: /var/vcap/jobs/kube-apiserver/config/encryption-config.yml
