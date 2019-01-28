@@ -348,6 +348,7 @@ instance_groups:
       k8s-args:
         cni-bin-dir: /var/vcap/jobs/kubelet/packages/cni/bin
         container-runtime: docker
+        docker: unix:///var/vcap/sys/run/docker/docker.sock
         docker-endpoint: unix:///var/vcap/sys/run/docker/docker.sock
         kubeconfig: /var/vcap/jobs/kubelet/config/kubeconfig
         network-plugin: cni
