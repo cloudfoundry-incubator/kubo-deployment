@@ -2,3 +2,4 @@
   path: /tags?
   value:
     KubernetesCluster: ((kubernetes_cluster_tag))
+    kubernetes.io/cluster/((kubernetes_cluster_tag)): ""
