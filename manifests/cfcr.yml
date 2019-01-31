@@ -209,7 +209,7 @@ instance_groups:
         audit-log-path: /var/vcap/sys/log/kube-apiserver/audit.log
         audit-policy-file: /var/vcap/jobs/kube-apiserver/config/audit_policy.yml
         authorization-mode: RBAC
-        client-ca-file: /var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+        client-ca-file: /var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
         disable-admission-plugins: []
         enable-admission-plugins: []
         enable-aggregator-routing: true
@@ -223,7 +223,7 @@ instance_groups:
         proxy-client-cert-file: /var/vcap/jobs/kube-apiserver/config/kubernetes.pem
         proxy-client-key-file: /var/vcap/jobs/kube-apiserver/config/kubernetes-key.pem
         requestheader-allowed-names: aggregator
-        requestheader-client-ca-file: /var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+        requestheader-client-ca-file: /var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
         requestheader-extra-headers-prefix: X-Remote-Extra-
         requestheader-group-headers: X-Remote-Group
         requestheader-username-headers: X-Remote-User
@@ -246,7 +246,7 @@ instance_groups:
         kubelet-client: ((tls-kubelet-client))
         kubernetes:
           ca: ((tls-kubernetes.ca))
-          certificate: ((tls-kubernetes.certificate))
+          certificate: ((tls-kubernetes.certificate))((tls-kubernetes.ca))
           private_key: ((tls-kubernetes.private_key))
     release: kubo
   - name: kube-controller-manager
@@ -370,7 +370,10 @@ instance_groups:
         tlsCertFile: /var/vcap/jobs/kubelet/config/kubelet.pem
         tlsPrivateKeyFile: /var/vcap/jobs/kubelet/config/kubelet-key.pem
       tls:
-        kubelet: ((tls-kubelet))
+        kubelet:
+          ca: ((tls-kubelet.ca))
+          certificate: ((tls-kubelet.certificate))((tls-kubelet.ca))
+          private_key: ((tls-kubelet.private_key))
         kubelet-client-ca:
           certificate: ((tls-kubelet-client.ca))
         kubernetes: ((tls-kubernetes))
