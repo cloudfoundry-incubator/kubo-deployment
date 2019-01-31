@@ -39,6 +39,22 @@
   value: vsphere
 
 - type: replace
+  path: /instance_groups/name=worker/jobs/-
+  value:
+    name: cloud-provider
+    release: kubo
+    properties:
+      cloud-provider:
+        type: vsphere
+    provides:
+      cloud-provider: {as: worker-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=kubelet/consumes?
+  value:
+    cloud-provider: {from: worker-cloud-provider}
+
+- type: replace
   path: /instance_groups/name=worker/jobs/name=kube-proxy/properties/cloud-provider?
   value: vsphere
 
