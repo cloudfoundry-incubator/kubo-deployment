@@ -212,7 +212,7 @@ instance_groups:
         audit-log-path: /var/vcap/sys/log/kube-apiserver/audit.log
         audit-policy-file: /var/vcap/jobs/kube-apiserver/config/audit_policy.yml
         authorization-mode: RBAC
-        client-ca-file: /var/vcap/jobs/kube-apiserver/config/kubernetes.pem
+        client-ca-file: /var/vcap/jobs/kube-apiserver/config/kubernetes-ca.pem
         disable-admission-plugins: []
         enable-admission-plugins: []
         enable-aggregator-routing: true
