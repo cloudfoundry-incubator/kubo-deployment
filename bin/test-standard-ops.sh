@@ -65,7 +65,6 @@ test_standard_ops() {
       check_interpolation "enable-denyescalatingexec.yml"
       check_interpolation "enable-podsecuritypolicy.yml"
       check_interpolation "enable-securitycontextdeny.yml"
-      check_interpolation "use-kube-dns.yml"
       check_interpolation "enable-encryption-config.yml" "-v encryption-config=encryption-config.yml"
       check_interpolation "enable-csi-shared-mounts.yml"
 

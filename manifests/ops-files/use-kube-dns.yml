@@ -1,7 +1,0 @@
----
-- type: replace
-  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/properties/addons?
-  value:
-    - "kube-dns"
-    - "metrics-server"
-    - "kubernetes-dashboard"
