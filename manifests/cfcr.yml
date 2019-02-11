@@ -413,8 +413,8 @@ releases:
   url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.9.0-ubuntu-xenial-250.4-20190130-184147-484372172.tgz
   version: 1.9.0
 - name: docker
-  sha1: 579827880093e089fd85638849a4e922d0878fa2
-  url: https://storage.googleapis.com/kubo-precompiled-releases/docker-33.0.1-ubuntu-xenial-250.4-20190130-183726-867222836.tgz
+  sha1: dee1d9ca01acf99d29b5bbd61e9352f090c61c27
+  url: https://storage.googleapis.com/kubo-precompiled-releases/docker-33.0.1-ubuntu-xenial-250.4-20190211-143302-426751302.tgz
   version: 33.0.1
 - name: bpm
   sha1: 9a8adc17020f0dfc0ca4a6f0f2657dd90e882a58
