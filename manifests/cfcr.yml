@@ -409,8 +409,8 @@ releases:
   url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-0.28.0-ubuntu-xenial-250.4-20190207-154806-561867957.tgz
   version: 0.28.0
 - name: cfcr-etcd
-  sha1: 25fb1e75f0a367024b78d42d47da14690b50865b
-  url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.9.0-ubuntu-xenial-250.4-20190130-184147-484372172.tgz
+  sha1: 18b234dc80156d19a81444a61758f2f321446d82
+  url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.9.0-ubuntu-xenial-250.4-20190211-151722-343709284.tgz
   version: 1.9.0
 - name: docker
   sha1: dee1d9ca01acf99d29b5bbd61e9352f090c61c27
