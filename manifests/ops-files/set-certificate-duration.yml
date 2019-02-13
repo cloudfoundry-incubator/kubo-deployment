@@ -19,11 +19,15 @@
   value: ((certificate-duration))
 
 - type: replace
-  path: /variables/name=tls-etcd-v0-17-0/options/duration?
+  path: /variables/name=etcd_ca/options/duration?
   value: ((certificate-duration))
 
 - type: replace
-  path: /variables/name=tls-etcdctl/options/duration?
+  path: /variables/name=tls-etcd-v0-29-0/options/duration?
+  value: ((certificate-duration))
+
+- type: replace
+  path: /variables/name=tls-etcdctl-v0-29-0/options/duration?
   value: ((certificate-duration))
 
 - type: replace
