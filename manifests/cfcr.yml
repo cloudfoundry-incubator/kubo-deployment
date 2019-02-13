@@ -423,7 +423,7 @@ releases:
 stemcells:
 - alias: default
   os: ubuntu-xenial
-  version: 250.4
+  version: 250.9
 update:
   canaries: 1
   canary_watch_time: 10000-300000
@@ -506,7 +506,7 @@ variables:
 - name: tls-etcdctl-v0-29-0
   options:
     ca: etcd_ca
-    common_name: 'etcdClient'
+    common_name: etcdClient
     extended_key_usage:
     - client_auth
   type: certificate
