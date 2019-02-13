@@ -294,17 +294,17 @@ instance_groups:
         dns_suffix: etcd.cfcr.internal
       tls:
         etcd:
-          ca: ((tls-etcd-v0-17-0.ca))
-          certificate: ((tls-etcd-v0-17-0.certificate))
-          private_key: ((tls-etcd-v0-17-0.private_key))
+          ca: ((etcd_ca.certificate))
+          certificate: ((tls-etcd-v0-29-0.certificate))
+          private_key: ((tls-etcd-v0-29-0.private_key))
         etcdctl:
-          ca: ((tls-etcdctl.ca))
-          certificate: ((tls-etcdctl.certificate))
-          private_key: ((tls-etcdctl.private_key))
+          ca: ((tls-etcdctl-v0-29-0.ca))
+          certificate: ((tls-etcdctl-v0-29-0.certificate))
+          private_key: ((tls-etcdctl-v0-29-0.private_key))
         peer:
-          ca: ((tls-etcd-v0-17-0.ca))
-          certificate: ((tls-etcd-v0-17-0.certificate))
-          private_key: ((tls-etcd-v0-17-0.private_key))
+          ca: ((tls-etcd-v0-29-0.ca))
+          certificate: ((tls-etcd-v0-29-0.certificate))
+          private_key: ((tls-etcd-v0-29-0.private_key))
     release: cfcr-etcd
   - name: smoke-tests
     release: kubo
@@ -490,18 +490,23 @@ variables:
     - digital_signature
     - key_encipherment
   type: certificate
-- name: tls-etcd-v0-17-0
+- name: etcd_ca
   options:
-    ca: kubo_ca
+    common_name: etcd.ca
+    is_ca: true
+  type: certificate
+- name: tls-etcd-v0-29-0
+  options:
+    ca: etcd_ca
     common_name: '*.etcd.cfcr.internal'
     extended_key_usage:
     - client_auth
     - server_auth
   type: certificate
-- name: tls-etcdctl
+- name: tls-etcdctl-v0-29-0
   options:
-    ca: kubo_ca
-    common_name: etcdClient
+    ca: etcd_ca
+    common_name: 'etcdClient'
     extended_key_usage:
     - client_auth
   type: certificate
