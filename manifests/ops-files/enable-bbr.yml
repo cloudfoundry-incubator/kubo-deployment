@@ -3,6 +3,9 @@
   value:
     name: bbr-etcd
     release: cfcr-etcd
+    properties:
+      bbr:
+        backup_one_restore_all: true
 
 - type: replace
   path: /instance_groups/name=master/jobs/-
