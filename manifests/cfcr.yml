@@ -423,7 +423,7 @@ releases:
 stemcells:
 - alias: default
   os: ubuntu-xenial
-  version: 250.9
+  version: 250.17
 update:
   canaries: 1
   canary_watch_time: 10000-300000
