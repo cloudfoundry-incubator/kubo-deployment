@@ -62,6 +62,7 @@
           pod-infra-container-image: kubeletwin/pause
           register-with-taints: windows=2019:NoSchedule
           resolv-conf: ""
+          runtime-request-timeout: 1m
         tls:
           kubelet: ((tls-kubelet))
           kubelet-client-ca:
