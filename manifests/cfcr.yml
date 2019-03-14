@@ -352,6 +352,7 @@ instance_groups:
         docker-endpoint: unix:///var/vcap/sys/run/docker/docker.sock
         kubeconfig: /var/vcap/jobs/kubelet/config/kubeconfig
         network-plugin: cni
+        root-dir: /var/vcap/data/kubelet
       kubelet-configuration:
         apiVersion: kubelet.config.k8s.io/v1beta1
         authentication:
