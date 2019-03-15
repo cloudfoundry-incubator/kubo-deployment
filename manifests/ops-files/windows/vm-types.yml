@@ -1,0 +1,3 @@
+- type: replace
+  path: /instance_groups/name=windows-worker/vm_type
+  value: ((windows_worker_vm_type))

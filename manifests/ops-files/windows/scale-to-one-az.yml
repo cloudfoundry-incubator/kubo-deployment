@@ -1,0 +1,7 @@
+---
+- type: replace
+  path: /instance_groups/name=windows-worker/instances
+  value: 1
+- type: replace
+  path: /instance_groups/name=windows-worker/azs
+  value: [ z1 ]
