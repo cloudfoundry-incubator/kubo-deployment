@@ -96,6 +96,7 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | [`ops-files/enable-encryption-config.yml`](ops-files/enable-encryption-config.yml) | Enable data encryption at rest | Extra Vars Required:<br>- **encryption-config:** Encryption configuration as described [here](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#understanding-the-encryption-at-rest-configuration). Var value must be the content of the yaml. Easier to define in a `--vars-file` file |
 | [`ops-files/enable-csi-shared-mounts.yml`](ops-files/enable-csi-shared-mounts.yml) | Enable shared mounts in Docker for CSI volumes | - |
 | [`ops-files/use-hostgw.yml`](ops-files/use-hostgw.yml) | Sets the cluster to use host-gw backend in flannel. Necessary for Windows workers. | - |
+| [`ops-files/set-fs-inotify-limit.yml`](ops-files/set-fs-inotify-limit.yml) | Configure fs.inotify.max_user_watches.| Extra Vars Required:<br>- **fs_inotify_max_user_watches:** Required for configuring the max inotify user watches. |
 
 ### Etcd
 

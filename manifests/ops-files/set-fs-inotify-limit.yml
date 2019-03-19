@@ -1,0 +1,23 @@
+- type: replace
+  path: /addons/-
+  value:
+    jobs:
+      - name: sysctl
+        release: os-conf
+        properties:
+          sysctl:
+          - fs.inotify.max_user_watches=((fs_inotify_max_user_watches))
+    name: fs-inotify-limit
+    include:
+      stemcell:
+      - os: ubuntu-trusty
+      - os: ubuntu-xenial
+
+- type: replace
+  path: /releases/-
+  value:
+    name: "os-conf"
+    version: "20.0.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=20.0.0"
+    sha1: "a60187f038d45e2886db9df82b72a9ab5fdcc49d"
+
