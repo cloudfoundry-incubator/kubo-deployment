@@ -8,6 +8,10 @@
           sysctl:
           - fs.inotify.max_user_watches=((fs_inotify_max_user_watches))
     name: fs-inotify-limit
+    include:
+      stemcell:
+      - os: ubuntu-trusty
+      - os: ubuntu-xenial
 
 - type: replace
   path: /releases/-
