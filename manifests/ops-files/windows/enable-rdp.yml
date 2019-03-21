@@ -1,4 +1,6 @@
-- type: replace
+- name: windows-utilities
+  note: the name key is necessary for bump-boshrelease.sh
+  type: replace
   path: /releases/-
   value:
     name: "windows-utilities"

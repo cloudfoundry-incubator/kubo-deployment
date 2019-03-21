@@ -5,8 +5,10 @@
     os: windows2019
     version: latest
 
-- type: replace
+- name: windows-tools
+  note: the name key is necessary for bump-boshrelease.sh
   path: /releases/-
+  type: replace
   value:
     name: "windows-tools"
     version: "32"
