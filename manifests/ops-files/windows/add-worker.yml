@@ -14,6 +14,14 @@
     sha1: "95b6dd94a0b12491afc95e62f393c4d519411239"
 
 - type: replace
+  path: /releases/-
+  value:
+    name: "kubo-windows"
+    version: 0.31.0
+    url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-windows-0.31.0-windows2019-2019.2-20190321-144654-567645.tgz
+    sha1: 9c7fad7e74640f983f9ddf4115e032f23a4230d6
+
+- type: replace
   path: /instance_groups/-
   value:
     name: windows-worker
@@ -68,9 +76,9 @@
           kubelet-client-ca:
             certificate: ((tls-kubelet-client.ca))
           kubernetes: ((tls-kubernetes))
-      release: kubo
+      release: kubo-windows
     - name: flanneld-windows
-      release: kubo
+      release: kubo-windows
     - name: kube-proxy-windows
       properties:
         api-token: ((kube-proxy-password))
@@ -84,6 +92,6 @@
             kubeconfig: /var/vcap/jobs/kube-proxy-windows/config/kubeconfig
           mode: kernelspace
           portRange: ""
-      release: kubo
+      release: kubo-windows
     - name: docker
       release: windows-tools
