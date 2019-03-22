@@ -3,6 +3,9 @@ addons:
   - name: kubo-dns-aliases
     release: kubo
   name: bosh-dns-aliases
+  include:
+    stemcell:
+    - os: ubuntu-xenial
 features:
   use_dns_addresses: true
 instance_groups:
