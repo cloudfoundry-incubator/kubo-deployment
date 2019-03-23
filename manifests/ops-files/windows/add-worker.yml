@@ -3,7 +3,7 @@
   value:
     alias: windows
     os: windows2019
-    version: latest
+    version: "2019.2"
 
 - type: replace
   path: /releases/-
@@ -17,9 +17,20 @@
   path: /releases/-
   value:
     name: "kubo-windows"
-    version: 0.31.0
-    url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-windows-0.31.0-windows2019-2019.2-20190321-144654-567645.tgz
-    sha1: 9c7fad7e74640f983f9ddf4115e032f23a4230d6
+    version: "0.31.0"
+    url: "https://storage.googleapis.com/kubo-precompiled-releases/kubo-windows-0.31.0-windows2019-2019.2-20190322-161352-014249.tgz"
+    sha1: "4b6e32710671faa6461ffdeee91ddf86f0f88b33"
+
+- type: replace
+  path: /addons/-
+  value:
+    name: bosh-dns-aliases-windows
+    jobs:
+    - name: kubo-dns-aliases
+      release: kubo-windows
+    include:
+      stemcell:
+      - os: windows2019
 
 - type: replace
   path: /instance_groups/-

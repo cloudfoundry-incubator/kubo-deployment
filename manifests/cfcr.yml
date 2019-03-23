@@ -1,8 +1,8 @@
 addons:
-- jobs:
+- name: bosh-dns-aliases
+  jobs:
   - name: kubo-dns-aliases
     release: kubo
-  name: bosh-dns-aliases
   include:
     stemcell:
     - os: ubuntu-xenial
