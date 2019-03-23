@@ -1,11 +1,11 @@
 addons:
-- name: bosh-dns-aliases
+- include:
+    stemcell:
+    - os: ubuntu-xenial
   jobs:
   - name: kubo-dns-aliases
     release: kubo
-  include:
-    stemcell:
-    - os: ubuntu-xenial
+  name: bosh-dns-aliases
 features:
   use_dns_addresses: true
 instance_groups:
@@ -427,7 +427,7 @@ releases:
 stemcells:
 - alias: default
   os: ubuntu-xenial
-  version: 250.21
+  version: 250.23
 update:
   canaries: 1
   canary_watch_time: 10000-300000
