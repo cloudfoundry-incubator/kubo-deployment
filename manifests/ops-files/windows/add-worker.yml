@@ -18,8 +18,8 @@
   value:
     name: "kubo-windows"
     version: "0.31.0"
-    url: "https://storage.googleapis.com/kubo-precompiled-releases/kubo-windows-0.31.0-windows2019-2019.2-20190322-161352-014249.tgz"
-    sha1: "4b6e32710671faa6461ffdeee91ddf86f0f88b33"
+    url: "https://storage.googleapis.com/kubo-precompiled-releases/kubo-windows-0.31.0-windows2019-2019.2-20190325-131732-878123.tgz"
+    sha1: "05ead5f098611e25a6fc6e5cfb33825cf1c9b8ae"
 
 - type: replace
   path: /addons/-
