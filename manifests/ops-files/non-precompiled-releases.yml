@@ -10,9 +10,9 @@
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/cfcr-etcd-release?v=1.10.0
     version: 1.10.0
   - name: docker
-    sha1: c1ea15bcd87b24e911a42bc1d7ae0e4f587b40ab
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/docker-boshrelease?v=35.1.1
-    version: 35.1.1
+    sha1: 4d19215416af57525fdb84f388f396fe1ae39c6d
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/docker-boshrelease?v=35.2.0
+    version: 35.2.0
   - name: bpm
     sha1: 2875a69cae225fa97fe3faae1e9fbacff61e2dc5
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=1.0.3
