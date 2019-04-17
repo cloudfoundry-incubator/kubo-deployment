@@ -1,0 +1,28 @@
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/-
+  value:
+    name: cloud-provider
+    release: kubo
+    properties:
+      cloud-provider:
+        type: gce
+      cloud-config:
+        Global:
+          project-id: ((project_id))
+          network-name: ((network))
+          node-tags: ((director_name))-((deployment_name))-worker
+
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=kubelet-windows/properties/cloud-provider?
+  value: gce
+
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=kubelet-windows/consumes?
+  value:
+    cloud-provider: {from: worker-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=kube-proxy-windows/properties/cloud-provider?
+  value: gce
+
+
