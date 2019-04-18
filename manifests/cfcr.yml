@@ -308,6 +308,20 @@ instance_groups:
           ca: ((tls-etcd-v0-29-0.ca))
           certificate: ((tls-etcd-v0-29-0.certificate))
           private_key: ((tls-etcd-v0-29-0.private_key))
+        etcdctl-flanneld:
+          ca: ((tls-etcdctl-flanneld-v0-29-0.ca))
+          certificate: ((tls-etcdctl-flanneld-v0-29-0.certificate))
+          private_key: ((tls-etcdctl-flanneld-v0-29-0.private_key))
+      users:
+      - name: root
+        password: ((etcd_user_root_password))
+      - name: flanneld
+        permissions:
+          read:
+          - /coreos.com/network/*
+          write:
+          - /coreos.com/network/*
+        password: ((etcd_user_flanneld_password))
     release: cfcr-etcd
   - name: smoke-tests
     release: kubo
@@ -446,6 +460,10 @@ variables:
   type: password
 - name: kube-scheduler-password
   type: password
+- name: etcd_user_root_password
+  type: password
+- name: etcd_user_flanneld_password
+  type: password
 - name: kubo_ca
   options:
     common_name: ca
@@ -510,7 +528,14 @@ variables:
 - name: tls-etcdctl-v0-29-0
   options:
     ca: etcd_ca
-    common_name: etcdClient
+    common_name: root
+    extended_key_usage:
+    - client_auth
+  type: certificate
+- name: tls-etcdctl-flanneld-v0-29-0
+  options:
+    ca: etcd_ca
+    common_name: flanneld
     extended_key_usage:
     - client_auth
   type: certificate
