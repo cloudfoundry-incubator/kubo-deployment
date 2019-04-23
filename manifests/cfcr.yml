@@ -317,6 +317,7 @@ instance_groups:
       users:
       - name: root
         password: ((etcd_user_root_password))
+        versions: [ "v2" ]
       - name: flanneld
         permissions:
           read:
