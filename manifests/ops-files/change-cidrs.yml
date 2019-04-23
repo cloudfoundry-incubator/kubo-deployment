@@ -12,9 +12,8 @@
   value: [((kubedns_service_ip))]
 
 - type: replace
-  path: /instance_groups/name=worker/jobs/name=flanneld/properties?
-  value:
-    pod-network-cidr: ((pod_network_cidr))
+  path: /instance_groups/name=worker/jobs/name=flanneld/properties?/pod-network-cidr?
+  value: ((pod_network_cidr))
 
 - type: replace
   path: /instance_groups/name=worker/jobs/name=kube-proxy/properties/kube-proxy-configuration?/clusterCIDR?
