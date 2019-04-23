@@ -43,6 +43,12 @@ instance_groups:
     release: bpm
   - name: flanneld
     release: kubo
+    properties:
+      tls:
+        etcdctl:
+          ca: ((tls-etcdctl-flanneld-v0-29-0.ca))
+          certificate: ((tls-etcdctl-flanneld-v0-29-0.certificate))
+          private_key: ((tls-etcdctl-flanneld-v0-29-0.private_key))
   - name: kube-apiserver
     properties:
       admin-password: ((kubo-admin-password))
@@ -308,10 +314,6 @@ instance_groups:
           ca: ((tls-etcd-v0-29-0.ca))
           certificate: ((tls-etcd-v0-29-0.certificate))
           private_key: ((tls-etcd-v0-29-0.private_key))
-        etcdctl-flanneld:
-          ca: ((tls-etcdctl-flanneld-v0-29-0.ca))
-          certificate: ((tls-etcdctl-flanneld-v0-29-0.certificate))
-          private_key: ((tls-etcdctl-flanneld-v0-29-0.private_key))
       users:
       - name: root
         password: ((etcd_user_root_password))
@@ -322,6 +324,7 @@ instance_groups:
           write:
           - /coreos.com/network/*
         password: ((etcd_user_flanneld_password))
+        versions: [ "v2" ]
     release: cfcr-etcd
   - name: smoke-tests
     release: kubo
@@ -339,6 +342,12 @@ instance_groups:
   jobs:
   - name: flanneld
     release: kubo
+    properties:
+      tls:
+        etcdctl:
+          ca: ((tls-etcdctl-flanneld-v0-29-0.ca))
+          certificate: ((tls-etcdctl-flanneld-v0-29-0.certificate))
+          private_key: ((tls-etcdctl-flanneld-v0-29-0.private_key))
   - name: docker
     properties:
       bridge: cni0
