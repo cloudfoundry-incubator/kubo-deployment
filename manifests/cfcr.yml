@@ -46,9 +46,9 @@ instance_groups:
     properties:
       tls:
         etcdctl:
-          ca: ((tls-etcdctl-flanneld-v0-29-0.ca))
-          certificate: ((tls-etcdctl-flanneld-v0-29-0.certificate))
-          private_key: ((tls-etcdctl-flanneld-v0-29-0.private_key))
+          ca: ((tls-etcdctl-flanneld.ca))
+          certificate: ((tls-etcdctl-flanneld.certificate))
+          private_key: ((tls-etcdctl-flanneld.private_key))
   - name: kube-apiserver
     properties:
       admin-password: ((kubo-admin-password))
@@ -346,9 +346,9 @@ instance_groups:
     properties:
       tls:
         etcdctl:
-          ca: ((tls-etcdctl-flanneld-v0-29-0.ca))
-          certificate: ((tls-etcdctl-flanneld-v0-29-0.certificate))
-          private_key: ((tls-etcdctl-flanneld-v0-29-0.private_key))
+          ca: ((tls-etcdctl-flanneld.ca))
+          certificate: ((tls-etcdctl-flanneld.certificate))
+          private_key: ((tls-etcdctl-flanneld.private_key))
   - name: docker
     properties:
       bridge: cni0
@@ -542,7 +542,7 @@ variables:
     extended_key_usage:
     - client_auth
   type: certificate
-- name: tls-etcdctl-flanneld-v0-29-0
+- name: tls-etcdctl-flanneld
   options:
     ca: etcd_ca
     common_name: flanneld
