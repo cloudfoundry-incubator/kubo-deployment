@@ -31,6 +31,10 @@
   value: ((certificate-duration))
 
 - type: replace
+  path: /variables/name=tls-etcdctl-flanneld/options/duration?
+  value: ((certificate-duration))
+
+- type: replace
   path: /variables/name=tls-metrics-server/options/duration?
   value: ((certificate-duration))
 
