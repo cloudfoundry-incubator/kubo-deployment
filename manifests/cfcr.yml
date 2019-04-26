@@ -42,13 +42,13 @@ instance_groups:
   - name: bpm
     release: bpm
   - name: flanneld
-    release: kubo
     properties:
       tls:
         etcdctl:
           ca: ((tls-etcdctl-flanneld.ca))
           certificate: ((tls-etcdctl-flanneld.certificate))
           private_key: ((tls-etcdctl-flanneld.private_key))
+    release: kubo
   - name: kube-apiserver
     properties:
       admin-password: ((kubo-admin-password))
@@ -317,15 +317,17 @@ instance_groups:
       users:
       - name: root
         password: ((etcd_user_root_password))
-        versions: [ "v2" ]
+        versions:
+        - v2
       - name: flanneld
+        password: ((etcd_user_flanneld_password))
         permissions:
           read:
           - /coreos.com/network/*
           write:
           - /coreos.com/network/*
-        password: ((etcd_user_flanneld_password))
-        versions: [ "v2" ]
+        versions:
+        - v2
     release: cfcr-etcd
   - name: smoke-tests
     release: kubo
@@ -342,13 +344,13 @@ instance_groups:
   instances: 3
   jobs:
   - name: flanneld
-    release: kubo
     properties:
       tls:
         etcdctl:
           ca: ((tls-etcdctl-flanneld.ca))
           certificate: ((tls-etcdctl-flanneld.certificate))
           private_key: ((tls-etcdctl-flanneld.private_key))
+    release: kubo
   - name: docker
     properties:
       bridge: cni0
@@ -445,8 +447,8 @@ releases:
   url: https://storage.googleapis.com/kubo-precompiled-releases/docker-35.2.0-ubuntu-xenial-315.11-20190424-173009-425355042.tgz
   version: 35.2.0
 - name: bpm
-  sha1: 438bfdea3c9f2fdf64474848c31993a5d04e30f5
-  url: https://storage.googleapis.com/kubo-precompiled-releases/bpm-1.0.4-ubuntu-xenial-315.11-20190424-174009-994944236.tgz
+  sha1: 5d142971eccc81cee49741364d15bd8d51b4a1fe
+  url: https://storage.googleapis.com/kubo-precompiled-releases/bpm-1.0.4-ubuntu-xenial-315.11-20190426-010134-221216876.tgz
   version: 1.0.4
 stemcells:
 - alias: default
