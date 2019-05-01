@@ -310,6 +310,10 @@ instance_groups:
           ca: ((tls-etcdctl-v0-29-0.ca))
           certificate: ((tls-etcdctl-v0-29-0.certificate))
           private_key: ((tls-etcdctl-v0-29-0.private_key))
+        etcdctl-root:
+          ca: ((tls-etcdctl-v0-29-0.ca))
+          certificate: ((tls-etcdctl-root.certificate))
+          private_key: ((tls-etcdctl-root.private_key))
         peer:
           ca: ((tls-etcd-v0-29-0.ca))
           certificate: ((tls-etcd-v0-29-0.certificate))
@@ -538,6 +542,13 @@ variables:
     - server_auth
   type: certificate
 - name: tls-etcdctl-v0-29-0
+  options:
+    ca: etcd_ca
+    common_name: etcdClient
+    extended_key_usage:
+    - client_auth
+  type: certificate
+- name: tls-etcdctl-root
   options:
     ca: etcd_ca
     common_name: root
