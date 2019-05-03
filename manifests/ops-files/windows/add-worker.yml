@@ -90,6 +90,12 @@
       release: kubo-windows
     - name: flanneld-windows
       release: kubo-windows
+      properties:
+        tls:
+          etcdctl:
+            ca: ((tls-etcdctl-flanneld.ca))
+            certificate: ((tls-etcdctl-flanneld.certificate))
+            private_key: ((tls-etcdctl-flanneld.private_key))
     - name: kube-proxy-windows
       properties:
         api-token: ((kube-proxy-password))
