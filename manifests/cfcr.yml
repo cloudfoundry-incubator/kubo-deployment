@@ -439,9 +439,9 @@ instance_groups:
 name: cfcr
 releases:
 - name: kubo
-  sha1: 55d9a5c748ddc2d897d5111b82fe8b254422c489
-  url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-0.31.0-ubuntu-xenial-250.23-20190326-002613-823256588.tgz
-  version: 0.31.0
+  sha1: d5787648b5c8b490ef10292183602b0894619118
+  url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-0.32.0-ubuntu-xenial-315.11-20190503-013515-207132992.tgz
+  version: 0.32.0
 - name: cfcr-etcd
   sha1: 0b50c71309b183a6df0d9ed323bd9121e0f52b7b
   url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.11.1-ubuntu-xenial-315.11-20190501-204615-484815995.tgz
