@@ -1,0 +1,35 @@
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/-
+  value:
+    name: cloud-provider
+    release: kubo
+    properties:
+      cloud-provider:
+        type: azure
+      cloud-config:
+        useManagedIdentityExtension: true
+        cloud: ((azure_cloud_name))
+        location: ((location))
+        primaryAvailabilitySetName: ((primary_availability_set))
+        resourceGroup: ((resource_group_name))
+        securityGroupName: ((default_security_group))
+        subnetName: ((subnet_name))
+        subscriptionId: ((subscription_id))
+        tenantId: ((tenant_id))
+        useInstanceMetadata: true
+        vnetName: ((vnet_name))
+        vnetResourceGroup: ((vnet_resource_group_name))
+        loadBalancerSku: standard
+
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=kubelet-windows/consumes?
+  value:
+    cloud-provider: {from: worker-cloud-provider}
+
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=kubelet-windows/properties/cloud-provider?
+  value: azure
+
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=kube-proxy-windows/properties/cloud-provider?
+  value: azure
