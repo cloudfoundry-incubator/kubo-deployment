@@ -1,0 +1,7 @@
+---
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=flanneld/properties?/vni
+  value: 4096
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=flanneld/properties?/port
+  value: 4789
