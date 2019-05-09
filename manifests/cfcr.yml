@@ -359,7 +359,7 @@ instance_groups:
     properties:
       bridge: cni0
       default_ulimits:
-      - nofile=65536
+      - nofile=1048576
       env: {}
       flannel: true
       ip_masq: false
