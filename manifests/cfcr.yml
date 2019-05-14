@@ -1160,7 +1160,6 @@ releases:
   version: 1.0.4
 - name: kubernetes
   version: latest
-  url: https://storage.googleapis.com/kubo-pipeline-store-test/kubernetes-release.tar.gz
 stemcells:
 - alias: default
   os: ubuntu-xenial
