@@ -373,7 +373,7 @@ instance_groups:
       store_dir: /var/vcap/data
     release: docker
   - name: kubernetes-dependencies
-    release: kubo
+    release: kubernetes
   - name: kubelet
     properties:
       api-token: ((kubelet-password))
@@ -454,6 +454,8 @@ releases:
   sha1: c3376e70d6a080054012afa45fae1e9249b2a6d9
   url: https://storage.googleapis.com/kubo-precompiled-releases/bpm-1.0.4-ubuntu-xenial-315.64-20190703-011222-636424609.tgz
   version: 1.0.4
+- name: kubernetes
+  version: latest
 stemcells:
 - alias: default
   os: ubuntu-xenial
