@@ -1,5 +1,5 @@
 - type: replace
-  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/properties/kubernetes-dashboard-spec?
+  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/properties/specs?/kubernetes-dashboard?
   value: |
     # Copyright 2017 The Kubernetes Authors.
     #

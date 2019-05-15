@@ -80,3 +80,29 @@
 - type: replace
   path: /instance_groups/name=worker/jobs/name=kube-proxy/properties/cloud-provider?
   value: azure
+
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kubernetes-roles/properties/specs?/cloud-provider?
+  value: |
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: system:azure-cloud-provider
+    rules:
+    - apiGroups: ['']
+      resources: ['secrets']
+      verbs:     ['get','create']
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1beta1
+    kind: ClusterRoleBinding
+    metadata:
+      name: system:azure-cloud-provider
+    roleRef:
+      kind: ClusterRole
+      apiGroup: rbac.authorization.k8s.io
+      name: system:azure-cloud-provider
+    subjects:
+    - kind: ServiceAccount
+      name: persistent-volume-binder
+      namespace: kube-system

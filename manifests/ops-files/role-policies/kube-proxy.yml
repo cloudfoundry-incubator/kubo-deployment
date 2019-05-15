@@ -1,0 +1,16 @@
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kubernetes-roles/properties/specs?/kube-proxy?
+  value: |
+    ---
+    kind: ClusterRoleBinding
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      name: kubo:internal:kube-proxy
+    subjects:
+    - kind: User
+      name: kube-proxy
+      apiGroup: rbac.authorization.k8s.io
+    roleRef:
+      kind: ClusterRole
+      name: system:node-proxier
+      apiGroup: rbac.authorization.k8s.io

@@ -1,9 +1,5 @@
 ---
 - type: replace
-  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/properties/kubedns-service-ip?
-  value: ((kubedns_service_ip))
-
-- type: replace
   path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args/service-cluster-ip-range?
   value: ((service_cluster_cidr))
 

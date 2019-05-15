@@ -1,5 +1,5 @@
 - type: replace
-  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/properties/coredns-spec?
+  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/properties/specs?/coredns?
   value: |
     ---
     apiVersion: v1

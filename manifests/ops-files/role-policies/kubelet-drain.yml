@@ -1,0 +1,43 @@
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kubernetes-roles/properties/specs?/kubelet-drain?
+  value: |
+    ---
+    kind: ClusterRole
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      name: kubo:internal:kubelet-drain
+    rules:
+    - apiGroups: [""]
+      resources: ["nodes"]
+      verbs: ["list", "get", "patch", "delete"]
+    - apiGroups: [""]
+      resources: ["pods"]
+      verbs: ["list", "delete"]
+    - apiGroups: [""]
+      resources: ["pods/eviction"]
+      verbs: ["create"]
+    - apiGroups: ["apps"]
+      resources: ["statefulsets", "daemonsets"]
+      verbs: ["get"]
+    - apiGroups: ["extensions"]
+      resources: ["replicasets", "daemonsets"]
+      verbs: ["get"]
+    - apiGroups: ["batch"]
+      resources: ["jobs"]
+      verbs: ["get"]
+    - apiGroups: [""]
+      resources: ["replicationcontrollers"]
+      verbs: ["get"]
+    ---
+    kind: ClusterRoleBinding
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      name: kubo:internal:kubelet-drain
+    subjects:
+    - kind: User
+      name: kubelet-drain
+      apiGroup: rbac.authorization.k8s.io
+    roleRef:
+      kind: ClusterRole
+      name: kubo:internal:kubelet-drain
+      apiGroup: rbac.authorization.k8s.io
