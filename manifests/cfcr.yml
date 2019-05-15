@@ -300,6 +300,167 @@ instance_groups:
       admin-username: admin
       tls:
         kubernetes: ((tls-kubernetes))
+      specs:
+        cluster-admin: |
+          ---
+          kind: ClusterRoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: kubo:internal:admin
+          subjects:
+          - kind: User
+            name: admin
+            apiGroup: rbac.authorization.k8s.io
+          roleRef:
+            kind: ClusterRole
+            name: cluster-admin
+            apiGroup: rbac.authorization.k8s.io
+        kube-proxy: |
+          ---
+          kind: ClusterRoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: kubo:internal:kube-proxy
+          subjects:
+          - kind: User
+            name: kube-proxy
+            apiGroup: rbac.authorization.k8s.io
+          roleRef:
+            kind: ClusterRole
+            name: system:node-proxier
+            apiGroup: rbac.authorization.k8s.io
+        kube-system-podsecuritypolicy: |
+          ---
+          apiVersion: policy/v1beta1
+          kind: PodSecurityPolicy
+          metadata:
+            name: kube-system-psp
+            annotations:
+              seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'docker/default'
+              apparmor.security.beta.kubernetes.io/allowedProfileNames: 'runtime/default'
+              seccomp.security.alpha.kubernetes.io/defaultProfileName:  'docker/default'
+              apparmor.security.beta.kubernetes.io/defaultProfileName:  'runtime/default'
+          spec:
+            privileged: false
+            # Required to prevent escalations to root.
+            allowPrivilegeEscalation: false
+            allowedCapabilities:
+            - '*'
+            # Allow core volume types.
+            hostNetwork: true
+            hostPorts:
+            - min: 0
+              max: 65535
+            hostIPC: true
+            hostPID: true
+            volumes:
+              - 'configMap'
+              - 'emptyDir'
+              - 'projected'
+              - 'secret'
+              - 'downwardAPI'
+            runAsUser:
+              # Require the container to run without root privileges.
+              rule: 'RunAsAny'
+            seLinux:
+              # This policy assumes the nodes are using AppArmor rather than SELinux.
+              rule: 'RunAsAny'
+            supplementalGroups:
+              rule: 'RunAsAny'
+            fsGroup:
+              rule: 'RunAsAny'
+              # rule: 'MustRunAs'
+              # ranges:
+              #   # Forbid adding the root group.
+              #   - min: 1
+              #     max: 65535
+          ---
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: Role
+          metadata:
+            name: psp:kube-system-psp
+            namespace: kube-system
+          rules:
+          - apiGroups:
+            - extensions
+            resourceNames:
+            - kube-system-psp
+            resources:
+            - podsecuritypolicies
+            verbs:
+            - use
+          ---
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: RoleBinding
+          metadata:
+            name: psp:kube-system-psp
+            namespace: kube-system
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: Role
+            name: psp:kube-system-psp
+          subjects:
+          - kind: ServiceAccount
+            name: coredns
+          - kind: ServiceAccount
+            name: metrics-server
+          - kind: ServiceAccount
+            name: kubernetes-dashboard
+        kubelet-drain: |
+          ---
+          kind: ClusterRole
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: kubo:internal:kubelet-drain
+          rules:
+          - apiGroups: [""]
+            resources: ["nodes"]
+            verbs: ["list", "get", "patch", "delete"]
+          - apiGroups: [""]
+            resources: ["pods"]
+            verbs: ["list", "delete"]
+          - apiGroups: [""]
+            resources: ["pods/eviction"]
+            verbs: ["create"]
+          - apiGroups: ["apps"]
+            resources: ["statefulsets", "daemonsets"]
+            verbs: ["get"]
+          - apiGroups: ["extensions"]
+            resources: ["replicasets", "daemonsets"]
+            verbs: ["get"]
+          - apiGroups: ["batch"]
+            resources: ["jobs"]
+            verbs: ["get"]
+          - apiGroups: [""]
+            resources: ["replicationcontrollers"]
+            verbs: ["get"]
+          ---
+          kind: ClusterRoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: kubo:internal:kubelet-drain
+          subjects:
+          - kind: User
+            name: kubelet-drain
+            apiGroup: rbac.authorization.k8s.io
+          roleRef:
+            kind: ClusterRole
+            name: kubo:internal:kubelet-drain
+            apiGroup: rbac.authorization.k8s.io
+        kubelet: |
+          ---
+          kind: ClusterRoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: kubo:internal:kubelet
+          subjects:
+          - kind: User
+            name: kubelet
+            apiGroup: rbac.authorization.k8s.io
+          roleRef:
+            kind: ClusterRole
+            name: system:node
+            apiGroup: rbac.authorization.k8s.io
     release: kubo
   - name: etcd
     properties:
