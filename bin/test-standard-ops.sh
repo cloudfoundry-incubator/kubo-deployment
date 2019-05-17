@@ -58,6 +58,7 @@ test_standard_ops() {
       check_interpolation "add-hostname-to-master-certificate.yml" "-v api-hostname=example.com"
       check_interpolation "add-oidc-endpoint.yml" "-l example-vars-files/misc/oidc.yml"
       check_interpolation "change-audit-log-flags.yml" "-l example-vars-files/change-audit-log-flags.yml"
+      check_interpolation "addons-spec.yml" "-v addons-spec={}"
       check_interpolation "allow-privileged-containers.yml"
       check_interpolation "change-cidrs.yml" "-l example-vars-files/new-cidrs.yml"
       check_interpolation "disable-anonymous-auth.yml"
@@ -68,12 +69,6 @@ test_standard_ops() {
       check_interpolation "enable-csi-shared-mounts.yml"
       check_interpolation "use-hostgw.yml"
       check_interpolation "set-fs-inotify-limit.yml" "-l example-vars-files/fs-inotify-limit.yml"
-
-      ## Addons
-      check_interpolation "addons-spec/addons.yml" "-v addons-spec={}"
-      check_interpolation "addons-spec/coredns.yml" "-v kubedns_service_ip=192.168.20.50"
-      check_interpolation "addons-spec/kubernetes-dashboard.yml"
-      check_interpolation "addons-spec/metrics-server.yml"
 
       # Etcd
       check_interpolation "change-etcd-metrics-url.yml" "-v etcd_metrics_protocol=http -v etcd_metrics_port=2378"

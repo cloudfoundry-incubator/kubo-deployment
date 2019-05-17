@@ -8,6 +8,10 @@
   value: [((kubedns_service_ip))]
 
 - type: replace
+  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/properties/specs/coredns/name=service/value/spec/clusterIP
+  value: ((kubedns_service_ip))
+
+- type: replace
   path: /instance_groups/name=worker/jobs/name=flanneld/properties?/pod-network-cidr?
   value: ((pod_network_cidr))
 

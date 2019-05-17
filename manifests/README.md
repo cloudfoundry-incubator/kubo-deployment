@@ -83,6 +83,7 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
+| [`ops-files/addons-spec.yml`](ops-files/addons-spec.yml) | Addons to be deployed into the Kubernetes cluster | - |
 | [`ops-files/allow-privileged-containers.yml`](ops-files/allow-privileged-containers.yml) | Allows privileged containers for the Kubernetes cluster. | It is not recommended to use privileged containers however some workloads require it. Container privileges can be limited with the SecurityContextDeny admission plugin (set by default in CFCR). See kubernetes documentation for more information |
 | [`ops-files/disable-anonymous-auth.yml`](ops-files/disable-anonymous-auth.yml) | Disable `anonymous-auth` on the API server | - |
 | [`ops-files/add-oidc-endpoint.yml`](ops-files/add-oidc-endpoint.yml) | Enable OIDC authentication for the Kubernetes cluster | - |
@@ -96,15 +97,6 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | [`ops-files/enable-csi-shared-mounts.yml`](ops-files/enable-csi-shared-mounts.yml) | Enable shared mounts in Docker for CSI volumes | - |
 | [`ops-files/use-hostgw.yml`](ops-files/use-hostgw.yml) | Sets the cluster to use host-gw backend in flannel. Necessary for Windows workers. | - |
 | [`ops-files/set-fs-inotify-limit.yml`](ops-files/set-fs-inotify-limit.yml) | Configure fs.inotify.max_user_watches.| Extra Vars Required:<br>- **fs_inotify_max_user_watches:** Required for configuring the max inotify user watches. |
-
-### Addons
-
-| Name | Purpose | Notes |
-|:---  |:---     |:---   |
-| [`ops-files/addons-spec/addons.yml`](ops-files/addons-spec/addons.yml) | Addons to be deployed into the Kubernetes cluster | - |
-| [`ops-files/addons-spec/coredns.yml`](ops-files/addons-spec/coredns.yml) | Coredns to be deployed into the Kubernetes cluster | `kubedns_service_ip` variable is needed, for example: `10.100.200.10` |
-| [`ops-files/addons-spec/kubernetes-dashboard.yml`](ops-files/addons-spec/kubernetes-dashboard.yml) | Kubernetes dashboard to be deployed into the Kubernetes cluster | - |
-| [`ops-files/addons-spec/metrics-server.yml`](ops-files/addons-spec/metrics-server.yml) | Metrics server to be deployed into the Kubernetes cluster | - |
 
 ### Etcd
 
