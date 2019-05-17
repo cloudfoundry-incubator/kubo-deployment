@@ -474,7 +474,7 @@ instance_groups:
                     secretName: metrics-server-certs
                 containers:
                 - name: metrics-server
-                  image: k8s.gcr.io/metrics-server-amd64:v0.3.2
+                  image: k8s.gcr.io/metrics-server-amd64:v0.3.3
                   imagePullPolicy: IfNotPresent
                   command:
                   - /metrics-server
