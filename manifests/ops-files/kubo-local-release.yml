@@ -2,5 +2,4 @@
   path: /releases/name=kubo
   value:
    name: kubo
-   version: create
-   url: file://../kubo-release
+   version: latest

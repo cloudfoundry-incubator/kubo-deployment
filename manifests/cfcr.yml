@@ -297,11 +297,11 @@ instance_groups:
   - name: kubernetes-roles
     properties:
       admin-password: ((kubo-admin-password))
-      admin-username: admin
       tls:
         kubernetes: ((tls-kubernetes))
-      specs:
-        cluster-admin: |
+      post-start-policies:
+      - name: cluster-admin
+        value: |
           ---
           kind: ClusterRoleBinding
           apiVersion: rbac.authorization.k8s.io/v1
@@ -315,7 +315,8 @@ instance_groups:
             kind: ClusterRole
             name: cluster-admin
             apiGroup: rbac.authorization.k8s.io
-        kube-proxy: |
+      - name: kube-proxy
+        value: |
           ---
           kind: ClusterRoleBinding
           apiVersion: rbac.authorization.k8s.io/v1
@@ -329,7 +330,8 @@ instance_groups:
             kind: ClusterRole
             name: system:node-proxier
             apiGroup: rbac.authorization.k8s.io
-        kube-system-podsecuritypolicy: |
+      - name: kube-system-podsecuritypolicy
+        value: |
           ---
           apiVersion: policy/v1beta1
           kind: PodSecurityPolicy
@@ -406,7 +408,8 @@ instance_groups:
             name: metrics-server
           - kind: ServiceAccount
             name: kubernetes-dashboard
-        kubelet-drain: |
+      - name: kubelet-drain
+        value: |
           ---
           kind: ClusterRole
           apiVersion: rbac.authorization.k8s.io/v1
@@ -447,7 +450,8 @@ instance_groups:
             kind: ClusterRole
             name: kubo:internal:kubelet-drain
             apiGroup: rbac.authorization.k8s.io
-        kubelet: |
+      - name: kubelet
+        value: |
           ---
           kind: ClusterRoleBinding
           apiVersion: rbac.authorization.k8s.io/v1

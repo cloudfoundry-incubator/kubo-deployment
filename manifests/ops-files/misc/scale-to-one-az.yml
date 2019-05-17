@@ -4,10 +4,10 @@
 # in a single Availability Zone.
 - type: replace
   path: /instance_groups/name=master/instances
-  value: 1
+  value: ((master_instance))
 - type: replace
   path: /instance_groups/name=worker/instances
-  value: 1
+  value: ((worker_instance))
 - type: replace
   path: /instance_groups/name=apply-addons/instances
   value: 1
