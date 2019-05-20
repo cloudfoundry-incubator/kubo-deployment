@@ -1160,6 +1160,7 @@ releases:
   version: 1.0.4
 - name: kubernetes
   version: latest
+  url: a
 stemcells:
 - alias: default
   os: ubuntu-xenial
