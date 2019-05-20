@@ -17,3 +17,6 @@
     sha1: 41df19697d6a69d2552bc2c132928157fa91abe0
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=1.0.4
     version: 1.0.4
+  - name: kubernetes
+    url: hardcode
+    version: 1.0.0
