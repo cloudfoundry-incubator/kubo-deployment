@@ -19,4 +19,4 @@
     version: 1.0.4
   - name: kubernetes
     url: https://storage.googleapis.com/kubo-pipeline-store-test/kubernetes-release.tar.gz
-    version: 0.0.0-dev.1
+    version: 0.0.0-dev.2
