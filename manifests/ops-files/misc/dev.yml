@@ -1,11 +1,17 @@
-- type: replace
+- type: remove
   path: /releases/name=kubo
+
+- type: replace
+  path: /releases/-
   value:
     name: kubo
     version: latest
 
+- type: remove
+  path: /releases/name=kubernetes
+
 - type: replace
-  path: /releases/name=kubernetes?
+  path: /releases/-
   value:
     name: kubernetes
     version: latest
