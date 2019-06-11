@@ -3,7 +3,7 @@
   value:
     alias: windows
     os: windows2019
-    version: "2019.2"
+    version: latest
 
 - type: replace
   path: /releases/-
