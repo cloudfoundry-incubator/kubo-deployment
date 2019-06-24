@@ -98,6 +98,15 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | [`ops-files/use-hostgw.yml`](ops-files/use-hostgw.yml) | Sets the cluster to use host-gw backend in flannel. Necessary for Windows workers. | - |
 | [`ops-files/set-fs-inotify-limit.yml`](ops-files/set-fs-inotify-limit.yml) | Configure fs.inotify.max_user_watches.| Extra Vars Required:<br>- **fs_inotify_max_user_watches:** Required for configuring the max inotify user watches. |
 | [`ops-files/master-kubelet.yml`](ops-files/master-kubelet.yml) | Installs a kubelet with its dependencies on the master nodes. | EXPERIMENTAL for use with pluggable CNIs.  Must be deployed after `ops-files/change-cidrs.yml`. |
+| [`ops-files/disable-flannel-enable-ipam.yml`](ops-files/disable-flannel-enable-ipam.yml) | Removes BOSH flanneld and enables pod IPAM on kube-controller-manager | EXPERIMENTAL for use with pluggable CNIs.  Must be deployed after `ops-files/master-kubelet.yml`. Probably should also be deployed with a CNI ops-file (though you can use this to manually install your own CNIs with `kubectl`) |
+
+
+### CNIs
+| Name | Purpose | Notes|
+|:--- |:--- |:--- |
+| [`ops-files/cni/kube-flannel.yml`](ops-files/cni/kube-flannel.yml) | Installs flannel CNI as a DaemonSet | EXPERIMENTAL for use with pluggable CNIs.  Must be deployed after `ops-files/master-kubelet.yml` and `ops-files/disable-flannel-enable-ipam.yml`.  Currently hard codes the 10.200.0.0/16 pod network, this must be manually changed before applying |
+| [`ops-files/cni/canal.yml`](ops-files/cni/canal.yml) | Installs Calico policy & flannel CNI as a DaemonSet | EXPERIMENTAL for use with pluggable CNIs.  Must be deployed after `ops-files/master-kubelet.yml` and `ops-files/disable-flannel-enable-ipam.yml`.  Currently hard codes the 10.200.0.0/16 pod network, this must be manually changed before applying |
+| [`ops-files/cni/calico.yml`](ops-files/cni/calico.yml) | Installs Calico CNI as a DaemonSet | EXPERIMENTAL for use with pluggable CNIs.  Must be deployed after `ops-files/master-kubelet.yml` and `ops-files/disable-flannel-enable-ipam.yml`.  Currently hard codes the 10.200.0.0/16 pod network, this must be manually changed before applying.  This is not yet supported on Azure, but can be modified to run in vxlan mode if you're feeling adventurous. |
 
 ### Etcd
 
