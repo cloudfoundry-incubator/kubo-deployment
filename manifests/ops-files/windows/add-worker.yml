@@ -39,7 +39,7 @@
           keep-terminated-pod-volumes: false
           kubeconfig: C:\var\vcap\jobs\kubelet-windows\config\kubeconfig
           network-plugin: cni
-          pod-infra-container-image: kubeletwin/pause
+          pod-infra-container-image: mcr.microsoft.com/k8s/core/pause:1.2.0
           register-with-taints: windows=2019:NoSchedule
           resolv-conf: ""
           runtime-request-timeout: 1m
