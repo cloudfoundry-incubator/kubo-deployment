@@ -443,16 +443,16 @@ releases:
   url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-0.34.0-ubuntu-xenial-315.41-20190621-181712-51217485.tgz
   version: 0.34.0
 - name: cfcr-etcd
-  sha1: 96453ba126e882db503197d33877238d607b8614
-  url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.11.1-ubuntu-xenial-315.64-20190703-010646-918405469.tgz
+  sha1: c3f8ad93473190dc2c64169dd291556332642a57
+  url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.11.1-ubuntu-xenial-315.70-20190716-175327-761536081.tgz
   version: 1.11.1
 - name: docker
-  sha1: 737bd5e464e40793e33fe0f51808446feed7a1dc
-  url: https://storage.googleapis.com/kubo-precompiled-releases/docker-35.2.1-ubuntu-xenial-315.64-20190703-010240-076100027.tgz
+  sha1: d0ceb29605302fdfd16ef1a89fe2d52a5997a8e9
+  url: https://storage.googleapis.com/kubo-precompiled-releases/docker-35.2.1-ubuntu-xenial-315.70-20190716-174942-710123101.tgz
   version: 35.2.1
 - name: bpm
-  sha1: c3376e70d6a080054012afa45fae1e9249b2a6d9
-  url: https://storage.googleapis.com/kubo-precompiled-releases/bpm-1.0.4-ubuntu-xenial-315.64-20190703-011222-636424609.tgz
+  sha1: 6d4d11a1c5bf47e49085b45937a5824d1e4830a7
+  url: https://storage.googleapis.com/kubo-precompiled-releases/bpm-1.0.4-ubuntu-xenial-315.70-20190716-175908-07910572.tgz
   version: 1.0.4
 stemcells:
 - alias: default
