@@ -25,7 +25,8 @@
   path: /releases/-
   value:
     name: "kubernetes-windows"
-    version: latest
+    url: https://storage.googleapis.com/kubo-pipeline-store-test/kubernetes-windows-release.tar.gz
+    version: 0.0.0-dev.7
 
 - type: replace
   path: /addons/-
