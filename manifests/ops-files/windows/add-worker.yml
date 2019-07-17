@@ -22,6 +22,12 @@
     sha1: "05ead5f098611e25a6fc6e5cfb33825cf1c9b8ae"
 
 - type: replace
+  path: /releases/-
+  value:
+    name: "kubernetes-windows"
+    version: latest
+
+- type: replace
   path: /addons/-
   value:
     name: bosh-dns-aliases-windows
