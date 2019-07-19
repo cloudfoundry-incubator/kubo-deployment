@@ -1,15 +1,15 @@
 ---
 - type: replace
-  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/properties/kubedns-service-ip?
-  value: ((kubedns_service_ip))
-
-- type: replace
   path: /instance_groups/name=master/jobs/name=kube-apiserver/properties/k8s-args/service-cluster-ip-range?
   value: ((service_cluster_cidr))
 
 - type: replace
   path: /instance_groups/name=worker/jobs/name=kubelet/properties/kubelet-configuration/clusterDNS?
   value: [((kubedns_service_ip))]
+
+- type: replace
+  path: /instance_groups/name=apply-addons/jobs/name=apply-specs/properties/specs/coredns/name=service/value/spec/clusterIP
+  value: ((kubedns_service_ip))
 
 - type: replace
   path: /instance_groups/name=worker/jobs/name=flanneld/properties?/pod-network-cidr?

@@ -26,7 +26,544 @@ instance_groups:
         kubernetes: ((tls-kubernetes))
         kubernetes-dashboard: ((tls-kubernetes-dashboard))
         metrics-server: ((tls-metrics-server))
+      specs:
+        coredns:
+        - name: service-account
+          value:
+            apiVersion: v1
+            kind: ServiceAccount
+            metadata:
+              name: coredns
+              namespace: kube-system
+        - name: cluster-role
+          value:
+            apiVersion: rbac.authorization.k8s.io/v1
+            kind: ClusterRole
+            metadata:
+              labels:
+                kubernetes.io/bootstrapping: rbac-defaults
+              name: system:coredns
+            rules:
+            - apiGroups:
+              - ""
+              resources:
+              - endpoints
+              - services
+              - pods
+              - namespaces
+              verbs:
+              - list
+              - watch
+            - apiGroups:
+              - ""
+              resources:
+              - nodes
+              verbs:
+              - get
+        - name: cluster-role-binding
+          value:
+            apiVersion: rbac.authorization.k8s.io/v1
+            kind: ClusterRoleBinding
+            metadata:
+              annotations:
+                rbac.authorization.kubernetes.io/autoupdate: "true"
+              labels:
+                kubernetes.io/bootstrapping: rbac-defaults
+              name: system:coredns
+            roleRef:
+              apiGroup: rbac.authorization.k8s.io
+              kind: ClusterRole
+              name: system:coredns
+            subjects:
+            - kind: ServiceAccount
+              name: coredns
+              namespace: kube-system
+        - name: config-map
+          value:
+            apiVersion: v1
+            kind: ConfigMap
+            metadata:
+              name: coredns
+              namespace: kube-system
+            data:
+              Corefile: |
+                .:53 {
+                    errors
+                    health
+                    kubernetes cluster.local in-addr.arpa ip6.arpa {
+                      pods insecure
+                      upstream
+                      fallthrough in-addr.arpa ip6.arpa
+                    }
+                    prometheus :9153
+                    proxy . /etc/resolv.conf {
+                      policy sequential # needed for workloads to be able to use BOSH-DNS
+                    }
+                    cache 30
+                    loop
+                    reload
+                    loadbalance
+                }
+        - name: deployment
+          value:
+            apiVersion: extensions/v1beta1
+            kind: Deployment
+            metadata:
+              name: coredns
+              namespace: kube-system
+              labels:
+                k8s-app: kube-dns
+                kubernetes.io/name: "CoreDNS"
+            spec:
+              replicas: 3
+              strategy:
+                type: RollingUpdate
+                rollingUpdate:
+                  maxUnavailable: 1
+              selector:
+                matchLabels:
+                  k8s-app: kube-dns
+              template:
+                metadata:
+                  labels:
+                    k8s-app: kube-dns
+                  annotations:
+                    seccomp.security.alpha.kubernetes.io/pod: 'docker/default'
+                spec:
+                  priorityClassName: system-cluster-critical # Added for Guaranteed Scheduling
+                  serviceAccountName: coredns
+                  tolerations:
+                    - key: "CriticalAddonsOnly"
+                      operator: "Exists"
+                  containers:
+                  - name: coredns
+                    image: coredns/coredns:1.3.1
+                    imagePullPolicy: IfNotPresent
+                    resources:
+                      limits:
+                        memory: 170Mi
+                      requests:
+                        cpu: 100m
+                        memory: 70Mi
+                    args: [ "-conf", "/etc/coredns/Corefile" ]
+                    volumeMounts:
+                    - name: config-volume
+                      mountPath: /etc/coredns
+                      readOnly: true
+                    ports:
+                    - containerPort: 53
+                      name: dns
+                      protocol: UDP
+                    - containerPort: 53
+                      name: dns-tcp
+                      protocol: TCP
+                    - containerPort: 9153
+                      name: metrics
+                      protocol: TCP
+                  # NOTE: Security Context is denied unless privileged containers
+                  # are enabled. Once security context can be separated from
+                  # allow-privileged in the release, then this should become
+                  # conditional.
+                    # securityContext:
+                    #   allowPrivilegeEscalation: false
+                    #   capabilities:
+                    #     add:
+                    #     - NET_BIND_SERVICE
+                    #     drop:
+                    #     - all
+                    #   readOnlyRootFilesystem: true
+                    livenessProbe:
+                      httpGet:
+                        path: /health
+                        port: 8080
+                        scheme: HTTP
+                      initialDelaySeconds: 60
+                      timeoutSeconds: 5
+                      successThreshold: 1
+                      failureThreshold: 5
+                  dnsPolicy: Default
+                  volumes:
+                    - name: config-volume
+                      configMap:
+                        name: coredns
+                        items:
+                        - key: Corefile
+                          path: Corefile
+        - name: service
+          value:
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: kube-dns
+              namespace: kube-system
+              annotations:
+                prometheus.io/port: "9153"
+                prometheus.io/scrape: "true"
+              labels:
+                k8s-app: kube-dns
+                kubernetes.io/cluster-service: "true"
+                kubernetes.io/name: "CoreDNS"
+            spec:
+              selector:
+                k8s-app: kube-dns
+              clusterIP: 10.100.200.10
+              ports:
+              - name: dns
+                port: 53
+                protocol: UDP
+              - name: dns-tcp
+                port: 53
+                protocol: TCP
+        kubernetes-dashboard: |
+          # Copyright 2017 The Kubernetes Authors.
+          #
+          # Licensed under the Apache License, Version 2.0 (the "License");
+          # you may not use this file except in compliance with the License.
+          # You may obtain a copy of the License at
+          #
+          #     http://www.apache.org/licenses/LICENSE-2.0
+          #
+          # Unless required by applicable law or agreed to in writing, software
+          # distributed under the License is distributed on an "AS IS" BASIS,
+          # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+          # See the License for the specific language governing permissions and
+          # limitations under the License.
+
+          # Configuration to deploy release version of the Dashboard UI compatible with
+          # Kubernetes 1.8.
+          #
+          # Example usage: kubectl create -f <this_file>
+
+          ---
+          # ------------------- Dashboard Service Account ------------------- #
+
+          apiVersion: v1
+          kind: ServiceAccount
+          metadata:
+            labels:
+              k8s-app: kubernetes-dashboard
+            name: kubernetes-dashboard
+            namespace: kube-system
+
+          ---
+          # ------------------- Dashboard Role & Role Binding ------------------- #
+
+          kind: Role
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            labels:
+              k8s-app: kubernetes-dashboard
+            name: kubernetes-dashboard-minimal
+            namespace: kube-system
+          rules:
+            # Allow Dashboard to create 'kubernetes-dashboard-key-holder' secret. Added separately from Addons Spec
+          - apiGroups: [""]
+            resources: ["secrets"]
+            verbs: ["create"]
+
+            # Allow Dashboard to get, update and delete Dashboard exclusive secrets.
+          - apiGroups: [""]
+            resources: ["secrets"]
+            resourceNames: ["kubernetes-dashboard-key-holder", "kubernetes-dashboard-certs"]
+            verbs: ["get", "update", "delete"]
+            # Allow Dashboard to get and update 'kubernetes-dashboard-settings' config map.
+          - apiGroups: [""]
+            resources: ["configmaps"]
+            resourceNames: ["kubernetes-dashboard-settings"]
+            verbs: ["get", "update"]
+
+          ---
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: RoleBinding
+          metadata:
+            name: kubernetes-dashboard-minimal
+            namespace: kube-system
+            labels:
+              k8s-app: kubernetes-dashboard
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: Role
+            name: kubernetes-dashboard-minimal
+          subjects:
+          - kind: ServiceAccount
+            name: kubernetes-dashboard
+            namespace: kube-system
+
+          ---
+          # ------------------- Dashboard Config ------------------- #
+
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: kubernetes-dashboard-settings
+            namespace: kube-system
+            labels:
+              k8s-app: kubernetes-dashboard
+          ---
+          # ------------------- Dashboard Deployment ------------------- #
+
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: kubernetes-dashboard
+            namespace: kube-system
+            labels:
+              k8s-app: kubernetes-dashboard
+          spec:
+            selector:
+              matchLabels:
+                k8s-app: kubernetes-dashboard
+            template:
+              metadata:
+                labels:
+                  k8s-app: kubernetes-dashboard
+                annotations:
+                  scheduler.alpha.kubernetes.io/critical-pod: ''
+                  seccomp.security.alpha.kubernetes.io/pod: 'docker/default'
+              spec:
+                priorityClassName: system-cluster-critical
+                containers:
+                - name: kubernetes-dashboard
+                  image: k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.1
+                  resources:
+                    limits:
+                      cpu: 100m
+                      memory: 300Mi
+                    requests:
+                      cpu: 50m
+                      memory: 100Mi
+                  ports:
+                  - containerPort: 8443
+                    protocol: TCP
+                  args:
+                    - --default-cert-dir=/certs
+                    - --tls-cert-file=kubernetes-dashboard-cert
+                    - --tls-key-file=kubernetes-dashboard-key
+                    # Uncomment the following line
+                    # Create on-disk volume to store exec logs
+                  volumeMounts:
+                  - mountPath: /tmp
+                    name: tmp-volume
+                  - mountPath: /certs
+                    name: kubernetes-dashboard-certs
+                    readOnly: true
+                  livenessProbe:
+                    httpGet:
+                      scheme: HTTPS
+                      path: /
+                      port: 8443
+                    initialDelaySeconds: 30
+                    timeoutSeconds: 30
+                volumes:
+                - name: kubernetes-dashboard-certs
+                  secret:
+                    secretName: kubernetes-dashboard-certs
+                - name: tmp-volume
+                  emptyDir: {}
+                serviceAccountName: kubernetes-dashboard
+                tolerations:
+                - key: "CriticalAddonsOnly"
+                  operator: "Exists"
+                # Comment the following tolerations if Dashboard must not be deployed on master
+                # tolerations:
+                # - key: node-role.kubernetes.io/master
+                #  effect: NoSchedule
+
+          ---
+          # ------------------- Dashboard Service ------------------- #
+
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: kubernetes-dashboard
+            namespace: kube-system
+            labels:
+              k8s-app: kubernetes-dashboard
+          spec:
+            selector:
+              k8s-app: kubernetes-dashboard
+            ports:
+            - port: 443
+              targetPort: 8443
+            type: NodePort
+        metrics-server: |
+          ---
+          # ------------------- Auth Delegator ------------------- #
+
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: ClusterRoleBinding
+          metadata:
+            name: metrics-server:system:auth-delegator
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: system:auth-delegator
+          subjects:
+          - kind: ServiceAccount
+            name: metrics-server
+            namespace: kube-system
+
+          ---
+          # ------------------- Auth Reader ------------------- #
+
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: RoleBinding
+          metadata:
+            name: metrics-server-auth-reader
+            namespace: kube-system
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: Role
+            name: extension-apiserver-authentication-reader
+          subjects:
+          - kind: ServiceAccount
+            name: metrics-server
+            namespace: kube-system
+
+          ---
+          # ------------------- Metrics APIService ------------------- #
+
+          apiVersion: apiregistration.k8s.io/v1beta1
+          kind: APIService
+          metadata:
+            name: v1beta1.metrics.k8s.io
+          spec:
+            service:
+              name: metrics-server
+              namespace: kube-system
+            group: metrics.k8s.io
+            version: v1beta1
+            insecureSkipTLSVerify: true
+            groupPriorityMinimum: 100
+            versionPriority: 100
+
+          ---
+          # ------------------- Metrics Server Deployment ------------------- #
+
+          apiVersion: v1
+          kind: ServiceAccount
+          metadata:
+            name: metrics-server
+            namespace: kube-system
+          ---
+          apiVersion: extensions/v1beta1
+          kind: Deployment
+          metadata:
+            name: metrics-server
+            namespace: kube-system
+            labels:
+              k8s-app: metrics-server
+              version: v0.3.1
+          spec:
+            selector:
+              matchLabels:
+                k8s-app: metrics-server
+            template:
+              metadata:
+                name: metrics-server
+                labels:
+                  k8s-app: metrics-server
+              spec:
+                serviceAccountName: metrics-server
+                volumes:
+                # mount in tmp so we can safely use from-scratch images and/or read-only containers
+                - name: tmp-dir
+                  emptyDir: {}
+                - name: metrics-server-secrets
+                  secret:
+                    secretName: metrics-server-certs
+                containers:
+                - name: metrics-server
+                  image: k8s.gcr.io/metrics-server-amd64:v0.3.3
+                  imagePullPolicy: IfNotPresent
+                  command:
+                  - /metrics-server
+                  - --kubelet-preferred-address-types=InternalIP
+                  - --kubelet-insecure-tls
+                  - --client-ca-file=/var/run/kubernetes/client-ca.crt
+                  - --requestheader-client-ca-file=/var/run/kubernetes/requestheader-client-ca.crt
+                  - --tls-cert-file=/var/run/kubernetes/client.crt
+                  - --tls-private-key-file=/var/run/kubernetes/client.key
+                  ports:
+                  - containerPort: 443
+                    name: https
+                    protocol: TCP
+                  volumeMounts:
+                  - name: tmp-dir
+                    mountPath: /tmp
+                  - name: metrics-server-secrets
+                    mountPath: /var/run/kubernetes
+                tolerations:
+                  - key: "CriticalAddonsOnly"
+                    operator: "Exists"
+
+          ---
+          # ------------------- Metrics Server Service ------------------- #
+
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: metrics-server
+            namespace: kube-system
+            labels:
+              kubernetes.io/name: "Metrics-server"
+          spec:
+            selector:
+              k8s-app: metrics-server
+            ports:
+            - port: 443
+              protocol: TCP
+              targetPort: https
+
+          ---
+          # ------------------- Resource Reader ------------------- #
+
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: ClusterRole
+          metadata:
+            name: system:metrics-server
+          rules:
+          - apiGroups:
+            - ""
+            resources:
+            - nodes/stats
+            verbs:
+            - create
+            - get
+          - apiGroups:
+            - ""
+            resources:
+            - pods
+            - nodes
+            - namespaces
+            verbs:
+            - get
+            - list
+            - watch
+          - apiGroups:
+            - "extensions"
+            resources:
+            - deployments
+            verbs:
+            - get
+            - list
+            - watch
+          ---
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: ClusterRoleBinding
+          metadata:
+            name: system:metrics-server
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: system:metrics-server
+          subjects:
+          - kind: ServiceAccount
+            name: metrics-server
+            namespace: kube-system
     release: kubo
+  - name: kubernetes-dependencies
+    release: kubernetes
   lifecycle: errand
   name: apply-addons
   networks:
@@ -49,6 +586,8 @@ instance_groups:
           certificate: ((tls-etcdctl-flanneld.certificate))
           private_key: ((tls-etcdctl-flanneld.private_key))
     release: kubo
+  - name: kubernetes-dependencies
+    release: kubernetes
   - name: kube-apiserver
     properties:
       admin-password: ((kubo-admin-password))
@@ -293,9 +832,174 @@ instance_groups:
   - name: kubernetes-roles
     properties:
       admin-password: ((kubo-admin-password))
-      admin-username: admin
       tls:
         kubernetes: ((tls-kubernetes))
+      post-start-policies:
+      - name: cluster-admin
+        value: |
+          ---
+          kind: ClusterRoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: kubo:internal:admin
+          subjects:
+          - kind: User
+            name: admin
+            apiGroup: rbac.authorization.k8s.io
+          roleRef:
+            kind: ClusterRole
+            name: cluster-admin
+            apiGroup: rbac.authorization.k8s.io
+      - name: kube-proxy
+        value: |
+          ---
+          kind: ClusterRoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: kubo:internal:kube-proxy
+          subjects:
+          - kind: User
+            name: kube-proxy
+            apiGroup: rbac.authorization.k8s.io
+          roleRef:
+            kind: ClusterRole
+            name: system:node-proxier
+            apiGroup: rbac.authorization.k8s.io
+      - name: kube-system-podsecuritypolicy
+        value: |
+          ---
+          apiVersion: policy/v1beta1
+          kind: PodSecurityPolicy
+          metadata:
+            name: kube-system-psp
+            annotations:
+              seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'docker/default'
+              apparmor.security.beta.kubernetes.io/allowedProfileNames: 'runtime/default'
+              seccomp.security.alpha.kubernetes.io/defaultProfileName:  'docker/default'
+              apparmor.security.beta.kubernetes.io/defaultProfileName:  'runtime/default'
+          spec:
+            privileged: false
+            # Required to prevent escalations to root.
+            allowPrivilegeEscalation: false
+            allowedCapabilities:
+            - '*'
+            # Allow core volume types.
+            hostNetwork: true
+            hostPorts:
+            - min: 0
+              max: 65535
+            hostIPC: true
+            hostPID: true
+            volumes:
+              - 'configMap'
+              - 'emptyDir'
+              - 'projected'
+              - 'secret'
+              - 'downwardAPI'
+            runAsUser:
+              # Require the container to run without root privileges.
+              rule: 'RunAsAny'
+            seLinux:
+              # This policy assumes the nodes are using AppArmor rather than SELinux.
+              rule: 'RunAsAny'
+            supplementalGroups:
+              rule: 'RunAsAny'
+            fsGroup:
+              rule: 'RunAsAny'
+              # rule: 'MustRunAs'
+              # ranges:
+              #   # Forbid adding the root group.
+              #   - min: 1
+              #     max: 65535
+          ---
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: Role
+          metadata:
+            name: psp:kube-system-psp
+            namespace: kube-system
+          rules:
+          - apiGroups:
+            - extensions
+            resourceNames:
+            - kube-system-psp
+            resources:
+            - podsecuritypolicies
+            verbs:
+            - use
+          ---
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: RoleBinding
+          metadata:
+            name: psp:kube-system-psp
+            namespace: kube-system
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: Role
+            name: psp:kube-system-psp
+          subjects:
+          - kind: ServiceAccount
+            name: coredns
+          - kind: ServiceAccount
+            name: metrics-server
+          - kind: ServiceAccount
+            name: kubernetes-dashboard
+      - name: kubelet-drain
+        value: |
+          ---
+          kind: ClusterRole
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: kubo:internal:kubelet-drain
+          rules:
+          - apiGroups: [""]
+            resources: ["nodes"]
+            verbs: ["list", "get", "patch", "delete"]
+          - apiGroups: [""]
+            resources: ["pods"]
+            verbs: ["list", "delete"]
+          - apiGroups: [""]
+            resources: ["pods/eviction"]
+            verbs: ["create"]
+          - apiGroups: ["apps"]
+            resources: ["statefulsets", "daemonsets"]
+            verbs: ["get"]
+          - apiGroups: ["extensions"]
+            resources: ["replicasets", "daemonsets"]
+            verbs: ["get"]
+          - apiGroups: ["batch"]
+            resources: ["jobs"]
+            verbs: ["get"]
+          - apiGroups: [""]
+            resources: ["replicationcontrollers"]
+            verbs: ["get"]
+          ---
+          kind: ClusterRoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: kubo:internal:kubelet-drain
+          subjects:
+          - kind: User
+            name: kubelet-drain
+            apiGroup: rbac.authorization.k8s.io
+          roleRef:
+            kind: ClusterRole
+            name: kubo:internal:kubelet-drain
+            apiGroup: rbac.authorization.k8s.io
+      - name: kubelet
+        value: |
+          ---
+          kind: ClusterRoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: kubo:internal:kubelet
+          subjects:
+          - kind: User
+            name: kubelet
+            apiGroup: rbac.authorization.k8s.io
+          roleRef:
+            kind: ClusterRole
+            name: system:node
+            apiGroup: rbac.authorization.k8s.io
     release: kubo
   - name: etcd
     properties:
@@ -373,7 +1077,7 @@ instance_groups:
       store_dir: /var/vcap/data
     release: docker
   - name: kubernetes-dependencies
-    release: kubo
+    release: kubernetes
   - name: kubelet
     properties:
       api-token: ((kubelet-password))
@@ -454,6 +1158,8 @@ releases:
   sha1: 6d4d11a1c5bf47e49085b45937a5824d1e4830a7
   url: https://storage.googleapis.com/kubo-precompiled-releases/bpm-1.0.4-ubuntu-xenial-315.70-20190716-175908-07910572.tgz
   version: 1.0.4
+- name: kubernetes
+  version: latest
 stemcells:
 - alias: default
   os: ubuntu-xenial

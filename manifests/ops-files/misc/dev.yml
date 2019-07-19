@@ -3,3 +3,9 @@
   value:
     name: kubo
     version: latest
+
+- type: replace
+  path: /releases/name=kubernetes?
+  value:
+    name: kubernetes
+    version: latest
