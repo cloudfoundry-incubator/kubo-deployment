@@ -71,7 +71,6 @@
           enforceNodeAllocatable: []
         drain-api-token: ((kubelet-drain-password))
         k8s-args:
-          allow-privileged: true
           cni-bin-dir: C:\var\vcap\jobs\kubelet-windows\packages\cni-windows\bin
           container-runtime: docker
           image-pull-progress-deadline: 20m

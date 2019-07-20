@@ -1,0 +1,7 @@
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=cloud-provider/properties/cloud-provider/gce?/service_key?
+  value: ((service_key_worker))
+
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=cloud-provider/properties/cloud-config?/Global?/token-url?
+  value: 'nil'

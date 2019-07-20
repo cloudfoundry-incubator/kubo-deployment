@@ -1,0 +1,3 @@
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=cloud-provider/properties/cloud-config?/Global?/subnetwork-name?
+  value: ((subnetwork))

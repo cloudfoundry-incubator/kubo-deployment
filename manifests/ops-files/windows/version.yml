@@ -1,0 +1,5 @@
+- type: replace
+  path: /releases/name=kubo-windows
+  value:
+    name: kubo-windows
+    version: ((kubo-windows-version))
