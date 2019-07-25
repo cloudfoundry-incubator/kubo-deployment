@@ -1,36 +1,26 @@
+## DO NOT REORDER RELEASES & STEMCELL! KUBO CI RELIES ON THE ARRAY INDEX OF THESE ELEMENTS TO UPDATE THEM 
+- type: replace
+  path: /releases/-
+  value:
+    name: kubo
+    version: "0.35.0"
+    url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-windows-0.31.0-windows2019-2019.2-20190325-131732-878123.tgz
+    sha1: 05ead5f098611e25a6fc6e5cfb33825cf1c9b8ae
+
+- type: replace
+  path: /releases/-
+  value:
+    name: docker
+    version: "35.2.1"
+    url: "https://bosh.io/d/github.com/cloudfoundry-incubator/windows-tools-release?v=32"
+    sha1: 95b6dd94a0b12491afc95e62f393c4d519411239
+
 - type: replace
   path: /stemcells/-
   value:
     alias: windows
     os: windows2019
     version: "2019.2"
-
-- type: replace
-  path: /releases/-
-  value:
-    name: "windows-tools"
-    version: "32"
-    url: "https://bosh.io/d/github.com/cloudfoundry-incubator/windows-tools-release?v=32"
-    sha1: "95b6dd94a0b12491afc95e62f393c4d519411239"
-
-- type: replace
-  path: /releases/-
-  value:
-    name: "kubo-windows"
-    version: "0.31.0"
-    url: "https://storage.googleapis.com/kubo-precompiled-releases/kubo-windows-0.31.0-windows2019-2019.2-20190325-131732-878123.tgz"
-    sha1: "05ead5f098611e25a6fc6e5cfb33825cf1c9b8ae"
-
-- type: replace
-  path: /addons/-
-  value:
-    name: bosh-dns-aliases-windows
-    jobs:
-    - name: kubo-dns-aliases
-      release: kubo-windows
-    include:
-      stemcell:
-      - os: windows2019
 
 - type: replace
   path: /instance_groups/-
@@ -87,9 +77,9 @@
           kubelet-client-ca:
             certificate: ((tls-kubelet-client.ca))
           kubernetes: ((tls-kubernetes))
-      release: kubo-windows
+      release: kubo
     - name: flanneld-windows
-      release: kubo-windows
+      release: kubo
       properties:
         tls:
           etcdctl:
@@ -109,6 +99,17 @@
             kubeconfig: /var/vcap/jobs/kube-proxy-windows/config/kubeconfig
           mode: kernelspace
           portRange: ""
-      release: kubo-windows
+      release: kubo
     - name: docker
-      release: windows-tools
+      release: docker
+
+- type: replace
+  path: /addons/-
+  value:
+    name: bosh-dns-aliases-windows
+    jobs:
+    - name: kubo-dns-aliases
+      release: kubo
+    include:
+      stemcell:
+      - os: windows2019
