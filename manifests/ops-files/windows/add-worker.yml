@@ -91,7 +91,7 @@
         tls:
           kubernetes: ((tls-kubernetes))
       release: kubo
-    - name: docker
+    - name: docker-windows
       release: docker
     name: windows-worker
     networks:
