@@ -17,7 +17,7 @@
   value:
     alias: windows
     os: windows2019
-    version: "2019.2"
+    version: "2019.7"
 - path: /instance_groups/-
   type: replace
   value:
