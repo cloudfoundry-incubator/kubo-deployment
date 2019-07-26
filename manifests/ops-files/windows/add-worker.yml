@@ -105,6 +105,6 @@
       stemcell:
       - os: windows2019
     jobs:
-    - name: kubo-dns-aliases
+    - name: kubo-dns-aliases-windows
       release: kubo
     name: bosh-dns-aliases-windows
