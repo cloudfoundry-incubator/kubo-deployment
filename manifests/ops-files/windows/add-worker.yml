@@ -1,64 +1,35 @@
-## DO NOT REORDER RELEASES & STEMCELL! KUBO CI RELIES ON THE ARRAY INDEX OF THESE ELEMENTS TO UPDATE THEM 
-- type: replace
-  path: /releases/-
+- path: /releases/-
+  type: replace
   value:
     name: kubo
-    version: "0.35.0"
-    url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-windows-0.31.0-windows2019-2019.2-20190325-131732-878123.tgz
     sha1: 05ead5f098611e25a6fc6e5cfb33825cf1c9b8ae
-
-- type: replace
-  path: /releases/-
+    url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-windows-0.31.0-windows2019-2019.2-20190325-131732-878123.tgz
+    version: 0.35.0
+- path: /releases/-
+  type: replace
   value:
     name: docker
-    version: "35.2.1"
-    url: "https://bosh.io/d/github.com/cloudfoundry-incubator/windows-tools-release?v=32"
-    sha1: 95b6dd94a0b12491afc95e62f393c4d519411239
-
-- type: replace
-  path: /stemcells/-
+    sha1: e15ffd321abf93c821a53a18d62884f41dccaa62
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/docker-boshrelease?v=35.2.2
+    version: 35.2.2
+- path: /stemcells/-
+  type: replace
   value:
     alias: windows
     os: windows2019
     version: "2019.2"
-
-- type: replace
-  path: /instance_groups/-
+- path: /instance_groups/-
+  type: replace
   value:
-    name: windows-worker
-    instances: 3
     azs:
     - z1
     - z2
     - z3
-    networks:
-    - name: default
-    stemcell: windows
-    vm_type: worker
+    instances: 3
     jobs:
     - name: kubelet-windows
       properties:
         api-token: ((kubelet-password))
-        kubelet-configuration:
-          kind: KubeletConfiguration
-          apiVersion: kubelet.config.k8s.io/v1beta1
-          authentication:
-            anonymous:
-              enabled: false
-            x509:
-              clientCAFile: C:\var\vcap\jobs\kubelet-windows\config\kubelet-client-ca.pem
-          authorization:
-            mode: Webhook
-          clusterDNS:
-            - 10.100.200.10
-          clusterDomain: cluster.local
-          failSwapOn: false
-          readOnlyPort: 0
-          serializeImagePulls: false
-          tlsCertFile: C:\var\vcap\jobs\kubelet-windows\config\kubelet.pem
-          tlsPrivateKeyFile: C:\var\vcap\jobs\kubelet-windows\config\kubelet-key.pem
-          cgroupsPerQOS: false
-          enforceNodeAllocatable: []
         drain-api-token: ((kubelet-drain-password))
         k8s-args:
           allow-privileged: true
@@ -72,6 +43,26 @@
           register-with-taints: windows=2019:NoSchedule
           resolv-conf: ""
           runtime-request-timeout: 1m
+        kubelet-configuration:
+          apiVersion: kubelet.config.k8s.io/v1beta1
+          authentication:
+            anonymous:
+              enabled: false
+            x509:
+              clientCAFile: C:\var\vcap\jobs\kubelet-windows\config\kubelet-client-ca.pem
+          authorization:
+            mode: Webhook
+          cgroupsPerQOS: false
+          clusterDNS:
+          - 10.100.200.10
+          clusterDomain: cluster.local
+          enforceNodeAllocatable: []
+          failSwapOn: false
+          kind: KubeletConfiguration
+          readOnlyPort: 0
+          serializeImagePulls: false
+          tlsCertFile: C:\var\vcap\jobs\kubelet-windows\config\kubelet.pem
+          tlsPrivateKeyFile: C:\var\vcap\jobs\kubelet-windows\config\kubelet-key.pem
         tls:
           kubelet: ((tls-kubelet))
           kubelet-client-ca:
@@ -79,37 +70,41 @@
           kubernetes: ((tls-kubernetes))
       release: kubo
     - name: flanneld-windows
-      release: kubo
       properties:
         tls:
           etcdctl:
             ca: ((tls-etcdctl-flanneld.ca))
             certificate: ((tls-etcdctl-flanneld.certificate))
             private_key: ((tls-etcdctl-flanneld.private_key))
+      release: kubo
     - name: kube-proxy-windows
       properties:
         api-token: ((kube-proxy-password))
-        tls:
-          kubernetes: ((tls-kubernetes))
         kube-proxy-configuration:
           apiVersion: kubeproxy.config.k8s.io/v1alpha1
-          kind: KubeProxyConfiguration
-          clusterCIDR: 10.200.0.0/16
           clientConnection:
             kubeconfig: /var/vcap/jobs/kube-proxy-windows/config/kubeconfig
+          clusterCIDR: 10.200.0.0/16
+          kind: KubeProxyConfiguration
           mode: kernelspace
           portRange: ""
+        tls:
+          kubernetes: ((tls-kubernetes))
       release: kubo
     - name: docker
       release: docker
-
-- type: replace
-  path: /addons/-
+    name: windows-worker
+    networks:
+    - name: default
+    stemcell: windows
+    vm_type: worker
+- path: /addons/-
+  type: replace
   value:
-    name: bosh-dns-aliases-windows
-    jobs:
-    - name: kubo-dns-aliases
-      release: kubo
     include:
       stemcell:
       - os: windows2019
+    jobs:
+    - name: kubo-dns-aliases
+      release: kubo
+    name: bosh-dns-aliases-windows
