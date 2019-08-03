@@ -9,9 +9,9 @@
   type: replace
   value:
     name: docker
-    sha1: e15ffd321abf93c821a53a18d62884f41dccaa62
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/docker-boshrelease?v=35.2.2
-    version: 35.2.2
+    sha1: 997f92ea8c961a697bbf6b07808a2aeaf0c3f1f2
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/docker-boshrelease?v=35.3.1
+    version: 35.3.1
 - path: /stemcells/-
   type: replace
   value:
