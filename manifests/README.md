@@ -134,3 +134,8 @@ For deeper documentation to deploy CFCR go [here](https://github.com/cloudfoundr
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
 | [`ops-files/kubo-local-release.yml`](ops-files/kubo-local-release.yml) | Deploy a local kubo release located in `../kubo-release` | -  |
+
+### Docker
+| Name | Purpose | Notes |
+|:---  |:---     |:---   |
+| [`ops-files/docker-sans-flannel.yml`](ops-files/docker-sans-flannel.yml) | Configure Docker Daemeon with standard networking settings (docker0 bridge), and let Kubelet/CNI manage cni0 bridge | This allows Bosh to recover/recreate worker nodes when flannel fails to renew subnet lease and a new one is assigned creating a sync problem between flannel.1 and cni0 |
