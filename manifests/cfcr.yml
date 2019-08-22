@@ -42,6 +42,8 @@ instance_groups:
   - name: bpm
     release: bpm
   - name: flanneld
+    provides:
+      flanneld: {as: worker-flanneld}
     properties:
       tls:
         etcdctl:
