@@ -13,7 +13,7 @@
           password: ((vcenter_master_password))
           server: ((vcenter_ip))
           user: ((vcenter_master_user))
-          working-dir: /((vcenter_dc))/vm/((vcenter_vms))/((director_uuid))
+          working-dir: /((vcenter_dc))/vm/((vcenter_vms))
         Disk:
           scsicontrollertype: pvscsi
     provides:
