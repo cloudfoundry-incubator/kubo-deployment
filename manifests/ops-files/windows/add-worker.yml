@@ -2,8 +2,8 @@
   type: replace
   value:
     name: kubo
-    sha1: 05ead5f098611e25a6fc6e5cfb33825cf1c9b8ae
-    url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-windows-0.31.0-windows2019-2019.2-20190325-131732-878123.tgz
+    sha1: 9ccefbc52c43a3b68d1d3e79abd6608359f1b78f
+    url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.35.0/kubo-release-0.35.0.tgz
     version: 0.35.0
 - path: /releases/name=docker
   type: replace
