@@ -92,7 +92,7 @@
           kubernetes: ((tls-kubernetes))
       release: kubo
     - name: docker-windows
-      release: docker
+      release: kubo
     name: windows-worker
     networks:
     - name: default
