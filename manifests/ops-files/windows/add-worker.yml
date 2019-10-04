@@ -1,17 +1,10 @@
-- path: /releases/name=kubo
+- path: /releases/-
   type: replace
   value:
-    name: kubo
-    sha1: f4d3230a20133684a5579823bb7d8abf8ae83aa1
-    url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.36.0/kubo-release-0.36.0.tgz
-    version: 0.36.0
-- path: /releases/name=docker
-  type: replace
-  value:
-    name: docker
-    sha1: ee15b3dbb6f0e0d19f287e2cae22714f069f67f3
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/docker-boshrelease?v=35.3.3
-    version: 35.3.3
+    name: kubo-windows
+    sha1: 05ead5f098611e25a6fc6e5cfb33825cf1c9b8ae
+    url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-windows-0.31.0-windows2019-2019.2-20190325-131732-878123.tgz
+    version: 0.31.0
 - path: /stemcells/-
   type: replace
   value:
@@ -68,7 +61,7 @@
           kubelet-client-ca:
             certificate: ((tls-kubelet-client.ca))
           kubernetes: ((tls-kubernetes))
-      release: kubo
+      release: kubo-windows
     - name: flanneld-windows
       properties:
         tls:
@@ -76,7 +69,7 @@
             ca: ((tls-etcdctl-flanneld.ca))
             certificate: ((tls-etcdctl-flanneld.certificate))
             private_key: ((tls-etcdctl-flanneld.private_key))
-      release: kubo
+      release: kubo-windows
     - name: kube-proxy-windows
       properties:
         api-token: ((kube-proxy-password))
@@ -90,9 +83,9 @@
           portRange: ""
         tls:
           kubernetes: ((tls-kubernetes))
-      release: kubo
+      release: kubo-windows
     - name: docker-windows
-      release: docker
+      release: kubo-windows
     name: windows-worker
     networks:
     - name: default
@@ -105,6 +98,6 @@
       stemcell:
       - os: windows2019
     jobs:
-    - name: kubo-dns-aliases-windows
+    - name: kubo-dns-aliases
       release: kubo
     name: bosh-dns-aliases-windows
