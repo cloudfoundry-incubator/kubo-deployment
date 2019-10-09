@@ -1,10 +1,10 @@
 - path: /releases/-
   type: replace
   value:
-    name: kubo-windows
-    sha1: 05ead5f098611e25a6fc6e5cfb33825cf1c9b8ae
-    url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-windows-0.31.0-windows2019-2019.2-20190325-131732-878123.tgz
-    version: 0.31.0
+    name: kubo
+    sha1: 119af8f6aadef441f19779cd3f7fe4552d16cc87
+    url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.37.0/kubo-release-0.37.0.tgz
+    version: 0.37.0
 - path: /stemcells/-
   type: replace
   value:
