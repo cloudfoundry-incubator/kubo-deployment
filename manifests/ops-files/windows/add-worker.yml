@@ -8,10 +8,9 @@
 - path: /stemcells/-
   type: replace
   value:
-    name: docker
-    sha1: 8dcacf558067ed5302e30e4c8de928ee7917695e
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/docker-boshrelease?v=35.3.4
-    version: 35.3.4
+    alias: windows
+    os: windows2019
+    version: "2019.7"
 - path: /instance_groups/-
   type: replace
   value:
