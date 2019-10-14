@@ -26,17 +26,13 @@
         api-token: ((kubelet-password))
         drain-api-token: ((kubelet-drain-password))
         k8s-args:
-          allow-privileged: true
           cni-bin-dir: C:\var\vcap\jobs\kubelet-windows\packages\cni-windows\bin
           container-runtime: docker
-          image-pull-progress-deadline: 20m
-          keep-terminated-pod-volumes: false
           kubeconfig: C:\var\vcap\jobs\kubelet-windows\config\kubeconfig
           network-plugin: cni
           pod-infra-container-image: mcr.microsoft.com/k8s/core/pause:1.2.0
           register-with-taints: windows=2019:NoSchedule
           resolv-conf: ""
-          runtime-request-timeout: 1m
         kubelet-configuration:
           apiVersion: kubelet.config.k8s.io/v1beta1
           authentication:
