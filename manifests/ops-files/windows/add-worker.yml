@@ -66,6 +66,8 @@
             certificate: ((tls-etcdctl-flanneld.certificate))
             private_key: ((tls-etcdctl-flanneld.private_key))
       release: kubo-windows
+      consumes:
+        flanneld: {from: worker-flanneld}
     - name: kube-proxy-windows
       properties:
         api-token: ((kube-proxy-password))
