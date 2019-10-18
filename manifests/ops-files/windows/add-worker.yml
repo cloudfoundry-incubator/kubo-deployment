@@ -27,6 +27,7 @@
         k8s-args:
           cni-bin-dir: C:\var\vcap\jobs\kubelet-windows\packages\cni-windows\bin
           container-runtime: docker
+          image-pull-progress-deadline: 20m
           kubeconfig: C:\var\vcap\jobs\kubelet-windows\config\kubeconfig
           network-plugin: cni
           pod-infra-container-image: mcr.microsoft.com/k8s/core/pause:1.2.0
