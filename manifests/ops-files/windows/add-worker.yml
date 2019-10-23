@@ -2,9 +2,9 @@
   type: replace
   value:
     name: kubo-windows
-    sha1: 6eab00861ebe8396bf02529c670dca12d62e42a4
-    url: https://github.com/cloudfoundry-incubator/kubo-release-windows/releases/download/v0.38.0/kubo-release-windows-0.38.0.tgz
-    version: 0.38.0
+    sha1: acd3d40eb4c2a04f00b188bab43390cdc27d6645
+    url: https://github.com/cloudfoundry-incubator/kubo-release-windows/releases/download/v0.39.0/kubo-release-windows-0.39.0.tgz
+    version: 0.39.0
 - path: /stemcells/-
   type: replace
   value:
@@ -59,7 +59,10 @@
             certificate: ((tls-kubelet-client.ca))
           kubernetes: ((tls-kubernetes))
       release: kubo-windows
-    - name: flanneld-windows
+    - consumes:
+        flanneld:
+          from: worker-flanneld
+      name: flanneld-windows
       properties:
         tls:
           etcdctl:
@@ -67,8 +70,6 @@
             certificate: ((tls-etcdctl-flanneld.certificate))
             private_key: ((tls-etcdctl-flanneld.private_key))
       release: kubo-windows
-      consumes:
-        flanneld: {from: worker-flanneld}
     - name: kube-proxy-windows
       properties:
         api-token: ((kube-proxy-password))
