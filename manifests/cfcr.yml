@@ -42,14 +42,15 @@ instance_groups:
   - name: bpm
     release: bpm
   - name: flanneld
-    provides:
-      flanneld: {as: worker-flanneld}
     properties:
       tls:
         etcdctl:
           ca: ((tls-etcdctl-flanneld.ca))
           certificate: ((tls-etcdctl-flanneld.certificate))
           private_key: ((tls-etcdctl-flanneld.private_key))
+    provides:
+      flanneld:
+        as: worker-flanneld
     release: kubo
   - name: kube-apiserver
     properties:
@@ -441,12 +442,12 @@ instance_groups:
 name: cfcr
 releases:
 - name: kubo
-  sha1: 426c0ae026e8911c79e08d8c709d3c2c8cf9354e
+  sha1: d1df65a470a1aa51a72ecc5df543d471faa074fd
   stemcell:
     os: ubuntu-xenial
     version: 456.3
-  url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-0.38.0-ubuntu-xenial-456.30-20191009-190924-879468961.tgz
-  version: 0.38.0
+  url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-0.39.0-ubuntu-xenial-456.30-20191023-194525-000256754.tgz
+  version: 0.39.0
 - name: cfcr-etcd
   sha1: f87fdefcd1754da18d600aae1137466e733271f3
   url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.11.1-ubuntu-xenial-456.30-20191008-185029-871352872.tgz
