@@ -2,3 +2,11 @@
 - type: replace
   path: /instance_groups/name=windows-worker/jobs/name=flanneld-windows/properties?/kubedns-service-ip
   value: ((kubedns_service_ip))
+
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=kubelet-windows/properties/kubelet-configuration/clusterDNS?
+  value: [((kubedns_service_ip))]
+
+- type: replace
+  path: /instance_groups/name=windows-worker/jobs/name=kube-proxy-windows/properties/kube-proxy-configuration?/clusterCIDR?
+  value: ((pod_network_cidr))
