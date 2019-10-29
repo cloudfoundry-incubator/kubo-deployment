@@ -2,9 +2,9 @@
   type: replace
   value:
   - name: kubo
-    sha1: 47e7cd4edbc0cf7e9fc036971775c05863963c91
-    url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.40.0/kubo-release-0.40.0.tgz
-    version: 0.40.0
+    sha1: 4f90264f32fbfd55abfa83fa0cacd95e0ba4db44
+    url: https://github.com/cloudfoundry-incubator/kubo-release/releases/download/v0.41.0/kubo-release-0.41.0.tgz
+    version: 0.41.0
   - name: cfcr-etcd
     sha1: 5ff0104783202a287b7877883d9ff95f22e18eef
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/cfcr-etcd-release?v=1.11.1

@@ -1,11 +1,11 @@
-- path: /releases/name=kubo-windows?
-  label: kubo-windows
+- label: kubo-windows
+  path: /releases/name=kubo-windows?
   type: replace
   value:
     name: kubo-windows
-    sha1: 214f1f947deb132fbc61a050ebdfcdb8ebe29efc
-    url: https://github.com/cloudfoundry-incubator/kubo-release-windows/releases/download/v0.40.0/kubo-release-windows-0.40.0.tgz
-    version: 0.40.0
+    sha1: 94ab2ac55f736e75d4efa1deececb37251ee31b6
+    url: https://github.com/cloudfoundry-incubator/kubo-release-windows/releases/download/v0.41.0/kubo-release-windows-0.41.0.tgz
+    version: 0.41.0
 - path: /stemcells/-
   type: replace
   value:
