@@ -443,9 +443,6 @@ name: cfcr
 releases:
 - name: kubo
   sha1: 0d81608fb97ad32cb86e7e6d689ff8f424a7fb33
-  stemcell:
-    os: ubuntu-xenial
-    version: 456.3
   url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-0.41.0-ubuntu-xenial-456.30-20191029-153605-894983413.tgz
   version: 0.41.0
 - name: cfcr-etcd
@@ -454,9 +451,6 @@ releases:
   version: 1.11.1
 - name: docker
   sha1: 3f984427501e1ab8da5d7c43bb12786fb7f2298b
-  stemcell:
-    os: ubuntu-xenial
-    version: 456.3
   url: https://storage.googleapis.com/kubo-precompiled-releases/docker-35.3.4-ubuntu-xenial-456.30-20191010-220825-027336158.tgz
   version: 35.3.4
 - name: bpm
