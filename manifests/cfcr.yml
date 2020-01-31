@@ -290,6 +290,7 @@ instance_groups:
           kubeconfig: /var/vcap/jobs/kube-scheduler/config/kubeconfig
         disablePreemption: false
         kind: KubeSchedulerConfiguration
+      k8s-args:
       tls:
         kubernetes: ((tls-kubernetes))
     release: kubo
