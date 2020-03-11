@@ -284,13 +284,13 @@ instance_groups:
   - name: kube-scheduler
     properties:
       api-token: ((kube-scheduler-password))
+      k8s-args: null
       kube-scheduler-configuration:
         apiVersion: kubescheduler.config.k8s.io/v1alpha1
         clientConnection:
           kubeconfig: /var/vcap/jobs/kube-scheduler/config/kubeconfig
         disablePreemption: false
         kind: KubeSchedulerConfiguration
-      k8s-args:
       tls:
         kubernetes: ((tls-kubernetes))
     release: kubo
