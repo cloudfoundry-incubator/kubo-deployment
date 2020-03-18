@@ -443,12 +443,12 @@ instance_groups:
 name: cfcr
 releases:
 - name: kubo
-  sha1: 0d81608fb97ad32cb86e7e6d689ff8f424a7fb33
+  sha1: 7662cb2c9586ffef3c04d595ebc892792f3bb21a
   stemcell:
     os: ubuntu-xenial
-    version: 456.3
-  url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-0.41.0-ubuntu-xenial-456.30-20191029-153605-894983413.tgz
-  version: 0.41.0
+    version: 621.59
+  url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-0.42.0-ubuntu-xenial-621.59-20200318-043947-801128414.tgz
+  version: 0.42.0
 - name: cfcr-etcd
   sha1: dee2b9fd09fecb76cb47bf07c2240ef2b9e70185
   stemcell:
