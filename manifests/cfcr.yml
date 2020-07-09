@@ -450,12 +450,12 @@ releases:
   url: https://storage.googleapis.com/kubo-precompiled-releases/kubo-0.42.0-ubuntu-xenial-621.59-20200318-043947-801128414.tgz
   version: 0.42.0
 - name: cfcr-etcd
-  sha1: a5d11b0f66b58ba31a2a0657ecfc6590ba2b5585
+  sha1: 401c32e577d2489616cf7ea879ae07333bb060ba
   stemcell:
     os: ubuntu-xenial
     version: 621.76
-  url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.12.1-ubuntu-xenial-621.76-20200616-225156-964774718.tgz
-  version: 1.12.1
+  url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.12.4-ubuntu-xenial-621.76-20200709-214415-386687063.tgz
+  version: 1.12.4
 - name: docker
   sha1: c11e26b85f027844ea31591b55dd4280004708d5
   stemcell:
