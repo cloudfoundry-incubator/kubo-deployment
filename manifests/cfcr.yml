@@ -18,13 +18,11 @@ instance_groups:
       addons:
       - coredns
       - metrics-server
-      - kubernetes-dashboard
       admin-password: ((kubo-admin-password))
       admin-username: admin
       api-token: ((kubelet-password))
       tls:
         kubernetes: ((tls-kubernetes))
-        kubernetes-dashboard: ((tls-kubernetes-dashboard))
         metrics-server: ((tls-metrics-server))
     release: kubo
   lifecycle: errand
@@ -584,15 +582,4 @@ variables:
     - metrics-server.kube-system.svc
     ca: kubo_ca
     common_name: metrics-server
-  type: certificate
-- name: kubernetes-dashboard-ca
-  options:
-    common_name: ca
-    is_ca: true
-  type: certificate
-- name: tls-kubernetes-dashboard
-  options:
-    alternative_names: []
-    ca: kubernetes-dashboard-ca
-    common_name: kubernetesdashboard.cfcr.internal
   type: certificate
