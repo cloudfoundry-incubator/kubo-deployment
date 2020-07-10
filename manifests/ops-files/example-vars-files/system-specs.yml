@@ -4,4 +4,3 @@ tls-kubernetes:
   ca: ca
   certificate: cert
   private_key: key
-tls-kubernetes-dashboard: tls-kubernetes-dashboard
