@@ -3,9 +3,9 @@
   type: replace
   value:
     name: kubo-windows
-    sha1: bf98f495441bc5c65e2413713c6d19df3efc9074
-    url: https://github.com/cloudfoundry-incubator/kubo-release-windows/releases/download/v0.43.0/kubo-release-windows-0.43.0.tgz
-    version: 0.43.0
+    sha1: 5fa40c0ace6c18b26cc62bffdab9d720aaa11e0e
+    url: https://github.com/cloudfoundry-incubator/kubo-release-windows/releases/download/v0.43.1/kubo-release-windows-0.43.1.tgz
+    version: 0.43.1
 - path: /stemcells/-
   type: replace
   value:
