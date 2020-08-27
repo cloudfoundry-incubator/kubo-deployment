@@ -462,12 +462,12 @@ releases:
   url: https://storage.googleapis.com/kubo-precompiled-releases/docker-35.3.4-ubuntu-xenial-621.76-20200709-214911-363026543.tgz
   version: 35.3.4
 - name: bpm
-  sha1: d5c7f253444a5a43d89fdadf3ceb54da21b8779a
+  sha1: 6a24763d4f0111fcf70588fe218a32b044872cd8
   stemcell:
     os: ubuntu-xenial
     version: 621.76
-  url: https://storage.googleapis.com/kubo-precompiled-releases/bpm-1.1.8-ubuntu-xenial-621.76-20200616-225653-154816808.tgz
-  version: 1.1.8
+  url: https://storage.googleapis.com/kubo-precompiled-releases/bpm-1.1.9-ubuntu-xenial-621.76-20200827-230505-857738012.tgz
+  version: 1.1.9
 stemcells:
 - alias: default
   os: ubuntu-xenial
