@@ -470,8 +470,8 @@ releases:
   version: 1.1.12
 stemcells:
 - alias: default
-  os: ubuntu-xenial
-  version: "621.125"
+  os: ubuntu-bionic
+  version: "1"
 update:
   canaries: 1
   canary_watch_time: 10000-300000
