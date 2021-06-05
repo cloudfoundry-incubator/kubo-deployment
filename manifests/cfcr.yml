@@ -462,11 +462,11 @@ releases:
   url: https://storage.googleapis.com/kubo-precompiled-releases/docker-36.0.0-ubuntu-bionic-1.1-20210605-232104-167720752.tgz
   version: 36.0.0
 - name: bpm
-  sha1: 194dab5d404fb686c73693c85ad929f22e66d083
+  sha1: d5927c775b59d4956348e7a736e4f3f77d3b9ca6
   stemcell:
-    os: ubuntu-xenial
-    version: 621.125
-  url: https://storage.googleapis.com/kubo-precompiled-releases/bpm-1.1.12-ubuntu-xenial-621.125-20210604-164156-841055243.tgz
+    os: ubuntu-bionic
+    version: 1.1
+  url: https://storage.googleapis.com/kubo-precompiled-releases/bpm-1.1.12-ubuntu-bionic-1.1-20210605-233157-616437219.tgz
   version: 1.1.12
 stemcells:
 - alias: default
