@@ -1,7 +1,7 @@
 addons:
 - include:
     stemcell:
-    - os: ubuntu-xenial
+    - os: ubuntu-bionic
   jobs:
   - name: kubo-dns-aliases
     release: kubo
