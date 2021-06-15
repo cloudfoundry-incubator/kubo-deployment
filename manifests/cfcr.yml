@@ -455,12 +455,12 @@ releases:
   url: https://storage.googleapis.com/kubo-precompiled-releases/cfcr-etcd-1.13.0-ubuntu-bionic-1.10-20210610-134709-163487119.tgz
   version: 1.13.0
 - name: docker
-  sha1: c5dbba2466b1fe8d2db08d91284f7df4ab7dd7f7
+  sha1: 817c65cfdd934a8cceebd047e7ec884ebb0dfe94
   stemcell:
     os: ubuntu-bionic
     version: 1.1
-  url: https://storage.googleapis.com/kubo-precompiled-releases/docker-36.0.0-ubuntu-bionic-1.10-20210610-134433-660211163.tgz
-  version: 36.0.0
+  url: https://storage.googleapis.com/kubo-precompiled-releases/docker-36.0.2-ubuntu-bionic-1.10-20210615-232232-583238861.tgz
+  version: 36.0.2
 - name: bpm
   sha1: d91166188915665ff3ee0838c97e9708aad155f6
   stemcell:
