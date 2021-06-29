@@ -471,7 +471,7 @@ releases:
 stemcells:
 - alias: default
   os: ubuntu-bionic
-  version: "1.10"
+  version: "1.13"
 update:
   canaries: 1
   canary_watch_time: 10000-300000
