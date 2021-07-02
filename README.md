@@ -1,3 +1,8 @@
+# This repo has been archived. 
+  The manifest for CFCR has been moved to https://github.com/cloudfoundry-incubator/kubo-release
+
+---
+
 # kubo-deployment
 
 This repository should be named "kubo-manifest". It contains the documentation and manifests for deploying [kubo-release](https://github.com/cloudfoundry-incubator/kubo-release) with BOSH. 
