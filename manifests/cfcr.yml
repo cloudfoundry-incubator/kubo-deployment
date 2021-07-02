@@ -250,6 +250,7 @@ instance_groups:
       kube-proxy-password: ((kube-proxy-password))
       kube-scheduler-password: ((kube-scheduler-password))
       kubelet-drain-password: ((kubelet-drain-password))
+      kubelet-pre-stop-password: ((kubelet-pre-stop-password))
       kubelet-password: ((kubelet-password))
       service-account-public-key: ((service-account-key.public_key))
       tls:
@@ -380,6 +381,7 @@ instance_groups:
     properties:
       api-token: ((kubelet-password))
       drain-api-token: ((kubelet-drain-password))
+      pre-stop-api-token: ((kubelet-pre-stop-password))
       k8s-args:
         cni-bin-dir: /var/vcap/jobs/kubelet/packages/cni/bin
         container-runtime: docker
@@ -483,6 +485,8 @@ variables:
 - name: kubelet-password
   type: password
 - name: kubelet-drain-password
+  type: password
+- name: kubelet-pre-stop-password
   type: password
 - name: kube-proxy-password
   type: password
