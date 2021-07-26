@@ -1,0 +1,95 @@
+- type: replace
+  path: /instance_groups/name=master/jobs/-
+  value:
+    name: docker
+    release: docker
+    properties:
+      bridge: cni0
+      default_ulimits:
+      - nofile=1048576
+      env: {}
+      flannel: true
+      ip_masq: false
+      iptables: false
+      live_restore: true
+      log_level: error
+      log_options:
+      - max-size=128m
+      - max-file=2
+      storage_driver: overlay2
+      store_dir: /var/vcap/data
+
+- type: replace
+  path: /instance_groups/name=master/jobs/-
+  value:
+    name: kubelet
+    release: kubo
+    properties:
+      api-token: ((kubelet-password))
+      drain-api-token: ((kubelet-drain-password))
+      master: true
+      k8s-args:
+        cni-bin-dir: /var/vcap/jobs/kubelet/packages/cni/bin
+        container-runtime: docker
+        docker: unix:///var/vcap/sys/run/docker/docker.sock
+        docker-endpoint: unix:///var/vcap/sys/run/docker/docker.sock
+        kubeconfig: /var/vcap/jobs/kubelet/config/kubeconfig
+        network-plugin: cni
+        root-dir: /var/vcap/data/kubelet
+      kubelet-configuration:
+        apiVersion: kubelet.config.k8s.io/v1beta1
+        authentication:
+          anonymous:
+            enabled: false
+          x509:
+            clientCAFile: /var/vcap/jobs/kubelet/config/kubelet-client-ca.pem
+        authorization:
+          mode: Webhook
+        clusterDNS: [((kubedns_service_ip))]
+        clusterDomain: cluster.local
+        failSwapOn: false
+        kind: KubeletConfiguration
+        serializeImagePulls: false
+        tlsCertFile: /var/vcap/jobs/kubelet/config/kubelet.pem
+        tlsPrivateKeyFile: /var/vcap/jobs/kubelet/config/kubelet-key.pem
+      tls:
+        kubelet:
+          ca: ((tls-kubelet.ca))
+          certificate: ((tls-kubelet.certificate))((tls-kubelet.ca))
+          private_key: ((tls-kubelet.private_key))
+        kubelet-client-ca:
+          certificate: ((tls-kubelet-client.ca))
+        kubernetes: ((tls-kubernetes))
+
+- type: replace
+  path: /instance_groups/name=master/jobs/-
+  value:
+    name: kubernetes-dependencies
+    release: kubo
+    properties:
+      nfs: true
+
+- type: replace
+  path: /instance_groups/name=master/jobs/-
+  value:
+    name: kube-proxy
+    release: kubo
+    properties:
+      api-token: ((kube-proxy-password))
+      kube-proxy-configuration:
+        apiVersion: kubeproxy.config.k8s.io/v1alpha1
+        clientConnection:
+          kubeconfig: /var/vcap/jobs/kube-proxy/config/kubeconfig
+        clusterCIDR: ((pod_network_cidr))
+        iptables:
+          masqueradeAll: false
+          masqueradeBit: 14
+          minSyncPeriod: 0s
+          syncPeriod: 30s
+        kind: KubeProxyConfiguration
+        mode: iptables
+        portRange: ""
+      tls:
+        kubernetes: ((tls-kubernetes))
+
+      

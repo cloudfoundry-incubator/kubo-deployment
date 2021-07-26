@@ -1,0 +1,16 @@
+- type: remove
+  path: /instance_groups/name=master/jobs/name=flanneld
+- type: remove
+  path: /instance_groups/name=worker/jobs/name=flanneld
+- type: replace
+  path: /instance_groups/name=master/jobs/name=docker/properties/flannel
+  value: false
+- type: replace
+  path: /instance_groups/name=worker/jobs/name=docker/properties/flannel
+  value: false
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-controller-manager/properties/k8s-args/allocate-node-cidrs?
+  value: true
+- type: replace
+  path: /instance_groups/name=master/jobs/name=kube-controller-manager/properties/k8s-args/cluster-cidr?
+  value: ((pod_network_cidr))
